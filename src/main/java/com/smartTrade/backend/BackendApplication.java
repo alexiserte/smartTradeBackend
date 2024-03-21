@@ -1,13 +1,13 @@
-package smartTrade.spring;
+package com.smartTrade.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SmartTradeApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SmartTradeApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }
