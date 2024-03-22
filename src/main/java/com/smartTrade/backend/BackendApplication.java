@@ -43,9 +43,9 @@ public class BackendApplication {
         }
 
 
-        @GetMapping("/comprador/?id={id}")
-        public Comprador comprador(@PathVariable String id){
-            return compradorDAO.getCompradorByID(Integer.parseInt(id));
+        @GetMapping("/comprador/{id}")
+        public Comprador comprador(@PathVariable int id) {
+            return compradorDAO.getCompradorByID(id);
         }
         
         
