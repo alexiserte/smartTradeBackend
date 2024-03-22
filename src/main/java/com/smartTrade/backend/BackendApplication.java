@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.models.*;
 import java.util.List;
@@ -44,10 +45,24 @@ public class BackendApplication {
         }
 
 
-        @GetMapping("/comprador/{id}")
-        public Comprador comprador(@PathVariable int id) {
-            return compradorDAO.getCompradorByID(id);
+        @GetMapping("/comprador")
+        public Comprador comprador(@RequestParam(value = "id", required = false) Integer id_consumidor,
+                @RequestParam(value = "nickname", required = false) String nickname) {
+            if (id_consumidor != null && nickname != null) {
+                // Lógica para buscar por ID y nombre
+                return compradorDAO.getCompradorByIDAndNombre(id_consumidor, nickname);
+            } else if (id_consumidor != null) {
+                // Lógica para buscar por ID
+                return compradorDAO.getCompradorByID(id_consumidor);
+            } else if (nickname != null) {
+                // Lógica para buscar por nombre
+                return compradorDAO.getCompradorByNombre(nickname);
+            } else {
+                // Manejar escenario sin parámetros
+                return null; // O lanzar una excepción, dependiendo de tu caso de uso
+            }
         }
+
         
         
         

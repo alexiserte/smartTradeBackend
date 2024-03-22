@@ -17,4 +17,12 @@ public class CompradorDAO{
         return database.queryForObject("SELECT * FROM consumidor WHERE id_consumidor = ?",new CompradorMapper(),id);
     }
 
+    public Comprador getCompradorByIDAndNombre(int id, String nombre){
+        return database.queryForObject("SELECT * FROM consumidor WHERE nickname = ? AND id_consumidor = ?",new CompradorMapper(),nombre, id);
+    }
+
+    public Comprador getCompradorByNombre(String nombre){
+        return database.queryForObject("SELECT * FROM consumidor WHERE nickname = ?",new CompradorMapper(),nombre);
+    }
+
 }
