@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.models.*;
 import java.util.List;
@@ -23,6 +22,8 @@ public class BackendApplication {
         public String mensaje(){
             return "Hello World";
         }
+        
+        
 
         @GetMapping("/five-guys")
         public List<MiembroEquipo> equipo(){
