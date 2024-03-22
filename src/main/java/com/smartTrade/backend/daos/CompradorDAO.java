@@ -1,5 +1,5 @@
-package com.smartTrade.backend.repos;
-import com.smartTrade.backend.DAO.CompradorDAO;
+package com.smartTrade.backend.daos;
+import com.smartTrade.backend.mappers.CompradorMapper;
 import com.smartTrade.backend.models.Comprador;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -9,12 +9,12 @@ public class CompradorDAO{
     
     private JdbcTemplate database;
 
-    public CompradorRepository(JdbcTemplate database) {
+    public CompradorDAO(JdbcTemplate database) {
         this.database = database;
     }
 
-    public static Comprador getCompradorByID(int id){
-        return database.queryForObject("SELECT * FROM consumidor WHERE id_consumidor = ?",new CompradorDAO(),id);
+    public Comprador getCompradorByID(int id){
+        return database.queryForObject("SELECT * FROM consumidor WHERE id_consumidor = ?",new CompradorMapper(),id);
     }
 
 }

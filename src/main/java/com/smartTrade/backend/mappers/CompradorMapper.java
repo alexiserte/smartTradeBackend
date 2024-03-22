@@ -1,4 +1,4 @@
-package com.smartTrade.backend.DAO;
+package com.smartTrade.backend.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

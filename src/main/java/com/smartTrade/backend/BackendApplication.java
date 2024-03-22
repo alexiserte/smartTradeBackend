@@ -1,8 +1,10 @@
 package com.smartTrade.backend;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.models.*;
@@ -13,6 +15,9 @@ import com.smartTrade.backend.daos.*;
 @SpringBootApplication
 @RestController
 public class BackendApplication {
+
+        @Autowired
+        CompradorDAO compradorDAO;
 
         @GetMapping("/")
         public String mensaje(){
@@ -40,7 +45,7 @@ public class BackendApplication {
 
         @GetMapping("/comprador/?id={}")
         public Comprador comprador(@PathVariable String id){
-            CompradorDAO.getCompradorByID(Integer.parseInt(id));
+            return compradorDAO.getCompradorByID(Integer.parseInt(id));
         }
         
         
