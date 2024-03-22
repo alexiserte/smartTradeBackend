@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import com.smartTrade.backend.models.Comprador;
 
-public class CompradorDAO implements RowMapper<Comprador> {
+public class CompradorMapper implements RowMapper<Comprador> {
     @Override
     public Comprador mapRow(ResultSet rs, int rowNum) throws SQLException {
         Comprador comprador = new Comprador();
