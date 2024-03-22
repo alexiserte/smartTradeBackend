@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.models.*;
 import java.util.List;
 import java.util.ArrayList;
+import com.smartTrade.backend.daos.*;
 
 @SpringBootApplication
 @RestController
@@ -34,9 +35,14 @@ public class BackendApplication {
             res.add(m5);
 
             return res;
-
         }
 
+
+        @GetMapping("/comprador/?id={}")
+        public Comprador comprador(@PathVariable String id){
+            CompradorDAO.getCompradorByID(Integer.parseInt(id));
+        }
+        
         
         
 	public static void main(String[] args) {

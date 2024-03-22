@@ -13,7 +13,7 @@ public class CompradorDAO{
         this.database = database;
     }
 
-    public Comprador getCompradorByID(int id){
+    public static Comprador getCompradorByID(int id){
         return database.queryForObject("SELECT * FROM consumidor WHERE id_consumidor = ?",new CompradorDAO(),id);
     }
 
