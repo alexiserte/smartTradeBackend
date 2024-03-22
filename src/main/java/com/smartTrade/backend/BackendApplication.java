@@ -1,8 +1,13 @@
 package com.smartTrade.backend;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,22 +49,31 @@ public class BackendApplication {
             return res;
         }
 
+        @GetMapping("/comprador/")
+        public ResponseEntity<?> comprador(@RequestParam(value = "id", required = false) Integer id,
+                @RequestParam(value = "nickname", required = false) String nombre) {
+            Comprador comprador = null;
 
-        @GetMapping("/comprador")
-        public Comprador comprador(@RequestParam(value = "id", required = false) Integer id_consumidor,
-                @RequestParam(value = "nickname", required = false) String nickname) {
-            if (id_consumidor != null && nickname != null) {
+            if (id != null && nombre != null) {
                 // Lógica para buscar por ID y nombre
-                return compradorDAO.getCompradorByIDAndNombre(id_consumidor, nickname);
-            } else if (id_consumidor != null) {
+                comprador = compradorDAO.getCompradorByIDAndNombre(id, nombre);
+            } else if (id != null) {
                 // Lógica para buscar por ID
-                return compradorDAO.getCompradorByID(id_consumidor);
-            } else if (nickname != null) {
+                comprador = compradorDAO.getCompradorByID(id);
+            } else if (nombre != null) {
                 // Lógica para buscar por nombre
-                return compradorDAO.getCompradorByNombre(nickname);
+                comprador = compradorDAO.getCompradorByNombre(nombre);
+            }
+
+            if (comprador != null) {
+                // Si se encontró un comprador, lo devolvemos como ResponseEntity con código de
+                // estado 200 (OK)
+                return ResponseEntity.ok(comprador);
             } else {
-                // Manejar escenario sin parámetros
-                return null; // O lanzar una excepción, dependiendo de tu caso de uso
+                // Si no se encontró ningún comprador, devolvemos un JSON con un mensaje de
+                // error y un código de estado 404 (Not Found)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("{\"message\": \"No se encontraron resultados para la búsqueda.\"}");
             }
         }
 
