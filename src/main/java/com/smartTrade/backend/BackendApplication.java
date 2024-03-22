@@ -3,6 +3,7 @@ package com.smartTrade.backend;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.models.*;
 import java.util.List;
@@ -35,6 +36,8 @@ public class BackendApplication {
             return res;
 
         }
+
+        
         
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
