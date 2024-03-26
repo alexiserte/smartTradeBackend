@@ -39,7 +39,7 @@ public class SmartTradeServices {
         }
     }
 
-    @PostMapping("/services/register")
+    @PostMapping("/services/register/")
     public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password) {
 
