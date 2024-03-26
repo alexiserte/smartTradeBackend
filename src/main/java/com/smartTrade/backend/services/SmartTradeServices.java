@@ -45,12 +45,11 @@ public class SmartTradeServices {
 
         Random random = new Random();
         int id = random.nextInt(1000);
-
-        if (compradorDAO.existsComprador(nickname)) {
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Usuario ya registrado."));
-        } else {
+        try{
             compradorDAO.insertCompradorOnlyNicknameAndPassword(id, nickname, password);
             return ResponseEntity.ok(ResponseEntity.status(201).body("Usuario registrado correctamente."));
+        }catch(Exception e){
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario."));
         }
 
     }
