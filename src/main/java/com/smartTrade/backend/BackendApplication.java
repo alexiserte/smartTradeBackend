@@ -47,7 +47,10 @@ public class BackendApplication {
     public ResponseEntity<?> comprador(@RequestParam(value = "id", required = false) Integer id_consumidor,
             @RequestParam(value = "nickname", required = false) String nickname) {
         try {
-            if (id_consumidor != null && nickname != null) {
+            if(id_consumidor == null && nickname == null){
+                return ResponseEntity.ok(compradorDAO.getAllCompradores());
+            }
+            else if (id_consumidor != null && nickname != null) {
                 // Lógica para buscar por ID y nombre
                 return ResponseEntity.ok(compradorDAO.getCompradorByIDAndNombre(id_consumidor, nickname));
             } else if (id_consumidor != null) {
@@ -66,11 +69,6 @@ public class BackendApplication {
 
             return ResponseEntity.ok(ResponseEntity.status(500).body("Error: " + e.getMessage()));
         }
-    }
-
-    @GetMapping("/comprador/all")
-    public List<Comprador> compradores() {
-        return compradorDAO.getAllCompradores();
     }
 
     public static void main(String[] args) {
