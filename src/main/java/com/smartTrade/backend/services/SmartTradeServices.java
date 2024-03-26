@@ -43,15 +43,16 @@ public class SmartTradeServices {
     public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password) {
 
-            Random random = new Random();
-            int id = random.nextInt(1000);
-        try {
-            Comprador comprador = compradorDAO.getCompradorByNombre(nickname);
+        Random random = new Random();
+        int id = random.nextInt(1000);
+
+        if (compradorDAO.existsComprador(nickname)) {
             return ResponseEntity.ok(ResponseEntity.status(400).body("Usuario ya registrado."));
-        } catch (EmptyResultDataAccessException e) {
+        } else {
             compradorDAO.insertCompradorOnlyNicknameAndPassword(id, nickname, password);
             return ResponseEntity.ok(ResponseEntity.status(201).body("Usuario registrado correctamente."));
         }
+
     }
 
 }

@@ -79,6 +79,15 @@ public class CompradorDAO{
         return database.query("SELECT * FROM consumidor",new CompradorMapper());
     }
 
+    public boolean existsComprador(String nickname){
+        try{
+            database.queryForObject("SELECT * FROM consumidor WHERE nickname = ?",new CompradorMapper(),nickname);
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    }
+
 
 
 }
