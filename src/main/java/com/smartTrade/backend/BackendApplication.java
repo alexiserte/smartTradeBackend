@@ -12,8 +12,6 @@ import com.smartTrade.backend.models.*;
 import java.util.List;
 import java.util.ArrayList;
 import com.smartTrade.backend.daos.*;
-import com.smartTrade.backend.util.*;
-
 @SpringBootApplication
 @RestController
 public class BackendApplication {
@@ -45,23 +43,21 @@ public class BackendApplication {
     }
 
     @GetMapping("/comprador/")
-    public Response<?> comprador(@RequestParam(value = "id", required = false) Integer id_consumidor,
+    public ResponseEntity<?> comprador(@RequestParam(value = "id", required = false) Integer id_consumidor,
             @RequestParam(value = "nickname", required = false) String nickname) {
-        try {
-            if (id_consumidor != null && nickname != null) {
-                // Lógica para buscar por ID y nombre
-                return new Response<Comprador>(true, compradorDAO.getCompradorByIDAndNombre(id_consumidor, nickname));
-            } else if (id_consumidor != null) {
-                // Lógica para buscar por ID
-                return new Response<Comprador>(true, compradorDAO.getCompradorByID(id_consumidor));
-            } else if (nickname != null) {
-                // Lógica para buscar por nombre
-                return new Response<List<Comprador>>(true, compradorDAO.getCompradorByNombre(nickname));
-            } else {
-                throw new Exception("Número de parámetros incorrecto");    
-            }
-        } catch (Exception e) {
-            return new Response<String>(false, e.getMessage());
+        
+                if (id_consumidor != null && nickname != null) {
+            // Lógica para buscar por ID y nombre
+            return ResponseEntity.ok(compradorDAO.getCompradorByIDAndNombre(id_consumidor, nickname));
+        } else if (id_consumidor != null) {
+            // Lógica para buscar por ID
+            return ResponseEntity.ok(compradorDAO.getCompradorByID(id_consumidor));
+        } else if (nickname != null) {
+            // Lógica para buscar por nombre
+            return ResponseEntity.ok(compradorDAO.getCompradorByNombre(nickname));
+        } else {
+            // Manejar escenario sin parámetros
+            return null; // O lanzar una excepción, dependiendo de tu caso de uso
         }
     }
 
