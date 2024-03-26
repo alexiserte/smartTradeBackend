@@ -75,6 +75,9 @@ public class CompradorDAO{
         database.update("INSERT INTO consumidor (id_consumidor, nickname, user_password) VALUES (?,?,?)",id, nickname, password);
     }
    
+    public List<Comprador> getAllCompradores(){
+        return database.query("SELECT * FROM consumidor",new CompradorMapper());
+    }
 
 
 

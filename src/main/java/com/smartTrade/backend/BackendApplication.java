@@ -68,6 +68,11 @@ public class BackendApplication {
         }
     }
 
+    @GetMapping("/comprador/all")
+    public List<Comprador> compradores() {
+        return compradorDAO.getAllCompradores();
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(BackendApplication.class, args);
     }
