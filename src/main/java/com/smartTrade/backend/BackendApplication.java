@@ -57,7 +57,7 @@ public class BackendApplication {
             return ResponseEntity.ok(compradorDAO.getCompradorByNombre(nickname));
         } else {
             // Manejar escenario sin parámetros
-            return ResponseEntity.badRequest().build(); // O lanzar una excepción, dependiendo de tu caso de uso
+            return ResponseEntity.status(400).body("Número de parámetros incorrecto."); // O lanzar una excepción, dependiendo de tu caso de uso
         }
 
     } catch (Exception e) {
