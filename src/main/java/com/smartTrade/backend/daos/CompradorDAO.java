@@ -3,6 +3,8 @@ import com.smartTrade.backend.mappers.CompradorMapper;
 import com.smartTrade.backend.models.Comprador;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.ArrayList;
 
 @Repository
 public class CompradorDAO{
@@ -21,8 +23,51 @@ public class CompradorDAO{
         return database.queryForObject("SELECT * FROM consumidor WHERE nickname = ? AND id_consumidor = ?",new CompradorMapper(),nombre, id);
     }
 
-    public Comprador getCompradorByNombre(String nombre){
-        return database.queryForObject("SELECT * FROM consumidor WHERE nickname = ?",new CompradorMapper(),nombre);
+    public List<Comprador> getCompradorByNombre(String nombre){
+        return database.query("SELECT * FROM consumidor WHERE nickname = ?",new CompradorMapper(),nombre);
     }
+
+    public List<Comprador> getCompradorByDireccion(String direccion){
+        return database.query("SELECT * FROM consumidor WHERE direccion = ?",new CompradorMapper(),direccion);
+    }
+
+    public List<Comprador> getCompradorByPuntosResponsabilidad(int puntos){
+        return database.query("SELECT * FROM consumidor WHERE puntos_responsabilidad = ?",new CompradorMapper(),puntos);
+    }
+
+    public List<Comprador> getCompradorByPuntosResponsabilidadAndDireccion(int puntos, String direccion){
+        return database.query("SELECT * FROM consumidor WHERE puntos_responsabilidad = ? AND direccion = ?",new CompradorMapper(),puntos, direccion);
+    }
+
+    public List<Comprador> getCompradorByPuntosResponsabilidadAndNombre(int puntos, String nombre){
+        return database.query("SELECT * FROM consumidor WHERE puntos_responsabilidad = ? AND nickname = ?",new CompradorMapper(),puntos, nombre);
+    }
+
+    public List<Comprador> getCompradorByDireccionAndNombre(String direccion, String nombre){
+        return database.query("SELECT * FROM consumidor WHERE direccion = ? AND nickname = ?",new CompradorMapper(),direccion, nombre);
+    }
+
+    public List<Comprador> getCompradorByDireccionAndNombreAndPuntosResponsabilidad(String direccion, String nombre, int puntos){
+        return database.query("SELECT * FROM consumidor WHERE direccion = ? AND nickname = ? AND puntos_responsabilidad = ?",new CompradorMapper(),direccion, nombre, puntos);
+    }
+
+    public List<Comprador> getCompradorByDireccionAndPuntosResponsabilidad(String direccion, int puntos){
+        return database.query("SELECT * FROM consumidor WHERE direccion = ? AND puntos_responsabilidad = ?",new CompradorMapper(),direccion, puntos);
+    }
+
+    public List<Comprador> getCompradorByNombreAndPuntosResponsabilidad(String nombre, int puntos){
+        return database.query("SELECT * FROM consumidor WHERE nickname = ? AND puntos_responsabilidad = ?",new CompradorMapper(),nombre, puntos);
+    }
+
+    public List<Comprador> getCompradorByDireccionAndNombreAndPuntosResponsabilidadAndID(String direccion, String nombre, int puntos, int id){
+        return database.query("SELECT * FROM consumidor WHERE direccion = ? AND nickname = ? AND puntos_responsabilidad = ? AND id_consumidor = ?",new CompradorMapper(),direccion, nombre, puntos, id);
+    }
+
+    public Comprador getUserPassword(String id){
+        return database.queryForObject("SELECT user_password FROM consumidor WHERE id_consumidor = ?",new CompradorMapper(),id);
+    }
+   
+
+
 
 }
