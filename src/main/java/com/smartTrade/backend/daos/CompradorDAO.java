@@ -70,6 +70,10 @@ public class CompradorDAO{
     public Comprador getCompradorByNicknameAndPassword(String nickname, String password){
         return database.queryForObject("SELECT * FROM consumidor WHERE nickname = ? AND user_password = ?",new CompradorMapper(),nickname, password);
     }
+
+    public void insertCompradorOnlyNicknameAndPassword(int id, String nickname, String password){
+        database.update("INSERT INTO consumidor (id_consumidor, nickname, user_password) VALUES (?,?,?)",id, nickname, password);
+    }
    
 
 
