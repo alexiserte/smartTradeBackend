@@ -72,6 +72,8 @@ public class SmartTradeServices {
 
     @DeleteMapping("/services/delete-comprador/")
     public ResponseEntity<?> deleteComprador(@RequestParam(value = "id", required = true) int  id) {
+
+        //// EL METODO BORRAR COMPRADOR HAY QUE BORRAR TODO LO QUE REFERENCIA A ESA ID DE COMPRADOR
             compradorDAO.deleteComprador(id);
             return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario eliminado correctamente."));
     }
