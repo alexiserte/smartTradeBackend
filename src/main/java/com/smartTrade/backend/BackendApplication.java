@@ -60,7 +60,7 @@ public class BackendApplication {
                 return ResponseEntity.ok(ResponseEntity.status(400).body("Número de parámetros incorrecto.")); // O                                                                                           // de uso
             }
         } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.ok(ResponseEntity.status(404).body("Número de parámetros incorrecto."));
+            return ResponseEntity.ok(ResponseEntity.status(404).body("Recurso no encontrado."));
 
         } catch (Exception e) {
 
