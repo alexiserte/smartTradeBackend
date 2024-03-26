@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.models.*;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.ArrayList;
 import com.smartTrade.backend.daos.*;
@@ -21,8 +24,15 @@ public class BackendApplication {
     CompradorDAO compradorDAO;
 
     @GetMapping("/")
-    public String mensaje() {
-        return "Hello World";
+    public String mensaje(HttpServletRequest request) {
+        // Obteniendo la dirección IP del cliente desde la solicitud
+        String clientIP = request.getRemoteAddr();
+        
+        // Puedes usar la dirección IP del cliente como desees, por ejemplo, imprimir en la consola
+        System.out.println("IP del cliente: " + clientIP);
+        
+        // Retornando un mensaje simple como ejemplo
+        return "¡Bienvenido a smartTrade!";
     }
 
     @GetMapping("/five-guys")
