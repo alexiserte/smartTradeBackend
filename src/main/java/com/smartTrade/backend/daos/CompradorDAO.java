@@ -23,8 +23,8 @@ public class CompradorDAO{
         return database.queryForObject("SELECT * FROM consumidor WHERE nickname = ? AND id_consumidor = ?",new CompradorMapper(),nombre, id);
     }
 
-    public List<Comprador> getCompradorByNombre(String nombre){
-        return database.query("SELECT * FROM consumidor WHERE nickname = ?",new CompradorMapper(),nombre);
+    public Comprador getCompradorByNombre(String nombre){
+        return database.queryForObject("SELECT * FROM consumidor WHERE nickname = ?",new CompradorMapper(),nombre);
     }
 
     public List<Comprador> getCompradorByDireccion(String direccion){
@@ -65,6 +65,10 @@ public class CompradorDAO{
 
     public Comprador getUserPassword(String id){
         return database.queryForObject("SELECT user_password FROM consumidor WHERE id_consumidor = ?",new CompradorMapper(),id);
+    }
+
+    public Comprador getCompradorByNicknameAndPassword(String nickname, String password){
+        return database.queryForObject("SELECT * FROM consumidor WHERE nickname = ? AND user_password = ?",new CompradorMapper(),nickname, password);
     }
    
 
