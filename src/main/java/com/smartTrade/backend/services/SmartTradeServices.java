@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,5 +69,13 @@ public class SmartTradeServices {
             return ResponseEntity.ok(ResponseEntity.status(400).body("Contraseña incorrecta."));
         }
     }
+
+    @DeleteMapping("/services/delete-comprador/")
+    public ResponseEntity<?> deleteComprador(@RequestParam(value = "id", required = true) int  id) {
+            compradorDAO.deleteComprador(id);
+            return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario eliminado correctamente."));
+    }
+
+
 
 }

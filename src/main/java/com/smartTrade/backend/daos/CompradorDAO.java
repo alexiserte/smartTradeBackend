@@ -96,6 +96,10 @@ public class CompradorDAO{
         database.update("UPDATE consumidor SET user_password = ? WHERE nickname = ?",password, nickname);
     }
 
+    public void deleteComprador(int id){
+        database.update("DELETE FROM consumidor WHERE id_consumidor = ?",id);
+    }
+
 
 
 }
