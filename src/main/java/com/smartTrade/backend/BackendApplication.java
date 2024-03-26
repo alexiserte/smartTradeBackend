@@ -45,7 +45,7 @@ public class BackendApplication {
     @GetMapping("/comprador/")
     public ResponseEntity<?> comprador(@RequestParam(value = "id", required = false) Integer id_consumidor,
             @RequestParam(value = "nickname", required = false) String nickname) {
-        
+        try{
                 if (id_consumidor != null && nickname != null) {
             // Lógica para buscar por ID y nombre
             return ResponseEntity.ok(compradorDAO.getCompradorByIDAndNombre(id_consumidor, nickname));
@@ -57,8 +57,12 @@ public class BackendApplication {
             return ResponseEntity.ok(compradorDAO.getCompradorByNombre(nickname));
         } else {
             // Manejar escenario sin parámetros
-            return null; // O lanzar una excepción, dependiendo de tu caso de uso
+            return ResponseEntity.badRequest().build(); // O lanzar una excepción, dependiendo de tu caso de uso
         }
+
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body("Error: " + e.getMessage());
+    }
     }
 
     public static void main(String[] args) {
