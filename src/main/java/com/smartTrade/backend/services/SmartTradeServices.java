@@ -10,6 +10,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.smartTrade.backend.models.*;
 import java.util.Random;
@@ -21,6 +22,7 @@ public class SmartTradeServices {
     
     @Autowired
     CompradorDAO compradorDAO;
+
 
     @GetMapping("/services/login/")
     public ResponseEntity<?> login(@RequestParam(value = "nickname", required = true) String nickname,
@@ -51,7 +53,20 @@ public class SmartTradeServices {
         }catch(Exception e){
             return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario."));
         }
+    }
 
+    @PutMapping("/services/change-password/")
+    public ResponseEntity<?> changePassword(@RequestParam(value = "nickname", required = true) String nickname,
+            @RequestParam(value = "oldPassword", required = true) String oldPassword,
+            @RequestParam(value = "newPassword", required = true) String newPassword) {
+
+        try {
+            Comprador comprador = compradorDAO.getCompradorByNicknameAndPassword(nickname, oldPassword);
+            compradorDAO.changeCompradorPassword(nickname, newPassword);
+            return ResponseEntity.ok(ResponseEntity.status(200).body("Contraseña actualizada correctamente."));
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Contraseña incorrecta."));
+        }
     }
 
 }

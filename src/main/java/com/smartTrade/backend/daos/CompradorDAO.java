@@ -88,6 +88,14 @@ public class CompradorDAO{
         }
     }
 
+    public void updateCompradorDireccion(int id, String direccion){
+        database.update("UPDATE consumidor SET direccion = ? WHERE id_consumidor = ?",direccion, id);
+    }
+
+    public void changeCompradorPassword(String nickname, String password){
+        database.update("UPDATE consumidor SET user_password = ? WHERE nickname = ?",password, nickname);
+    }
+
 
 
 }
