@@ -40,7 +40,7 @@ public class ProductorDAO{
         return database.query("SELECT * FROM producto ORDER BY precio DESC",new ProductMapper());
     }
 
-    public List<Producto> searchProductByNameOrderedASC(String descripcion){
+    public List<Producto> getProductByNameOrderedASC(String descripcion){
 
         List<Producto> res = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class ProductorDAO{
         return res;
 
     }
-    public List<Producto> searchProductByNameOrderedDESC(String descripcion){
+    public List<Producto> getProductByNameOrderedDESC(String descripcion){
 
         List<Producto> res = new ArrayList<>();
 
@@ -68,6 +68,13 @@ public class ProductorDAO{
         }
         return res;
 
+    }
+
+
+    public List<Producto> getProductsFromOneVendor(String vendorName){
+        /* AQUÍ VA PARA RECUPERAR LA ID DEL VENDEDOR*/
+        int id_vendedor=0;
+        database.query("SELECT id_vendedor,nickname,id_producto,precio,material FROM producto WHERE id_vendedor = ? ",new ProductMapper(),vendorName);
     }
 
     

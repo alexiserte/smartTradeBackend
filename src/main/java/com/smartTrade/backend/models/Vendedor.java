@@ -9,8 +9,10 @@ public class Vendedor {
         this.nombre_vendedor = nombre_vendedor;
     }
 
+    public Vendedor(){}
+
     public int getId_vendedor() {
-        return id_vendedor;
+        return this.id_vendedor;
     }
 
     public void setId_vendedor(int id_vendedor) {
@@ -18,7 +20,7 @@ public class Vendedor {
     }
 
     public String getNombre_vendedor() {
-        return nombre_vendedor;
+        return this.nombre_vendedor;
     }
 
     public void setNombre_vendedor(String nombre_vendedor) {
