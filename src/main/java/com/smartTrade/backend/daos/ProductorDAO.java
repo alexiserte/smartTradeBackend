@@ -1,16 +1,22 @@
 package com.smartTrade.backend.daos;
 import com.smartTrade.backend.mappers.ProductMapper;
 import com.smartTrade.backend.models.Producto;
+import com.smartTrade.backend.models.Vendedor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.ArrayList;
-import com.smartTrade.utils.StringComparison;
+import com.smartTrade.backend.utils.StringComparison;
 
 @Repository
 public class ProductorDAO{
     
     private JdbcTemplate database;
+
+    @Autowired
+    VendedorDAO VendedorDAO;
 
     public ProductorDAO(JdbcTemplate database) {
         this.database = database;
@@ -72,9 +78,9 @@ public class ProductorDAO{
 
 
     public List<Producto> getProductsFromOneVendor(String vendorName){
-        /* AQUÍ VA PARA RECUPERAR LA ID DEL VENDEDOR*/
-        int id_vendedor=0;
-        database.query("SELECT id_vendedor,nickname,id_producto,precio,material FROM producto WHERE id_vendedor = ? ",new ProductMapper(),vendorName);
+        Vendedor vendedor = VendedorDAO.getVendedorByNombre(vendorName);
+        int id_vendedor = vendedor.getId_vendedor();
+        return database.query("SELECT id_vendedor,nickname,id_producto,precio,material FROM producto WHERE id_vendedor = ? ",new ProductMapper(),id_vendedor);
     }
 
     
