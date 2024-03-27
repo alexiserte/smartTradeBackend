@@ -20,17 +20,16 @@ public class ProductoController {
     @Autowired
     ProductoDAO productoDAO;
 
-    @GetMapping("/producto/")
-    public ResponseEntity<?> searchProductByName(@RequestParam(value = "descripcion", required = false,) String descripcion,@RequestParam(value = "vendorName", required = false) String vendorName) {
-        
-        if(descripcion != null && vendorName != null){
-            return ResponseEntity.ok(productoDAO.searchProductByNameAndVendor(descripcion,vendorName));
-        }else if(descripcion != null){
+    @GetMapping("/producto")
+    public ResponseEntity<?> searchProductByName(@RequestParam(name = "descripcion", required = false) String descripcion,
+                                                  @RequestParam(name = "vendorName", required = false) String vendorName) {
+        if (descripcion != null) {
             return ResponseEntity.ok(productoDAO.searchProductByName(descripcion));
-        }else if(vendorName != null){
-            return ResponseEntity.ok(productoDAO.searchProductByVendor(vendorName));
-        }else{
+        } else if (vendorName != null) {
+            return ResponseEntity.ok(productoDAO.getProductsFromOneVendor(vendorName));
+        } else {
             return ResponseEntity.ok(productoDAO.getAllProducts());
         }
     }
+    
 }
