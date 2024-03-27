@@ -1,4 +1,4 @@
-package com.smartTrade.utils;
+package com.smartTrade.backend.utils;
 import java.util.Arrays;
 
 public class StringComparison {
