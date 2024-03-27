@@ -14,12 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 public class BasicController {
      @GetMapping("/")
     public String mensaje(HttpServletRequest request) {
-        // Obteniendo la dirección IP del cliente desde la solicitud
-        String clientIP = request.getRemoteAddr();
-        
-        // Puedes usar la dirección IP del cliente como desees, por ejemplo, imprimir en la consola
-        System.out.println("IP del cliente: " + clientIP);
-        
         // Retornando un mensaje simple como ejemplo
         return "¡Bienvenido a smartTrade!";
     }
