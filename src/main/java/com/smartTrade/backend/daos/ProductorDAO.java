@@ -66,7 +66,6 @@ public class ProductorDAO{
                 res.add(product);
             }
         }
-
         return res;
 
     }
