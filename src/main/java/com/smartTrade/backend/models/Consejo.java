@@ -1,6 +1,11 @@
 package com.smartTrade.backend.models;
 
-public class Consejo {
+public // The `Consejo` class is a Java class that represents a model for a piece of advice or
+// recommendation. It has two private fields `consejo_id` and `id_producto` along with their
+// getter and setter methods. The constructor initializes these fields with the provided values.
+// This class can be used to store and retrieve information related to advice or recommendations
+// in a backend system.
+class Consejo {
   private int consejo_id;
   private int id_producto;
   
