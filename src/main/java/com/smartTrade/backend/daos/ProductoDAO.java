@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import com.smartTrade.backend.utils.*;
 
 @Repository
-public class ProductorDAO{
+public class ProductoDAO{
     
     private JdbcTemplate database;
 
     @Autowired
     VendedorDAO VendedorDAO;
 
-    public ProductorDAO(JdbcTemplate database) {
+    public ProductoDAO(JdbcTemplate database) {
         this.database = database;
     }
   
@@ -81,6 +81,10 @@ public class ProductorDAO{
         Vendedor vendedor = VendedorDAO.getVendedorByNombre(vendorName);
         int id_vendedor = vendedor.getId_vendedor();
         return database.query("SELECT id_vendedor,nickname,id_producto,precio,material FROM producto WHERE id_vendedor = ? ",new ProductMapper(),id_vendedor);
+    }
+
+    public List<Producto> getAllProducts(){
+        return database.query("SELECT id_vendedor,nickname,id_producto,precio,material FROM producto",new ProductMapper());
     }
 
     
