@@ -14,6 +14,7 @@ public class CompradorDAO{
     public CompradorDAO(JdbcTemplate database) {
         this.database = database;
     }
+
   
     public Comprador getCompradorByID(int id){
         return database.queryForObject("SELECT * FROM consumidor WHERE id_consumidor = ?",new CompradorMapper(),id);
