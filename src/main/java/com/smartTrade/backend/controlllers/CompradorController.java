@@ -24,7 +24,6 @@ public class CompradorController {
     @GetMapping("/comprador/")
     public ResponseEntity<?> login(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password) {
-
         try {
             Comprador comprador = compradorDAO.getCompradorByNicknameAndPassword(nickname, password);
             return ResponseEntity.ok(comprador);

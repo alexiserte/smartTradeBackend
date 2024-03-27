@@ -100,6 +100,8 @@ public class CompradorDAO{
         database.update("DELETE FROM consumidor WHERE id_consumidor = ?",id);
     }
 
+    
+
 
 
 }
