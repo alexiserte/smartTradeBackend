@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.ArrayList;
+import com.smartTrade.utils.StringComparison;
 
 @Repository
 public class ProductorDAO{
@@ -15,8 +16,20 @@ public class ProductorDAO{
         this.database = database;
     }
   
-    public Producto getProductByName(int id){
-        return database.queryForObject("SELECT * FROM consumidor WHERE id_producto = ?",new ProductMapper(),id);
+    public List<Producto> searchProductByName(String descripcion){
+
+        List<Producto> res = new ArrayList<>();
+
+        List<Producto> busquedaInicial =  database.query("SELECT * FROM producto",new ProductMapper(),descripcion);
+
+        for(Producto product : busquedaInicial){
+            if(StringComparison.areSimilar(product.getDescripcion(), descripcion)){
+                res.add(product);
+            }
+        }
+
+        return res;
+
     }
 
     public List<Producto> getProductsOrderedAsc(){
