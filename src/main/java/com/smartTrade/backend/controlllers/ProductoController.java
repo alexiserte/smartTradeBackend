@@ -20,7 +20,7 @@ public class ProductoController {
     @Autowired
     ProductoDAO productoDAO;
 
-    @GetMapping("/producto")
+    @GetMapping("/producto/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "descripcion", required = false) String descripcion,
                                                   @RequestParam(name = "vendorName", required = false) String vendorName) {
         if (descripcion != null) {

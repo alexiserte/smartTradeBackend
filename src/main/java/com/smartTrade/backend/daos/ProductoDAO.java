@@ -80,11 +80,11 @@ public class ProductoDAO{
     public List<Producto> getProductsFromOneVendor(String vendorName){
         Vendedor vendedor = VendedorDAO.getVendedorByNombre(vendorName);
         int id_vendedor = vendedor.getId_vendedor();
-        return database.query("SELECT id_vendedor,nickname,id_producto,precio,material FROM producto WHERE id_vendedor = ? ",new ProductMapper(),id_vendedor);
+        return database.query("SELECT id_vendedor,descrpcion,id_producto,precio,material FROM producto WHERE id_vendedor = ? ",new ProductMapper(),id_vendedor);
     }
 
     public List<Producto> getAllProducts(){
-        return database.query("SELECT id_vendedor,nickname,id_producto,precio,material FROM producto",new ProductMapper());
+        return database.query("SELECT id_vendedor,descripcion,id_producto,precio,material FROM producto",new ProductMapper());
     }
 
     
