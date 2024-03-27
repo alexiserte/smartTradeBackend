@@ -16,7 +16,6 @@ public class BasicController {
     
     @GetMapping("/")
     public String mensaje(HttpServletRequest request) {
-        
         System.out.println(" -- Nueva conexión registrada -- Hora: " + LocalDateTime.now());
         return "¡Bienvenido a smartTrade!";
     }
