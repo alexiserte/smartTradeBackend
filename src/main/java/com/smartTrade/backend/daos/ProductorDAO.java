@@ -40,5 +40,38 @@ public class ProductorDAO{
         return database.query("SELECT * FROM producto ORDER BY precio DESC",new ProductMapper());
     }
 
+    public List<Producto> searchProductByNameOrderedASC(String descripcion){
+
+        List<Producto> res = new ArrayList<>();
+
+        List<Producto> busquedaInicial =  database.query("SELECT * FROM producto ORDER BY precio ASC",new ProductMapper(),descripcion);
+
+        for(Producto product : busquedaInicial){
+            if(StringComparison.areSimilar(product.getDescripcion(), descripcion)){
+                res.add(product);
+            }
+        }
+
+        return res;
+
+    }
+    public List<Producto> searchProductByNameOrderedDESC(String descripcion){
+
+        List<Producto> res = new ArrayList<>();
+
+        List<Producto> busquedaInicial =  database.query("SELECT * FROM producto ORDER BY precio DESC",new ProductMapper(),descripcion);
+
+        for(Producto product : busquedaInicial){
+            if(StringComparison.areSimilar(product.getDescripcion(), descripcion)){
+                res.add(product);
+            }
+        }
+
+        return res;
+
+    }
+
+    
+
 
 }
