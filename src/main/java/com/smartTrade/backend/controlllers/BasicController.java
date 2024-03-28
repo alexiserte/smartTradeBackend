@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.models.MiembroEquipo;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 
 @RestController
 public class BasicController {
-     @GetMapping("/")
+    
+    @GetMapping("/")
     public String mensaje(HttpServletRequest request) {
-        // Retornando un mensaje simple como ejemplo
+        System.out.println(" -- Nueva conexión registrada -- Hora: " + LocalDateTime.now());
         return "¡Bienvenido a smartTrade!";
     }
 

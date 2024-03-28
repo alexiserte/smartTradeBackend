@@ -18,7 +18,7 @@ public class Producto{
     public Producto() {}
 
     public int getId_producto() {
-        return id_producto;
+        return this.id_producto;
     }
 
     public void setId_producto(int id_producto) {
@@ -26,7 +26,7 @@ public class Producto{
     }
 
     public int getId_vendedor() {
-        return id_vendedor;
+        return this.id_vendedor;
     }
 
     public void setId_vendedor(int id_vendedor) {
@@ -34,7 +34,7 @@ public class Producto{
     }
 
     public double getPrecio() {
-        return precio;
+        return this.precio;
     }
 
     public void setPrecio(double precio) {
@@ -42,11 +42,11 @@ public class Producto{
     }
 
     public String getMaterial() {
-        return material;
+        return this.material;
     }
 
     public String getDescripcion() {
-        return descripcion;
+        return this.descripcion;
     }
 
     public void setMaterial(String material) {

@@ -19,7 +19,7 @@ public class Comprador {
     public Comprador() {}
 
     public int getId_comprador() {
-        return id_comprador;
+        return this.id_comprador;
     }
 
     public void setId_comprador(int id_comprador) {
@@ -27,7 +27,7 @@ public class Comprador {
     }
 
     public String getNickname() {
-        return nickname;
+        return this.nickname;
     }
 
     public void setNickname(String nickname) {
@@ -35,7 +35,7 @@ public class Comprador {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -43,7 +43,7 @@ public class Comprador {
     }
 
     public String getDireccion() {
-        return direccion;
+        return this.direccion;
     }
 
     public void setDireccion(String direccion) {
@@ -51,7 +51,7 @@ public class Comprador {
     }
 
     public int getPuntos_responsabilidad() {
-        return puntos_responsabilidad;
+        return this.puntos_responsabilidad;
     }
 
     public void setPuntos_responsabilidad(int puntos_responsabilidad) {
