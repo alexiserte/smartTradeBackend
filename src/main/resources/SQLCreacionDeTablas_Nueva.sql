@@ -1,6 +1,5 @@
 BEGIN TRY
     BEGIN TRAN;
-
     ---------SCRIPT--------------------------
 	CREATE TABLE [dbo].[Comprador](
 	[id] [int] IDENTITY(1,1) NOT NULL,
