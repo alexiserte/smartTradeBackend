@@ -40,3 +40,4 @@ $ cd smartTradeBackend
 $ nohup mvn spring-boot:run
 ```
 • Actualizar todos los archivos de modelos en base a cambios en la base de datos (SI HACE FALTA crear nuevos)
+• Crear las subcategorias de producto y todo lo relacionado en la base de datos
