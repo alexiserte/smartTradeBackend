@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">Parte de backend para el proyecto de aplicación de smartTradeUPV<a href="http://electron.atom.io" target="_blank">Electron</a>.</h4>
+<h4 align="center">Parte de backend para el proyecto de aplicación de smartTradeUPV.</h4>
 
 <p align="center">
   <a href="#descargar-el-repositorio">Descargar el repositorio</a> •
