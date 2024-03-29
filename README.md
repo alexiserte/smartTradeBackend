@@ -2,7 +2,7 @@
   <br>
   <img src="https://pbs.twimg.com/media/FQy68dqXwAkRjmK.jpg:large" alt="smartTrade" width="200">
   <br>
-  smartTrade by FiveGuysUPV
+  smartTrade by FiveGuysUPV 🇪🇸 5️⃣👨‍👦‍👦
   <br>
 </h1>
 
@@ -15,20 +15,15 @@
 
 ## Descargar el repositorio
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
-
 ```bash
 # Clone this repository
-$ git clone https://github.com/amitmerchant1990/electron-markdownify
+$ git clone [https://github.com/amitmerchant1990/electron-markdownify](https://github.com/alexiserte/smartTradeBackend.git)
 
 # Go into the repository
-$ cd electron-markdownify
+$ cd smartTradeBackend
 
-# Install dependencies
-$ npm install
-
-# Run the app
-$ npm start
+# Run the project
+mvn spring-boot:run
 ```
 
 ## Cosas a cambiar o a implementar
