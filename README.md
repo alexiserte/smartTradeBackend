@@ -23,7 +23,7 @@ $ git clone [https://github.com/amitmerchant1990/electron-markdownify](https://g
 $ cd smartTradeBackend
 
 # Run the project
-mvn spring-boot:run
+$ mvn spring-boot:run
 ```
 
 ## Cosas a cambiar o a implementar
