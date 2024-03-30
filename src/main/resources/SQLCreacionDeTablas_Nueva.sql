@@ -77,51 +77,66 @@ VALUES('Livetube');
 INSERT INTO [dbo].[Vendedor]([nickname])
 VALUES('Gabvine');
 
+CREATE TABLE [dbo].[Categoria]([id] [int] IDENTITY(1,1) NOT NULL,[nombre] [nvarchar](50) NOT NULL,[categoria_principal] [nvarchar](50) NULL,
+CONSTRAINT [PK_Categoria] PRIMARY KEY CLUSTERED ([id] ASC)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) 
+ON [PRIMARY]) ON [PRIMARY]
 
-CREATE TABLE [dbo].[Producto](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[nombre] [nvarchar](50) NOT NULL,
-	[id_vendedor] [int] NOT NULL,
-	[precio] [int] NOT NULL,
-	[material] [nvarchar](50) NOT NULL,
-	[descripcion] [nvarchar](255) NOT NULL,
-      CONSTRAINT [PK_Producto] PRIMARY KEY CLUSTERED ([id] ASC)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
-      ALTER TABLE [dbo].[Producto]  WITH CHECK ADD  CONSTRAINT [FK_Producto_Vendedor] FOREIGN KEY([id_vendedor])
-      REFERENCES [dbo].[Vendedor] ([id])
-      ALTER TABLE [dbo].[Producto] CHECK CONSTRAINT [FK_Producto_Vendedor]
-      ALTER TABLE [dbo].[Producto]  WITH CHECK ADD  CONSTRAINT [CK_Producto] CHECK  (([precio]>=(0)))
-      ALTER TABLE [dbo].[Producto] CHECK CONSTRAINT [CK_Producto]
+INSERT INTO [dbo].[Categoria]([nombre],[categoria_principal])VALUES('Alimentación',NULL);
+INSERT INTO [dbo].[Categoria]([nombre],[categoria_principal])VALUES('Moda',NULL);
+INSERT INTO [dbo].[Categoria]([nombre],[categoria_principal])VALUES('Electrónica',NULL);
+INSERT INTO [dbo].[Categoria]([nombre],[categoria_principal])VALUES('Higiene',NULL);
 
+CREATE TABLE [dbo].[Caracteristica]([id] [int] IDENTITY(1,1) NOT NULL,[nombre] [nvarchar](50) NOT NULL,[id_categoria] [int] NOT NULL,[valor] [nvarchar](50) NOT NULL,
+CONSTRAINT [PK_Caracteristica] PRIMARY KEY CLUSTERED ([id] ASC)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Bolso',3,40,'Glass','Bolso de mano');
+ALTER TABLE [dbo].[Caracteristica]  WITH CHECK ADD  CONSTRAINT [FK_Caracteristica_Caracteristica] FOREIGN KEY([id])REFERENCES [dbo].[Caracteristica] ([id])
+ALTER TABLE [dbo].[Caracteristica] CHECK CONSTRAINT [FK_Caracteristica_Caracteristica]
+ALTER TABLE [dbo].[Caracteristica]  WITH CHECK ADD  CONSTRAINT [FK_Caracteristica_Categoria] FOREIGN KEY([id_categoria])REFERENCES [dbo].[Categoria] ([id])
+ALTER TABLE [dbo].[Caracteristica] CHECK CONSTRAINT [FK_Caracteristica_Categoria]
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Reloj',5,77.67,'Brass','Reloj de pulsera');
+INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor])VALUES ('Peso: ',1,'3kg');
+INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor])VALUES ('Talla: ',2,'M');
+INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor])VALUES ('Memoria: ',3,'16GB');
+INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor])VALUES ('Color: ',4,'Azul');
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Camisa',7,16.44,'Wood','Camisa de algodón');
+CREATE TABLE [dbo].[Producto]([id] [int] IDENTITY(1,1) NOT NULL,[nombre] [nvarchar](50) NOT NULL,[id_vendedor] [int] NOT NULL,[precio] [int] NOT NULL,
+[material] [nvarchar](50) NOT NULL,[descripcion] [nvarchar](255) NOT NULL,[id_categoria] [int] NOT NULL,CONSTRAINT [PK_Producto] PRIMARY KEY CLUSTERED ([id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Bolso',9,40.90,'Brass','Bolso de mano');
+ALTER TABLE [dbo].[Producto]  WITH CHECK ADD  CONSTRAINT [FK_Producto_Categoria] FOREIGN KEY([id_categoria])REFERENCES [dbo].[Categoria] ([id])
+ALTER TABLE [dbo].[Producto] CHECK CONSTRAINT [FK_Producto_Categoria]
+ALTER TABLE [dbo].[Producto]  WITH CHECK ADD  CONSTRAINT [CK_Producto] CHECK  (([precio]>=(0)))
+ALTER TABLE [dbo].[Producto] CHECK CONSTRAINT [CK_Producto]
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Bolso',1,90,'Glass','Bolso de mano');
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Bolso',3,40,'Glass','Bolso de mano',2);
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Camisa',8,250.8,'Rubber','Camisa de algodón');
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Reloj',5,77.67,'Brass','Reloj de pulsera',2);
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Bolso',10,90.9,'Glass','Bolso de mano');
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Camisa',7,16.44,'Wood','Camisa de algodón',2);
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Pantalones',6,78.8,'Plastic','Pantalones Vaqueros');
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Bolso',9,40.90,'Brass','Bolso de mano',2);
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Pantalones',5,409,'Glass','Pantalones Vaqueros');
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Bolso',1,90,'Glass','Bolso de mano',2);
 
-INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion])
-VALUES('Pantalones ',2,25.7,'Vinyl','Pantalones Vaqueros');
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Camisa',8,250.8,'Rubber','Camisa de algodón',2);
+
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Bolso',10,90.9,'Glass','Bolso de mano',2);
+
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Pantalones',6,78.8,'Plastic','Pantalones Vaqueros',2);
+
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Pantalones',5,409,'Glass','Pantalones Vaqueros',2);
+
+INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
+VALUES('Pantalones ',2,25.7,'Vinyl','Pantalones Vaqueros',2);
 
 
 CREATE TABLE [dbo].[Carrito_Compra](
@@ -254,83 +269,44 @@ VALUES(10);
 
 
 
-CREATE TABLE [dbo].[Articulo](
-	[id] [int] IDENTITY(1,1) NOT NULL,[nombre] [nvarchar](50) NOT NULL,[precio] [decimal](10, 2) NOT NULL,CONSTRAINT [PK_Articulo] PRIMARY KEY CLUSTERED ([id] ASC)WITH
-       (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
-      ALTER TABLE [dbo].[Articulo]  WITH CHECK ADD  CONSTRAINT [CK_Articulo] CHECK  (([precio]>=(0)))
-      ALTER TABLE [dbo].[Articulo] CHECK CONSTRAINT [CK_Articulo]
+CREATE TABLE [dbo].[Detalle_Pedido]([id] [int] IDENTITY(1,1) NOT NULL,[id_pedido] [int] NOT NULL,[cantidad] [int] NOT NULL,[id_producto] [int] NOT NULL,
+CONSTRAINT [PK_Detalle_Pedido] PRIMARY KEY CLUSTERED ([id] ASC)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
+
+ALTER TABLE [dbo].[Detalle_Pedido]  WITH CHECK ADD  CONSTRAINT [FK_Detalle_Pedido_Pedido] FOREIGN KEY([id_producto])REFERENCES [dbo].[Producto] ([id])
+ALTER TABLE [dbo].[Detalle_Pedido] CHECK CONSTRAINT [FK_Detalle_Pedido_Pedido]
+ALTER TABLE [dbo].[Detalle_Pedido]  WITH CHECK ADD  CONSTRAINT [CK_Detalle_Pedido] CHECK  (([cantidad]>=(1)))
+ALTER TABLE [dbo].[Detalle_Pedido] CHECK CONSTRAINT [CK_Detalle_Pedido]
 
 
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Gorro de lana', 34.5);
 
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Manzanas rojas', 4.5);
-
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Botella de agua', 2.5);
-
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Vestido de princesa', 60);
-
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Estuche', 17.75);
-
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Ordenador', 934.5);
-
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Perfume', 84);
-
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Pintauñas', 5);
-
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Ratón', 25);
-
-INSERT INTO [dbo].[Articulo]([nombre],[precio])
-VALUES('Rosquillas integrales', 3.75);
-
-
-CREATE TABLE [dbo].[Detalle_Pedido](
-	[id] [int] IDENTITY(1,1) NOT NULL,[id_pedido] [int] NOT NULL,[id_articulo] [int] NOT NULL,[cantidad] [int] NOT NULL,CONSTRAINT [PK_Detalle_Pedido] PRIMARY KEY CLUSTERED ([id] ASC)WITH
-      (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
-      ALTER TABLE [dbo].[Detalle_Pedido]  WITH CHECK ADD  CONSTRAINT [FK_Detalle_Pedido_Articulo] FOREIGN KEY([id_articulo])REFERENCES [dbo].[Articulo] ([id])
-      ALTER TABLE [dbo].[Detalle_Pedido] CHECK CONSTRAINT [FK_Detalle_Pedido_Articulo]
-      ALTER TABLE [dbo].[Detalle_Pedido]  WITH CHECK ADD  CONSTRAINT [FK_Detalle_Pedido_Pedido] FOREIGN KEY([id_pedido])REFERENCES [dbo].[Pedido] ([id])
-      ALTER TABLE [dbo].[Detalle_Pedido] CHECK CONSTRAINT [FK_Detalle_Pedido_Pedido]
-      ALTER TABLE [dbo].[Detalle_Pedido]  WITH CHECK ADD  CONSTRAINT [CK_Detalle_Pedido] CHECK  (([cantidad]>=(1)))
-      ALTER TABLE [dbo].[Detalle_Pedido] CHECK CONSTRAINT [CK_Detalle_Pedido]
-
-
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(1,10,2);
 
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(2,9,1);
 
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(3,8,10);
 
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(4,7,4);
 
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(5,6,5);
 
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(6,5,1);
 
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(7,4,2);
 
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(8,3,3);
 
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(9,2,2);
 
-INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[id_articulo],[cantidad])
+INSERT INTO [dbo].[Detalle_Pedido]([id_pedido],[cantidad],[id_producto])
 VALUES(10,1,4);
 
 
