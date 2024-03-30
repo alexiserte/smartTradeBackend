@@ -22,7 +22,8 @@ public class ProductoController {
 
     @GetMapping("/producto/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "descripcion", required = false) String descripcion,
-                                                  @RequestParam(name = "vendorName", required = false) String vendorName) {
+                                                  @RequestParam(name = "vendorName", required = false) String vendorName) 
+    {
         if (descripcion != null) {
             return ResponseEntity.ok(productoDAO.searchProductByName(descripcion));
         } else if (vendorName != null) {
@@ -31,5 +32,19 @@ public class ProductoController {
             return ResponseEntity.ok(productoDAO.getAllProducts());
         }
     }
+
+    @PostMapping
+    public ResponseEntity<?> insertarProducto(@RequestParam(name = "nombre", required = true) String nombre,
+                                                @RequestParam(name = "id_vendedor", required = true) int idVendedor,
+                                                @RequestParam(name = "precio", required = true) double precio)
+    {
+        try{
+
+            return ResponseEntity.ok(productoDAO.insertProduct(nombre,idVendedor,precio))
+        }catch( Exception e){
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al insertar un nuevo producto."));
+        }
+    }
     
 }
+

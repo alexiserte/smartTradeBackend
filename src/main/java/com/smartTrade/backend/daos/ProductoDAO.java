@@ -87,6 +87,10 @@ public class ProductoDAO{
         return database.query("SELECT id_vendedor,descripcion,id_producto,precio,material FROM producto",new ProductMapper());
     }
 
+
+    public void insertProduct(String nombre, int id_vendedor, double precio){
+        database.update("INSERT INTO consumidor (nombre, id_vendedor, precio,precio) VALUES (?,?,?)",nombre,id_vendedor,precio);
+    }
     
 
 
