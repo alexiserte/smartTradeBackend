@@ -58,5 +58,22 @@ public class CompradorController {
     }
 
     @PutMapping("/comprador/")
-    public ResponseEntity updateComprador
+    public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
+                                            @RequestParam(value = "password", required = false) String password,
+                                            @RequestParam(value = "direccion", required = false) String dirección,
+                                            @RequestParam(value = "puntos_responsabilidad", required = false) int puntosResponsabilidad)
+    {
+        try{
+            return null;
+            /*
+             * 
+             * AQUÍ HAY CREAR UN BLOQUE DE IF EN EL QUE VAYA LLAMANDO A LOS MÉTODOS DE ACTUALIZACIÓN DE LA BASE DE DATOS
+             * Si hay más de un parámetro a actualizar, no hay que crear solo un méotodo que actualice todo, sino que hay que llamar a los métodos de actualización de la base de datos por
+             * separado
+             * 
+            */
+        }catch(Exception e){
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al actualizar el usuario."));
+        } 
+    }
 }
