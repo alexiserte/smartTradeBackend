@@ -50,8 +50,8 @@ public class CompradorDAO{
         }
     }
 
-    public void updateCompradorDireccion(int id, String direccion){
-        database.update("UPDATE consumidor SET direccion = ? WHERE id_consumidor = ?",direccion, id);
+    public void updateCompradorDireccion(String nickname, String direccion){
+        database.update("UPDATE consumidor SET direccion = ? WHERE nickname = ? ",direccion, nickname);
     }
 
     public void changeCompradorPassword(String nickname, String password){
