@@ -86,23 +86,10 @@ INSERT INTO [dbo].[Categoria]([nombre],[categoria_principal])VALUES('Moda',NULL)
 INSERT INTO [dbo].[Categoria]([nombre],[categoria_principal])VALUES('Electrónica',NULL);
 INSERT INTO [dbo].[Categoria]([nombre],[categoria_principal])VALUES('Higiene',NULL);
 
-CREATE TABLE [dbo].[Caracteristica]([id] [int] IDENTITY(1,1) NOT NULL,[nombre] [nvarchar](50) NOT NULL,[id_categoria] [int] NOT NULL,
-[valor] [nvarchar](50) NOT NULL,[id_producto] [int] NOT NULL,CONSTRAINT [PK_Caracteristica] PRIMARY KEY CLUSTERED ([id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
-ALTER TABLE [dbo].[Caracteristica]  WITH CHECK ADD  CONSTRAINT [FK_Caracteristica_Caracteristica] FOREIGN KEY([id_producto])REFERENCES [dbo].[Producto] ([id])
-ALTER TABLE [dbo].[Caracteristica] CHECK CONSTRAINT [FK_Caracteristica_Caracteristica]
-ALTER TABLE [dbo].[Caracteristica]  WITH CHECK ADD  CONSTRAINT [FK_Caracteristica_Categoria] FOREIGN KEY([id_categoria])REFERENCES [dbo].[Categoria] ([id])
-ALTER TABLE [dbo].[Caracteristica] CHECK CONSTRAINT [FK_Caracteristica_Categoria]
 
-INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor],[id_producto])VALUES ('Peso: ',1,'3kg',3);
-INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor],[id_producto])VALUES ('Talla: ',2,'M',4);
-INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor],[id_producto])VALUES ('Memoria: ',3,'16GB',2);
-INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor],[id_producto])VALUES ('Color: ',4,'Azul',7);
-
-CREATE TABLE [dbo].[Producto]([id] [int] IDENTITY(1,1) NOT NULL,[nombre] [nvarchar](50) NOT NULL,[id_vendedor] [int] NOT NULL,[precio] [int] NOT NULL,
-[material] [nvarchar](50) NOT NULL,[descripcion] [nvarchar](255) NOT NULL,[id_categoria] [int] NOT NULL,CONSTRAINT [PK_Producto] PRIMARY KEY CLUSTERED ([id] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
-
+CREATE TABLE [dbo].[Producto]([id] [int] IDENTITY(1,1) NOT NULL,[nombre] [nvarchar](50) NOT NULL,[id_vendedor] [int] NOT NULL,
+[precio] [int] NOT NULL,[material] [nvarchar](50) NOT NULL,[descripcion] [nvarchar](255) NOT NULL,[id_categoria] [int] NULL,
+CONSTRAINT [PK_Producto] PRIMARY KEY CLUSTERED ([id] ASC)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
 ALTER TABLE [dbo].[Producto]  WITH CHECK ADD  CONSTRAINT [FK_Producto_Categoria] FOREIGN KEY([id_categoria])REFERENCES [dbo].[Categoria] ([id])
 ALTER TABLE [dbo].[Producto] CHECK CONSTRAINT [FK_Producto_Categoria]
 ALTER TABLE [dbo].[Producto]  WITH CHECK ADD  CONSTRAINT [CK_Producto] CHECK  (([precio]>=(0)))
@@ -138,6 +125,18 @@ VALUES('Pantalones',5,409,'Glass','Pantalones Vaqueros',2);
 INSERT INTO [dbo].[Producto]([nombre],[id_vendedor],[precio],[material],[descripcion],[id_categoria])
 VALUES('Pantalones ',2,25.7,'Vinyl','Pantalones Vaqueros',2);
 
+CREATE TABLE [dbo].[Caracteristica]([id] [int] IDENTITY(1,1) NOT NULL,[nombre] [nvarchar](50) NOT NULL,[id_categoria] [int] NOT NULL,
+[valor] [nvarchar](50) NOT NULL,[id_producto] [int] NOT NULL,CONSTRAINT [PK_Caracteristica] PRIMARY KEY CLUSTERED ([id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
+ALTER TABLE [dbo].[Caracteristica]  WITH CHECK ADD  CONSTRAINT [FK_Caracteristica_Caracteristica] FOREIGN KEY([id_producto])REFERENCES [dbo].[Producto] ([id])
+ALTER TABLE [dbo].[Caracteristica] CHECK CONSTRAINT [FK_Caracteristica_Caracteristica]
+ALTER TABLE [dbo].[Caracteristica]  WITH CHECK ADD  CONSTRAINT [FK_Caracteristica_Categoria] FOREIGN KEY([id_categoria])REFERENCES [dbo].[Categoria] ([id])
+ALTER TABLE [dbo].[Caracteristica] CHECK CONSTRAINT [FK_Caracteristica_Categoria]
+
+INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor],[id_producto])VALUES ('Peso: ',1,'3kg',3);
+INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor],[id_producto])VALUES ('Talla: ',2,'M',4);
+INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor],[id_producto])VALUES ('Memoria: ',3,'16GB',2);
+INSERT INTO [dbo].[Caracteristica]([nombre],[id_categoria],[valor],[id_producto])VALUES ('Color: ',4,'Azul',7);
 
 CREATE TABLE [dbo].[Carrito_Compra](
 	[id] [int] IDENTITY(1,1) NOT NULL,
