@@ -33,8 +33,8 @@ public class CompradorDAO{
         return database.queryForObject("SELECT nickname,user_password,direccion,puntos_responsabilidad FROM comprador WHERE nickname = ? AND user_password = ?",new CompradorMapper(),nickname, password);
     }
 
-    public void insertCompradorOnlyNicknameAndPassword(String nickname, String password){
-        database.update("INSERT INTO comprador (nickname, user_password,puntos_responsabilidad) VALUES (?,?,0)",nickname, password);
+    public void insertComprador(String nickname, String password,String correo){
+        database.update("INSERT INTO comprador (nickname, user_password,puntos_responsabilidad) VALUES (?,?,0,?)",nickname, password,correo);
     }
    
     public List<Comprador> getAllCompradores(){
