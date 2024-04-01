@@ -15,7 +15,7 @@ public class AdministradorDAO{
 
 
     public List<String> getAllDatabases() {
-        String sql = "USE Five_Guys_DB" + "; " +
+        String sql = "USE Five_Guys_DB_Version2" + "; " +
                      "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
         return database.query(sql, new DatabaseMapper());
     }
