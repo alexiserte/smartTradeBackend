@@ -15,7 +15,7 @@ public class AdministradorDAO{
 
 
     public List<String> getAllDatabases(){
-        return database.query("SHOW DATABASES",new DatabaseMapper());
+        return database.query("SELECT name FROM sys.databases",new DatabaseMapper());
     }
 
 }
