@@ -17,33 +17,33 @@ public class CompradorDAO{
 
 
     public Comprador getCompradorByNombre(String nombre){
-        return database.queryForObject("SELECT id_consumidor,nickname,user_password,direccion,puntos_responsabilidad FROM consumidor WHERE nickname = ?",new CompradorMapper(),nombre);
+        return database.queryForObject("SELECT nickname,user_password,direccion,puntos_responsabilidad FROM comprador WHERE nickname = ?",new CompradorMapper(),nombre);
     }
 
     public List<Comprador> getCompradorByDireccion(String direccion){
-        return database.query("SELECT id_consumidor,nickname,user_password,direccion,puntos_responsabilidad FROM consumidor WHERE direccion = ?",new CompradorMapper(),direccion);
+        return database.query("SELECT nickname,user_password,direccion,puntos_responsabilidad FROM comprador WHERE direccion = ?",new CompradorMapper(),direccion);
     }
 
 
     public Comprador getUserPassword(String id){
-        return database.queryForObject("SELECT user_password FROM consumidor WHERE id_consumidor = ?",new CompradorMapper(),id);
+        return database.queryForObject("SELECT user_password FROM comprador WHERE id_comprador = ?",new CompradorMapper(),id);
     }
 
     public Comprador getCompradorByNicknameAndPassword(String nickname, String password){
-        return database.queryForObject("SELECT id_consumidor,nickname,user_password,direccion,puntos_responsabilidad FROM consumidor WHERE nickname = ? AND user_password = ?",new CompradorMapper(),nickname, password);
+        return database.queryForObject("SELECT nickname,user_password,direccion,puntos_responsabilidad FROM comprador WHERE nickname = ? AND user_password = ?",new CompradorMapper(),nickname, password);
     }
 
     public void insertCompradorOnlyNicknameAndPassword(String nickname, String password){
-        database.update("INSERT INTO consumidor (nickname, user_password) VALUES (?,?)",nickname, password);
+        database.update("INSERT INTO comprador (nickname, user_password) VALUES (?,?)",nickname, password);
     }
    
     public List<Comprador> getAllCompradores(){
-        return database.query("SELECT id_consumidor,nickname,user_password,direccion,puntos_responsabilidad FROM consumidor",new CompradorMapper());
+        return database.query("SELECT nickname,user_password,direccion,puntos_responsabilidad FROM comprador",new CompradorMapper());
     }
 
     public boolean existsComprador(String nickname){
         try{
-            database.queryForObject("SELECT id_consumidor,nickname,user_password,direccion,puntos_responsabilidad FROM consumidor WHERE nickname = ?",new CompradorMapper(),nickname);
+            database.queryForObject("SELECT nickname,user_password,direccion,puntos_responsabilidad FROM comprador WHERE nickname = ?",new CompradorMapper(),nickname);
             return true;
         }catch(Exception e){
             return false;
@@ -51,15 +51,15 @@ public class CompradorDAO{
     }
 
     public void updateCompradorDireccion(String nickname, String direccion){
-        database.update("UPDATE consumidor SET direccion = ? WHERE nickname = ? ",direccion, nickname);
+        database.update("UPDATE comprador SET direccion = ? WHERE nickname = ? ",direccion, nickname);
     }
 
     public void changeCompradorPassword(String nickname, String password){
-        database.update("UPDATE consumidor SET user_password = ? WHERE nickname = ?",password, nickname);
+        database.update("UPDATE comprador SET user_password = ? WHERE nickname = ?",password, nickname);
     }
 
     public void deleteComprador(int id){
-        database.update("DELETE FROM consumidor WHERE id_consumidor = ?",id);
+        database.update("DELETE FROM comprador WHERE id_comprador = ?",id);
     }
 
     
