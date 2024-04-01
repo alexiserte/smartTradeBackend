@@ -34,7 +34,7 @@ public class CompradorDAO{
     }
 
     public void insertCompradorOnlyNicknameAndPassword(String nickname, String password){
-        database.update("INSERT INTO comprador (nickname, user_password) VALUES (?,?)",nickname, password);
+        database.update("INSERT INTO comprador (nickname, user_password,puntos_responsabilidad) VALUES (?,?,0)",nickname, password);
     }
    
     public List<Comprador> getAllCompradores(){
