@@ -39,8 +39,8 @@ public class ProductoController {
                                                 @RequestParam(name = "precio", required = true) double precio)
     {
         try{
-
-            return ResponseEntity.ok(productoDAO.insertProduct(nombre,idVendedor,precio))
+            productoDAO.insertProduct(nombre,idVendedor,precio);
+            return ResponseEntity.ok(ResponseEntity.status(201).body("Producto añadido correctamente"));
         }catch( Exception e){
             return ResponseEntity.ok(ResponseEntity.status(400).body("Error al insertar un nuevo producto."));
         }

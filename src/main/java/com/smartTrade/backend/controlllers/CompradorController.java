@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
@@ -54,5 +55,25 @@ public class CompradorController {
         //// EL METODO BORRAR COMPRADOR HAY QUE BORRAR TODO LO QUE REFERENCIA A ESA ID DE COMPRADOR
             compradorDAO.deleteComprador(id);
             return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario eliminado correctamente."));
+    }
+
+    @PutMapping("/comprador/")
+    public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
+                                            @RequestParam(value = "password", required = false) String password,
+                                            @RequestParam(value = "direccion", required = false) String dirección,
+                                            @RequestParam(value = "puntos_responsabilidad", required = false) int puntosResponsabilidad)
+    {
+        try{
+            return null;
+            /*
+             * 
+             * AQUÍ HAY CREAR UN BLOQUE DE IF EN EL QUE VAYA LLAMANDO A LOS MÉTODOS DE ACTUALIZACIÓN DE LA BASE DE DATOS
+             * Si hay más de un parámetro a actualizar, no hay que crear solo un méotodo que actualice todo, sino que hay que llamar a los métodos de actualización de la base de datos por
+             * separado
+             * 
+            */
+        }catch(Exception e){
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al actualizar el usuario."));
+        } 
     }
 }
