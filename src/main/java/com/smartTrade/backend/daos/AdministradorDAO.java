@@ -14,8 +14,10 @@ public class AdministradorDAO{
     }
 
 
-    public List<String> getAllDatabases(){
-        return database.query("SELECT name FROM sys.databases",new DatabaseMapper());
+    public List<String> getAllDatabases() {
+        String sql = "USE Five_Guys_DB" + "; " +
+                     "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
+        return database.query(sql, new DatabaseMapper());
     }
 
 }
