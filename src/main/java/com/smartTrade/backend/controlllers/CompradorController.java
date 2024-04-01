@@ -45,7 +45,7 @@ public class CompradorController {
             compradorDAO.insertCompradorOnlyNicknameAndPassword(nickname, password);
             return ResponseEntity.ok(ResponseEntity.status(201).body("Usuario registrado correctamente."));
         }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario."));
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario." + e.getMessage()));
         }
     }
 
