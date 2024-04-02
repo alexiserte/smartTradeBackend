@@ -6,10 +6,12 @@ public class Comprador {
     private String password;
     private String direccion;
     private int puntos_responsabilidad;
+    private String correo;
 
-    public Comprador(String nickname, String password, String direccion, int puntos_responsabilidad) {
+    public Comprador(String nickname, String password, String direccion, int puntos_responsabilidad, String correo) {
         this.nickname = nickname;
         this.password = password;
+        this.correo = correo;
         this.direccion = direccion;
         this.puntos_responsabilidad = puntos_responsabilidad;
     }
@@ -46,6 +48,14 @@ public class Comprador {
 
     public void setPuntos_responsabilidad(int puntos_responsabilidad) {
         this.puntos_responsabilidad = puntos_responsabilidad;
+    }
+
+    public String getCorreo() {
+        return this.correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
 
