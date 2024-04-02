@@ -35,7 +35,10 @@ public class CompradorController {
             } catch (EmptyResultDataAccessException e2) {
                 return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));
            }
+        }catch(Exception e){
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al iniciar sesión. MOTIVO: " + e.getMessage()));
         }
+        
     }
 
     @PostMapping("/comprador/")
