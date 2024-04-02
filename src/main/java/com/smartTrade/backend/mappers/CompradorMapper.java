@@ -16,6 +16,7 @@ public class CompradorMapper implements RowMapper<Comprador> {
         comprador.setDireccion(rs.getString("direccion"));
         comprador.setCorreo(rs.getString("correo"));
         comprador.setPuntos_responsabilidad(rs.getInt("puntos_responsabilidad"));
+        comprador.setFecha_registro(rs.getDate("fecha_registro"));
         return comprador;
     }
 }

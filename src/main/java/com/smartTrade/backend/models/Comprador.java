@@ -1,5 +1,6 @@
 package com.smartTrade.backend.models;
 
+import java.sql.Date;
 public class Comprador {
    
     private String nickname;
@@ -7,13 +8,15 @@ public class Comprador {
     private String direccion;
     private int puntos_responsabilidad;
     private String correo;
+    private Date fecha_registro;
 
-    public Comprador(String nickname, String password, String direccion, int puntos_responsabilidad, String correo) {
+    public Comprador(String nickname, String password, String direccion, int puntos_responsabilidad, String correo, Date fecha_registro) {
         this.nickname = nickname;
         this.password = password;
         this.correo = correo;
         this.direccion = direccion;
         this.puntos_responsabilidad = puntos_responsabilidad;
+        this.fecha_registro = fecha_registro;
     }
 
     public Comprador() {}
@@ -56,6 +59,14 @@ public class Comprador {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public Date getFecha_registro() {
+        return this.fecha_registro;
+    }
+
+    public void setFecha_registro(Date fecha_registro) {
+        this.fecha_registro = fecha_registro;
     }
 
 
