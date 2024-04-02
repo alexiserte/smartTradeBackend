@@ -3,6 +3,8 @@ package com.smartTrade.backend.utils;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.io.PrintWriter;
+import java.io.File;
 
 public class MP3Coder {
 
@@ -23,11 +25,13 @@ public class MP3Coder {
         String archivoMP3 = "2024-03-29 02-48-58.mp3";
         String textoCodificado = null;
 
-        try {
+        try(PrintWriter pw = new PrintWriter(new File("ejemplo_codificado.txt"))){
             // Codificar el archivo MP3 a texto
             textoCodificado = codificarMP3aTexto(archivoMP3);
             System.out.println("Contenido codificado en texto:");
             System.out.println(textoCodificado);
+            pw.println(textoCodificado);
+            pw.flush();
 
             // Decodificar el texto y guardar como archivo MP3
             String nombreArchivoRecuperado = "ejemplo_recuperado.mp3";
