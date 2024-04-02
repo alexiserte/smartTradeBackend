@@ -2,14 +2,12 @@ package com.smartTrade.backend.models;
 
 public class Comprador {
    
-    private int id_comprador;
     private String nickname;
     private String password;
     private String direccion;
     private int puntos_responsabilidad;
 
-    public Comprador(int id_comprador, String nickname, String password, String direccion, int puntos_responsabilidad) {
-        this.id_comprador = id_comprador;
+    public Comprador(String nickname, String password, String direccion, int puntos_responsabilidad) {
         this.nickname = nickname;
         this.password = password;
         this.direccion = direccion;
@@ -17,14 +15,6 @@ public class Comprador {
     }
 
     public Comprador() {}
-
-    public int getId_comprador() {
-        return this.id_comprador;
-    }
-
-    public void setId_comprador(int id_comprador) {
-        this.id_comprador = id_comprador;
-    }
 
     public String getNickname() {
         return this.nickname;
