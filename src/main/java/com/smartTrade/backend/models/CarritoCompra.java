@@ -3,7 +3,7 @@ package com.smartTrade.backend.models;
 public class CarritoCompra {
     private int id_carrito;
     private int id_comprador;
-
+    
     public CarritoCompra(int id_carrito, int id_comprador) {
         this.id_carrito = id_carrito;
         this.id_comprador = id_comprador;

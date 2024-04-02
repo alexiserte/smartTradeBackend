@@ -35,17 +35,21 @@ public class CompradorController {
             } catch (EmptyResultDataAccessException e2) {
                 return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));
            }
+        }catch(Exception e){
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al iniciar sesión. MOTIVO: " + e.getMessage()));
         }
+        
     }
 
     @PostMapping("/comprador/")
     public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
-            @RequestParam(value = "password", required = true) String password) {
+            @RequestParam(value = "password", required = true) String password,
+            @RequestParam(value = "mail", required = true) String correo) {
         try{
-            compradorDAO.insertCompradorOnlyNicknameAndPassword(nickname, password);
+            compradorDAO.insertComprador(nickname, password,correo);
             return ResponseEntity.ok(ResponseEntity.status(201).body("Usuario registrado correctamente."));
         }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario."));
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario. MOTIVO: " + e.getMessage()));
         }
     }
 

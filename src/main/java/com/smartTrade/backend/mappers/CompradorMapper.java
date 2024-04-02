@@ -10,10 +10,11 @@ public class CompradorMapper implements RowMapper<Comprador> {
     @Override
     public Comprador mapRow(ResultSet rs, int rowNum) throws SQLException {
         Comprador comprador = new Comprador();
-        comprador.setId_comprador(rs.getInt("id"));
+        //comprador.setId_comprador(rs.getInt("id"));
         comprador.setNickname(rs.getString("nickname"));
         comprador.setPassword(rs.getString("user_password"));
         comprador.setDireccion(rs.getString("direccion"));
+        comprador.setCorreo(rs.getString("correo"));
         comprador.setPuntos_responsabilidad(rs.getInt("puntos_responsabilidad"));
         return comprador;
     }

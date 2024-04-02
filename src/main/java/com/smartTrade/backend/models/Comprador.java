@@ -2,29 +2,21 @@ package com.smartTrade.backend.models;
 
 public class Comprador {
    
-    private int id_comprador;
     private String nickname;
     private String password;
     private String direccion;
     private int puntos_responsabilidad;
+    private String correo;
 
-    public Comprador(int id_comprador, String nickname, String password, String direccion, int puntos_responsabilidad) {
-        this.id_comprador = id_comprador;
+    public Comprador(String nickname, String password, String direccion, int puntos_responsabilidad, String correo) {
         this.nickname = nickname;
         this.password = password;
+        this.correo = correo;
         this.direccion = direccion;
         this.puntos_responsabilidad = puntos_responsabilidad;
     }
 
     public Comprador() {}
-
-    public int getId_comprador() {
-        return this.id_comprador;
-    }
-
-    public void setId_comprador(int id_comprador) {
-        this.id_comprador = id_comprador;
-    }
 
     public String getNickname() {
         return this.nickname;
@@ -56,6 +48,14 @@ public class Comprador {
 
     public void setPuntos_responsabilidad(int puntos_responsabilidad) {
         this.puntos_responsabilidad = puntos_responsabilidad;
+    }
+
+    public String getCorreo() {
+        return this.correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
 
