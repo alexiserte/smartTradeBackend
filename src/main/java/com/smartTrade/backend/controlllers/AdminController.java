@@ -25,7 +25,7 @@ public class AdminController {
         return admin.getAllDatabases();
     }
 
-    @GetMapping("/admin/compradores")
+    @GetMapping("/admin/comprador")
     public List<Comprador> mostrarUsuarios() {
         return comprador.getAllCompradores();
     }
