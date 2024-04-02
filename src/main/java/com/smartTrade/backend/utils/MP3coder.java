@@ -6,7 +6,7 @@ import java.util.Base64;
 import java.io.PrintWriter;
 import java.io.File;
 
-public class MP3Coder {
+public class MP3coder {
 
     // Codificar un archivo MP3 a texto
     public static String codificarMP3aTexto(String rutaArchivo) throws Exception {
