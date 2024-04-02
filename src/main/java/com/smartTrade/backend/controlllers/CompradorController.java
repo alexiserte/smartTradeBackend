@@ -23,14 +23,14 @@ public class CompradorController {
     CompradorDAO compradorDAO;
 
     @GetMapping("/comprador/")
-    public ResponseEntity<?> login(@RequestParam(value = "nickname", required = true) String nickname,
+    public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
             @RequestParam(value = "password", required = true) String password) {
         try {
-            Comprador comprador = compradorDAO.getCompradorByNicknameAndPassword(nickname, password);
+            Comprador comprador = compradorDAO.getCompradorByNicknameORMailAndPassword(identifier, password);
             return ResponseEntity.ok(comprador);
         } catch (EmptyResultDataAccessException e) {
             try {
-                compradorDAO.getCompradorByNombre(nickname); // Intenta obtener al comprador solo por nickname
+                compradorDAO.getCompradorByIdentifier(identifier); // Intenta obtener al comprador solo por nickname
                 return ResponseEntity.ok(ResponseEntity.status(400).body("Contraseña incorrecta."));
             } catch (EmptyResultDataAccessException e2) {
                 return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));

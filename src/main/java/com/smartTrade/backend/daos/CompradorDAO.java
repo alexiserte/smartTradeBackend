@@ -16,8 +16,8 @@ public class CompradorDAO{
     }
 
 
-    public Comprador getCompradorByNombre(String nombre){
-        return database.queryForObject("SELECT nickname,user_password, correo, direccion,puntos_responsabilidad, fecha_registro FROM comprador WHERE nickname = ?",new CompradorMapper(),nombre);
+    public Comprador getCompradorByIdentifier(String identifier){
+        return database.queryForObject("SELECT nickname,user_password, correo, direccion,puntos_responsabilidad, fecha_registro FROM comprador WHERE nickname = ? OR correo = ?",new CompradorMapper(),identifier, identifier);
     }
 
     public List<Comprador> getCompradorByDireccion(String direccion){
@@ -29,8 +29,8 @@ public class CompradorDAO{
         return database.queryForObject("SELECT user_password FROM comprador WHERE id_comprador = ?",new CompradorMapper(),id);
     }
 
-    public Comprador getCompradorByNicknameAndPassword(String nickname, String password){
-        return database.queryForObject("SELECT nickname,user_password, correo ,direccion,puntos_responsabilidad, fecha_registro FROM comprador WHERE nickname = ? AND user_password = ?",new CompradorMapper(),nickname, password);
+    public Comprador getCompradorByNicknameORMailAndPassword(String identifier, String password){
+        return database.queryForObject("SELECT nickname,user_password, correo ,direccion,puntos_responsabilidad, fecha_registro FROM comprador WHERE (nickname = ? OR correo = ?) AND user_password = ?",new CompradorMapper(),identifier,identifier, password);
     }
 
     public void insertComprador(String nickname, String password,String correo){
@@ -63,7 +63,6 @@ public class CompradorDAO{
     public void deleteComprador(int id){
         database.update("DELETE FROM comprador WHERE id_comprador = ?",id);
     }
-
     
 
 
