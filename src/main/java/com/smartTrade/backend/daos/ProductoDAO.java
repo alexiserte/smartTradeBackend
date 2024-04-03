@@ -78,7 +78,7 @@ public class ProductoDAO{
 
 
     public List<Producto> getProductsFromOneVendor(String vendorName){
-        return database.query("SELECT id_vendedor,descripcion,id,precio,material FROM producto WHERE id = ANY(SELECT v.id FROM vendedor v WHERE v.vendedor_nombre = ?) ",new ProductMapper(),vendorName);
+        return database.query("SELECT id_vendedor,descripcion,id,precio,material FROM producto WHERE id = ANY(SELECT v.id FROM vendedor v WHERE v.nickname = ?) ",new ProductMapper(),vendorName);
     }
 
     public List<Producto> getAllProducts(){
