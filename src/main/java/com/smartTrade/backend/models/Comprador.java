@@ -1,74 +1,66 @@
 package com.smartTrade.backend.models;
 
 import java.sql.Date;
-public class Comprador {
+public class Comprador extends Usuario{
    
-    private String nickname;
-    private String password;
-    private String direccion;
-    private int puntos_responsabilidad;
-    private String correo;
-    private Date fecha_registro;
+    private int puntosResponsabilidad;
 
-    public Comprador(String nickname, String password, String direccion, int puntos_responsabilidad, String correo, Date fecha_registro) {
-        this.nickname = nickname;
-        this.password = password;
-        this.correo = correo;
-        this.direccion = direccion;
-        this.puntos_responsabilidad = puntos_responsabilidad;
-        this.fecha_registro = fecha_registro;
+    public Comprador(String nickname, String password, String direccion, String correo,int puntosResponsabilidad) {
+
+        super(nickname, password, direccion, correo);
+        this.puntosResponsabilidad = puntosResponsabilidad;
     }
 
     public Comprador() {}
 
+    public int getpuntosResponsabilidad() {
+        return this.puntosResponsabilidad;
+    }
+
+    public void setpuntosResponsabilidad(int puntosResponsabilidad) {
+        this.puntosResponsabilidad = puntosResponsabilidad;
+    }
+
+    
     public String getNickname() {
-        return this.nickname;
+        return super.getNickname();
     }
 
     public void setNickname(String nickname) {
-        this.nickname = nickname;
+        super.setNickname(nickname);
     }
 
     public String getPassword() {
-        return this.password;
+        return super.getPassword();
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        super.setPassword(password);
     }
 
     public String getDireccion() {
-        return this.direccion;
+        return super.getDireccion();
     }
 
     public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public int getPuntos_responsabilidad() {
-        return this.puntos_responsabilidad;
-    }
-
-    public void setPuntos_responsabilidad(int puntos_responsabilidad) {
-        this.puntos_responsabilidad = puntos_responsabilidad;
+        super.setDireccion(direccion);
     }
 
     public String getCorreo() {
-        return this.correo;
+        return super.getCorreo();
     }
 
     public void setCorreo(String correo) {
-        this.correo = correo;
+        super.setCorreo(correo);
     }
 
     public Date getFecha_registro() {
-        return this.fecha_registro;
+        return super.getFecha_registro();
     }
-
+    
     public void setFecha_registro(Date fecha_registro) {
-        this.fecha_registro = fecha_registro;
+        super.setFecha_registro(fecha_registro);
     }
-
 
 
 }
