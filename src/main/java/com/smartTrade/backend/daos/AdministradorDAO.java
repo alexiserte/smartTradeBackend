@@ -18,7 +18,7 @@ public class AdministradorDAO {
 
     public List<String> getAllDatabases() {
         List<String> result = new ArrayList<>();
-        String sql = "USE Five_Guys_DB_Version2; " +
+        String sql = 
                      "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
         List<String> tables = database.queryForList(sql, String.class);
         for (String table : tables) {
