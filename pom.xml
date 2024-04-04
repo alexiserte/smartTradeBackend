@@ -26,6 +26,13 @@
   			<artifactId>aws-advanced-jdbc-wrapper</artifactId>
   			<version>LATEST</version>
 		</dependency>
+		<dependency>
+    			<groupId>software.amazon.jdbc</groupId>
+    			<artifactId>aws-advanced-jdbc-wrapper</artifactId>
+    			<version>2.3.6-SNAPSHOT</version>
+    			<scope>system</scope>
+    			<systemPath>path-to-snapshot-jar</systemPath>
+  		</dependency>
                 <dependency>
                     <groupId>com.microsoft.sqlserver</groupId>
                     <artifactId>mssql-jdbc</artifactId>
