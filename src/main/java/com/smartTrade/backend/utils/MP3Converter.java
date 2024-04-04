@@ -5,9 +5,8 @@ import java.nio.file.Paths;
 import java.util.Base64;
 import java.io.PrintWriter;
 import java.io.File;
-import com.smartTrade.backend.models.Conversor;
 
-public class MP3Converter extends Conversor{
+public class MP3Converter{
 
     // Codificar un archivo MP3 a texto
     public String codificarMP3aTexto(String rutaArchivo) throws Exception {

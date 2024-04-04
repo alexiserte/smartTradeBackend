@@ -11,9 +11,8 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import com.smartTrade.backend.models.Conversor;
 
-public class JPEGConverter extends Conversor {
+public class JPEGConverter{
 
     public String imageToBase64(String imagePath) throws IOException {
         byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));

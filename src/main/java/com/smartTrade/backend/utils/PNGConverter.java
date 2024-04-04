@@ -10,9 +10,8 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import com.smartTrade.backend.models.Conversor;
 
-public class PNGConverter extends Conversor {
+public class PNGConverter{
 
     public String imageToBase64(String imagePath) throws IOException {
         byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
