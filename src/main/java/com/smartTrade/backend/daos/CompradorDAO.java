@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import com.smartTrade.backend.daos.Carrito_CompraDAO;
 import java.util.Date;
 
 @Repository
@@ -16,6 +17,9 @@ public class CompradorDAO{
     public CompradorDAO(JdbcTemplate database) {
         this.database = database;
     }
+
+    @Autowired
+    private Carrito_CompraDAO carrito;
     
     
     /**
@@ -55,7 +59,7 @@ public class CompradorDAO{
             String insertListaDeseosQuery = "INSERT INTO Lista_De_Deseos(id_comprador) VALUES (?)";
     
             database.update(insertCompradorQuery, idUsuario);
-            database.update(insertCarritoQuery, idUsuario);
+            carrito.create(id_usuario);
             database.update(insertGuardarMasTardeQuery, idUsuario);
             database.update(insertListaDeseosQuery, idUsuario);
         } catch (Exception e) {
