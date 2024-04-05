@@ -40,19 +40,19 @@ public class CompradorDAO{
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
 
-        database.update("INSERT Usuario(nickname,correo,user_password,direccion,fecha_registro)\r\n" + //
-                        "VALUES(?,?,?,?,?);\r\n" + //
-                        "\r\n" + //
-                        "INSERT Comprador(id_usuario,puntos_responsabilidad)\r\n" + //
-                        "SELECT id,0 FROM Usuario WHERE nickname = ?;\r\n" + //
-                        "\r\n" + //
-                        "INSERT Carrito_Compra(id_comprador)\r\n" + //
-                        "SELECT id FROM Usuario WHERE nickname = ?;\r\n" + //
-                        "\r\n" + //
-                        "INSERT Guardar_Mas_Tarde(id_comprador)\r\n" + //
-                        "SELECT id FROM Usuario WHERE nickname = ?;\r\n" + //
-                        "\r\n" + //
-                        "INSERT Lista_De_Deseos(id_comprador)\r\n" + //
+        database.update("INSERT Usuario(nickname,correo,user_password,direccion,fecha_registro)" + //
+                        "VALUES(?,?,?,?,?);" + //
+                        "" + //
+                        "INSERT Comprador(id_usuario,puntos_responsabilidad)" + //
+                        "SELECT id,0 FROM Usuario WHERE nickname = ?;" + //
+                        "" + //
+                        "INSERT Carrito_Compra(id_comprador)" + //
+                        "SELECT id FROM Usuario WHERE nickname = ?;" + //
+                        "" + //
+                        "INSERT Guardar_Mas_Tarde(id_comprador)" + //
+                        "SELECT id FROM Usuario WHERE nickname = ?;" + //
+                        "" + //
+                        "INSERT Lista_De_Deseos(id_comprador)" + //
                         "SELECT id FROM Usuario WHERE nickname = ?;",nickname,correo,password,direccion,fechaSQL,nickname);
     }
 
@@ -71,9 +71,9 @@ public class CompradorDAO{
      * `Usuario` y `Comprador` donde está el `id_usuario` en el `Comprador` partidos de mesa
      */
     public Comprador readOne(String identifier){
-        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad\r\n" + //
-                        "FROM Usuario u, Comprador c \r\n" + //
-                        "WHERE c.id_usuario = u.id \tAND (u.nickname = ? OR u.correo = ?)",new CompradorMapper(),identifier,identifier);
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad" + //
+                        "FROM Usuario u, Comprador c " + //
+                        "WHERE c.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)",new CompradorMapper(),identifier,identifier);
     }
 
    /**
@@ -85,8 +85,8 @@ public class CompradorDAO{
     * luego asigna los resultados a objetos Comprador usando la clase CompradorMapper.
     */
     public List<Comprador> readAll(){
-        return database.query("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad\r\n" + //
-                        "FROM Usuario u, Comprador c \r\n" + //
+        return database.query("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad" + //
+                        "FROM Usuario u, Comprador c " + //
                         "WHERE c.id_usuario = u.id",new CompradorMapper());
     }
 
@@ -128,19 +128,19 @@ public class CompradorDAO{
      * `Usuario`, `Carrito_Compra`, `
      */
     public void delete(String nickname){
-        database.update("DELETE FROM Comprador\r\n" + //
-                        "WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);\r\n" + //
-                        "\r\n" + //
-                        "DELETE FROM Usuario\r\n" + //
-                        "WHERE nickname = ?;\r\n" + //
-                        "\r\n" + //
-                        "DELETE FROM Carrito_Compra\r\n" + //
-                        "WHERE id_comprador IN(SELECT id FROM Usuario WHERE nickname = ?);\r\n" + //
-                        "\r\n" + //
-                        "DELETE FROM Guardar_Mas_Tarde\r\n" + //
-                        "WHERE id IN(SELECT id FROM Usuario WHERE nickname = ?);\r\n" + //
-                        "\r\n" + //
-                        "DELETE FROM Lista_De_Deseos\r\n" + //
+        database.update("DELETE FROM Comprador" + //
+                        "WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);" + //
+                        "" + //
+                        "DELETE FROM Usuario" + //
+                        "WHERE nickname = ?;" + //
+                        "" + //
+                        "DELETE FROM Carrito_Compra" + //
+                        "WHERE id_comprador IN(SELECT id FROM Usuario WHERE nickname = ?);" + //
+                        "" + //
+                        "DELETE FROM Guardar_Mas_Tarde" + //
+                        "WHERE id IN(SELECT id FROM Usuario WHERE nickname = ?);" + //
+                        "" + //
+                        "DELETE FROM Lista_De_Deseos" + //
                         "WHERE id IN(SELECT id FROM Usuario WHERE nickname = ?);",nickname,nickname);
     }
 

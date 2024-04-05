@@ -44,11 +44,10 @@ public class AdministradorDAO {
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
 
         database.update(
-                        "INSERT Usuario(nickname,correo,user_password,direccion,fecha_registro)\r\n" + //
-                        "VALUES(?,?,?,?,?);\r\n" + //
-                        "\r\n" + //
-                        "INSERT Administrador(id_usuario,puntos_responsabilidad)\r\n" + //
-                        "SELECT id,0 FROM Usuario WHERE nickname = ?;\r\n",nickname,correo,password,direccion,fechaSQL,nickname);
+                        "INSERT Usuario(nickname,correo,user_password,direccion,fecha_registro)" + //
+                        "VALUES(?,?,?,?,?);" + //
+                        "INSERT Administrador(id_usuario,puntos_responsabilidad)" + //
+                        "SELECT id,0 FROM Usuario WHERE nickname = ?;",nickname,correo,password,direccion,fechaSQL,nickname);
     }
 
     
