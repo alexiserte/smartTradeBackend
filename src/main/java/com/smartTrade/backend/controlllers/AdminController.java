@@ -27,7 +27,7 @@ public class AdminController {
 
     @GetMapping("/admin/comprador")
     public List<Comprador> mostrarUsuarios() {
-        return comprador.getAllCompradores();
+        return comprador.readAll();
     }
 }
 

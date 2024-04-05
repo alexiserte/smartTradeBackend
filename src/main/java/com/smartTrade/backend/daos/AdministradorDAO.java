@@ -19,7 +19,7 @@ public class AdministradorDAO {
     public List<String> getAllDatabases() {
         List<String> result = new ArrayList<>();
         String sql = 
-                     "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
+                     "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'FiveGuysDatabase' AND TABLE_TYPE = 'BASE TABLE'";
         List<String> tables = database.queryForList(sql, String.class);
         for (String table : tables) {
             String attributesSql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + table + "'";
@@ -33,4 +33,5 @@ public class AdministradorDAO {
         }
         return result;
     }
+    
 }
