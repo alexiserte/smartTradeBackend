@@ -1,5 +1,7 @@
 package com.smartTrade.backend.controlllers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,27 +28,24 @@ public class CompradorController {
     public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
             @RequestParam(value = "password", required = true) String password) {
         try {
-            Comprador comprador = compradorDAO.getCompradorByNicknameORMailAndPassword(identifier, password);
-            return ResponseEntity.ok(comprador);
+            Comprador comprador = compradorDAO.readOne(identifier);
+            if (comprador.getPassword().equals(password)) {
+                return ResponseEntity.ok(comprador);
+            }
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Contraseña incorrecta."));
         } catch (EmptyResultDataAccessException e) {
-            try {
-                compradorDAO.getCompradorByIdentifier(identifier); // Intenta obtener al comprador solo por nickname
-                return ResponseEntity.ok(ResponseEntity.status(400).body("Contraseña incorrecta."));
-            } catch (EmptyResultDataAccessException e2) {
-                return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));
-           }
-        }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al iniciar sesión. MOTIVO: " + e.getMessage()));
+            return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));
         }
-        
+
     }
 
     @PostMapping("/comprador/")
     public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password,
-            @RequestParam(value = "mail", required = true) String correo) {
+            @RequestParam(value = "mail", required = true) String correo,
+            @RequestParam(value = "direccion", required = true) String direccion){
         try{
-            compradorDAO.insertComprador(nickname, password,correo);
+            compradorDAO.create(nickname, password,correo,direccion);
             return ResponseEntity.ok(ResponseEntity.status(201).body("Usuario registrado correctamente."));
         }catch(Exception e){
             return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario. MOTIVO: " + e.getMessage()));
@@ -54,28 +53,38 @@ public class CompradorController {
     }
 
     @DeleteMapping("/comprador/")
-    public ResponseEntity<?> deleteComprador(@RequestParam(value = "id", required = true) int  id) {
-
-        //// EL METODO BORRAR COMPRADOR HAY QUE BORRAR TODO LO QUE REFERENCIA A ESA ID DE COMPRADOR
-            compradorDAO.deleteComprador(id);
+    public ResponseEntity<?> deleteComprador(@RequestParam(value = "nickname", required = true) String  nickname) {
+        try{    
+        compradorDAO.delete(nickname);
             return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario eliminado correctamente."));
+        }catch(Exception e){
+            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al eliminar el usuario."));
+        }
     }
 
     @PutMapping("/comprador/")
     public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
                                             @RequestParam(value = "password", required = false) String password,
                                             @RequestParam(value = "direccion", required = false) String dirección,
-                                            @RequestParam(value = "puntos_responsabilidad", required = false) int puntosResponsabilidad)
+                                            @RequestParam(value = "puntos_responsabilidad", required = false) String puntosResponsabilidad)
     {
         try{
-            return null;
-            /*
-             * 
-             * AQUÍ HAY CREAR UN BLOQUE DE IF EN EL QUE VAYA LLAMANDO A LOS MÉTODOS DE ACTUALIZACIÓN DE LA BASE DE DATOS
-             * Si hay más de un parámetro a actualizar, no hay que crear solo un méotodo que actualice todo, sino que hay que llamar a los métodos de actualización de la base de datos por
-             * separado
-             * 
-            */
+            Map<String,Object> attributes = new HashMap<>();
+            if(nickname != null){
+                attributes.put("nickname", nickname);
+            }
+            if(password != null){
+                attributes.put("password", password);
+            }
+            if(dirección != null){
+                attributes.put("direccion", dirección);
+            }
+            if(puntosResponsabilidad != null){
+                attributes.put("puntos_responsabilidad", Integer.parseInt(puntosResponsabilidad));
+            }
+
+            compradorDAO.update(nickname, attributes);
+            return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario actualizado correctamente."));
         }catch(Exception e){
             return ResponseEntity.ok(ResponseEntity.status(400).body("Error al actualizar el usuario."));
         } 
