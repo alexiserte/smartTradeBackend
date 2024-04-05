@@ -1,7 +1,37 @@
 BEGIN TRY
     BEGIN TRAN;
     ---------SCRIPT--------------------------
-	CREATE TABLE [dbo].[Comprador](
+	CREATE TABLE Usuario ( 
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nickname VARCHAR(255) NOT NULL UNIQUE,
+            correo VARCHAR(255) NOT NULL UNIQUE,
+            user_password VARCHAR(255) NOT NULL,
+            direccion VARCHAR(255),
+            fecha_registro DATE NOT NULL DEFAULT CURRENT_DATE
+      );
+      
+      
+
+      CREATE TABLE Administrador ( 
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            id_usuario INT NOT NULL UNIQUE CONSTRAINT FK_Administrador REFERENCES Usuario(id)
+      );
+      
+      CREATE TABLE Vendedor ( 
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            id_usuario INT NOT NULL UNIQUE CONSTRAINT FK_Administrador REFERENCES Usuario(id)
+
+      );
+
+      CREATE TABLE Comprador ( 
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            id_usuario INT NOT NULL UNIQUE CONSTRAINT FK_Administrador REFERENCES Usuario(id),
+            puntos_responsabilidad INT NOT NULL CHECK(puntos_responsabilidad >= 0) DEFAULT 0
+      );
+      
+      
+      
+      /*CREATE TABLE [dbo].[Comprador](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[nickname] [nvarchar](50) NOT NULL,
 	[correo] [nvarchar](50) NOT NULL,
@@ -10,72 +40,172 @@ BEGIN TRY
 	[puntos_responsabilidad] [INT] NOT NULL,CONSTRAINT [PK_Comprador] PRIMARY KEY CLUSTERED ([id] ASC)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) 
       ON [PRIMARY]) ON [PRIMARY]
       ALTER TABLE [dbo].[Comprador]  WITH CHECK ADD  CONSTRAINT [CK_Comprador] CHECK  (([puntos_responsabilidad]>=(0)))
-      ALTER TABLE [dbo].[Comprador] CHECK CONSTRAINT [CK_Comprador]
+      ALTER TABLE [dbo].[Comprador] CHECK CONSTRAINT [CK_Comprador]*/
 
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('mgirardot0','mgirardot0@gmail.com','uhyrfyjH6~r0|l+q5?I','9th Floor',1);
+--Compradores
 
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('mloody1','mloody1@gmail.com','uH6~r0|l+q5?I','Apt 1892',2);
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('mgirardot0','mgirardot0@gmail.com','uhyrfyjH6~r0|l+q5?I','9th Floor', '2024-02-20');
 
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('baire2','baire2@gmail.com','zX0%.0nD#','16th Floor',3);
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('mloody1','mloody1@gmail.com','uH6~r0|l+q5?I','Apt 1892', '2024-03-12');
 
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('cfeares3','cfeares3@gmail.com','xB7=$d5EpMZ`E#I','PO Box 72149',4);
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('baire2','baire2@gmail.com','zX0%.0nD#','16th Floor', '2024-01-18');
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('cfeares3','cfeares3@gmail.com','xB7=$d5EpMZ`E#I','PO Box 72149', '2024-02-05');
 		  
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('dpuckett4','dpuckett4@gmail.com','lR4"3/\asb|8Z','Suite 9',5);
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('dpuckett4','dpuckett4@gmail.com','lR4"3/\asb|8Z','Suite 9', '2024-03-28');
 
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('rslator5','rslator5@gmail.com','yV7}nvn6','Suite 89',6);
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('rslator5','rslator5@gmail.com','yV7}nvn6','Suite 89', '2024-01-30');
 
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('tufts6','tufts6@gmail.com','gE5*M,%fp93<g','Apt 206',7);
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('tufts6','tufts6@gmail.com','gE5*M,%fp93<g','Apt 206', '2024-02-10');
 
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('aguittet7','aguittet7@gmail.com','yR5>2ClOm$','4th Floor',8); 
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('aguittet7','aguittet7@gmail.com','yR5>2ClOm$','4th Floor', '2024-03-05'); 
 
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('ndood8','ndood8@gmail.com','lX0>kdy?B8ldR','Room 1498',9);
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('ndood8','ndood8@gmail.com','lX0>kdy?B8ldR','Room 1498', '2024-01-22');
 
-INSERT INTO [dbo].[Comprador]([nickname],[correo],[user_password],[direccion],[puntos_responsabilidad])
-VALUES('fsisley9','fsisley9@gmail.com','rL8`1xXfR1K&gI','PO Box 49455',10);
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('fsisley9','fsisley9@gmail.com','rL8`1xXfR1K&gI','PO Box 49455', '2024-02-15');
+
+--Vendedores
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Jabbercube','jabbercube@gmail.com','jabbercube','Dirección de Jabbercube', '2024-01-05');
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Thoughtbridge','thoughtbridge@gmail.com','thoughtbridge','Dirección de Thoughtbridge', '2024-03-20');
+		   
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Cogibox','cogibox@gmail.com','cogibox','Dirección de Cogibox', '2024-02-08');
+		   
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Rhyloo','rhyloo@gmail.com','rhyloo','Dirección de Rhyloo', '2024-01-10');
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Dynabox','dynabox@gmail.com','dynabox','Dirección de Dynabox', '2024-03-02');
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Jayo','jayo@gmail.com','jayo','Dirección de Jayo', '2024-02-25');
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Buzzdog','buzzdog@gmail.com','buzzdog','Dirección de Buzzdog', '2024-01-15');
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Zoomdog','zoomdog@gmail.com','zoomdog','Dirección de Zoomdog', '2024-03-08');
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Livetube','livetube@gmail.com','livetube','Dirección de Livetube', '2024-02-20');
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('Gabvine','gabvine@gmail.com','gabvine','Dirección de Gabvine', '2024-01-28');
+
+--Administrador
+
+INSERT INTO [dbo].[Usuario]([nickname],[correo],[user_password],[direccion], [fecha_registro])
+VALUES('admin','five_guys@gmail.com','admin','!G-0.4', '2024-01-29');
 
 
-CREATE TABLE [dbo].[Vendedor](
+
+-- Inserts para la tabla Comprador
+
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'mgirardot0' AND correo = 'mgirardot0@gmail.com' AND user_password = 'uhyrfyjH6~r0|l+q5?I' AND direccion = '9th Floor' AND fecha_registro = '2024-02-20';
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'mloody1' AND correo = 'mloody1@gmail.com' AND user_password = 'uH6~r0|l+q5?I' AND direccion = 'Apt 1892' AND fecha_registro = '2024-03-12';
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'baire2' AND correo = 'baire2@gmail.com' AND user_password = 'zX0%.0nD#' AND direccion = '16th Floor' AND fecha_registro = '2024-01-18';
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'cfeares3' AND correo = 'cfeares3@gmail.com' AND user_password = 'xB7=$d5EpMZ`E#I' AND direccion = 'PO Box 72149' AND fecha_registro = '2024-02-05';
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'dpuckett4' AND correo = 'dpuckett4@gmail.com' AND user_password = 'lR4"3/\asb|8Z' AND direccion = 'Suite 9' AND fecha_registro = '2024-03-28';
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'rslator5' AND correo = 'rslator5@gmail.com' AND user_password = 'yV7}nvn6' AND direccion = 'Suite 89' AND fecha_registro = '2024-01-30';
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'tufts6' AND correo = 'tufts6@gmail.com' AND user_password = 'gE5*M,%fp93<g' AND direccion = 'Apt 206' AND fecha_registro = '2024-02-10';
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'aguittet7' AND correo = 'aguittet7@gmail.com' AND user_password = 'yR5>2ClOm$' AND direccion = '4th Floor' AND fecha_registro = '2024-03-05';
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'ndood8' AND correo = 'ndood8@gmail.com' AND user_password = 'lX0>kdy?B8ldR' AND direccion = 'Room 1498' AND fecha_registro = '2024-01-22';
+
+INSERT INTO Comprador (id_usuario, puntos_responsabilidad)
+SELECT id, 0 FROM Usuario WHERE nickname = 'fsisley9' AND correo = 'fsisley9@gmail.com' AND user_password = 'rL8`1xXfR1K&gI' AND direccion = 'PO Box 49455' AND fecha_registro = '2024-02-15';
+
+
+--Inserts para la tabla Vendedor
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Jabbercube')
+);
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Thoughtbridge')
+);
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Cogibox')
+);
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Rhyloo')
+);
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Dynabox')
+);
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Jayo')
+);
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Buzzdog')
+);
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Zoomdog')
+);
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Livetube')
+);
+
+INSERT INTO Vendedor (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'Gabvine')
+);
+
+
+--Insert tabla Administrador
+
+INSERT INTO Administrador (id_usuario) VALUES (
+    (SELECT id FROM Usuario WHERE nickname = 'admin')
+);
+
+
+
+
+
+
+/*CREATE TABLE [dbo].[Vendedor](
       [id] [int] IDENTITY(1,1) NOT NULL,[nickname] [nvarchar](50) NOT NULL,CONSTRAINT [PK_Vendedor] PRIMARY KEY CLUSTERED 
-      ([id] ASC)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]
+      ([id] ASC)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]) ON [PRIMARY]*/
 
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Jabbercube');
 
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Thoughtbridge');
-		   
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Cogibox');
-		   
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Rhyloo');
-
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Dynabox');
-
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Jayo');
-
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Buzzdog');
-
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Zoomdog');
-
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Livetube');
-
-INSERT INTO [dbo].[Vendedor]([nickname])
-VALUES('Gabvine');
 
 CREATE TABLE [dbo].[Categoria]([id] [int] IDENTITY(1,1) NOT NULL,[nombre] [nvarchar](50) NOT NULL,[categoria_principal] [nvarchar](50) NULL,
 CONSTRAINT [PK_Categoria] PRIMARY KEY CLUSTERED ([id] ASC)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) 
