@@ -40,8 +40,7 @@ public class CompradorDAO{
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
 
-        database.update("-- INSERTAR NUEVO COMPRADOR\r\n" + //
-                        "INSERT Usuario(nickname,correo,user_password,direccion,fecha_registro)\r\n" + //
+        database.update("INSERT Usuario(nickname,correo,user_password,direccion,fecha_registro)\r\n" + //
                         "VALUES(?,?,?,?,?);\r\n" + //
                         "\r\n" + //
                         "INSERT Comprador(id_usuario,puntos_responsabilidad)\r\n" + //
