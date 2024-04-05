@@ -45,7 +45,7 @@ public class CompradorDAO{
                     nickname, correo, password, direccion, fechaSQL);
 
 
-    Comprador c = database.queryForObject("SELECT * FROM Usuario WHERE nickname = ?", new CompradorMapper(), nickname);
+    Comprador c = readOne(nickname);
 
     database.update("INSERT INTO Comprador(id_usuario, puntos_responsabilidad) " +
                     "SELECT id, 0 FROM Usuario WHERE nickname = ?;",
