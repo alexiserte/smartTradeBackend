@@ -80,7 +80,7 @@ public class CompradorDAO{
      * `Usuario` y `Comprador` donde está el `id_usuario` en el `Comprador` partidos de mesa
      */
     public Comprador readOne(String identifier){
-        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad" + //
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad " + //
                         "FROM Usuario u, Comprador c " + //
                         "WHERE c.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)",new CompradorMapper(),identifier,identifier);
     }
