@@ -36,19 +36,34 @@ public class CompradorDAO{
      * la ubicación física donde reside el usuario o donde desea que le entreguen sus compras.
      */
     public void create(String nickname, String password, String correo, String direccion) {
-
-        Date fechaActual = new Date(System.currentTimeMillis());
-        java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
-
-        database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) " +
-                "VALUES (?, ?, ?, ?, ?);INSERT INTO Comprador(id_usuario, puntos_responsabilidad) " +
-                "SELECT id, 0 FROM Usuario WHERE nickname = ?;INSERT INTO Carrito_Compra(id_comprador) " +
-                "SELECT id FROM Usuario WHERE nickname = ?; INSERT INTO Guardar_Mas_Tarde(id_comprador) " +
-                "SELECT id FROM Usuario WHERE nickname = ?; INSERT INTO Lista_De_Deseos(id_comprador) " +
-                "SELECT id FROM Usuario WHERE nickname = ?;",
-                nickname, correo, password, direccion, fechaSQL, nickname, nickname, nickname, nickname);
-
+        try {
+            Date fechaActual = new Date(System.currentTimeMillis());
+            java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
+    
+            // Insertar en la tabla Usuario
+            String insertUsuarioQuery = "INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?)";
+            database.update(insertUsuarioQuery, nickname, correo, password, direccion, fechaSQL);
+    
+            // Obtener el ID del usuario insertado
+            String selectIdQuery = "SELECT id FROM Usuario WHERE nickname = ?";
+            int idUsuario = database.queryForObject(selectIdQuery, Integer.class, nickname);
+    
+            // Insertar en las tablas Comprador, Carrito_Compra, Guardar_Mas_Tarde y Lista_De_Deseos
+            String insertCompradorQuery = "INSERT INTO Comprador(id_usuario, puntos_responsabilidad) VALUES (?, 0)";
+            String insertCarritoQuery = "INSERT INTO Carrito_Compra(id_comprador) VALUES (?)";
+            String insertGuardarMasTardeQuery = "INSERT INTO Guardar_Mas_Tarde(id_comprador) VALUES (?)";
+            String insertListaDeseosQuery = "INSERT INTO Lista_De_Deseos(id_comprador) VALUES (?)";
+    
+            database.update(insertCompradorQuery, idUsuario);
+            database.update(insertCarritoQuery, idUsuario);
+            database.update(insertGuardarMasTardeQuery, idUsuario);
+            database.update(insertListaDeseosQuery, idUsuario);
+        } catch (Exception e) {
+            // Manejar cualquier excepción
+            e.printStackTrace();
+        }
     }
+    
 
 
     
