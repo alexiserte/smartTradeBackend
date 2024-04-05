@@ -1,14 +1,11 @@
 package com.smartTrade.backend.daos;
 import com.smartTrade.backend.mappers.CompradorMapper;
 import com.smartTrade.backend.models.Comprador;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
-import com.smartTrade.backend.daos.Carrito_CompraDAO;
 import java.util.Date;
 
 @Repository
@@ -19,9 +16,6 @@ public class CompradorDAO{
     public CompradorDAO(JdbcTemplate database) {
         this.database = database;
     }
-
-    @Autowired
-    private Carrito_CompraDAO carrito;
     
     
     /**
@@ -41,36 +35,29 @@ public class CompradorDAO{
      * @param direccion El parámetro "direccion" en el método representa la dirección del usuario. Es
      * la ubicación física donde reside el usuario o donde desea que le entreguen sus compras.
      */
-    public void create(String nickname, String password, String correo, String direccion) {
-        try {
-            Date fechaActual = new Date(System.currentTimeMillis());
-            java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
-    
-            // Insertar en la tabla Usuario
-            String insertUsuarioQuery = "INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?)";
-            database.update(insertUsuarioQuery, nickname, correo, password, direccion, fechaSQL);
-    
-            // Obtener el ID del usuario insertado
-            String selectIdQuery = "SELECT id FROM Usuario WHERE nickname = ?";
-            int idUsuario = database.queryForObject(selectIdQuery, Integer.class, nickname);
-    
-            // Insertar en las tablas Comprador, Carrito_Compra, Guardar_Mas_Tarde y Lista_De_Deseos
-            String insertCompradorQuery = "INSERT INTO Comprador(id_usuario, puntos_responsabilidad) VALUES (?, 0)";
-            String insertCarritoQuery = "INSERT INTO Carrito_Compra(id_comprador) VALUES (?)";
-            String insertGuardarMasTardeQuery = "INSERT INTO Guardar_Mas_Tarde(id_comprador) VALUES (?)";
-            String insertListaDeseosQuery = "INSERT INTO Lista_De_Deseos(id_comprador) VALUES (?)";
-    
-            database.update(insertCompradorQuery, idUsuario);
-            carrito.create(idUsuario);
-            database.update(insertGuardarMasTardeQuery, idUsuario);
-            database.update(insertListaDeseosQuery, idUsuario);
-        } catch (Exception e) {
-            // Manejar cualquier excepción
-            e.printStackTrace();
-        }
-    }
-    
+    public void create(String nickname, String password, String correo, String direccion){
+        
+        Date fechaActual = new Date(System.currentTimeMillis());
+        java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
 
+        database.update("BEGIN TRANSACTION;" +
+                        "INSERT Usuario(nickname,correo,user_password,direccion,fecha_registro)" + //
+                        "VALUES(?,?,?,?,?);" + //
+                        "" + //
+                        "INSERT Comprador(id_usuario,puntos_responsabilidad)" + //
+                        "SELECT id,0 FROM Usuario WHERE nickname = ?;" + //
+                        "" + //
+                        "INSERT Carrito_Compra(id_comprador)" + //
+                        "SELECT id FROM Usuario WHERE nickname = ?;" + //
+                        "" + //
+                        "INSERT Guardar_Mas_Tarde(id_comprador)" + //
+                        "SELECT id FROM Usuario WHERE nickname = ?;" + //
+                        "" + //
+                        "INSERT Lista_De_Deseos(id_comprador)" + //
+                        "SELECT id FROM Usuario WHERE nickname = ?;" +
+                        "COMMIT;"
+                        ,nickname,correo,password,direccion,fechaSQL,nickname);
+    }
 
     
     /**
@@ -87,9 +74,9 @@ public class CompradorDAO{
      * `Usuario` y `Comprador` donde está el `id_usuario` en el `Comprador` partidos de mesa
      */
     public Comprador readOne(String identifier){
-        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad " + //
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad" + //
                         "FROM Usuario u, Comprador c " + //
-                        "WHERE c.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)",new CompradorMapper(),identifier,identifier);
+                        "WHERE c.id_usuario = u.id \tAND (u.nickname = ? OR u.correo = ?)",new CompradorMapper(),identifier,identifier);
     }
 
    /**
