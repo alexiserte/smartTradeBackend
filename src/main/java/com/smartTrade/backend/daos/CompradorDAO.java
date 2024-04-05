@@ -26,7 +26,7 @@ public class CompradorDAO{
 
 
     public Comprador getUserPassword(String id){
-        return database.queryForObject("SELECT user_password FROM comprador WHERE id_comprador = ?",new CompradorMapper(),id);
+        return database.queryForObject("SELECT user_password FROM Comprador WHERE id_usuario = ?",new CompradorMapper(),id);
     }
 
     public Comprador getCompradorByNicknameORMailAndPassword(String identifier, String password){
