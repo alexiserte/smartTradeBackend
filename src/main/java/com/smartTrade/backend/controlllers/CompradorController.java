@@ -26,16 +26,27 @@ public class CompradorController {
 
     @GetMapping("/comprador/")
     public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
-            @RequestParam(value = "password", required = true) String password) {
-        try {
-            Comprador comprador = compradorDAO.readOne(identifier);
-            if (comprador.getPassword().equals(password)) {
+            @RequestParam(value = "password", required = false) String password) {
+        if(password == null){ // Si no se envía la contraseña, se asume que se quiere obtener la información del usuario
+            try{
+                Comprador comprador = compradorDAO.readOne(identifier);
                 return ResponseEntity.ok(comprador);
+            }catch(Exception e){
+                return ResponseEntity.ok(ResponseEntity.status(400).body("Error al obtener el usuario."));
             }
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Contraseña incorrecta."));
-        } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));
         }
+        else{ // Si se envía la contraseña, se asume que se quiere hacer login
+            try {
+                Comprador comprador = compradorDAO.readOne(identifier);
+                if (comprador.getPassword().equals(password)) {
+                    return ResponseEntity.ok(comprador);
+                }
+                return ResponseEntity.ok(ResponseEntity.status(400).body("Contraseña incorrecta."));
+            } catch (EmptyResultDataAccessException e) {
+                return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));
+            } 
+        }
+
 
     }
 
