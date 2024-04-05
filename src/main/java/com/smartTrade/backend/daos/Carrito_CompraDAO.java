@@ -13,7 +13,7 @@ public class Carrito_CompraDAO{
     
     private JdbcTemplate database;
 
-    public CompradorDAO(JdbcTemplate database) {
+    public Carrito_CompraDAO(JdbcTemplate database) {
         this.database = database;
     }
     

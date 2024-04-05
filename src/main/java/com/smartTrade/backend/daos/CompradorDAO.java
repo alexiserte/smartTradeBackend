@@ -1,6 +1,8 @@
 package com.smartTrade.backend.daos;
 import com.smartTrade.backend.mappers.CompradorMapper;
 import com.smartTrade.backend.models.Comprador;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -59,7 +61,7 @@ public class CompradorDAO{
             String insertListaDeseosQuery = "INSERT INTO Lista_De_Deseos(id_comprador) VALUES (?)";
     
             database.update(insertCompradorQuery, idUsuario);
-            carrito.create(id_usuario);
+            carrito.create(idUsuario);
             database.update(insertGuardarMasTardeQuery, idUsuario);
             database.update(insertListaDeseosQuery, idUsuario);
         } catch (Exception e) {
