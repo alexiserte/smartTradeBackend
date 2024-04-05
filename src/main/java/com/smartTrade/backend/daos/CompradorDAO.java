@@ -35,32 +35,35 @@ public class CompradorDAO{
      * @param direccion El parámetro "direccion" en el método representa la dirección del usuario. Es
      * la ubicación física donde reside el usuario o donde desea que le entreguen sus compras.
      */
-    public void create(String nickname, String password, String correo, String direccion){
+   public void create(String nickname, String password, String correo, String direccion){
         
-        Date fechaActual = new Date(System.currentTimeMillis());
-        java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
-    
-        database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) " +
-                        "VALUES (?, ?, ?, ?, ?);",
-                        nickname, correo, password, direccion, fechaSQL);
-    
-        database.update("INSERT INTO Comprador(id_usuario, puntos_responsabilidad) " +
-                        "SELECT id, 0 FROM Usuario WHERE nickname = ?;",
-                        nickname);
-    
-        database.update("INSERT INTO Carrito_Compra(id_comprador) " +
-                        "SELECT id FROM Usuario WHERE nickname = ?;",
-                        nickname);
-    
-        database.update("INSERT INTO Guardar_Mas_Tarde(id_comprador) " +
-                        "SELECT id FROM Usuario WHERE nickname = ?;",
-                        nickname);
-    
-        database.update("INSERT INTO Lista_De_Deseos(id_comprador) " +
-                        "SELECT id FROM Usuario WHERE nickname = ?;",
-                        nickname);
-    }
-    
+    Date fechaActual = new Date(System.currentTimeMillis());
+    java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
+
+    database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) " +
+                    "VALUES (?, ?, ?, ?, ?);",
+                    nickname, correo, password, direccion, fechaSQL);
+
+
+    Comprador c = database.queryForObject("SELECT * FROM Usuario WHERE nickname = ?", new CompradorMapper(), nickname);
+
+    database.update("INSERT INTO Comprador(id_usuario, puntos_responsabilidad) " +
+                    "SELECT id, 0 FROM Usuario WHERE nickname = ?;",
+                    c.getNickname());
+
+    database.update("INSERT INTO Carrito_Compra(id_comprador) " +
+                    "SELECT id FROM Usuario WHERE nickname = ?;",
+                    c.getNickname());
+
+    database.update("INSERT INTO Guardar_Mas_Tarde(id_comprador) " +
+                    "SELECT id FROM Usuario WHERE nickname = ?;",
+                    c.getNickname());
+
+    database.update("INSERT INTO Lista_De_Deseos(id_comprador) " +
+                    "SELECT id FROM Usuario WHERE nickname = ?;",
+                    c.getNickname());
+}
+
 
     
     /**
