@@ -4,6 +4,8 @@ import com.smartTrade.backend.mappers.CompradorMapper;
 import com.smartTrade.backend.models.Comprador;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ public class CompradorDAO {
      *                  la ubicación física donde reside el usuario o donde desea
      *                  que le entreguen sus compras.
      */
+    @Transactional
     public void create(String nickname, String password, String correo, String direccion) {
 
         Date fechaActual = new Date(System.currentTimeMillis());
