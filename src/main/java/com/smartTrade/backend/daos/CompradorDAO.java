@@ -54,7 +54,7 @@ public class CompradorDAO {
 
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
-        
+        try{
         database.update("SET FOREIGN_KEY_CHECKS=0;");
         
         String query = "INSERT INTO Usuario (nickname, correo, user_password, direccion, fecha_registro) " +
@@ -76,8 +76,13 @@ public class CompradorDAO {
         query = "INSERT INTO Lista_De_Deseos (id_comprador) " +
                 "SELECT id FROM Usuario WHERE nickname = ?";
         database.update(query, nickname);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        finally{
+            database.update("SET FOREIGN_KEY_CHECKS=1;");
+        }
 
-        database.update("SET FOREIGN_KEY_CHECKS=1;");
     }
 
     /**
