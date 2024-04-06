@@ -61,21 +61,25 @@ public class CompradorDAO {
                 "VALUES (?, ?, ?, ?, ?)";
         database.update(query, nickname, correo, password, direccion, fechaSQL);
 
+
+
         query = "INSERT INTO Comprador (id_usuario, puntos_responsabilidad) " +
                 "SELECT id, 0 FROM Usuario WHERE nickname = ?";
         database.update(query, nickname);
 
+        query = "SELECT id FROM Usuario WHERE nickname = ?";
+        int userId = database.queryForObject(query, Integer.class, nickname);
         query = "INSERT INTO Carrito_Compra (id_comprador) " +
-                "SELECT id FROM Usuario WHERE nickname = ?";
-        database.update(query, nickname);
+                "VALUES(?)";
+        database.update(query, userId);
 
         query = "INSERT INTO Guardar_Mas_Tarde (id_comprador) " +
-                "SELECT id FROM Usuario WHERE nickname = ?";
-        database.update(query, nickname);
+                "VALUES(?)";
+        database.update(query, userId);
 
         query = "INSERT INTO Lista_De_Deseos (id_comprador) " +
-                "SELECT id FROM Usuario WHERE nickname = ?";
-        database.update(query, nickname);
+                "VALUES(?)";
+        database.update(query, userId);
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
