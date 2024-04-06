@@ -50,44 +50,15 @@ public class CompradorDAO {
      *                  que le entreguen sus compras.
      */
     @Transactional
-    public void create(String nickname, String password, String correo, String direccion) {
-
+    public void create(String nickname, String password, String correo, String direccion){
+        
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
-        try{
-        database.update("SET FOREIGN_KEY_CHECKS=0;");
-        
-        String query = "INSERT INTO Usuario (nickname, correo, user_password, direccion, fecha_registro) " +
-                "VALUES (?, ?, ?, ?, ?)";
-        database.update(query, nickname, correo, password, direccion, fechaSQL);
 
-
-
-        query = "INSERT INTO Comprador (id_usuario, puntos_responsabilidad) " +
-                "SELECT id, 0 FROM Usuario WHERE nickname = ?";
-        database.update(query, nickname);
-
-        query = "SELECT id FROM Usuario WHERE nickname = ?";
-        int userId = database.queryForObject(query, Integer.class, nickname);
-        query = "INSERT INTO Carrito_Compra (id_comprador) " +
-                "VALUES(?)";
-        database.update(query, userId);
-
-        query = "INSERT INTO Guardar_Mas_Tarde (id_comprador) " +
-                "VALUES(?)";
-        database.update(query, userId);
-
-        query = "INSERT INTO Lista_De_Deseos (id_comprador) " +
-                "VALUES(?)";
-        database.update(query, userId);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        finally{
-            database.update("SET FOREIGN_KEY_CHECKS=1;");
-        }
+        database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?); INSERT INTO Comprador(id_usuario, puntos_responsabilidad) SELECT id, 0 FROM Usuario WHERE nickname = ?; INSERT INTO Carrito_Compra(id_comprador) SELECT id FROM Usuario WHERE nickname = ?; INSERT INTO Guardar_Mas_Tarde(id_comprador) SELECT id FROM Usuario WHERE nickname = ?; INSERT INTO Lista_De_Deseos(id_comprador) SELECT id FROM Usuario WHERE nickname = ?;", nickname, correo, password, direccion, fechaSQL, nickname, nickname, nickname, nickname);
 
     }
+
 
     /**
      * La función `readOne` recupera un objeto `Comprador` de la base de datos
