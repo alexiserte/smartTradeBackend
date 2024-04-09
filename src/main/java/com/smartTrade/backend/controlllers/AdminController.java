@@ -7,8 +7,10 @@ import java.util.Map;
 
 import com.smartTrade.backend.daos.AdministradorDAO;
 import com.smartTrade.backend.daos.CompradorDAO;
+import com.smartTrade.backend.daos.VendedorDAO;
 import com.smartTrade.backend.models.Administrador;
 import com.smartTrade.backend.models.Comprador;
+import com.smartTrade.backend.models.Vendedor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -30,6 +32,9 @@ public class AdminController {
     @Autowired
     CompradorDAO comprador;
 
+    @Autowired
+    VendedorDAO vendedor;
+
     @GetMapping("/admin/database")
     public List<String> mostrarBasesDeDatos() {
         return admin.getAllDatabases();
@@ -38,6 +43,11 @@ public class AdminController {
     @GetMapping("/admin/comprador")
     public List<Comprador> mostrarUsuarios() {
         return comprador.readAll();
+    }
+
+    @GetMapping("/admin/vendedor")
+    public List<Vendedor> mostrarVendedores() {
+        return vendedor.readAll();
     }
 
     @GetMapping("/admin/")
