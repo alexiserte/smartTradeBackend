@@ -3,8 +3,6 @@ package com.smartTrade.backend.mappers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
-
-import com.smartTrade.backend.models.Comprador;
 import com.smartTrade.backend.models.Vendedor;
 
 public class VendedorMapper implements RowMapper<Vendedor> {

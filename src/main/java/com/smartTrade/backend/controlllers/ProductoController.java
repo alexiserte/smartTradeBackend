@@ -1,10 +1,7 @@
 package com.smartTrade.backend.controlllers;
 
-import java.lang.module.ResolutionException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;

@@ -1,13 +1,9 @@
 package com.smartTrade.backend.utils;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
-import java.io.PrintWriter;
-import java.io.File;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 

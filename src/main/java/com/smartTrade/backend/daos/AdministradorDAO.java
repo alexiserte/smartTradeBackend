@@ -2,7 +2,6 @@ package com.smartTrade.backend.daos;
 
 import com.smartTrade.backend.mappers.AdministradorMapper;
 import com.smartTrade.backend.mappers.CompradorMapper;
-import com.smartTrade.backend.mappers.DatabaseMapper;
 import com.smartTrade.backend.models.Administrador;
 import com.smartTrade.backend.models.Comprador;
 

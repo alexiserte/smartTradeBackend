@@ -1,10 +1,7 @@
 package com.smartTrade.backend.factory;
 import com.smartTrade.backend.utils.PNGConverter;
 
-import ch.qos.logback.core.pattern.Converter;
-
 import com.smartTrade.backend.utils.MP3Converter;
-import com.smartTrade.backend.utils.Conversor;
 import com.smartTrade.backend.utils.JPEGConverter;
 public class ConversorFactory {
     

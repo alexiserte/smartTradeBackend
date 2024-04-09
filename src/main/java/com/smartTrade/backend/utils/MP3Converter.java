@@ -3,8 +3,6 @@ package com.smartTrade.backend.utils;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
-import java.io.PrintWriter;
-import java.io.File;
 
 public class MP3Converter{
 

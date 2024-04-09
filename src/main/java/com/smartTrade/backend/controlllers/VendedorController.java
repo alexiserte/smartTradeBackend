@@ -2,8 +2,6 @@ package com.smartTrade.backend.controlllers;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
-import com.smartTrade.backend.models.Comprador;
 import com.smartTrade.backend.models.Vendedor;
-
-import jakarta.annotation.PostConstruct;
 
 @RestController
 public class VendedorController {

@@ -1,6 +1,5 @@
 package com.smartTrade.backend.controlllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +49,8 @@ public class AdminController {
         return vendedor.readAll();
     }
 
+    
+    @SuppressWarnings("unused")
     @GetMapping("/admin/")
     public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
             @RequestParam(value = "password", required = false) String password) {
