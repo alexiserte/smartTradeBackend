@@ -20,34 +20,25 @@ public class CompradorDAO {
         this.database = database;
     }
 
+
     /**
-     * El método "create" inserta un nuevo comprador en la base de datos con tablas
-     * asociadas para los
-     * detalles del comprador, el carrito de compras, los artículos guardados y la
-     * lista de deseos.
+     * El método "crear" inserta un nuevo usuario en la base de datos junto con entradas relacionadas
+     * para un comprador, carrito de compras, artículos guardados y lista de deseos.
      * 
-     * @param nickname  El parámetro `nickname` es el nombre de usuario o alias que
-     *                  el usuario elige
-     *                  para identificarse en la plataforma. Es un identificador
-     *                  único para la cuenta del usuario.
-     * @param password  El parámetro "contraseña" en el método "crear" representa la
-     *                  contraseña del
-     *                  usuario que se crea en el sistema. Esta contraseña se
-     *                  utiliza normalmente con fines de
-     *                  autenticación cuando el usuario inicia sesión en su cuenta.
-     *                  Es importante almacenar y manejar de
-     *                  forma segura las contraseñas para garantizar la seguridad de
-     *                  las cuentas de usuario. Es
-     *                  recomendado
-     * @param correo    El parámetro "correo" en el método representa la dirección
-     *                  de correo electrónico
-     *                  del usuario que se está creando. Se utiliza para almacenar
-     *                  la información de correo electrónico
-     *                  en la base de datos para el nuevo usuario.
-     * @param direccion El parámetro "direccion" en el método representa la
-     *                  dirección del usuario. Es
-     *                  la ubicación física donde reside el usuario o donde desea
-     *                  que le entreguen sus compras.
+     * @param nickname El método "crear" que proporcionó parece ser parte de una clase de servicio o
+     * repositorio para crear un nuevo usuario en una base de datos. El método toma cuatro parámetros:
+     * `apodo`, `contraseña`, `correo` (correo electrónico) y `direccion` (dirección).
+     * @param password El método "crear" que proporcionó parece ser parte de una clase de servicio o
+     * repositorio para crear un nuevo usuario en una base de datos. El método toma varios parámetros
+     * como `apodo`, `contraseña`, `correo` (correo electrónico) y `direccion` (dirección) para crear
+     * una nueva entrada de usuario.
+     * @param correo El parámetro "correo" en la firma del método representa la dirección de correo
+     * electrónico del usuario que se está creando. Se utiliza para almacenar la dirección de correo
+     * electrónico en la base de datos del nuevo usuario.
+     * @param direccion El parámetro "direccion" en el código proporcionado se refiere a la dirección
+     * del usuario. Se pasa como parámetro al método "crear" junto con otros detalles del usuario, como
+     * apodo, contraseña y correo electrónico. Luego, la dirección se inserta en la base de datos junto
+     * con otra información del usuario durante la creación del usuario.
      */
     @Transactional
     public void create(String nickname, String password, String correo, String direccion){
@@ -87,11 +78,7 @@ public class CompradorDAO {
      *         partidos de mesa
      */
     public Comprador readOne(String identifier) {
-        return database.queryForObject(
-                "SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad" + //
-                        "FROM Usuario u, Comprador c " + //
-                        "WHERE c.id_usuario = u.id \tAND (u.nickname = ? OR u.correo = ?)",
-                new CompradorMapper(), identifier, identifier);
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new CompradorMapper(), identifier, identifier);
     }
 
     /**
@@ -107,11 +94,8 @@ public class CompradorDAO {
      *         CompradorMapper.
      */
     public List<Comprador> readAll() {
-        return database.query(
-                "SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, c.puntos_responsabilidad" + //
-                        "FROM Usuario u, Comprador c " + //
-                        "WHERE c.id_usuario = u.id",
-                new CompradorMapper());
+        return database.query("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id", new CompradorMapper());
+
     }
 
     /**
@@ -158,20 +142,16 @@ public class CompradorDAO {
      *                 `Usuario`, `Carrito_Compra`, `
      */
     public void delete(String nickname) {
-        database.update("DELETE FROM Comprador" + //
-                "WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);" + //
-                "" + //
-                "DELETE FROM Usuario" + //
-                "WHERE nickname = ?;" + //
-                "" + //
-                "DELETE FROM Carrito_Compra" + //
-                "WHERE id_comprador IN(SELECT id FROM Usuario WHERE nickname = ?);" + //
-                "" + //
-                "DELETE FROM Guardar_Mas_Tarde" + //
-                "WHERE id IN(SELECT id FROM Usuario WHERE nickname = ?);" + //
-                "" + //
-                "DELETE FROM Lista_De_Deseos" + //
-                "WHERE id IN(SELECT id FROM Usuario WHERE nickname = ?);", nickname, nickname);
+        database.update("DELETE FROM Comprador WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);",
+                nickname);
+        database.update("DELETE FROM Usuario WHERE nickname = ?;", nickname);
+        database.update("DELETE FROM Carrito_Compra WHERE id_comprador IN(SELECT id FROM Usuario WHERE nickname = ?);",
+                nickname);
+        database.update("DELETE FROM Guardar_Mas_Tarde WHERE id IN(SELECT id FROM Usuario WHERE nickname = ?);",
+                nickname);
+        database.update("DELETE FROM Lista_De_Deseos WHERE id IN(SELECT id FROM Usuario WHERE nickname = ?);",
+                nickname);
+
     }
 
 }
