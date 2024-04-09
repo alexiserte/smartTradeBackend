@@ -30,20 +30,24 @@ public class ProductoDAO{
         this.database = database;
     }
   
-    public void create(String nombre, int id_categoria, int id_vendedor, double precio, String descripcion) {
+    public void create(String nombre, String characteristicName, String vendorName, double precio, String descripcion) {
         try{
-            database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion FROM Producto WHERE nombre = ? AND id_vendedor = ?;", new ProductMapper(), nombre, id_categoria, id_vendedor, precio, descripcion);
+            database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ? AND id IN(SELECT id_usuario FROM Vendedor)) AND id_categoria IN(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), nombre, vendorName, characteristicName);
         }catch(EmptyResultDataAccessException e){
+            int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class, characteristicName);
+            int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
             database.update("INSERT INTO Producto(nombre, id_categoria, id_vendedor, precio, descripcion) VALUES (?, ?, ?, ?, ?);", nombre, id_categoria, id_vendedor, precio, descripcion);
         }
     }
 
-    public Map<Producto,HashMap<String,String>> readOne(int id_producto) {
+    public Map<Producto,HashMap<String,String>> readOne(String productName, String vendorName) {
         
         Map<Producto,HashMap<String,String>> res = new HashMap<>();
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))", Integer.class, productName, vendorName);
 
         Producto producto = database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion FROM Producto WHERE id_producto = ?", new ProductMapper(), id_producto);
         
+       
         HashMap<String,String> caracteristicas = CaracteristicaDAO.getCaracteristicas(id_producto);
 
         res.put(producto, caracteristicas);
@@ -55,8 +59,9 @@ public class ProductoDAO{
         return database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion FROM Producto", new ProductMapper());
     }
 
-    public void update(String nombre, int id_vendedor, HashMap<String, ?> atributos) {
+    public void update(String nombre, String vendorName, HashMap<String, ?> atributos) {
         List<String> keys = new ArrayList<>(atributos.keySet());
+        int id_vendedor = database.queryForObject("SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))", Integer.class, nombre, vendorName);
         for (String key : keys) {
             Object valor = atributos.get(key);
             if (valor instanceof Integer) {
@@ -72,7 +77,8 @@ public class ProductoDAO{
         }
     }
 
-    public void delete(String nombre, int id_vendedor) {
+    public void delete(String nombre, String vendorName) {
+        int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
         database.update("DELETE FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
     }
 
@@ -81,7 +87,8 @@ public class ProductoDAO{
         return database.query("SELECT nombre,id_vendedor,id_categoria,descripcion,precio FROM Producto WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), categoryName);
     }
 
-    public List<Producto> getProductsBySeller(int id_vendedor) {
+    public List<Producto> getProductsBySeller(String vendorName) {
+        int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         return database.query("SELECT * FROM Producto WHERE id_vendedor IN (SELECT id FROM Vendedor WHERE id_usuario IN (SELECT id FROM Usuario WHERE nickname = ?))", new ProductMapper(), id_vendedor);
     }
 

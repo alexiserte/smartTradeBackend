@@ -52,7 +52,7 @@ public class CompradorController {
     public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "mail", required = true) String correo,
-            @RequestParam(value = "direccion", required = true) String direccion){
+            @RequestParam(value = "direction", required = true) String direccion){
         try{
             compradorDAO.create(nickname, password,correo,direccion);
             return ResponseEntity.ok(ResponseEntity.status(201).body("Usuario registrado correctamente."));
@@ -74,8 +74,8 @@ public class CompradorController {
     @PutMapping("/comprador/")
     public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
                                             @RequestParam(value = "password", required = false) String password,
-                                            @RequestParam(value = "direccion", required = false) String dirección,
-                                            @RequestParam(value = "puntos_responsabilidad", required = false) String puntosResponsabilidad)
+                                            @RequestParam(value = "direction", required = false) String dirección,
+                                            @RequestParam(value = "points", required = false) String puntosResponsabilidad)
     {
         try{
             Map<String,Object> attributes = new HashMap<>();

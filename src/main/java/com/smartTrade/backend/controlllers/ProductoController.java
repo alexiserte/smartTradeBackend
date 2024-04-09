@@ -26,8 +26,7 @@ public class ProductoController {
     ProductoDAO productoDAO;
 
     @GetMapping("/producto/")
-    public ResponseEntity<?> searchProductByName(@RequestParam(name = "nombre", required = true) String nombre,
-            @RequestParam(name = "category", required = false) String category) {
+    public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre, @RequestParam(name = "category", required = false) String category) {
         List<Producto> todosLosProductos = productoDAO.readAll();
         List<Producto> res = todosLosProductos
                 .stream()
@@ -35,7 +34,7 @@ public class ProductoController {
                 .toList();
         if (category != null) {
             res = res.stream()
-                    .filter(producto -> productoDAO.isFromOneCategory(producto.getNombre(), producto.getId_vendedor(),category))
+                    .filter(producto -> productoDAO.isFromOneCategory(producto.getNombre(),producto.getId_vendedor(),category))
                     .toList();
             return ResponseEntity.ok(res);
         } else {
@@ -45,14 +44,14 @@ public class ProductoController {
     }
 
     @PostMapping("/producto/")
-    public ResponseEntity<?> insertarProducto(@RequestParam(name = "nombre", required = true) String nombre,
-                                                @RequestParam(name = "id_vendedor", required = true) int idVendedor,
-                                                @RequestParam(name = "precio", required = true) double precio,
-                                                @RequestParam(name = "descripcion", required = true) String descripcion,
-                                                @RequestParam(name = "id_categoria", required = true) int id_categoria)
+    public ResponseEntity<?> insertarProducto(@RequestParam(name = "name", required = true) String nombre,
+                                                @RequestParam(name = "vendor", required = true) String vendorName,
+                                                @RequestParam(name = "price", required = true) double precio,
+                                                @RequestParam(name = "description", required = true) String descripcion,
+                                                @RequestParam(name = "category", required = true) String characteristicName)
     {
         try{
-            productoDAO.create(nombre,id_categoria, idVendedor, precio, descripcion);
+            productoDAO.create(nombre,characteristicName, vendorName, precio, descripcion);
             return ResponseEntity.ok().build();
         }catch(Exception e){
             return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
@@ -60,10 +59,10 @@ public class ProductoController {
     }
 
     @DeleteMapping("/producto/")
-    public ResponseEntity<?> deleteProduct(@RequestParam(name = "nombre", required = true) String nombre,
-                                           @RequestParam(name = "id_vendedor", required = true) int idVendedor) {
+    public ResponseEntity<?> deleteProduct(@RequestParam(name = "name", required = true) String nombre,
+                                           @RequestParam(name = "vendor", required = true) String vendorName) {
         try {
-            productoDAO.delete(nombre, idVendedor);
+            productoDAO.delete(nombre,vendorName);
             return ResponseEntity.ok(ResponseEntity.status(200).body("Producto eliminado"));
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
@@ -72,10 +71,10 @@ public class ProductoController {
 
     @PutMapping("/producto/")
     public ResponseEntity<?> updateProduct(@RequestParam(name = "nombre", required = true) String nombre,
-                                           @RequestParam(name = "id_vendedor", required = true) int idVendedor,
-                                           @RequestParam(name = "atributos", required = true) HashMap<String, ?> atributos) {
+                                           @RequestParam(name = "vendor", required = true) String vendorName,
+                                           @RequestParam(name = "attributes", required = true) HashMap<String, ?> atributos) {
         try {
-            productoDAO.update(nombre, idVendedor, atributos);
+            productoDAO.update(nombre, vendorName, atributos);
             return ResponseEntity.ok(ResponseEntity.status(200).body("Producto actualizado"));
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));

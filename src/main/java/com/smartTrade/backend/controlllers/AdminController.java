@@ -90,7 +90,7 @@ public class AdminController {
     @PutMapping("/admin/")
     public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
                                             @RequestParam(value = "password", required = false) String password,
-                                            @RequestParam(value = "direccion", required = false) String dirección)
+                                            @RequestParam(value = "direction", required = false) String dirección)
     {
         try{
             Map<String,Object> attributes = new HashMap<>();
