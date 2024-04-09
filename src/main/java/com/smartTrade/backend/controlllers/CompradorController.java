@@ -46,8 +46,6 @@ public class CompradorController {
                 return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));
             } 
         }
-
-
     }
 
     @PostMapping("/comprador/")
@@ -85,7 +83,7 @@ public class CompradorController {
                 attributes.put("nickname", nickname);
             }
             if(password != null){
-                attributes.put("password", password);
+                attributes.put("user_password", password);
             }
             if(dirección != null){
                 attributes.put("direccion", dirección);
