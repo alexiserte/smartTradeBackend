@@ -1,17 +1,18 @@
 package com.smartTrade.backend.models;
 
 public class Producto{
+    private String nombre;
     private int id_producto;
     private int id_vendedor;
     private double precio;
-    private String material;
     private String descripcion;
+    private int id_categoria;
 
-    public Producto(int id_producto, int id_vendedor, double precio, String material, String descripcion) {
-        this.id_producto = id_producto;
+    public Producto(String nombre, int id_categoria, int id_vendedor, double precio, String descripcion) {
+        this.nombre = nombre;
+        this.id_categoria = id_categoria;
         this.id_vendedor = id_vendedor;
         this.precio = precio;
-        this.material = material;
         this.descripcion = descripcion;
     }
 
@@ -41,20 +42,31 @@ public class Producto{
         this.precio = precio;
     }
 
-    public String getMaterial() {
-        return this.material;
-    }
+
 
     public String getDescripcion() {
         return this.descripcion;
     }
 
-    public void setMaterial(String material) {
-        this.material = material;
-    }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getNombre() {
+        return this.nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getId_categoria() {
+        return this.id_categoria;
+    }
+
+    public void setId_categoria(int id_categoria) {
+        this.id_categoria = id_categoria;
     }
 
 
