@@ -6,9 +6,11 @@ import java.util.Map;
 
 import com.smartTrade.backend.daos.AdministradorDAO;
 import com.smartTrade.backend.daos.CompradorDAO;
+import com.smartTrade.backend.daos.ProductoDAO;
 import com.smartTrade.backend.daos.VendedorDAO;
 import com.smartTrade.backend.models.Administrador;
 import com.smartTrade.backend.models.Comprador;
+import com.smartTrade.backend.models.Producto;
 import com.smartTrade.backend.models.Vendedor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class AdminController {
     @Autowired
     VendedorDAO vendedor;
 
+    @Autowired
+    ProductoDAO producto;
+
     @GetMapping("/admin/database")
     public List<String> mostrarBasesDeDatos() {
         return admin.getAllDatabases();
@@ -47,6 +52,11 @@ public class AdminController {
     @GetMapping("/admin/vendedor")
     public List<Vendedor> mostrarVendedores() {
         return vendedor.readAll();
+    }
+
+    @GetMapping("/admin/producto/")
+    public List<Producto> mostrarProductos() {
+        return producto.readAll();
     }
 
     
