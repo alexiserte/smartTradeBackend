@@ -12,7 +12,8 @@ public class Carrito_CompraDAO{
     }
     
 
-    public void create(int id_comprador) {
+    public void create(String compradorName) {
+        int id_comprador = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, compradorName);
         database.update("INSERT INTO Carrito_Compra(id_comprador) VALUES (?)",id_comprador);
     }
     

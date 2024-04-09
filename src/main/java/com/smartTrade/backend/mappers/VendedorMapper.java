@@ -9,7 +9,6 @@ public class VendedorMapper implements RowMapper<Vendedor> {
     @Override
     public Vendedor mapRow(ResultSet rs, int rowNum) throws SQLException {
         Vendedor vendedor = new Vendedor();
-        //comprador.setId_comprador(rs.getInt("id"));
         vendedor.setNickname(rs.getString("nickname"));
         vendedor.setPassword(rs.getString("user_password"));
         vendedor.setDireccion(rs.getString("direccion"));

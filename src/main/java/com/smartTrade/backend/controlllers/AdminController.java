@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.smartTrade.backend.daos.AdministradorDAO;
+import com.smartTrade.backend.daos.CategoriaDAO;
 import com.smartTrade.backend.daos.CompradorDAO;
 import com.smartTrade.backend.daos.ProductoDAO;
 import com.smartTrade.backend.daos.VendedorDAO;
 import com.smartTrade.backend.models.Administrador;
+import com.smartTrade.backend.models.Categoria;
 import com.smartTrade.backend.models.Comprador;
 import com.smartTrade.backend.models.Producto;
 import com.smartTrade.backend.models.Vendedor;
@@ -38,6 +40,14 @@ public class AdminController {
 
     @Autowired
     ProductoDAO producto;
+
+    @Autowired
+    CategoriaDAO categoria;
+
+    @GetMapping("/admin/categoria")
+    public List<Categoria> mostrarCategorias() {
+        return categoria.readAll();
+    }
 
     @GetMapping("/admin/database")
     public List<String> mostrarBasesDeDatos() {
