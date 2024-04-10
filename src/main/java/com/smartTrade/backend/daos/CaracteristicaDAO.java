@@ -1,6 +1,8 @@
 package com.smartTrade.backend.daos;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
 import com.smartTrade.backend.mappers.CaracteristicaMapper;
 
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import com.smartTrade.backend.models.Caracteristica;
 
+@Repository
 public class CaracteristicaDAO {
     private JdbcTemplate database;
 
