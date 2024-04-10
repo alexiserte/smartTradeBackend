@@ -75,9 +75,6 @@ public class CompradorController {
     {
         try{
             Map<String,Object> attributes = new HashMap<>();
-            if(nickname != null){
-                attributes.put("nickname", nickname);
-            }
             if(password != null){
                 attributes.put("user_password", password);
             }

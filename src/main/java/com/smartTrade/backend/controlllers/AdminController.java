@@ -15,6 +15,7 @@ import com.smartTrade.backend.models.Comprador;
 import com.smartTrade.backend.models.Producto;
 import com.smartTrade.backend.models.Vendedor;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -96,41 +97,44 @@ public class AdminController {
         }
     }
 
-
+    @SuppressWarnings("unused")
     @PostMapping("/admin/")
     public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "mail", required = true) String correo,
             @RequestParam(value = "direccion", required = true) String direccion){
         try{
+            Administrador administrador = admin.readOne(direccion);
+            return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);
+        }catch(EmptyResultDataAccessException e){
             admin.create(nickname, password,correo,direccion);
-            return ResponseEntity.ok(ResponseEntity.status(201).body("Usuario registrado correctamente."));
+            return new ResponseEntity<>("Administrador creado correctamente",HttpStatus.CREATED);
         }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario. MOTIVO: " + e.getMessage()));
+            return new ResponseEntity<>("Error al crear el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @SuppressWarnings("unused")
     @PutMapping("/admin/")
     public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
-                                            @RequestParam(value = "password", required = false) String password,
-                                            @RequestParam(value = "direction", required = false) String dirección)
-    {
-        try{
-            Map<String,Object> attributes = new HashMap<>();
-            if(nickname != null){
-                attributes.put("nickname", nickname);
-            }
-            if(password != null){
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "direction", required = false) String dirección) {
+        try {
+            Administrador administrador = admin.readOne(nickname);
+            Map<String, Object> attributes = new HashMap<>();
+            if (password != null) {
                 attributes.put("user_password", password);
             }
-            if(dirección != null){
+            if (dirección != null) {
                 attributes.put("direccion", dirección);
             }
             admin.update(nickname, attributes);
-            return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario actualizado correctamente."));
-        }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al actualizar el usuario."));
-        } 
+            return new ResponseEntity<>("Usuario actualizado correctamente", HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al actualizar un archivo: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/admin/")
