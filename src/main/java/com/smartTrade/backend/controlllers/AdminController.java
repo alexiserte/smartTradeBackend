@@ -17,6 +17,7 @@ import com.smartTrade.backend.models.Vendedor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,19 +79,19 @@ public class AdminController {
                                 // del usuario
             try {
                 Administrador administrador = admin.readOne(identifier);
-                return ResponseEntity.ok(administrador);
+                return new ResponseEntity<>(administrador,HttpStatus.OK);
             } catch (Exception e) {
-                return ResponseEntity.status(404).body("Usuario no encontrado.");
+                return new ResponseEntity<>("Usuario no encontrado.",HttpStatus.NOT_FOUND);
             }
         } else { // Si se envía la contraseña, se asume que se quiere hacer login
             try {
                 Administrador administrador = admin.readOne(identifier);
                 if (administrador.getPassword().equals(password)) {
-                    return ResponseEntity.ok(administrador);
+                    return new ResponseEntity<>(administrador,HttpStatus.OK);
                 }
-                return ResponseEntity.status(401).body("Contraseña incorrecta.");
+                return new ResponseEntity<>("Contraseña incorreta",HttpStatus.UNAUTHORIZED);
             } catch (EmptyResultDataAccessException e) {
-                return ResponseEntity.status(404).body("Usuario no encontrado.");
+                return new ResponseEntity<>("Usuario no encontrado.",HttpStatus.NOT_FOUND);
             }
         }
     }
