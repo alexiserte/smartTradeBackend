@@ -5,6 +5,7 @@ import com.smartTrade.backend.utils.MP3Converter;
 import com.smartTrade.backend.utils.JPEGConverter;
 public class ConversorFactory {
     
+    
     public ConversorFactory(){}
 
     public Object createConversor(String type){
