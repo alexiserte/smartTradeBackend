@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +28,10 @@ public class CompradorController {
             try{
                 Comprador comprador = compradorDAO.readOne(identifier);
                 return ResponseEntity.ok(comprador);
+            }catch(EmptyResultDataAccessException e){
+                return new ResponseEntity<>("Usuario no existente",HttpStatus.NOT_FOUND);
             }catch(Exception e){
-                return ResponseEntity.ok(ResponseEntity.status(400).body("Error al obtener el usuario."));
+                return new ResponseEntity<>("Error al obtener usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         else{ // Si se envía la contraseña, se asume que se quiere hacer login
@@ -37,33 +40,41 @@ public class CompradorController {
                 if (comprador.getPassword().equals(password)) {
                     return ResponseEntity.ok(comprador);
                 }
-                return ResponseEntity.ok(ResponseEntity.status(400).body("Contraseña incorrecta."));
+                return new ResponseEntity<>("Contraseña incorrecta",HttpStatus.UNAUTHORIZED);
             } catch (EmptyResultDataAccessException e) {
-                return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));
+                return new ResponseEntity<>("Usuario no encontrado.",HttpStatus.NOT_FOUND);
             } 
         }
     }
 
+    @SuppressWarnings("unused")
     @PostMapping("/comprador/")
     public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "mail", required = true) String correo,
             @RequestParam(value = "direction", required = true) String direccion){
         try{
+            Comprador comprador = compradorDAO.readOne(nickname);
+            return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);
+        }catch(EmptyResultDataAccessException e){
             compradorDAO.create(nickname, password,correo,direccion);
-            return ResponseEntity.ok(ResponseEntity.status(201).body("Usuario registrado correctamente."));
+            return new ResponseEntity<>("Comprador creado correctamente",HttpStatus.CREATED);
         }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario. MOTIVO: " + e.getMessage()));
+            return new ResponseEntity<>("Error al crear el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @SuppressWarnings("unused")
     @DeleteMapping("/comprador/")
     public ResponseEntity<?> deleteComprador(@RequestParam(value = "nickname", required = true) String  nickname) {
-        try{    
-        compradorDAO.delete(nickname);
-            return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario eliminado correctamente."));
+        try{
+            Comprador comprador = compradorDAO.readOne(nickname);    
+            compradorDAO.delete(nickname);
+            return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
         }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al eliminar el usuario."));
+            return new ResponseEntity<>("Error al eliminar el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -74,6 +85,7 @@ public class CompradorController {
                                             @RequestParam(value = "points", required = false) String puntosResponsabilidad)
     {
         try{
+            Comprador comprador = compradorDAO.readOne(nickname);
             Map<String,Object> attributes = new HashMap<>();
             if(password != null){
                 attributes.put("user_password", password);
@@ -85,10 +97,12 @@ public class CompradorController {
                 attributes.put("puntos_responsabilidad", Integer.parseInt(puntosResponsabilidad));
             }
 
-            compradorDAO.update(nickname, attributes);
-            return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario actualizado correctamente."));
+            compradorDAO.update(comprador.getNickname(), attributes);
+            return new ResponseEntity<>("Usuario actualizado correctamente", HttpStatus.OK);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
         }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al actualizar el usuario."));
+            return new ResponseEntity<>("Error al actualizar un archivo: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         } 
     }
 }

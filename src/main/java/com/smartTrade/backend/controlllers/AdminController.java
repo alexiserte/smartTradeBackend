@@ -17,6 +17,7 @@ import com.smartTrade.backend.models.Vendedor;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,7 +73,6 @@ public class AdminController {
     }
 
     
-    
     @GetMapping("/admin/")
     public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
             @RequestParam(value = "password", required = false) String password) {
@@ -114,7 +114,7 @@ public class AdminController {
         }
     }
 
-    @SuppressWarnings("unused")
+
     @PutMapping("/admin/")
     public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
             @RequestParam(value = "password", required = false) String password,
@@ -128,7 +128,7 @@ public class AdminController {
             if (dirección != null) {
                 attributes.put("direccion", dirección);
             }
-            admin.update(nickname, attributes);
+            admin.update(administrador.getNickname(), attributes);
             return new ResponseEntity<>("Usuario actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
@@ -139,11 +139,14 @@ public class AdminController {
 
     @DeleteMapping("/admin/")
     public ResponseEntity<?> deleteComprador(@RequestParam(value = "nickname", required = true) String  nickname) {
-        try{    
-        admin.delete(nickname);
-            return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario eliminado correctamente."));
+        try{  
+            Administrador administrador = admin.readOne(nickname);
+           admin.delete(administrador.getNickname());
+            return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
         }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al eliminar el usuario."));
+            return new ResponseEntity<>("Error al eliminar el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
