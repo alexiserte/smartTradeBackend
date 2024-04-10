@@ -64,7 +64,7 @@ public class AdminController {
         return vendedor.readAll();
     }
 
-    @GetMapping("/admin/producto/")
+    @GetMapping("/admin/producto")
     public List<Producto> mostrarProductos() {
         return producto.readAll();
     }
