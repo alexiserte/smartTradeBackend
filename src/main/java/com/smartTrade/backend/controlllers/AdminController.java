@@ -70,29 +70,30 @@ public class AdminController {
     }
 
     
-    @SuppressWarnings("unused")
-@GetMapping("/admin/")
-public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
-        @RequestParam(value = "password", required = false) String password) {
-    if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información del usuario
-        try {
-            Administrador administrador = admin.readOne(identifier);
-            return ResponseEntity.ok(administrador);
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body("Usuario no encontrado.");
-        }
-    } else { // Si se envía la contraseña, se asume que se quiere hacer login
-        try {
-            Administrador administrador = admin.readOne(identifier);
-            if (administrador.getPassword().equals(password)) {
+    
+    @GetMapping("/admin/")
+    public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
+            @RequestParam(value = "password", required = false) String password) {
+        if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información
+                                // del usuario
+            try {
+                Administrador administrador = admin.readOne(identifier);
                 return ResponseEntity.ok(administrador);
+            } catch (Exception e) {
+                return ResponseEntity.status(404).body("Usuario no encontrado.");
             }
-            return ResponseEntity.status(401).body("Contraseña incorrecta.");
-        } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.status(404).body("Usuario no encontrado.");
+        } else { // Si se envía la contraseña, se asume que se quiere hacer login
+            try {
+                Administrador administrador = admin.readOne(identifier);
+                if (administrador.getPassword().equals(password)) {
+                    return ResponseEntity.ok(administrador);
+                }
+                return ResponseEntity.status(401).body("Contraseña incorrecta.");
+            } catch (EmptyResultDataAccessException e) {
+                return ResponseEntity.status(404).body("Usuario no encontrado.");
+            }
         }
     }
-}
 
 
     @PostMapping("/admin/")
