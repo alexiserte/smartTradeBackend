@@ -1,6 +1,8 @@
 package com.smartTrade.backend.daos;
 import com.smartTrade.backend.mappers.ProductMapper;
 import com.smartTrade.backend.models.Producto;
+import com.smartTrade.backend.daos.VendedorDAO;
+import com.smartTrade.backend.daos.CaracteristicaDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 @Repository
 public class ProductoDAO{
