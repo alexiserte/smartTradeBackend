@@ -116,12 +116,15 @@ public class AdminController {
 
 
     @PutMapping("/admin/")
-    public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
+    public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = false) String password,
             @RequestParam(value = "direction", required = false) String dirección) {
         try {
             Administrador administrador = admin.readOne(nickname);
             Map<String, Object> attributes = new HashMap<>();
+            if(password == null && dirección == null){
+                return new ResponseEntity<>("No se han enviado atributos para actualizar",HttpStatus.BAD_REQUEST);
+            }
             if (password != null) {
                 attributes.put("user_password", password);
             }

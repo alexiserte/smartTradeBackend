@@ -68,13 +68,16 @@ public class VendedorController {
     }
 
     @PutMapping("/vendedor/")
-    public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
+    public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = true) String nickname,
                                             @RequestParam(value = "password", required = false) String password,
                                             @RequestParam(value = "direccion", required = false) String dirección,
                                             @RequestParam(value = "puntos_responsabilidad", required = false) String puntosResponsabilidad)
     {
         try{
             Map<String,Object> attributes = new HashMap<>();
+            if(password == null && dirección == null && puntosResponsabilidad == null){
+                return ResponseEntity.ok(ResponseEntity.status(400).body("No se ha enviado ningún atributo para actualizar."));
+            }
             if(password != null){
                 attributes.put("user_password", password);
             }
