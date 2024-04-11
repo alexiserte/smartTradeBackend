@@ -21,7 +21,7 @@ public class VendedorController {
     VendedorDAO vendedorDAO;
 
     @GetMapping("/vendedor/")
-    public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
+    public ResponseEntity<?> getVendedor(@RequestParam(value = "identifier", required = true) String identifier,
             @RequestParam(value = "password", required = false) String password) {
         if(password == null){ // Si no se envía la contraseña, se asume que se quiere obtener la información del usuario
             try{
@@ -45,7 +45,7 @@ public class VendedorController {
     }
 
     @PostMapping("/vendedor/")
-    public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
+    public ResponseEntity<?> registerVendedor(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "mail", required = true) String correo,
             @RequestParam(value = "direccion", required = true) String direccion){
@@ -58,7 +58,7 @@ public class VendedorController {
     }
 
     @DeleteMapping("/vendedor/")
-    public ResponseEntity<?> deleteComprador(@RequestParam(value = "nickname", required = true) String  nickname) {
+    public ResponseEntity<?> deleteVendedor(@RequestParam(value = "nickname", required = true) String  nickname) {
         try{    
             vendedorDAO.delete(nickname);
             return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario eliminado correctamente."));
@@ -68,14 +68,14 @@ public class VendedorController {
     }
 
     @PutMapping("/vendedor/")
-    public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = true) String nickname,
+    public ResponseEntity<?> updateVendedor(@RequestParam(value = "nickname", required = true) String nickname,
                                             @RequestParam(value = "password", required = false) String password,
                                             @RequestParam(value = "direccion", required = false) String dirección,
-                                            @RequestParam(value = "puntos_responsabilidad", required = false) String puntosResponsabilidad)
+                                            @RequestParam(value = "mail", required = false) String mail)
     {
         try{
             Map<String,Object> attributes = new HashMap<>();
-            if(password == null && dirección == null && puntosResponsabilidad == null){
+            if(password == null && dirección == null && mail == null ){
                 return ResponseEntity.ok(ResponseEntity.status(400).body("No se ha enviado ningún atributo para actualizar."));
             }
             if(password != null){
@@ -84,8 +84,8 @@ public class VendedorController {
             if(dirección != null){
                 attributes.put("direccion", dirección);
             }
-            if(puntosResponsabilidad != null){
-                attributes.put("puntos_responsabilidad", Integer.parseInt(puntosResponsabilidad));
+            if(mail != null){
+                attributes.put("correo", mail);
             }
 
             vendedorDAO.update(nickname, attributes);

@@ -81,12 +81,13 @@ public class CompradorController {
     @PutMapping("/comprador/")
     public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = true) String nickname,
                                             @RequestParam(value = "password", required = false) String password,
+                                            @RequestParam(value = "mail", required = false) String mail,
                                             @RequestParam(value = "direction", required = false) String dirección,
                                             @RequestParam(value = "points", required = false) String puntosResponsabilidad)
     {
         try{
             Comprador comprador = compradorDAO.readOne(nickname);
-            if(password == null && dirección == null && puntosResponsabilidad == null){
+            if(password == null && dirección == null && puntosResponsabilidad == null && mail == null){
                 return new ResponseEntity<>("No se ha enviado ningún atributo para actualizar",HttpStatus.BAD_REQUEST);
             }
             Map<String,Object> attributes = new HashMap<>();
@@ -98,6 +99,9 @@ public class CompradorController {
             }
             if(puntosResponsabilidad != null){
                 attributes.put("puntos_responsabilidad", Integer.parseInt(puntosResponsabilidad));
+            }
+            if(mail != null){
+                attributes.put("correo", mail);
             }
 
             compradorDAO.update(comprador.getNickname(), attributes);
