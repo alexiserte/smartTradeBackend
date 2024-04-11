@@ -88,7 +88,9 @@ public class AdminController {
                     this.productosComprados = productosComprados;
                 }
             }
-            return new ResponseEntity<>(new Return(identifier,result),HttpStatus.OK);
+
+            Return r = new Return(identifier,result);
+            return new ResponseEntity<>(r,HttpStatus.OK);
     }catch(EmptyResultDataAccessException e){
         return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
     
