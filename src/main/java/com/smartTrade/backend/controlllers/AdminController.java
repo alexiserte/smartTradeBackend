@@ -78,7 +78,17 @@ public class AdminController {
         try{
             Comprador c = comprador.readOne(identifier);
             Integer result = comprador.productosCompradosPorUnUsuario(identifier);
-            return new ResponseEntity<>(result,HttpStatus.OK);
+            
+            class Return{
+                private String identifier;
+                private Integer productosComprados;
+
+                public Return(String identifier, Integer productosComprados){
+                    this.identifier = identifier;
+                    this.productosComprados = productosComprados;
+                }
+            }
+            return new ResponseEntity<>(new Return(identifier,result),HttpStatus.OK);
     }catch(EmptyResultDataAccessException e){
         return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
     
