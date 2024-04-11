@@ -77,7 +77,7 @@ public class AdminController {
     public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){
         try{
             Comprador c = comprador.readOne(identifier);
-            int result = comprador.productosCompradosPorUnUsuario(identifier);
+            Integer result = comprador.productosCompradosPorUnUsuario(identifier);
             return new ResponseEntity<>(result,HttpStatus.OK);
     }catch(EmptyResultDataAccessException e){
         return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
