@@ -13,7 +13,7 @@ import java.io.FileInputStream;
 
 public class PNGConverter {
 
-    public String convertImageToBase64(String imagePath) {
+    public static String convertImageToBase64(String imagePath) {
         String base64Image = "";
         try (FileInputStream fileInputStreamReader = new FileInputStream(imagePath)) {
             byte[] imageData = new byte[fileInputStreamReader.available()];
@@ -25,7 +25,7 @@ public class PNGConverter {
         return "data:image/png;base64," + base64Image;
     }
 
-    public void base64ToImage(String base64Data, String dataDir) throws IOException {
+    public static void base64ToImage(String base64Data, String dataDir) throws IOException {
         // Decodificar la cadena base64 pasada como parámetro
         String base64ImageString = base64Data.replace("data:image/png;base64,", "");
         byte[] imageBytes = Base64.getDecoder().decode(base64ImageString);
@@ -38,5 +38,6 @@ public class PNGConverter {
     
 
     public static void main(String[] args) throws IOException {
+        System.out.println(convertImageToBase64("./output-onlinepngtools (9).png"));
     }
 }
