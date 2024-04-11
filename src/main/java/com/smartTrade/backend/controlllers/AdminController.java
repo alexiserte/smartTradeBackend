@@ -74,7 +74,7 @@ public class AdminController {
 
     
     @GetMapping("/admin/")
-    public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
+    public ResponseEntity<?> loginAdministrador(@RequestParam(value = "identifier", required = true) String identifier,
             @RequestParam(value = "password", required = false) String password) {
         if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información
                                 // del usuario
@@ -99,7 +99,7 @@ public class AdminController {
 
     @SuppressWarnings("unused")
     @PostMapping("/admin/")
-    public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
+    public ResponseEntity<?> registerAdministrador(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "mail", required = true) String correo,
             @RequestParam(value = "direccion", required = true) String direccion){
@@ -116,17 +116,24 @@ public class AdminController {
 
 
     @PutMapping("/admin/")
-    public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = false) String nickname,
+    public ResponseEntity<?> updateAdministrador(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "mail", required = false) String correo,
             @RequestParam(value = "direction", required = false) String dirección) {
         try {
             Administrador administrador = admin.readOne(nickname);
             Map<String, Object> attributes = new HashMap<>();
+            if(password == null && dirección == null && correo == null){
+                return new ResponseEntity<>("No se han enviado atributos para actualizar",HttpStatus.BAD_REQUEST);
+            }
             if (password != null) {
                 attributes.put("user_password", password);
             }
             if (dirección != null) {
                 attributes.put("direccion", dirección);
+            }
+            if (correo != null) {
+                attributes.put("correo", correo);
             }
             admin.update(administrador.getNickname(), attributes);
             return new ResponseEntity<>("Usuario actualizado correctamente", HttpStatus.OK);
@@ -138,7 +145,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/admin/")
-    public ResponseEntity<?> deleteComprador(@RequestParam(value = "nickname", required = true) String  nickname) {
+    public ResponseEntity<?> deleteAdministrador(@RequestParam(value = "nickname", required = true) String  nickname) {
         try{  
             Administrador administrador = admin.readOne(nickname);
            admin.delete(administrador.getNickname());

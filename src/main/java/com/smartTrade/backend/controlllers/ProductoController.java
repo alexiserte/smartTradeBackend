@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,9 +34,9 @@ public class ProductoController {
             res = res.stream()
                     .filter(producto -> productoDAO.isFromOneCategory(producto.getNombre(),producto.getId_vendedor(),category))
                     .toList();
-            return ResponseEntity.ok(res);
+            return new ResponseEntity<>(res, HttpStatus.OK);
         } else {
-            return ResponseEntity.ok(res);
+            return new ResponseEntity<>(res, HttpStatus.OK);
         }
 
     }
@@ -49,7 +50,7 @@ public class ProductoController {
     {
         try{
             productoDAO.create(nombre,characteristicName, vendorName, precio, descripcion);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }catch(Exception e){
             return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
         }
@@ -60,10 +61,13 @@ public class ProductoController {
                                            @RequestParam(name = "vendor", required = true) String vendorName) {
         try {
             productoDAO.delete(nombre,vendorName);
-            return ResponseEntity.ok(ResponseEntity.status(200).body("Producto eliminado"));
+            return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al eliminar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
     @PutMapping("/producto/")
@@ -72,10 +76,13 @@ public class ProductoController {
                                            @RequestParam(name = "attributes", required = true) HashMap<String, ?> atributos) {
         try {
             productoDAO.update(nombre, vendorName, atributos);
-            return ResponseEntity.ok(ResponseEntity.status(200).body("Producto actualizado"));
+            return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
+            return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        
     }
     
 }
