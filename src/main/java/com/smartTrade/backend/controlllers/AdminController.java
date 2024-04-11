@@ -87,6 +87,14 @@ public class AdminController {
                     this.identifier = identifier;
                     this.productosComprados = productosComprados;
                 }
+
+                public String getIdentifier(){
+                    return identifier;
+                }
+
+                public int getProductosComprados(){
+                    return productosComprados;
+                }
             }
 
             Return r = new Return(identifier,result);
