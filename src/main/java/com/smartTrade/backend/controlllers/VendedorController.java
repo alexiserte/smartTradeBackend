@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,44 +27,59 @@ public class VendedorController {
         if(password == null){ // Si no se envía la contraseña, se asume que se quiere obtener la información del usuario
             try{
                 Vendedor vendedor = vendedorDAO.readOne(identifier);
-                return ResponseEntity.ok(vendedor);
-            }catch(Exception e){
-                return ResponseEntity.ok(ResponseEntity.status(400).body("Error al obtener el usuario."));
+                return new ResponseEntity<>(vendedor, HttpStatus.OK);
+            }catch(EmptyResultDataAccessException e){
+                return new ResponseEntity<>("Usuario no econtrado", HttpStatus.NOT_FOUND);
+            }
+            catch(Exception e){
+                return new ResponseEntity<>("Error al obtener el usuario", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         else{ // Si se envía la contraseña, se asume que se quiere hacer login
             try {
                 Vendedor vendedor = vendedorDAO.readOne(identifier);
                 if (vendedor.getPassword().equals(password)) {
-                    return ResponseEntity.ok(vendedor);
+                    return new ResponseEntity<>(vendedor, HttpStatus.OK);
                 }
-                return ResponseEntity.ok(ResponseEntity.status(400).body("Contraseña incorrecta."));
+                return new ResponseEntity<>("Contraseña incorrecta", HttpStatus.UNAUTHORIZED);
             } catch (EmptyResultDataAccessException e) {
-                return ResponseEntity.ok(ResponseEntity.status(404).body("Usuario no encontrado."));
+                return new ResponseEntity<>("Usuario no econtrado", HttpStatus.NOT_FOUND);
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error al obtener el usuario", HttpStatus.INTERNAL_SERVER_ERROR);
             } 
         }
     }
 
+    @SuppressWarnings("unused")
     @PostMapping("/vendedor/")
     public ResponseEntity<?> registerVendedor(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "mail", required = true) String correo,
             @RequestParam(value = "direccion", required = true) String direccion){
         try{
+            Vendedor vendedor = vendedorDAO.readOne(nickname);
+            return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);  
+        }catch(EmptyResultDataAccessException e){
             vendedorDAO.create(nickname, password,correo,direccion);
-            return ResponseEntity.ok(ResponseEntity.status(201).body("Usuario registrado correctamente."));
-        }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al registrar el usuario. MOTIVO: " + e.getMessage()));
+            return new ResponseEntity<>("Usuario creado correctamente",HttpStatus.CREATED);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>("Error al crear el usuario",HttpStatus.BAD_REQUEST);
         }
     }
 
+    @SuppressWarnings("unused")
     @DeleteMapping("/vendedor/")
     public ResponseEntity<?> deleteVendedor(@RequestParam(value = "nickname", required = true) String  nickname) {
         try{    
+            Vendedor vendedor = vendedorDAO.readOne(nickname);
             vendedorDAO.delete(nickname);
-            return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario eliminado correctamente."));
-        }catch(Exception e){
-            return ResponseEntity.ok(ResponseEntity.status(400).body("Error al eliminar el usuario."));
+            return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>("Error al eliminar el usuario",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
