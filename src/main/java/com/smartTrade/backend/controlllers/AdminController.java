@@ -73,7 +73,7 @@ public class AdminController {
     }
 
     @SuppressWarnings("unused")
-    @GetMapping("/producto/comprador/")
+    @GetMapping("/admin/producto/comprador/")
     public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){
         try{
             Comprador c = comprador.readOne(identifier);
