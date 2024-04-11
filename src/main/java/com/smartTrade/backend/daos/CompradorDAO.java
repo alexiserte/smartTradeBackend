@@ -154,4 +154,8 @@ public class CompradorDAO {
 
     }
 
+    public int productosCompradosPorUnUsuario(String identifier){
+        return database.queryForObject("SELECT SUM(cantidad) FROM Detalle_Pedido WHERE id_pedido = ANY(SELECT id FROM Pedido WHERE id_comprador = ANY(SELECT id_usuario FROM Comprador WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ? OR correo = ?)))", Integer.class, identifier,identifier);
+    }
+
 }

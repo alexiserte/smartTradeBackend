@@ -72,7 +72,20 @@ public class AdminController {
         return producto.readAll();
     }
 
+    @SuppressWarnings("unused")
+    @GetMapping("/producto/comprador/")
+    public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){
+        try{
+            Comprador c = comprador.readOne(identifier);
+            int result = comprador.productosCompradosPorUnUsuario(identifier);
+            return new ResponseEntity<>(result,HttpStatus.OK);
+    }catch(EmptyResultDataAccessException e){
+        return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
     
+    }catch(Exception e){
+        return new ResponseEntity<>("Error al obtener el usuario",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
     @GetMapping("/admin/")
     public ResponseEntity<?> loginAdministrador(@RequestParam(value = "identifier", required = true) String identifier,
             @RequestParam(value = "password", required = false) String password) {
