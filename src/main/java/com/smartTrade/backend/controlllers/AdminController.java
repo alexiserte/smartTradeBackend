@@ -77,11 +77,11 @@ public class AdminController {
     public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){
         try{
             Comprador c = comprador.readOne(identifier);
-            Integer result = comprador.productosCompradosPorUnUsuario(identifier);
+            int result = comprador.productosCompradosPorUnUsuario(identifier);
             
             class Return{
                 private String identifier;
-                private Integer productosComprados;
+                private int productosComprados;
 
                 public Return(String identifier, Integer productosComprados){
                     this.identifier = identifier;
