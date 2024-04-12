@@ -35,9 +35,5 @@ public class PNGConverter {
             fos.write(imageBytes);
         }
     }
-    
 
-    public static void main(String[] args) throws IOException {
-        System.out.println(convertImageToBase64("./output-onlinepngtools (9).png"));
-    }
 }

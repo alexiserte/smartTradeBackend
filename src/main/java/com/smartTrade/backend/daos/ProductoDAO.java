@@ -2,7 +2,7 @@ package com.smartTrade.backend.daos;
 import com.smartTrade.backend.mappers.ProductMapper;
 import com.smartTrade.backend.models.Producto;
 import com.smartTrade.backend.daos.VendedorDAO;
-import com.smartTrade.backend.daos.CaracteristicaDAO;
+import com.smartTrade.backend.daos.Caracteristica_ProductoDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +22,7 @@ public class ProductoDAO{
     VendedorDAO VendedorDAO;
 
     @Autowired
-    CaracteristicaDAO CaracteristicaDAO;
+    Caracteristica_ProductoDAO CaracteristicaDAO;
 
     public ProductoDAO(JdbcTemplate database) {
         this.database = database;
@@ -98,6 +98,7 @@ public class ProductoDAO{
             return false;
         }
     }
+
 
 
 }
