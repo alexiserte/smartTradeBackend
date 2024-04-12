@@ -1,5 +1,6 @@
 package com.smartTrade.backend.controlllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,17 +29,23 @@ public class ProductoController {
 
     @GetMapping("/productos/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre, @RequestParam(name = "category", required = false) String category) {
+        List<Producto> resultado = new ArrayList<>();
         List<Producto> todosLosProductos = productoDAO.readAll();
         List<Producto> res = todosLosProductos
                 .stream()
                 .filter(producto -> StringComparison.areSimilar(nombre, producto.getNombre()))
                 .toList();
         if (category != null) {
-            res = res.stream()
+            resultado = res.stream()
                     .filter(producto -> productoDAO.isFromOneCategory(producto.getNombre(),producto.getId_vendedor(),category))
                     .toList();
+                    return new ResponseEntity<>(resultado, HttpStatus.OK);
         }
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        else{
+            return new ResponseEntity<>(res, HttpStatus.OK);
+            
+        }
+        
 
     }
 
