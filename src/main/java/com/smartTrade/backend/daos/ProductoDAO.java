@@ -41,7 +41,7 @@ public class ProductoDAO{
         }
     }
 
-    public List<?> readOne(String productName, String vendorName) {
+    public List<Object> readOne(String productName, String vendorName) {
         
         List<Object> res = new ArrayList<>();
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))", Integer.class, productName, vendorName);

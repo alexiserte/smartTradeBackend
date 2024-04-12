@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -91,7 +92,7 @@ public class ProductoController {
     public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName,
                                        @RequestParam(name = "vendor", required = true) String vendorName) {
         try {
-            List<?> resultado = productoDAO.readOne(productName, vendorName);
+            List<Object> resultado = productoDAO.readOne(productName, vendorName);
 
             class Response{
                 public Producto producto;
@@ -113,6 +114,7 @@ public class ProductoController {
 
             }
 
+            @SuppressWarnings("unchecked")
             Response r = new Response((Producto) resultado.get(0), (HashMap<String,String>) resultado.get(1));
             return new ResponseEntity<>(r, HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {

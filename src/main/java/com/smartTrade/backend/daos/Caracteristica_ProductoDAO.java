@@ -60,12 +60,9 @@ public class Caracteristica_ProductoDAO {
         List<Caracteristica> queryResult = database.query("SELECT id_caracteristica, valor, id_categoria, id_producto FROM Caracteristica WHERE id_producto = ?", new CaracteristicaMapper(), id_producto);
         
         List<Object> valores = new ArrayList<>();
-        for(Caracteristica c : queryResult) {
-            valores.add(c.getValor());
-        }
-
         List<String> nombres = new ArrayList<>();
         for(Caracteristica c : queryResult) {
+            valores.add(c.getValor());
             String nombre = database.queryForObject("SELECT nombre FROM Caracteristicas_Categoria WHERE id = ?", String.class, c.getId_caracteristica());
             nombres.add(nombre);
         }
