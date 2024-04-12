@@ -37,7 +37,7 @@ public class ProductoController {
                 .toList();
         if (category != null) {
             resultado = res.stream()
-                    .filter(producto -> productoDAO.isFromOneCategory(producto.getNombre(),producto.getId_vendedor(),category))
+                    .filter(producto -> !productoDAO.isFromOneCategory(producto.getNombre(),producto.getId_vendedor(),category))
                     .toList();
                     return new ResponseEntity<>(resultado, HttpStatus.OK);
         }
