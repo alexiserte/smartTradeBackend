@@ -70,6 +70,8 @@ public class Caracteristica_ProductoDAO {
         for(int i = 0; i < nombres.size(); i++) {
             res.put(nombres.get(i), valores.get(i).toString());
         }
+
+        res.remove("product");
         return res;
     }
 }
