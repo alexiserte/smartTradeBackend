@@ -115,8 +115,8 @@ public class ProductoController {
             }
 
             @SuppressWarnings("unchecked")
-            Response r = new Response((Producto) resultado.get(0), (HashMap<String,String>) resultado.get(1));
-            return new ResponseEntity<>(r, HttpStatus.OK);
+            Response r = new Response((Producto) resultado.get(0), (HashMap<String,String>)resultado.get(1));
+            return ResponseEntity.ok(r);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
         }catch(Exception e){
