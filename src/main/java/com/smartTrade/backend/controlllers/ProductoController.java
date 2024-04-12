@@ -20,7 +20,6 @@ import com.smartTrade.backend.daos.*;
 import com.smartTrade.backend.models.Producto;
 import com.smartTrade.backend.utils.StringComparison;
 
-
 @RestController
 public class ProductoController {
 
@@ -28,7 +27,8 @@ public class ProductoController {
     ProductoDAO productoDAO;
 
     @GetMapping("/productos/")
-    public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre, @RequestParam(name = "category", required = false) String category) {
+    public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre,
+            @RequestParam(name = "category", required = false) String category) {
         List<Producto> resultado = new ArrayList<>();
         List<Producto> todosLosProductos = productoDAO.readAll();
         List<Producto> res = todosLosProductos
@@ -36,80 +36,82 @@ public class ProductoController {
                 .filter(producto -> StringComparison.areSimilar(nombre, producto.getNombre()))
                 .toList();
         if (category != null) {
-            resultado = res.stream()
-                    .filter(producto -> !productoDAO.isFromOneCategory(producto.getNombre(),producto.getId_vendedor(),category))
+            resultado = todosLosProductos
+                    .stream()
+                    .filter(producto -> StringComparison.areSimilar(nombre, producto.getNombre()))
+                    .filter(producto -> !productoDAO.isFromOneCategory(producto.getNombre(), producto.getId_vendedor(),
+                            category))
                     .toList();
             if (resultado.size() == 0) {
-                return new ResponseEntity<>("No se han encontrado productos que cumplen con los criterios de búsqueda", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("No se han encontrado productos que cumplen con los criterios de búsqueda",
+                        HttpStatus.NOT_FOUND);
             } else {
                 return new ResponseEntity<>(resultado, HttpStatus.OK);
             }
-        }
-        else{
+        } else {
             return new ResponseEntity<>(res, HttpStatus.OK);
-            
-        }
-        
 
+        }
     }
 
     @PostMapping("/producto/")
     public ResponseEntity<?> insertarProducto(@RequestParam(name = "name", required = true) String nombre,
-                                                @RequestParam(name = "vendor", required = true) String vendorName,
-                                                @RequestParam(name = "price", required = true) double precio,
-                                                @RequestParam(name = "description", required = true) String descripcion,
-                                                @RequestParam(name = "category", required = true) String characteristicName,
-                                                @RequestParam(name = "image", required = true) String imagen)
-    {
-        try{
-            productoDAO.create(nombre,characteristicName, vendorName, precio, descripcion,imagen);
+            @RequestParam(name = "vendor", required = true) String vendorName,
+            @RequestParam(name = "price", required = true) double precio,
+            @RequestParam(name = "description", required = true) String descripcion,
+            @RequestParam(name = "category", required = true) String characteristicName,
+            @RequestParam(name = "image", required = true) String imagen) {
+        try {
+            productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imagen);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
         }
     }
 
     @DeleteMapping("/producto/")
     public ResponseEntity<?> deleteProduct(@RequestParam(name = "name", required = true) String nombre,
-                                           @RequestParam(name = "vendor", required = true) String vendorName) {
+            @RequestParam(name = "vendor", required = true) String vendorName) {
         try {
-            productoDAO.delete(nombre,vendorName);
+            productoDAO.delete(nombre, vendorName);
             return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al eliminar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar el producto: " + e.getLocalizedMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     @PutMapping("/producto/")
     public ResponseEntity<?> updateProduct(@RequestParam(name = "nombre", required = true) String nombre,
-                                           @RequestParam(name = "vendor", required = true) String vendorName,
-                                           @RequestParam(name = "attributes", required = true) HashMap<String, ?> atributos) {
+            @RequestParam(name = "vendor", required = true) String vendorName,
+            @RequestParam(name = "attributes", required = true) HashMap<String, ?> atributos) {
         try {
             productoDAO.update(nombre, vendorName, atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
+
     }
 
     @SuppressWarnings("unused")
     @GetMapping("/producto/")
     public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName,
-                                       @RequestParam(name = "vendor", required = true) String vendorName) {
+            @RequestParam(name = "vendor", required = true) String vendorName) {
         try {
             List<Object> resultado = productoDAO.readOne(productName, vendorName);
 
-            class Resultado{
+            class Resultado {
                 Producto producto;
-                HashMap<String,String> smartTag;
+                HashMap<String, String> smartTag;
 
-                public Resultado(Producto producto, HashMap<String,String> smartTag){
+                public Resultado(Producto producto, HashMap<String, String> smartTag) {
                     this.producto = producto;
                     this.smartTag = smartTag;
                 }
@@ -121,18 +123,18 @@ public class ProductoController {
                 public HashMap<String, String> getSmartTag() {
                     return smartTag;
                 }
-                
+
             }
 
             @SuppressWarnings("unchecked")
-            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String,String>)resultado.get(1));
+            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1));
             return ResponseEntity.ok(r);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener el producto: " + e.getLocalizedMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
-}
 
+}
