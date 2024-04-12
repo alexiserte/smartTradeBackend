@@ -107,10 +107,23 @@ public class ProductoDAO{
             
     }
 
-    public void validate(String nombre, String vendorName){
-        int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
-        database.update("DELETE FROM Pendientes_Validacion WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?)", nombre, id_vendedor);
-        database.update("UPDATE Producto SET validado = true WHERE nombre = ? AND id_vendedor = ?", nombre, id_vendedor);
+    public void validate(String nombre, String vendorName) throws EmptyResultDataAccessException{
+        int exists = database.queryForObject(
+                "SELECT COUNT(*) FROM Pendientes_Validacion WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)))",
+                Integer.class, nombre, vendorName);
+        if (exists == 0) {
+            throw new EmptyResultDataAccessException(1);
+        } else {
+            int id_vendedor = database.queryForObject(
+                    "SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
+                    Integer.class, vendorName);
+            database.update(
+                    "DELETE FROM Pendientes_Validacion WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?)",
+                    nombre, id_vendedor);
+            database.update("UPDATE Producto SET validado = true WHERE nombre = ? AND id_vendedor = ?", nombre,
+                    id_vendedor);
+
+        }
     }
 
     public List<Producto> getProductosPendientesDeValidacion() throws Exception{

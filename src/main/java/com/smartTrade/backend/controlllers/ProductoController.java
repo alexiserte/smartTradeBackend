@@ -151,14 +151,18 @@ public class ProductoController {
             @RequestParam(name = "vendor", required = true) String vendorName) {
         try {
             Producto producto = productoDAO.readOneProduct(nombre, vendorName);
+            try {
+                productoDAO.validate(nombre, vendorName);
+                return new ResponseEntity<>("Producto validado correctamente", HttpStatus.OK);
+            } catch (EmptyResultDataAccessException e) {
+                return new ResponseEntity<>("El producto ya ha sido validado", HttpStatus.CONFLICT);
+            }
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al validar el producto: " + e.getLocalizedMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        productoDAO.validate(nombre, vendorName);
-        return new ResponseEntity<>("Producto validado correctamente", HttpStatus.OK);
     }
 
 }
