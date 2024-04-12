@@ -95,8 +95,8 @@ public class ProductoController {
             List<Object> resultado = productoDAO.readOne(productName, vendorName);
 
             class Response{
-                public Producto producto;
-                public HashMap<String,String> smartTag;
+                private Producto producto;
+                private HashMap<String,String> smartTag;
 
                 public Response(Producto producto, HashMap<String,String> smartTag){
                     this.producto = producto;

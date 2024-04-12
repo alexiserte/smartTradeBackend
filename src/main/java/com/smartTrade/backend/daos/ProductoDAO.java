@@ -51,8 +51,9 @@ public class ProductoDAO{
        
         HashMap<String,String> caracteristicas = CaracteristicaDAO.getSmartTag(productName, vendorName);
 
-        res.add(producto);
-        res.add(caracteristicas);
+        res.add(0,producto);
+
+        res.add(1,caracteristicas);
 
         return res;
     }
