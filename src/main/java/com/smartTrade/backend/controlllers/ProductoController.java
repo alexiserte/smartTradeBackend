@@ -39,7 +39,11 @@ public class ProductoController {
             resultado = res.stream()
                     .filter(producto -> !productoDAO.isFromOneCategory(producto.getNombre(),producto.getId_vendedor(),category))
                     .toList();
-                    return new ResponseEntity<>(resultado, HttpStatus.OK);
+            if (resultado.size() == 0) {
+                return new ResponseEntity<>("No se han encontrado productos que cumplen con los criterios de búsqueda", HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(resultado, HttpStatus.OK);
+            }
         }
         else{
             return new ResponseEntity<>(res, HttpStatus.OK);
