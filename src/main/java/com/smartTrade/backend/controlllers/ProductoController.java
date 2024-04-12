@@ -146,7 +146,7 @@ public class ProductoController {
     }
 
     @SuppressWarnings("unused")
-    @PutMapping("/producto/validar")
+    @PutMapping("/producto/validar/")
     public ResponseEntity<?> validarProducto(@RequestParam(name = "name", required = true) String nombre,
             @RequestParam(name = "vendor", required = true) String vendorName) {
         try {
