@@ -94,28 +94,27 @@ public class ProductoController {
         try {
             List<Object> resultado = productoDAO.readOne(productName, vendorName);
 
-            class Response{
-                private Producto producto;
-                private HashMap<String,String> smartTag;
+            class Resultado{
+                Producto producto;
+                HashMap<String,String> smartTag;
 
-                public Response(Producto producto, HashMap<String,String> smartTag){
+                public Resultado(Producto producto, HashMap<String,String> smartTag){
                     this.producto = producto;
                     this.smartTag = smartTag;
                 }
 
-                public Producto getProduct(){
-                    return this.producto;
+                public Producto getProducto() {
+                    return producto;
                 }
 
-                public HashMap<String,String> getSmartTag(){
-                    return this.smartTag;
+                public HashMap<String, String> getSmartTag() {
+                    return smartTag;
                 }
-
-
+                
             }
 
             @SuppressWarnings("unchecked")
-            Response r = new Response((Producto) resultado.get(0), (HashMap<String,String>)resultado.get(1));
+            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String,String>)resultado.get(1));
             return ResponseEntity.ok(r);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
