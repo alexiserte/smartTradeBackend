@@ -8,8 +8,9 @@ public class Producto{
     private int id_categoria;
     private String imagen;
     private java.sql.Date fecha_publicacion;
+    private boolean validado;
 
-    public Producto(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion) {
+    public Producto(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado) {
         this.nombre = nombre;
         this.id_vendedor = id_vendedor;
         this.precio = precio;
@@ -17,6 +18,7 @@ public class Producto{
         this.id_categoria = id_categoria;
         this.imagen = imagen;
         this.fecha_publicacion = fecha_publicacion;
+        this.validado = validado;
     }
 
     public Producto(){}
@@ -76,4 +78,14 @@ public class Producto{
     public void setFecha_publicacion(java.sql.Date fecha_publicacion) {
         this.fecha_publicacion = fecha_publicacion;
     }
+
+    public boolean getValidado() {
+        return this.validado;
+    }
+
+    public void setValidado(boolean validado) {
+        this.validado = validado;
+    }
+
+    
 }

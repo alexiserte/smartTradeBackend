@@ -72,6 +72,17 @@ public class AdminController {
         return producto.readAll();
     }
 
+    @GetMapping("/admin/pendientes_validacion")
+    public ResponseEntity<?> mostrarProductosPendientesDeValidacion() {
+        try{
+            List<Producto> res =  producto.getProductosPendientesDeValidacion();
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener los productos pendientes de validación",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+    }
+
     @SuppressWarnings("unused")
     @GetMapping("/admin/productos/comprador/")
     public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){

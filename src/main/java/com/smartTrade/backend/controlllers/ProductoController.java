@@ -61,9 +61,17 @@ public class ProductoController {
             @RequestParam(name = "description", required = true) String descripcion,
             @RequestParam(name = "category", required = true) String characteristicName,
             @RequestParam(name = "image", required = true) String imagen) {
-        try {
-            productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imagen);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        
+            try {
+            try{
+                productoDAO.readOne(imagen, vendorName);
+                return new ResponseEntity<>("El producto ya existe", HttpStatus.CONFLICT);
+            }
+            catch(EmptyResultDataAccessException e){
+                productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imagen);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
+            
         } catch (Exception e) {
             return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
         }
@@ -135,6 +143,22 @@ public class ProductoController {
             return new ResponseEntity<>("Error al obtener el producto: " + e.getLocalizedMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @SuppressWarnings("unused")
+    @PutMapping("/producto/validar")
+    public ResponseEntity<?> validarProducto(@RequestParam(name = "name", required = true) String nombre,
+            @RequestParam(name = "vendor", required = true) String vendorName) {
+        try {
+            Producto producto = productoDAO.readOneProduct(nombre, vendorName);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al validar el producto: " + e.getLocalizedMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        productoDAO.validate(nombre, vendorName);
+        return new ResponseEntity<>("Producto validado correctamente", HttpStatus.OK);
     }
 
 }
