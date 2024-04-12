@@ -60,5 +60,8 @@ public class VendedorDAO{
         database.update("DELETE FROM Usuario WHERE nickname = ?;", nickname);
 
     }
-    
+
+    public int productosVendidosPorUnVendedor(String identifier) {
+        return database.queryForObject("SELECT SUM(cantidad) FROM Detalle_Pedido WHERE id_producto = ANY(SELECT id FROM Producto WHERE id_vendedor = ANY(SELECT id_usuario FROM Vendedor WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ? OR correo = ?)))",Integer.class, identifier, identifier);
+    }
 }

@@ -47,7 +47,7 @@ public class AdminController {
     @Autowired
     CategoriaDAO categoria;
 
-    @GetMapping("/admin/categoria")
+    @GetMapping("/admin/categorias")
     public List<Categoria> mostrarCategorias() {
         return categoria.readAll();
     }
@@ -57,23 +57,23 @@ public class AdminController {
         return admin.getAllDatabases();
     }
 
-    @GetMapping("/admin/comprador")
+    @GetMapping("/admin/compradores")
     public List<Comprador> mostrarUsuarios() {
         return comprador.readAll();
     }
 
-    @GetMapping("/admin/vendedor")
+    @GetMapping("/admin/vendedores")
     public List<Vendedor> mostrarVendedores() {
         return vendedor.readAll();
     }
 
-    @GetMapping("/admin/producto")
+    @GetMapping("/admin/productos")
     public List<Producto> mostrarProductos() {
         return producto.readAll();
     }
 
     @SuppressWarnings("unused")
-    @GetMapping("/admin/producto/comprador/")
+    @GetMapping("/admin/productos/comprador/")
     public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){
         try{
             Comprador c = comprador.readOne(identifier);
@@ -106,6 +106,39 @@ public class AdminController {
         return new ResponseEntity<>("Error al obtener el usuario",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+    @SuppressWarnings("unused")
+    @GetMapping("/admin/productos/vendedor/")
+    public ResponseEntity<?> productsSoldByOneVendor(@RequestParam(value = "identifier", required = true) String identifier){
+        try{
+            Vendedor v = vendedor.readOne(identifier);
+            int result = vendedor.productosVendidosPorUnVendedor(identifier);
+            
+            class Return{
+                private String identifier;
+                private int productosVendidos;
+
+                public Return(String identifier, Integer productosVendidos){
+                    this.identifier = identifier;
+                    this.productosVendidos = productosVendidos;
+                }
+
+                public String getIdentifier(){
+                    return identifier;
+                }
+
+                public int getProductosVendidos(){
+                    return productosVendidos;
+                }
+            }
+
+                Return r = new Return(identifier,result);
+                return new ResponseEntity<>(r,HttpStatus.OK);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener el usuario",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping("/admin/")
     public ResponseEntity<?> loginAdministrador(@RequestParam(value = "identifier", required = true) String identifier,
             @RequestParam(value = "password", required = false) String password) {
