@@ -2,6 +2,8 @@ package com.smartTrade.backend.controlllers;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -44,10 +46,11 @@ public class ProductoController {
                                                 @RequestParam(name = "vendor", required = true) String vendorName,
                                                 @RequestParam(name = "price", required = true) double precio,
                                                 @RequestParam(name = "description", required = true) String descripcion,
-                                                @RequestParam(name = "category", required = true) String characteristicName)
+                                                @RequestParam(name = "category", required = true) String characteristicName,
+                                                @RequestParam(name = "image", required = true) String imagen)
     {
         try{
-            productoDAO.create(nombre,characteristicName, vendorName, precio, descripcion);
+            productoDAO.create(nombre,characteristicName, vendorName, precio, descripcion,imagen);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch(Exception e){
             return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
@@ -83,11 +86,35 @@ public class ProductoController {
         
     }
 
+    @SuppressWarnings("unused")
     @GetMapping("/producto/")
     public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName,
                                        @RequestParam(name = "vendor", required = true) String vendorName) {
         try {
-            return new ResponseEntity<>(productoDAO.readOne(productName, vendorName), HttpStatus.OK);
+            List<?> resultado = productoDAO.readOne(productName, vendorName);
+
+            class Response{
+                public Producto producto;
+                public HashMap<String,String> smartTag;
+
+                public Response(Producto producto, HashMap<String,String> smartTag){
+                    this.producto = producto;
+                    this.smartTag = smartTag;
+                }
+
+                public Producto getProduct(){
+                    return this.producto;
+                }
+
+                public HashMap<String,String> getSmartTag(){
+                    return this.smartTag;
+                }
+
+
+            }
+
+            Response r = new Response((Producto) resultado.get(0), (HashMap<String,String>) resultado.get(1));
+            return new ResponseEntity<>(r, HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
         }catch(Exception e){

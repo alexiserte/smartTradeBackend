@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -28,33 +29,36 @@ public class ProductoDAO{
         this.database = database;
     }
   
-    public void create(String nombre, String characteristicName, String vendorName, double precio, String descripcion) {
+    public void create(String nombre, String characteristicName, String vendorName, double precio, String descripcion,String imagen) {
+        Date fechaActual = new Date(System.currentTimeMillis());
+        java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         try{
-            database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ? AND id IN(SELECT id_usuario FROM Vendedor)) AND id_categoria IN(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), nombre, vendorName, characteristicName);
+            database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ? AND id IN(SELECT id_usuario FROM Vendedor)) AND id_categoria IN(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), nombre, vendorName, characteristicName);
         }catch(EmptyResultDataAccessException e){
             int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class, characteristicName);
             int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
-            database.update("INSERT INTO Producto(nombre, id_categoria, id_vendedor, precio, descripcion) VALUES (?, ?, ?, ?, ?);", nombre, id_categoria, id_vendedor, precio, descripcion);
+            database.update("INSERT INTO Producto(nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido) VALUES (?, ?, ?, ?, ?,?,?);", nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fechaSQL);
         }
     }
 
-    public Map<Producto,HashMap<String,String>> readOne(String productName, String vendorName) {
+    public List<?> readOne(String productName, String vendorName) {
         
-        Map<Producto,HashMap<String,String>> res = new HashMap<>();
+        List<Object> res = new ArrayList<>();
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))", Integer.class, productName, vendorName);
 
-        Producto producto = database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion FROM Producto WHERE id_producto = ?", new ProductMapper(), id_producto);
+        Producto producto = database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion, imagen,fecha_añadido FROM Producto WHERE id_producto = ?", new ProductMapper(), id_producto);
         
        
         HashMap<String,String> caracteristicas = CaracteristicaDAO.getSmartTag(productName, vendorName);
 
-        res.put(producto, caracteristicas);
+        res.add(producto);
+        res.add(caracteristicas);
 
         return res;
     }
 
     public List<Producto> readAll() {
-        return database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion FROM Producto", new ProductMapper());
+        return database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido FROM Producto", new ProductMapper());
     }
 
     public void update(String nombre, String vendorName, HashMap<String, ?> atributos) {
@@ -82,12 +86,12 @@ public class ProductoDAO{
 
 
     public List<Producto> getProductsByCategory(String categoryName) {
-        return database.query("SELECT nombre,id_vendedor,id_categoria,descripcion,precio FROM Producto WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), categoryName);
+        return database.query("SELECT nombre,id_vendedor,id_categoria,descripcion,precio,imagen,fecha_añadido FROM Producto WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), categoryName);
     }
 
     public List<Producto> getProductsBySeller(String vendorName) {
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
-        return database.query("SELECT * FROM Producto WHERE id_vendedor IN (SELECT id FROM Vendedor WHERE id_usuario IN (SELECT id FROM Usuario WHERE nickname = ?))", new ProductMapper(), id_vendedor);
+        return database.query("SELECT nombre,id_vendedor,id_categoria,descripcion,precio,imagen,fecha_añadido FROM Producto WHERE id_vendedor IN (SELECT id FROM Vendedor WHERE id_usuario IN (SELECT id FROM Usuario WHERE nickname = ?))", new ProductMapper(), id_vendedor);
     }
 
     public boolean isFromOneCategory(String productName, int id_vendedor, String categoryName) {
