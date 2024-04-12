@@ -23,7 +23,7 @@ public class ProductoController {
     @Autowired
     ProductoDAO productoDAO;
 
-    @GetMapping("/producto/")
+    @GetMapping("/productos/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre, @RequestParam(name = "category", required = false) String category) {
         List<Producto> todosLosProductos = productoDAO.readAll();
         List<Producto> res = todosLosProductos
@@ -34,10 +34,8 @@ public class ProductoController {
             res = res.stream()
                     .filter(producto -> productoDAO.isFromOneCategory(producto.getNombre(),producto.getId_vendedor(),category))
                     .toList();
-            return new ResponseEntity<>(res, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(res, HttpStatus.OK);
         }
+        return new ResponseEntity<>(res, HttpStatus.OK);
 
     }
 
@@ -83,6 +81,18 @@ public class ProductoController {
             return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
+    }
+
+    @GetMapping("/producto/")
+    public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName,
+                                       @RequestParam(name = "vendor", required = true) String vendorName) {
+        try {
+            return new ResponseEntity<>(productoDAO.readOne(productName, vendorName), HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     
 }

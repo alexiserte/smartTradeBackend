@@ -46,7 +46,7 @@ public class ProductoDAO{
         Producto producto = database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion FROM Producto WHERE id_producto = ?", new ProductMapper(), id_producto);
         
        
-        HashMap<String,String> caracteristicas = CaracteristicaDAO.getCaracteristicas(id_producto);
+        HashMap<String,String> caracteristicas = CaracteristicaDAO.getSmartTag(productName, vendorName);
 
         res.put(producto, caracteristicas);
 
