@@ -96,12 +96,9 @@ public class ProductoDAO{
     }
 
     public boolean isFromOneCategory(String productName, int id_vendedor, String categoryName) {
-        try {
-            database.queryForObject("SELECT COUNT(*) FROM Producto WHERE nombre = ? AND id_vendedor = ? AND id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)",Integer.class, productName, id_vendedor, categoryName);
-            return true;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
-        }
+    
+            return database.queryForObject("SELECT COUNT(*) FROM Producto WHERE nombre = ? AND id_vendedor = ? AND id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)",Integer.class, productName, id_vendedor, categoryName) != 0;
+            
     }
 
 
