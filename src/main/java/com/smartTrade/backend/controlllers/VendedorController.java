@@ -1,6 +1,7 @@
 package com.smartTrade.backend.controlllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
+import com.smartTrade.backend.models.Producto;
 import com.smartTrade.backend.models.Vendedor;
 
 @RestController
@@ -20,6 +22,8 @@ public class VendedorController {
 
     @Autowired
     VendedorDAO vendedorDAO;
+    @Autowired
+    ProductoDAO productoDAO;
 
     @GetMapping("/vendedor/")
     public ResponseEntity<?> getVendedor(@RequestParam(value = "identifier", required = true) String identifier,
@@ -49,6 +53,22 @@ public class VendedorController {
             } 
         }
     }
+
+    @GetMapping("/vendedor/productos/")
+    public ResponseEntity<?> getProductsFromOneVendor(
+            @RequestParam(value = "identifier", required = true) String identifier) {
+        try {
+            Vendedor vendedor = vendedorDAO.readOne(identifier);
+            List<Producto> productos = productoDAO.getProductsBySeller(vendedor.getNickname());
+            return new ResponseEntity<>(productos, HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Usuario no econtrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener los productos del vendedor", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    
 
     @SuppressWarnings("unused")
     @PostMapping("/vendedor/")
