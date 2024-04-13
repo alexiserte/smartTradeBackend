@@ -39,6 +39,7 @@ public class ProductoDAO{
             int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
             database.update("INSERT INTO Producto(nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado) VALUES (?, ?, ?, ?, ?,?,?,?);", nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fechaSQL, false);
             database.update("INSERT INTO Pendientes_Validacion(id_producto) SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
+            database.update("INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
         }
     }
 
@@ -70,7 +71,9 @@ public class ProductoDAO{
 
     public void update(String nombre, String vendorName, HashMap<String, ?> atributos) {
         List<String> keys = new ArrayList<>(atributos.keySet());
-        int id_vendedor = database.queryForObject("SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))", Integer.class, nombre, vendorName);
+        int id_vendedor = database.queryForObject(
+                "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
+                Integer.class, nombre, vendorName);
         for (String key : keys) {
             Object valor = atributos.get(key);
             if (valor instanceof Integer) {
@@ -83,12 +86,18 @@ public class ProductoDAO{
                 database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
                         (Double) valor, nombre, id_vendedor);
             }
+            if (key.equals("precio")) {
+                database.update(
+                        "INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;",
+                        nombre, id_vendedor);
+            }
         }
     }
 
     public void delete(String nombre, String vendorName) {
         int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
         database.update("DELETE FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
+        database.update("DELETE FROM Historico_Precios WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?);", nombre, id_vendedor);
     }
 
 
