@@ -102,7 +102,11 @@ public class ProductoController {
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
+        }catch(IllegalArgumentException e){
+            return new ResponseEntity<>("Los valores son iguales a los ya existentes. No se ha actualizado el producto",
+                    HttpStatus.OK);
+        } 
+        catch (Exception e) {
             return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }

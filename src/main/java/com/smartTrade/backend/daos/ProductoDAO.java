@@ -131,6 +131,10 @@ public class ProductoDAO{
                 }
             }
         }
+
+        if(keys.size() == 0){
+            throw new IllegalArgumentException("Los atributos son iguales a los actuales. No se realizaron cambios.");
+        }
         for (String key : keys) {
             Object valor = atributos.get(key);
             if (valor instanceof Integer) {
