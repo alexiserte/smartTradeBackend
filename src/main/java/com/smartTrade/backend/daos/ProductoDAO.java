@@ -84,7 +84,7 @@ public class ProductoDAO{
  * producto en la base de datos. Las claves en `HashMap` corresponden a los atributos del producto (por
  * ejemplo, "
  */
-    public void update(String nombre, String vendorName, HashMap<String, ?> atributos) throws IllegalArgumentException {
+    public void update(String nombre, String vendorName, HashMap<String, ?> atributos){
         List<String> keys = new ArrayList<>(atributos.keySet());
         int id_vendedor = database.queryForObject(
                 "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
@@ -130,10 +130,6 @@ public class ProductoDAO{
                     keys.remove(key);
                 }
             }
-        }
-
-        if(keys.size() == 0){
-            throw new IllegalArgumentException("Los atributos son iguales a los actuales. No se realizaron cambios.");
         }
         for (String key : keys) {
             Object valor = atributos.get(key);
