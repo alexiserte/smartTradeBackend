@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
@@ -95,7 +96,7 @@ public class ProductoController {
     @PutMapping("/producto/")
     public ResponseEntity<?> updateProduct(@RequestParam(name = "nombre", required = true) String nombre,
             @RequestParam(name = "vendor", required = true) String vendorName,
-            @RequestParam(name = "attributes", required = true) HashMap<String, ?> atributos) {
+            @RequestBody(required = true) HashMap<String, ?> atributos) {
         try {
             productoDAO.update(nombre, vendorName, atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
