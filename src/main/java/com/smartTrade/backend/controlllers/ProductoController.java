@@ -120,10 +120,12 @@ public class ProductoController {
             class Resultado {
                 Producto producto;
                 HashMap<String, String> smartTag;
+                String vendedor;
 
-                public Resultado(Producto producto, HashMap<String, String> smartTag) {
+                public Resultado(Producto producto, HashMap<String, String> smartTag, String vendedor) {
                     this.producto = producto;
                     this.smartTag = smartTag;
+                    this.vendedor = vendedor;
                 }
 
                 public Producto getProducto() {
@@ -134,10 +136,14 @@ public class ProductoController {
                     return smartTag;
                 }
 
+                public String getVendedor() {
+                    return vendedor;
+                }
+
             }
 
             @SuppressWarnings("unchecked")
-            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1));
+            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),(String) resultado.get(2));
             return ResponseEntity.ok(r);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
