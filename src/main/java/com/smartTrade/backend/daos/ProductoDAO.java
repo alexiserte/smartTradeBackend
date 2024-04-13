@@ -51,7 +51,7 @@ public class ProductoDAO{
         List<Object> res = new ArrayList<>();
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))", Integer.class, productName, vendorName);
 
-        Producto producto = database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion, imagen,fecha_añadido,validado FROM Producto WHERE id = ?", new ProductMapper(), id_producto);
+        Producto producto = database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion, imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id = ?", new ProductMapper(), id_producto);
         
        
         HashMap<String,String> caracteristicas = CaracteristicaDAO.getSmartTag(productName, vendorName);
