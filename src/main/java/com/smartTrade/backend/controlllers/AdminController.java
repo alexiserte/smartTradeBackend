@@ -84,10 +84,24 @@ public class AdminController {
     }
 
     @GetMapping("/admin/categoria/")
-    public ResponseEntity<?> mostrarCategorias(@RequestParam(value = "name", required = true) String name) {
+    public ResponseEntity<?> mostrarCategorias(@RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "id", required = false) Integer id) {
         try{
-            int res = categoria.getID(name);
-            return new ResponseEntity<>(res,HttpStatus.OK);
+            if(name == null && id == null){
+                return new ResponseEntity<>(categoria.readAll(),HttpStatus.OK);
+            }
+            if(name != null && id != null){
+                return new ResponseEntity<>("No se pueden enviar ambos parámetros",HttpStatus.BAD_REQUEST);
+            }
+            if(name != null){
+                Categoria res = categoria.readOne(name);
+                return new ResponseEntity<>(res,HttpStatus.OK);
+            }
+            if(id != null){
+                String res = categoria.getNombre(id);
+                return new ResponseEntity<>(res,HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Error al obtener las categorías",HttpStatus.BAD_REQUEST);
         }catch(Exception e){
             return new ResponseEntity<>("Error al obtener las categorías",HttpStatus.INTERNAL_SERVER_ERROR);
         }

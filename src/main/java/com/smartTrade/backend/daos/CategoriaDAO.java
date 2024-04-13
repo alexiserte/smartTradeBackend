@@ -62,4 +62,8 @@ public class CategoriaDAO {
     public int getID(String nombre) {
         return database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class, nombre);
     }
+
+    public String getNombre(int id) {
+        return database.queryForObject("SELECT nombre FROM Categoria WHERE id = ?", String.class, id);
+    }
 }
