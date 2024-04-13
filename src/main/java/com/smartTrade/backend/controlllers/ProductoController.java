@@ -120,12 +120,12 @@ public class ProductoController {
             class Resultado {
                 Producto producto;
                 HashMap<String, String> smartTag;
-                String vendedor;
+                String categoria;
 
-                public Resultado(Producto producto, HashMap<String, String> smartTag, String vendedor) {
+                public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria) {
                     this.producto = producto;
                     this.smartTag = smartTag;
-                    this.vendedor = vendedor;
+                    this.categoria = categoria;
                 }
 
                 public Producto getProducto() {
@@ -136,8 +136,8 @@ public class ProductoController {
                     return smartTag;
                 }
 
-                public String getVendedor() {
-                    return vendedor;
+                public String getCategoria() {
+                    return categoria;
                 }
 
             }
