@@ -33,12 +33,14 @@ public class ProductoDAO{
     public void create(String nombre, String characteristicName, String vendorName, double precio, String descripcion,String imagen) {
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
+        java.util.Random random = new java.util.Random();
+        int huella_ecologica = random.nextInt(0,6);
         try{
-            database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ? AND id IN(SELECT id_usuario FROM Vendedor)) AND id_categoria IN(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), nombre, vendorName, characteristicName);
+            database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado, huella_ecologica FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ? AND id IN(SELECT id_usuario FROM Vendedor)) AND id_categoria IN(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), nombre, vendorName, characteristicName);
         }catch(EmptyResultDataAccessException e){
             int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class, characteristicName);
             int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
-            database.update("INSERT INTO Producto(nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado) VALUES (?, ?, ?, ?, ?,?,?,?);", nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fechaSQL, false);
+            database.update("INSERT INTO Producto(nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica) VALUES (?, ?, ?, ?, ?,?,?,?,?);", nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fechaSQL, false, huella_ecologica);
             database.update("INSERT INTO Pendientes_Validacion(id_producto) SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
             database.update("INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
         }
@@ -64,11 +66,11 @@ public class ProductoDAO{
 
     public Producto readOneProduct(String productName, String vendorName) {
         int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
-        return database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado FROM Producto WHERE nombre = ? AND id_vendedor = ?", new ProductMapper(), productName, id_vendedor);
+        return database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado, huella_ecologica FROM Producto WHERE nombre = ? AND id_vendedor = ?", new ProductMapper(), productName, id_vendedor);
     }
 
     public List<Producto> readAll() {
-        return database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado FROM Producto", new ProductMapper());
+        return database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto", new ProductMapper());
     }
 
 /**
@@ -93,7 +95,7 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
             "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
             Integer.class, nombre, vendorName);
     Producto product = database.queryForObject(
-            "SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado FROM Producto WHERE nombre = ? AND id_vendedor = ?", new ProductMapper(), nombre, id_vendedor);
+            "SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado ,huella_ecologica FROM Producto WHERE nombre = ? AND id_vendedor = ?", new ProductMapper(), nombre, id_vendedor);
 
     for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
         String key = iterator.next();
@@ -204,7 +206,7 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
     }
 
     public List<Producto> getProductosPendientesDeValidacion() throws Exception{
-        List<Producto> productos = database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado FROM Producto WHERE validado = false", new ProductMapper());
+        List<Producto> productos = database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE validado = false", new ProductMapper());
         int productosSize = database.queryForObject("SELECT COUNT(*) FROM Pendientes_Validacion", Integer.class);
         if(productosSize == productos.size()){
             return productos;

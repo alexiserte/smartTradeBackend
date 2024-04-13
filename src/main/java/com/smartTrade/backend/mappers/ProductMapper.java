@@ -17,6 +17,7 @@ public class ProductMapper implements RowMapper<Producto> {
         producto.setImagen(rs.getString("imagen"));
         producto.setFecha_publicacion(rs.getDate("fecha_añadido"));
         producto.setValidado(rs.getBoolean("validado"));
+        producto.setHuella_ecologica(rs.getInt("huella_ecologica"));
         return producto;
     }
 }
