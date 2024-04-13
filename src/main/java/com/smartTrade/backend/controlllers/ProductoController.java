@@ -204,10 +204,12 @@ public class ProductoController {
 
                     class ProductoEstadisticas{
                         String producto;
+                        String vendedor;
                         java.util.HashMap<String,?> estadisticas;
 
-                        public ProductoEstadisticas(String producto, java.util.HashMap<String,?> estadisticas){
+                        public ProductoEstadisticas(String producto, String vendedor,java.util.HashMap<String,?> estadisticas){
                             this.producto = producto;
+                            this.vendedor = vendedor;
                             this.estadisticas = estadisticas;
                         }
 
@@ -215,12 +217,16 @@ public class ProductoController {
                             return producto;
                         }
 
+                        public String getVendedor(){
+                            return vendedor;
+                        }
+
                         public java.util.HashMap<String,?> getEstadisticas(){
                             return estadisticas;
                         }
                     }
 
-                    ProductoEstadisticas pe = new ProductoEstadisticas(producto.getNombre(), mapaCaracteristicas);
+                    ProductoEstadisticas pe = new ProductoEstadisticas(producto.getNombre(),vendedor.getNickname(), mapaCaracteristicas);
                     return new ResponseEntity<>(pe,HttpStatus.OK);
                 }catch(EmptyResultDataAccessException e){
                     return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
