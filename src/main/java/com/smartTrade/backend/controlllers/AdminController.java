@@ -88,7 +88,7 @@ public class AdminController {
         
     }
 
-    @GetMapping("/admin/categorias/existen_subcategorias/")
+    @GetMapping("/admin/categoria/existen_subcategorias/")
     public ResponseEntity<?> existenSubcategorias(@RequestParam(value = "name", required = true) String name) {
         try {
             try {

@@ -84,7 +84,7 @@ public class CategoriaDAO {
         int id = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class, name);
         try{
             List<Categoria> queryResult = database.query("SELECT nombre, categoria_principal FROM Categoria WHERE categoria_principal = ?", new CategoriaMapper(), id);
-            return true;
+            return queryResult.size() > 0;
         }catch(EmptyResultDataAccessException e){
             return false;
         }
