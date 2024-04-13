@@ -69,11 +69,68 @@ public class ProductoDAO{
         return database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado FROM Producto", new ProductMapper());
     }
 
+/**
+ * El método "actualizar" en Java actualiza los atributos del producto en una base de datos en función
+ * de los atributos de entrada y la información del proveedor.
+ * 
+ * @param nombre El parámetro `nombre` en el método `update` representa el nombre del producto que
+ * deseas actualizar en la base de datos. Se utiliza para identificar el producto específico que
+ * necesita ser modificado.
+ * @param vendorName El parámetro `vendorName` en el método `update` representa el nombre del proveedor
+ * asociado con el producto que se actualiza. Se utiliza para identificar al proveedor en la base de
+ * datos y recuperar la información del producto correspondiente para actualizarla.
+ * @param atributos El parámetro `atributos` en el método `update` es un `HashMap` que contiene pares
+ * clave-valor que representan los atributos y sus nuevos valores que deben actualizarse para un
+ * producto en la base de datos. Las claves en `HashMap` corresponden a los atributos del producto (por
+ * ejemplo, "
+ */
     public void update(String nombre, String vendorName, HashMap<String, ?> atributos) {
         List<String> keys = new ArrayList<>(atributos.keySet());
         int id_vendedor = database.queryForObject(
                 "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
                 Integer.class, nombre, vendorName);
+        Producto product = database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado FROM Producto WHERE nombre = ? AND id_vendedor = ?", new ProductMapper(), nombre, id_vendedor);
+        for(String key : keys){
+            if(key.equals("nombre")){
+                if(atributos.get(key).equals(product.getNombre())){
+                    keys.remove(key);
+                }
+            }else if(key.equals("id_categoria")){
+                if(atributos.get(key).equals(product.getId_categoria())){
+                    keys.remove(key);
+                }
+            }
+            else if(key.equals("id_vendedor")){
+                if(atributos.get(key).equals(product.getId_vendedor())){
+                    keys.remove(key);
+                }
+            }
+            else if(key.equals("precio")){
+                if(atributos.get(key).equals(product.getPrecio())){
+                    keys.remove(key);
+                }
+            }
+            else if(key.equals("descripcion")){
+                if(atributos.get(key).equals(product.getDescripcion())){
+                    keys.remove(key);
+                }
+            }
+            else if(key.equals("imagen")){
+                if(atributos.get(key).equals(product.getImagen())){
+                    keys.remove(key);
+                }
+            }
+            else if(key.equals("fecha_añadido")){
+                if(atributos.get(key).equals(product.getFecha_publicacion())){
+                    keys.remove(key);
+                }
+            }
+            else if(key.equals("validado")){
+                if(atributos.get(key).equals(product.getValidado())){
+                    keys.remove(key);
+                }
+            }
+        }
         for (String key : keys) {
             Object valor = atributos.get(key);
             if (valor instanceof Integer) {
