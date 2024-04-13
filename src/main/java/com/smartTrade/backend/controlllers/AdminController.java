@@ -83,6 +83,16 @@ public class AdminController {
         
     }
 
+    @GetMapping("/admin/categoria/")
+    public ResponseEntity<?> mostrarCategorias(@RequestParam(value = "name", required = true) String name) {
+        try{
+            int res = categoria.getID(name);
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener las categorías",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @SuppressWarnings("unused")
     @GetMapping("/admin/productos/comprador/")
     public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){

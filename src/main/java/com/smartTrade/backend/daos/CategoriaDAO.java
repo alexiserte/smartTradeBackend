@@ -58,4 +58,8 @@ public class CategoriaDAO {
     public List<Categoria> readAll() {
         return database.query("SELECT nombre, categoria_principal FROM Categoria", new CategoriaMapper());
     }
+
+    public int getID(String nombre) {
+        return database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class, nombre);
+    }
 }
