@@ -87,6 +87,7 @@ public class ProductoDAO{
  */
 public void update(String nombre, String vendorName, HashMap<String, ?> atributos) {
     List<String> keys = new ArrayList<>(atributos.keySet());
+    boolean precio = false;
     int id_vendedor = database.queryForObject(
             "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
             Integer.class, nombre, vendorName);
@@ -100,31 +101,35 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
                 iterator.remove();
             }
         } else if (key.equals("id_categoria")) {
-            if (atributos.get(key).equals(product.getId_categoria())) {
+            if ((int) atributos.get(key) == (product.getId_categoria())) {
                 iterator.remove();
             }
         } else if (key.equals("id_vendedor")) {
-            if (atributos.get(key).equals(product.getId_vendedor())) {
+            if ((int) atributos.get(key) == product.getId_vendedor()) {
                 iterator.remove();
             }
         } else if (key.equals("precio")) {
-            if (atributos.get(key).equals(product.getPrecio())) {
+            
+            if ((Double) atributos.get(key) == product.getPrecio()) {
                 iterator.remove();
             }
+            else{
+                precio = true;
+            }
         } else if (key.equals("descripcion")) {
-            if (atributos.get(key).equals(product.getDescripcion())) {
+            if (((String)atributos.get(key)).equals(product.getDescripcion())) {
                 iterator.remove();
             }
         } else if (key.equals("imagen")) {
-            if (atributos.get(key).equals(product.getImagen())) {
+            if (((String)atributos.get(key)).equals(product.getImagen())) {
                 iterator.remove();
             }
         } else if (key.equals("fecha_añadido")) {
-            if (atributos.get(key).equals(product.getFecha_publicacion())) {
+            if (((Date)atributos.get(key)).equals(product.getFecha_publicacion())) {
                 iterator.remove();
             }
         } else if (key.equals("validado")) {
-            if (atributos.get(key).equals(product.getValidado())) {
+            if ((boolean) atributos.get(key) == product.getValidado()) {
                 iterator.remove();
             }
         }
@@ -148,12 +153,9 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
         }
     }
     
-    for (String key : keys) {
-        if (key.equals("precio")) {
-            database.update(
-                    "INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;",
-                    nombre, id_vendedor);
-        }
+
+    if(precio){
+        database.update("INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
     }
 }
 
