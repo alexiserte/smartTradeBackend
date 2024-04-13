@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import com.smartTrade.backend.mappers.CategoriaMapper;
 import com.smartTrade.backend.models.Categoria;
 
@@ -75,5 +77,16 @@ public class CategoriaDAO {
 
     public List<Categoria> getCategoriasPrincipales(){
         return database.query("SELECT nombre,categoria_principal FROM Categoria WHERE categoria_principal IS NULL", new CategoriaMapper());
+    }
+
+
+    public boolean hasSubcategories(String name){
+        int id = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class, name);
+        try{
+            List<Categoria> queryResult = database.query("SELECT nombre, categoria_principal FROM Categoria WHERE categoria_principal = ?", new CategoriaMapper(), id);
+            return true;
+        }catch(EmptyResultDataAccessException e){
+            return false;
+        }
     }
 }

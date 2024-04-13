@@ -88,6 +88,45 @@ public class AdminController {
         
     }
 
+    @GetMapping("/admin/categorias/existen_subcategorias/")
+    public ResponseEntity<?> existenSubcategorias(@RequestParam(value = "name", required = true) String name) {
+        try {
+            try {
+                boolean res = categoria.hasSubcategories(name);
+
+                class Result{
+                    private String name;
+                    private boolean hasSubcategories;
+
+                    public Result(String name, boolean hasSubcategories){
+                        this.name = name;
+                        this.hasSubcategories = hasSubcategories;
+                    }
+
+                    public String getName(){
+                        return name;
+                    }
+
+                    public boolean getHasSubcategories(){
+                        return hasSubcategories;
+                    }
+                }
+
+                Result r = new Result(name,res);
+
+                return new ResponseEntity<>(r, HttpStatus.OK);
+            } catch (EmptyResultDataAccessException e) {
+                return new ResponseEntity<>("No se encontraron subcategorías", HttpStatus.NOT_FOUND);
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error al obtener las subcategorías", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Categoría no encontrada", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener las subcategorías", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/admin/categoria/")
     public ResponseEntity<?> mostrarCategorias(@RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "id", required = false) Integer id) {
