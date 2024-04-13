@@ -62,6 +62,19 @@ public class VendedorDAO{
     }
 
     public int productosVendidosPorUnVendedor(String identifier) {
-        return database.queryForObject("SELECT SUM(cantidad) FROM Detalle_Pedido WHERE id_producto = ANY(SELECT id FROM Producto WHERE id_vendedor = ANY(SELECT id_usuario FROM Vendedor WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ? OR correo = ?)))",Integer.class, identifier, identifier);
+        int numResults = database.queryForObject(
+                "SELECT COUNT(*) FROM Detalle_Pedido WHERE id_producto = ANY(SELECT id FROM Producto WHERE id_vendedor = ANY(SELECT id_usuario FROM Vendedor WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ? OR correo = ?)))",
+                Integer.class, identifier, identifier);
+        if (numResults == 0) {
+            return 0;
+        } else {
+            return database.queryForObject(
+                    "SELECT SUM(cantidad) FROM Detalle_Pedido WHERE id_producto = ANY(SELECT id FROM Producto WHERE id_vendedor = ANY(SELECT id_usuario FROM Vendedor WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ? OR correo = ?)))",
+                    Integer.class, identifier, identifier);
+        }
+    }
+
+    public String getVendorName(int id_vendedor) {
+        return database.queryForObject("SELECT nickname FROM Usuario WHERE id = ?", String.class, id_vendedor);
     }
 }

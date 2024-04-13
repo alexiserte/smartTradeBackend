@@ -2,9 +2,9 @@ package com.smartTrade.backend.models;
 
 public class Categoria {
     private String nombre;
-    private Categoria categoria_principal;
+    private Integer categoria_principal;
 
-    public Categoria(String nombre, Categoria categoria_principal) {
+    public Categoria(String nombre, int categoria_principal) {
         this.nombre = nombre;
         this.categoria_principal = categoria_principal;
     }
@@ -21,7 +21,7 @@ public class Categoria {
         return nombre;
     }
 
-    public Categoria getCategoria_principal() {
+    public int getCategoria_principal() {
         return categoria_principal;
     }
 
@@ -29,7 +29,7 @@ public class Categoria {
         this.nombre = nombre;
     }
 
-    public void setCategoria_principal(Categoria categoria_principal) {
+    public void setCategoria_principal(int categoria_principal) {
         this.categoria_principal = categoria_principal;
     }
 }

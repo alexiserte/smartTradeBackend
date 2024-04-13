@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import com.smartTrade.backend.daos.AdministradorDAO;
 import com.smartTrade.backend.daos.CategoriaDAO;
 import com.smartTrade.backend.daos.CompradorDAO;
@@ -51,6 +52,10 @@ public class AdminController {
     public List<Categoria> mostrarCategorias() {
         return categoria.readAll();
     }
+    @GetMapping("/admin/categorias/principales")
+    public List<Categoria> mostrarCategoriasPrincipales() {
+        return categoria.getCategoriasPrincipales();
+    }
 
     @GetMapping("/admin/database")
     public List<String> mostrarBasesDeDatos() {
@@ -72,6 +77,99 @@ public class AdminController {
         return producto.readAll();
     }
 
+    @GetMapping("/admin/pendientes_validacion")
+    public ResponseEntity<?> mostrarProductosPendientesDeValidacion() {
+        try{
+            List<Producto> res =  producto.getProductosPendientesDeValidacion();
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener los productos pendientes de validación",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+    }
+
+    @GetMapping("/admin/categoria/existen_subcategorias/")
+    public ResponseEntity<?> existenSubcategorias(@RequestParam(value = "name", required = true) String name) {
+        try {
+            try {
+                boolean res = categoria.hasSubcategories(name);
+
+                class Result{
+                    private String name;
+                    private boolean hasSubcategories;
+
+                    public Result(String name, boolean hasSubcategories){
+                        this.name = name;
+                        this.hasSubcategories = hasSubcategories;
+                    }
+
+                    public String getName(){
+                        return name;
+                    }
+
+                    public boolean getHasSubcategories(){
+                        return hasSubcategories;
+                    }
+                }
+
+                Result r = new Result(name,res);
+
+                return new ResponseEntity<>(r, HttpStatus.OK);
+            } catch (EmptyResultDataAccessException e) {
+                return new ResponseEntity<>("No se encontraron subcategorías", HttpStatus.NOT_FOUND);
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error al obtener las subcategorías", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Categoría no encontrada", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener las subcategorías", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/admin/categoria/")
+    public ResponseEntity<?> mostrarCategorias(@RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "id", required = false) Integer id) {
+        try{
+            if(name == null && id == null){
+                return new ResponseEntity<>(categoria.readAll(),HttpStatus.OK);
+            }
+            if(name != null && id != null){
+                return new ResponseEntity<>("No se pueden enviar ambos parámetros",HttpStatus.BAD_REQUEST);
+            }
+            if(name != null){
+                Categoria res = categoria.readOne(name);
+                return new ResponseEntity<>(res,HttpStatus.OK);
+            }
+            if(id != null){
+                String res = categoria.getNombre(id);
+                return new ResponseEntity<>(res,HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Error al obtener las categorías",HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener las categorías",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("admin/categoria/subcategorias/")
+    public ResponseEntity<?> mostrarSubcategorias(@RequestParam(value = "name", required = true) String name) {
+        try{
+            Categoria c = categoria.readOne(name);
+            try{
+                List<Categoria> res = categoria.getSubcategorias(c.getNombre());
+                return new ResponseEntity<>(res,HttpStatus.OK);
+            }catch(EmptyResultDataAccessException e){
+                return new ResponseEntity<>("No se encontraron subcategorías",HttpStatus.NOT_FOUND);
+            }catch(Exception e){
+                return new ResponseEntity<>("Error al obtener las subcategorías",HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Categoría no encontrada",HttpStatus.NOT_FOUND);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>("Error al obtener las subcategorías",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @SuppressWarnings("unused")
     @GetMapping("/admin/productos/comprador/")
     public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){
@@ -103,7 +201,7 @@ public class AdminController {
         return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
     
     }catch(Exception e){
-        return new ResponseEntity<>("Error al obtener el usuario",HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Error al obtener el usuario: " + e.getLocalizedMessage() + "\n",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
     @SuppressWarnings("unused")
@@ -136,7 +234,7 @@ public class AdminController {
         }catch(EmptyResultDataAccessException e){
             return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
         }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener el usuario",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error al obtener el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("/admin/")

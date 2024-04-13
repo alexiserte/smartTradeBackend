@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.smartTrade.backend.models.Caracteristica;
+import com.smartTrade.backend.models.Categoria;
 
 @Repository
 public class Caracteristica_ProductoDAO {
@@ -53,13 +54,25 @@ public class Caracteristica_ProductoDAO {
         database.update("DELETE FROM Caracteristica WHERE nombre = ? AND id_producto = ?;", nombre, id_producto);
     }
     
-    public HashMap<String,String> getCaracteristicas(int id_producto) {
-        HashMap<String,String> res  = new HashMap<>();
-        List<Caracteristica> queryResult = database.query("SELECT nombre, valor, id_categoria, id_producto FROM caracteristica WHERE id_producto = ?", new CaracteristicaMapper(), id_producto);
+    public HashMap<String,String> getSmartTag(String productName, String vendorName){
+        HashMap<String,String> res = new HashMap<>();
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ANY(SELECT id_usuario FROM Vendedor WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?))", Integer.class, productName, vendorName);
+
+        List<Caracteristica> queryResult = database.query("SELECT id_caracteristica, valor, id_categoria, id_producto FROM Caracteristica WHERE id_producto = ?", new CaracteristicaMapper(), id_producto);
+        
+        List<Object> valores = new ArrayList<>();
+        List<String> nombres = new ArrayList<>();
         for(Caracteristica c : queryResult) {
-            res.put(c.getNombre(), c.getValor());
+            valores.add(c.getValor());
+            String nombre = database.queryForObject("SELECT nombre FROM Caracteristicas_Categoria WHERE id = ?", String.class, c.getId_caracteristica());
+            nombres.add(nombre);
         }
+
+        for(int i = 0; i < nombres.size(); i++) {
+            res.put(nombres.get(i), valores.get(i).toString());
+        }
+
+        res.remove("product");
         return res;
     }
-
 }
