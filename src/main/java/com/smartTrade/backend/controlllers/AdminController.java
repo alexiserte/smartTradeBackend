@@ -124,7 +124,7 @@ public class AdminController {
         return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
     
     }catch(Exception e){
-        return new ResponseEntity<>("Error al obtener el usuario",HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Error al obtener el usuario: " + e.getLocalizedMessage() + "\n",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
     @SuppressWarnings("unused")
