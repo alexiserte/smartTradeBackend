@@ -56,8 +56,8 @@ public class ProductoDAO{
         res.add(0,producto);
 
         res.add(1,caracteristicas);
-        res.add(vendorName);
-
+        String categoria = database.queryForObject("SELECT nombre FROM Categoria WHERE id IN(SELECT id_categoria FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)))",String.class,productName,vendorName);
+        res.add(2,categoria);
 
         return res;
     }
