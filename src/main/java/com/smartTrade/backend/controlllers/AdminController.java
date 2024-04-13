@@ -157,7 +157,7 @@ public class AdminController {
         }catch(EmptyResultDataAccessException e){
             return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
         }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener el usuario",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error al obtener el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("/admin/")
