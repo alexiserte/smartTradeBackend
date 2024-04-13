@@ -12,7 +12,7 @@ public class CategoriaMapper implements RowMapper<Categoria> {
     public Categoria mapRow(ResultSet rs, int rowNum) throws SQLException {
         Categoria categoria = new Categoria();
         categoria.setNombre(rs.getString("nombre"));
-        categoria.setCategoria_principal(new Categoria(rs.getString("categoria_principal")));
+        categoria.setCategoria_principal(rs.getInt("categoria_principal"));
         return categoria;
     }
 }
