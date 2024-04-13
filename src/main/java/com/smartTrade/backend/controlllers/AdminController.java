@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import com.smartTrade.backend.daos.AdministradorDAO;
 import com.smartTrade.backend.daos.CategoriaDAO;
 import com.smartTrade.backend.daos.CompradorDAO;
@@ -50,6 +51,10 @@ public class AdminController {
     @GetMapping("/admin/categorias")
     public List<Categoria> mostrarCategorias() {
         return categoria.readAll();
+    }
+    @GetMapping("/admin/categorias/principales")
+    public List<Categoria> mostrarCategoriasPrincipales() {
+        return categoria.getCategoriasPrincipales();
     }
 
     @GetMapping("/admin/database")
@@ -107,6 +112,25 @@ public class AdminController {
         }
     }
 
+    @GetMapping("admin/categoria/subcategorias/")
+    public ResponseEntity<?> mostrarSubcategorias(@RequestParam(value = "name", required = true) String name) {
+        try{
+            Categoria c = categoria.readOne(name);
+            try{
+                List<Categoria> res = categoria.getSubcategorias(c.getNombre());
+                return new ResponseEntity<>(res,HttpStatus.OK);
+            }catch(EmptyResultDataAccessException e){
+                return new ResponseEntity<>("No se encontraron subcategorías",HttpStatus.NOT_FOUND);
+            }catch(Exception e){
+                return new ResponseEntity<>("Error al obtener las subcategorías",HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Categoría no encontrada",HttpStatus.NOT_FOUND);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>("Error al obtener las subcategorías",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @SuppressWarnings("unused")
     @GetMapping("/admin/productos/comprador/")
     public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){

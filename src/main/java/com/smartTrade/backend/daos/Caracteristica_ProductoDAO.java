@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.smartTrade.backend.models.Caracteristica;
+import com.smartTrade.backend.models.Categoria;
 
 @Repository
 public class Caracteristica_ProductoDAO {
