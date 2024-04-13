@@ -25,10 +25,9 @@ public class PrecioDAO {
         List<Double> historicoPrecios = database.queryForList("SELECT precio FROM Historico_Precios WHERE id_producto = ?",Double.class,id_product);
         HashMap<String,Double> precios = new HashMap<>();
         for(int i = 0; i < historicoPrecios.size(); i++){
-            precios.put("Precio " + i, historicoPrecios.get(i));
+            precios.put("Precio " + (i + 1), historicoPrecios.get(i));
         }
         HashMap<String, Object> res = new HashMap<>();
-        res.put("Producto", productName);
         res.put("Número de cambios de precio", numerodecambios);
         res.put("Precio mínimo", preciominimo);
         res.put("Precio máximo", preciomaximo);

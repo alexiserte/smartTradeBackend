@@ -201,7 +201,27 @@ public class ProductoController {
                 try{
                     Producto producto = productoDAO.readOneProduct(productName, vendedor.getNickname());
                     HashMap<String,?> mapaCaracteristicas = precioDAO.getStats(producto.getNombre(), vendedor.getNickname());
-                    return new ResponseEntity<>(mapaCaracteristicas,HttpStatus.OK);
+
+                    class ProductoEstadisticas{
+                        String producto;
+                        java.util.HashMap<String,?> estadisticas;
+
+                        public ProductoEstadisticas(String producto, java.util.HashMap<String,?> estadisticas){
+                            this.producto = producto;
+                            this.estadisticas = estadisticas;
+                        }
+
+                        public String getProducto(){
+                            return producto;
+                        }
+
+                        public java.util.HashMap<String,?> getEstadisticas(){
+                            return estadisticas;
+                        }
+                    }
+
+                    ProductoEstadisticas pe = new ProductoEstadisticas(producto.getNombre(), mapaCaracteristicas);
+                    return new ResponseEntity<>(pe,HttpStatus.OK);
                 }catch(EmptyResultDataAccessException e){
                     return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
                 }catch(Exception e){
