@@ -175,7 +175,7 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
 
     public List<Producto> getProductsBySeller(String vendorName) {
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
-        return database.query("SELECT nombre,id_vendedor,id_categoria,descripcion,precio,imagen,fecha_añadido, validado FROM Producto WHERE id_vendedor IN (SELECT id_usuario FROM Vendedor WHERE id_usuario IN (SELECT id FROM Usuario WHERE nickname = ?))", new ProductMapper(), id_vendedor);
+        return database.query("SELECT nombre,id_vendedor,id_categoria,descripcion,precio,imagen,fecha_añadido, validado FROM Producto WHERE id_vendedor = ?", new ProductMapper(), id_vendedor);
     }
 
     public boolean isFromOneCategory(String productName, int id_vendedor, String categoryName) {
