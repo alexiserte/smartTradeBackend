@@ -146,6 +146,9 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
             database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
                     (Double) valor, nombre, id_vendedor);
         }
+    }
+    
+    for (String key : keys) {
         if (key.equals("precio")) {
             database.update(
                     "INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;",
@@ -153,6 +156,7 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
         }
     }
 }
+
 
 
     public void delete(String nombre, String vendorName) {
