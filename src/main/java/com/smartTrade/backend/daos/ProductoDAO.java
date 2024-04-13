@@ -95,9 +95,10 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
             "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
             Integer.class, nombre, vendorName);
     Producto product = database.queryForObject(
-            "SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado ,huella_ecologica FROM Producto WHERE nombre = ? AND id_vendedor = ?", new ProductMapper(), nombre, id_vendedor);
+            "SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado ,huella_ecologica FROM Producto WHERE nombre = ? AND id_vendedor = ?",
+            new ProductMapper(), nombre, id_vendedor);
 
-    for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
+    for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
         String key = iterator.next();
         if (key.equals("nombre")) {
             if (atributos.get(key).equals(product.getNombre())) {
@@ -112,30 +113,34 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
                 iterator.remove();
             }
         } else if (key.equals("precio")) {
-            
+
             if ((Double) atributos.get(key) == product.getPrecio()) {
                 iterator.remove();
-            }
-            else{
+            } else {
                 precio = true;
             }
         } else if (key.equals("descripcion")) {
-            if (((String)atributos.get(key)).equals(product.getDescripcion())) {
+            if (((String) atributos.get(key)).equals(product.getDescripcion())) {
                 iterator.remove();
             }
         } else if (key.equals("imagen")) {
-            if (((String)atributos.get(key)).equals(product.getImagen())) {
+            if (((String) atributos.get(key)).equals(product.getImagen())) {
                 iterator.remove();
             }
         } else if (key.equals("fecha_añadido")) {
-            if (((Date)atributos.get(key)).equals(product.getFecha_publicacion())) {
+            if (((Date) atributos.get(key)).equals(product.getFecha_publicacion())) {
                 iterator.remove();
             }
         } else if (key.equals("validado")) {
             if ((boolean) atributos.get(key) == product.getValidado()) {
                 iterator.remove();
             }
+        } else if (key.equals("huella_ecologica")) {
+            if ((int) atributos.get(key) == product.getHuella_ecologica()) {
+                iterator.remove();
+            }
         }
+
     }
 
     if (keys.isEmpty()) {
@@ -155,10 +160,11 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
                     (Double) valor, nombre, id_vendedor);
         }
     }
-    
 
-    if(precio){
-        database.update("INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
+    if (precio) {
+        database.update(
+                "INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;",
+                nombre, id_vendedor);
     }
 }
 
