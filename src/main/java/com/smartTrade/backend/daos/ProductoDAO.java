@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 
 @Repository
@@ -84,75 +85,75 @@ public class ProductoDAO{
  * producto en la base de datos. Las claves en `HashMap` corresponden a los atributos del producto (por
  * ejemplo, "
  */
-    public void update(String nombre, String vendorName, HashMap<String, ?> atributos){
-        List<String> keys = new ArrayList<>(atributos.keySet());
-        int id_vendedor = database.queryForObject(
-                "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
-                Integer.class, nombre, vendorName);
-        Producto product = database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado FROM Producto WHERE nombre = ? AND id_vendedor = ?", new ProductMapper(), nombre, id_vendedor);
-        for(String key : keys){
-            if(key.equals("nombre")){
-                if(atributos.get(key).equals(product.getNombre())){
-                    keys.remove(key);
-                }
-            }else if(key.equals("id_categoria")){
-                if(atributos.get(key).equals(product.getId_categoria())){
-                    keys.remove(key);
-                }
+public void update(String nombre, String vendorName, HashMap<String, ?> atributos) {
+    List<String> keys = new ArrayList<>(atributos.keySet());
+    int id_vendedor = database.queryForObject(
+            "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
+            Integer.class, nombre, vendorName);
+    Producto product = database.queryForObject(
+            "SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado FROM Producto WHERE nombre = ? AND id_vendedor = ?", new ProductMapper(), nombre, id_vendedor);
+
+    for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
+        String key = iterator.next();
+        if (key.equals("nombre")) {
+            if (atributos.get(key).equals(product.getNombre())) {
+                iterator.remove();
             }
-            else if(key.equals("id_vendedor")){
-                if(atributos.get(key).equals(product.getId_vendedor())){
-                    keys.remove(key);
-                }
+        } else if (key.equals("id_categoria")) {
+            if (atributos.get(key).equals(product.getId_categoria())) {
+                iterator.remove();
             }
-            else if(key.equals("precio")){
-                if(atributos.get(key).equals(product.getPrecio())){
-                    keys.remove(key);
-                }
+        } else if (key.equals("id_vendedor")) {
+            if (atributos.get(key).equals(product.getId_vendedor())) {
+                iterator.remove();
             }
-            else if(key.equals("descripcion")){
-                if(atributos.get(key).equals(product.getDescripcion())){
-                    keys.remove(key);
-                }
+        } else if (key.equals("precio")) {
+            if (atributos.get(key).equals(product.getPrecio())) {
+                iterator.remove();
             }
-            else if(key.equals("imagen")){
-                if(atributos.get(key).equals(product.getImagen())){
-                    keys.remove(key);
-                }
+        } else if (key.equals("descripcion")) {
+            if (atributos.get(key).equals(product.getDescripcion())) {
+                iterator.remove();
             }
-            else if(key.equals("fecha_añadido")){
-                if(atributos.get(key).equals(product.getFecha_publicacion())){
-                    keys.remove(key);
-                }
+        } else if (key.equals("imagen")) {
+            if (atributos.get(key).equals(product.getImagen())) {
+                iterator.remove();
             }
-            else if(key.equals("validado")){
-                if(atributos.get(key).equals(product.getValidado())){
-                    keys.remove(key);
-                }
+        } else if (key.equals("fecha_añadido")) {
+            if (atributos.get(key).equals(product.getFecha_publicacion())) {
+                iterator.remove();
             }
-        }
-        if(keys.size() == 0){
-            return;
-        }
-        for (String key : keys) {
-            Object valor = atributos.get(key);
-            if (valor instanceof Integer) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
-                        (Integer) valor, nombre, id_vendedor);
-            } else if (valor instanceof String) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
-                        (String) valor, nombre, id_vendedor);
-            } else if (valor instanceof Double) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
-                        (Double) valor, nombre, id_vendedor);
-            }
-            if (key.equals("precio")) {
-                database.update(
-                        "INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;",
-                        nombre, id_vendedor);
+        } else if (key.equals("validado")) {
+            if (atributos.get(key).equals(product.getValidado())) {
+                iterator.remove();
             }
         }
     }
+
+    if (keys.isEmpty()) {
+        return;
+    }
+
+    for (String key : keys) {
+        Object valor = atributos.get(key);
+        if (valor instanceof Integer) {
+            database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
+                    (Integer) valor, nombre, id_vendedor);
+        } else if (valor instanceof String) {
+            database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
+                    (String) valor, nombre, id_vendedor);
+        } else if (valor instanceof Double) {
+            database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
+                    (Double) valor, nombre, id_vendedor);
+        }
+        if (key.equals("precio")) {
+            database.update(
+                    "INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;",
+                    nombre, id_vendedor);
+        }
+    }
+}
+
 
     public void delete(String nombre, String vendorName) {
         int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
