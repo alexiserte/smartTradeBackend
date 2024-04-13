@@ -27,6 +27,9 @@ public class ProductoController {
     @Autowired
     ProductoDAO productoDAO;
 
+    @Autowired
+    VendedorDAO vendedorDAO;
+
     @GetMapping("/productos/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre,
             @RequestParam(name = "category", required = false) String category) {
@@ -113,18 +116,21 @@ public class ProductoController {
     @SuppressWarnings("unused")
     @GetMapping("/producto/")
     public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName,
-            @RequestParam(name = "vendor", required = true) String vendorName) {
+            @RequestParam(name = "vendor", required = true) int id_vendedor) {
         try {
+            String vendorName = vendedorDAO.getVendorName(id_vendedor);
             List<Object> resultado = productoDAO.readOne(productName, vendorName);
 
             class Resultado {
                 Producto producto;
                 HashMap<String, String> smartTag;
+                String vendedor;
                 String categoria;
 
-                public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria) {
+                public Resultado(Producto producto, HashMap<String, String> smartTag, String vendedor,String categoria) {
                     this.producto = producto;
                     this.smartTag = smartTag;
+                    this.vendedor = vendedor;
                     this.categoria = categoria;
                 }
 
@@ -140,10 +146,14 @@ public class ProductoController {
                     return categoria;
                 }
 
+                public String getVendedor() {
+                    return vendedor;
+                }
+
             }
 
             @SuppressWarnings("unchecked")
-            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),(String) resultado.get(2));
+            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),vendorName,(String) resultado.get(2));
             return ResponseEntity.ok(r);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
