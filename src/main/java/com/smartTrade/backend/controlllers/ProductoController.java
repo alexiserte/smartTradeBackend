@@ -193,7 +193,7 @@ public class ProductoController {
         }
     }
 
-    @GetMapping("/productos/estadisticas/")
+    @GetMapping("/producto/estadisticas/")
     public ResponseEntity<?> getEstadisticas(@RequestParam(name = "name", required = true) String productName,
         @RequestParam(name = "vendor", required = true) String vendorName){
             try{
