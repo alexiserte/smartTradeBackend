@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
 import com.smartTrade.backend.models.Producto;
+import com.smartTrade.backend.models.Vendedor;
 import com.smartTrade.backend.utils.StringComparison;
 
 @RestController
@@ -29,6 +30,9 @@ public class ProductoController {
 
     @Autowired
     VendedorDAO vendedorDAO;
+
+    @Autowired
+    PrecioDAO precioDAO;
 
     @GetMapping("/productos/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre,
@@ -58,7 +62,7 @@ public class ProductoController {
         }
     }
 
-    
+
 
     @PostMapping("/producto/")
     public ResponseEntity<?> insertarProducto(@RequestParam(name = "name", required = true) String nombre,
@@ -99,7 +103,7 @@ public class ProductoController {
     }
 
     @PutMapping("/producto/")
-    public ResponseEntity<?> updateProduct(@RequestParam(name = "nombre", required = true) String nombre,
+    public ResponseEntity<?> updateProduct(@RequestParam(name = "name", required = true) String nombre,
             @RequestParam(name = "vendor", required = true) String vendorName,
             @RequestBody(required = true) HashMap<String, ?> atributos) {
         try {
@@ -188,5 +192,28 @@ public class ProductoController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/productos/estadisticas/")
+    public ResponseEntity<?> getEstadisticas(@RequestParam(name = "name", required = true) String productName,
+        @RequestParam(name = "vendor", required = true) String vendorName){
+            try{
+                Vendedor vendedor = vendedorDAO.readOne(vendorName);
+                try{
+                    Producto producto = productoDAO.readOneProduct(productName, vendedor.getNickname());
+                    HashMap<String,?> mapaCaracteristicas = precioDAO.getStats(producto.getNombre(), vendedor.getNickname());
+                    return new ResponseEntity<>(mapaCaracteristicas,HttpStatus.OK);
+                }catch(EmptyResultDataAccessException e){
+                    return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+                }catch(Exception e){
+                    return new ResponseEntity<>("Error al obtener el producto", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }catch(EmptyResultDataAccessException e){
+                return new ResponseEntity<>("Vendedor no econtrado", HttpStatus.NOT_FOUND);
+            }catch(Exception e){
+                return new ResponseEntity<>("Error al obtener el vendedor", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+    
+        
+        }
 
 }
