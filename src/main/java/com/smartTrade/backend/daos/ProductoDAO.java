@@ -131,6 +131,9 @@ public class ProductoDAO{
                 }
             }
         }
+        if(keys.size() == 0){
+            return;
+        }
         for (String key : keys) {
             Object valor = atributos.get(key);
             if (valor instanceof Integer) {
