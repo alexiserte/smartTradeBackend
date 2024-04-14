@@ -193,6 +193,7 @@ public class ProductoController {
         }
     }
 
+    @SuppressWarnings("unused")
     @GetMapping("/producto/estadisticas/")
     public ResponseEntity<?> getEstadisticas(@RequestParam(name = "name", required = true) String productName,
         @RequestParam(name = "vendor", required = true) String vendorName){

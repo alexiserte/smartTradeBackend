@@ -2,6 +2,7 @@ package com.smartTrade.backend.controlllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -14,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
 import com.smartTrade.backend.models.Comprador;
+import com.smartTrade.backend.models.Producto;
 
 @RestController
 public class CompradorController {
 
     @Autowired
     CompradorDAO compradorDAO;
+
+    @Autowired
+    ProductoDAO productoDAO;
 
     @GetMapping("/comprador/")
     public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
@@ -111,5 +116,25 @@ public class CompradorController {
         }catch(Exception e){
             return new ResponseEntity<>("Error al actualizar un archivo: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         } 
+    }
+
+   
+    @GetMapping("/comprador/productos_comprados/")
+    public ResponseEntity<?> productosComprados(@RequestParam(name = "nickname", required = true) String nickname) {
+        try {
+            Comprador comprador = compradorDAO.readOne(nickname);
+            try{
+                List<Producto> productos = productoDAO.getProductosComprados(comprador.getNickname());
+                return new ResponseEntity<>(productos, HttpStatus.OK);
+            }catch(EmptyResultDataAccessException e){
+                return new ResponseEntity<>("No se han encontrado productos creados por este usuario", HttpStatus.NOT_FOUND);
+            }catch(Exception e){
+                return new ResponseEntity<>("Error al obtener los productos comprados: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener los productos comprados: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
