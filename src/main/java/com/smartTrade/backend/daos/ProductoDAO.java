@@ -221,8 +221,12 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
     }
 }
 
-    public List<Producto> getProductosComprados(String nickname){
-        return database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ANY(SELECT id FROM Pedido WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)))",new ProductMapper(),nickname);
+    public List<Producto> getProductosComprados(String nickname) throws EmptyResultDataAccessException{
+        List<Producto> lista =  database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ANY(SELECT id FROM Pedido WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)))",new ProductMapper(),nickname);
+        if(lista.size() == 0){
+            throw new EmptyResultDataAccessException(1);
+        }
+        return lista;
     }
 
 }

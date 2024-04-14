@@ -125,8 +125,6 @@ public class CompradorController {
             Comprador comprador = compradorDAO.readOne(nickname);
             try{
                 List<Producto> productos = productoDAO.getProductosComprados(comprador.getNickname());
-                if(productos.size() > 0)
-                    throw new EmptyResultDataAccessException(0);
                 return new ResponseEntity<>(productos, HttpStatus.OK);
             }catch(EmptyResultDataAccessException e){
                 return new ResponseEntity<>("No se han encontrado productos comprados por este usuario", HttpStatus.NOT_FOUND);
