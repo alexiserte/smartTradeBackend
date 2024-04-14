@@ -129,7 +129,7 @@ public class CompradorController {
                     throw new EmptyResultDataAccessException(0);
                 return new ResponseEntity<>(productos, HttpStatus.OK);
             }catch(EmptyResultDataAccessException e){
-                return new ResponseEntity<>("No se han encontrado productos creados por este usuario", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("No se han encontrado productos comprados por este usuario", HttpStatus.NOT_FOUND);
             }catch(Exception e){
                 return new ResponseEntity<>("Error al obtener los productos comprados: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
