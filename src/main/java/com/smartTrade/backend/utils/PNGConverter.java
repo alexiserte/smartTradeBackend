@@ -18,7 +18,7 @@ public class PNGConverter {
 
         // Verificar si la decodificación fue exitosa
         if (originalImage == null) {
-            return null; // Devolver null si la decodificación falla
+            return base64Image; 
         }
 
         // Obtener el ancho y alto originales
