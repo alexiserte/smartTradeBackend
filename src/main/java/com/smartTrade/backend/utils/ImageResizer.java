@@ -1,0 +1,50 @@
+package com.smartTrade.backend.utils;
+
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+import javax.imageio.ImageIO;
+import com.smartTrade.backend.utils.PNGConverter;
+
+public class ImageResizer {
+
+    public static String resizeImageTo512x512(String base64Image) {
+        try {
+            // Decodificar la imagen base64
+            byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+            BufferedImage originalImage = ImageIO.read(bis);
+            
+            // Obtener el ancho y alto originales
+            int originalWidth = originalImage.getWidth();
+            int originalHeight = originalImage.getHeight();
+            
+            // Verificar si la imagen ya está en 512x512
+            if (originalWidth == 512 && originalHeight == 512) {
+                return base64Image; // La imagen ya está en el tamaño deseado
+            }
+            
+            // Crear una nueva imagen en blanco con el tamaño deseado (512x512)
+            BufferedImage resizedImage = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = resizedImage.createGraphics();
+            g.drawImage(originalImage.getScaledInstance(512, 512, Image.SCALE_SMOOTH), 0, 0, 512, 512, null);
+            g.dispose();
+            
+            // Convertir la imagen redimensionada a base64
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(resizedImage, "png", bos);
+            byte[] resizedImageBytes = bos.toByteArray();
+            String resizedBase64Image = Base64.getEncoder().encodeToString(resizedImageBytes);
+            
+            return resizedBase64Image;
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null; // En caso de error, retornar null
+        }
+    }
+}
