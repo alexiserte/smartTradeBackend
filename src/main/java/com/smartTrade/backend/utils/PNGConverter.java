@@ -65,12 +65,14 @@ public class PNGConverter {
         try {
             String[] parts = base64Image.split(",");
             byte[] imageBytes = Base64.getDecoder().decode(parts[1]);
-            return ImageIO.read(new ByteArrayInputStream(imageBytes));
-        } catch (IOException e) {
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+            return ImageIO.read(bis);
+        } catch (IOException | ArrayIndexOutOfBoundsException e) {
             System.err.println("Error al decodificar la imagen base64: " + e.getMessage());
             return null;
         }
     }
+    
 
     public static void main(String[] args) {
         String imagePath = "./image.png";
