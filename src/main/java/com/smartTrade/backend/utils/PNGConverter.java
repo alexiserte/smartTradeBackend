@@ -49,7 +49,7 @@ public class PNGConverter {
         return resizedBase64Image;
     }
 
-    private static String convertImageToBase64(String imagePath) {
+    public static String convertImageToBase64(String imagePath) {
         String base64Image = "";
         try (FileInputStream fileInputStreamReader = new FileInputStream(imagePath)) {
             byte[] imageData = new byte[fileInputStreamReader.available()];
