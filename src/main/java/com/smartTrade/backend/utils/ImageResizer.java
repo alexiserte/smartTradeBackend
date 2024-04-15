@@ -6,18 +6,20 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Base64;
 import javax.imageio.ImageIO;
 import com.smartTrade.backend.utils.PNGConverter;
 
 public class ImageResizer {
-
+    /*/
     public static String resizeImageTo512x512(String base64Image) {
         try {
             // Decodificar la imagen base64
-            byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
-            BufferedImage originalImage = ImageIO.read(bis);
+            PNGConverter.base64ToImage(base64Image,"tmp.png");
+
+            // Leer la imagen original desde el archivo
+            BufferedImage originalImage = ImageIO.read(Paths.get("./tmp.png").toFile());
             
             // Obtener el ancho y alto originales
             int originalWidth = originalImage.getWidth();
@@ -38,7 +40,7 @@ public class ImageResizer {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ImageIO.write(resizedImage, "png", bos);
             byte[] resizedImageBytes = bos.toByteArray();
-            String resizedBase64Image = Base64.getEncoder().encodeToString(resizedImageBytes);
+            String resizedBase64Image = "data:image/png;base64," + Base64.getEncoder().encodeToString(resizedImageBytes);
             
             return resizedBase64Image;
             
@@ -47,4 +49,5 @@ public class ImageResizer {
             return null; // En caso de error, retornar null
         }
     }
+    */
 }

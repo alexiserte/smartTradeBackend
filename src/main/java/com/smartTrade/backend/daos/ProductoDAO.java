@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import com.smartTrade.backend.utils.ImageResizer;
+import com.smartTrade.backend.utils.PNGConverter;
 
 
 @Repository
@@ -32,7 +33,7 @@ public class ProductoDAO{
     }
   
     public void create(String nombre, String characteristicName, String vendorName, double precio, String descripcion,String imagen) {
-        String imagenResized = ImageResizer.resizeImageTo512x512(imagen);
+        String imagenResized = PNGConverter.convertAndResizeImageToBase64(imagen);
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         java.util.Random random = new java.util.Random();
