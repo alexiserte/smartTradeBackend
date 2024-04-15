@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 @Repository
 public class CompradorDAO {
@@ -116,14 +117,49 @@ public class CompradorDAO {
      */
     public void update(String nickname, Map<String, ?> atributos) {
         List<String> keys = new ArrayList<>(atributos.keySet());
+    Comprador compradorObject = readOne(nickname);
+    for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
+        String key = iterator.next();
+        if (key.equals("nickname")) {
+            if (atributos.get(key).equals(compradorObject.getNickname())) {
+                iterator.remove();
+            }
+        } else if (key.equals("password")) {
+            if (atributos.get(key) == (compradorObject.getPassword())) {
+                iterator.remove();
+            }
+        } else if (key.equals("correo")) {
+            if (atributos.get(key) == compradorObject.getCorreo()) {
+                iterator.remove();
+            }
+        } else if (key.equals("direccion")) {
+            if (atributos.get(key) == compradorObject.getDireccion()) {
+                iterator.remove();
+            }
+        } else if (key.equals("puntos_responsabilidad")) {
+            if ((atributos.get(key)).equals(compradorObject.getpuntosResponsabilidad())) {
+                iterator.remove();
+            }
+        }
+
+    }
+
+    if (keys.isEmpty()) {
+        return;
+    }
         for (String key : keys) {
-            Object valor = atributos.get(key);
-            if (valor instanceof Integer) {
-                database.update("UPDATE Usuario SET " + key + " = ? WHERE nickname = ?;", (Integer) valor, nickname);
-            } else if (valor instanceof String) {
-                database.update("UPDATE Usuario SET " + key + " = ? WHERE nickname = ?;", (String) valor, nickname);
-            } else if (valor instanceof Double) {
-                database.update("UPDATE Usuario SET " + key + " = ? WHERE nickname = ?;", (Double) valor, nickname);
+            if(key.equals("puntos_responsabilidad")){
+                database.update("UPDATE Comprador SET puntos_responsabilidad = ? WHERE id_usuario = (SELECT id FROM Usuario WHERE nickname = ?);", (Integer) atributos.get(key), nickname);
+            }
+            else{
+                Object valor = atributos.get(key);
+                if (valor instanceof Integer) {
+                    database.update("UPDATE Usuario SET " + key + " = ? WHERE nickname = ?;", (Integer) valor, nickname);
+                } else if (valor instanceof String) {
+                    database.update("UPDATE Usuario SET " + key + " = ? WHERE nickname = ?;", (String) valor, nickname);
+                } else if (valor instanceof Double) {
+                    database.update("UPDATE Usuario SET " + key + " = ? WHERE nickname = ?;", (Double) valor, nickname);
+                }
             }
         }
     }
