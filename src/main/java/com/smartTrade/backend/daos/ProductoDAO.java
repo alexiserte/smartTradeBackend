@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import com.smartTrade.backend.utils.ImageResizer;
 
 
 @Repository
@@ -31,6 +32,7 @@ public class ProductoDAO{
     }
   
     public void create(String nombre, String characteristicName, String vendorName, double precio, String descripcion,String imagen) {
+        String imagenResized = ImageResizer.resizeImageTo512x512(imagen);
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         java.util.Random random = new java.util.Random();
@@ -40,7 +42,7 @@ public class ProductoDAO{
         }catch(EmptyResultDataAccessException e){
             int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class, characteristicName);
             int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
-            database.update("INSERT INTO Producto(nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica) VALUES (?, ?, ?, ?, ?,?,?,?,?);", nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fechaSQL, false, huella_ecologica);
+            database.update("INSERT INTO Producto(nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica) VALUES (?, ?, ?, ?, ?,?,?,?,?);", nombre, id_categoria, id_vendedor, precio, descripcion,imagenResized,fechaSQL, false, huella_ecologica);
             database.update("INSERT INTO Pendientes_Validacion(id_producto) SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
             database.update("INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
         }
