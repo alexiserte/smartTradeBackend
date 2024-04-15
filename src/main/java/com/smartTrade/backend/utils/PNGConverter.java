@@ -64,14 +64,19 @@ public class PNGConverter {
     private static BufferedImage base64ToImage(String base64Image) {
         try {
             String[] parts = base64Image.split(",");
+            if (parts.length < 2) {
+                System.err.println("La cadena base64 no es válida.");
+                return null;
+            }
             byte[] imageBytes = Base64.getDecoder().decode(parts[1]);
             ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
             return ImageIO.read(bis);
-        } catch (IOException | ArrayIndexOutOfBoundsException e) {
+        } catch (IOException | IllegalArgumentException e) {
             System.err.println("Error al decodificar la imagen base64: " + e.getMessage());
             return null;
         }
     }
+    
     
 
     public static void main(String[] args) {
