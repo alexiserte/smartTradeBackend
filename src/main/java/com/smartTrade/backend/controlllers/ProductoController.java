@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +33,9 @@ public class ProductoController {
 
     @Autowired
     PrecioDAO precioDAO;
+    
 
-    private static final String DEFAULT_IMAGE = PNGConverter.convertImageToBase64("../../../../../resources/default_image.png");
+    private static final String DEFAULT_IMAGE = PNGConverter.convertImageToBase64("src/main/resources/default_image.png");
 
     @GetMapping("/productos/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre,
