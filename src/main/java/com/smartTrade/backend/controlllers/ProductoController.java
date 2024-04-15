@@ -73,7 +73,7 @@ public class ProductoController {
             @RequestParam(name = "price", required = true) double precio,
             @RequestParam(name = "description", required = true) String descripcion,
             @RequestParam(name = "category", required = true) String characteristicName,
-            @RequestParam(name = "image", required = false) String imagen) {
+            @RequestBody(required = false) String imagen) {
         
             try {
             try{
