@@ -35,7 +35,7 @@ public class ProductoController {
     PrecioDAO precioDAO;
     
 
-    private static final String DEFAULT_IMAGE = PNGConverter.convertImageToBase64("src/main/resources/default_image.png");
+    private static final String DEFAULT_IMAGE = PNGConverter.convertAndResizeImageToBase64("src/main/resources/default_image.png");
 
     @GetMapping("/productos/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre,
