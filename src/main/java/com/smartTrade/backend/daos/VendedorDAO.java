@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.ArrayList;
 
 
@@ -42,7 +43,34 @@ public class VendedorDAO{
 
     public void update(String nickname, Map<String, ?> atributos) {
         List<String> keys = new ArrayList<>(atributos.keySet());
+        Vendedor compradorObject = readOne(nickname);
+        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
+            String key = iterator.next();
+            if (key.equals("nickname")) {
+                if (atributos.get(key).equals(compradorObject.getNickname())) {
+                    iterator.remove();
+                }
+            } else if (key.equals("password")) {
+                if (atributos.get(key) == (compradorObject.getPassword())) {
+                    iterator.remove();
+                }
+            } else if (key.equals("correo")) {
+                if (atributos.get(key) == compradorObject.getCorreo()) {
+                    iterator.remove();
+                }
+            } else if (key.equals("direccion")) {
+                if (atributos.get(key) == compradorObject.getDireccion()) {
+                    iterator.remove();
+                }
+            }
+
+        }
+
+        if (keys.isEmpty()) {
+            return;
+        }
         for (String key : keys) {
+
             Object valor = atributos.get(key);
             if (valor instanceof Integer) {
                 database.update("UPDATE Usuario SET " + key + " = ? WHERE nickname = ?;", (Integer) valor, nickname);
@@ -51,6 +79,7 @@ public class VendedorDAO{
             } else if (valor instanceof Double) {
                 database.update("UPDATE Usuario SET " + key + " = ? WHERE nickname = ?;", (Double) valor, nickname);
             }
+
         }
     }
 
