@@ -73,17 +73,17 @@ public class ProductoController {
             @RequestParam(name = "price", required = true) double precio,
             @RequestParam(name = "description", required = true) String descripcion,
             @RequestParam(name = "category", required = true) String characteristicName,
-            @RequestBody(required = false) String imagen) {
+            @RequestBody(required = false) Map<String,String> body) {
         
             try {
             try{
-                productoDAO.readOne(imagen, vendorName);
+                productoDAO.readOne(nombre, vendorName);
                 return new ResponseEntity<>("El producto ya existe", HttpStatus.CONFLICT);
             }
             catch(EmptyResultDataAccessException e){
                 String imageToAdd;
-                if(imagen != null){
-                    imageToAdd = imagen;
+                if(body != null && body.containsKey("imagen")){
+                    imageToAdd = body.get("imagen");
                 }
                 else{
                     imageToAdd = DEFAULT_IMAGE;
