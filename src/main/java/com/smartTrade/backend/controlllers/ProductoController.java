@@ -21,6 +21,7 @@ import com.smartTrade.backend.daos.*;
 import com.smartTrade.backend.models.Producto;
 import com.smartTrade.backend.models.Vendedor;
 import com.smartTrade.backend.utils.StringComparison;
+import com.smartTrade.backend.utils.PNGConverter;
 
 @RestController
 public class ProductoController {
@@ -33,6 +34,8 @@ public class ProductoController {
 
     @Autowired
     PrecioDAO precioDAO;
+
+    private static final String DEFAULT_IMAGE = PNGConverter.convertImageToBase64("../../../../../resources/default_image.png");
 
     @GetMapping("/productos/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre,
@@ -70,7 +73,7 @@ public class ProductoController {
             @RequestParam(name = "price", required = true) double precio,
             @RequestParam(name = "description", required = true) String descripcion,
             @RequestParam(name = "category", required = true) String characteristicName,
-            @RequestParam(name = "image", required = true) String imagen) {
+            @RequestParam(name = "image", required = false) String imagen) {
         
             try {
             try{
@@ -78,7 +81,14 @@ public class ProductoController {
                 return new ResponseEntity<>("El producto ya existe", HttpStatus.CONFLICT);
             }
             catch(EmptyResultDataAccessException e){
-                productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imagen);
+                String imageToAdd;
+                if(imagen != null){
+                    imageToAdd = imagen;
+                }
+                else{
+                    imageToAdd = DEFAULT_IMAGE;
+                }
+                productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }
             
