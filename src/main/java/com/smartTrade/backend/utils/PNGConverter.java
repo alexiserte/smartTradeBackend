@@ -1,11 +1,10 @@
 package com.smartTrade.backend.utils;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Base64;
 import java.io.ByteArrayInputStream;
 
@@ -13,11 +12,14 @@ import javax.imageio.ImageIO;
 
 public class PNGConverter {
 
-    public static String convertAndResizeImageToBase64(String imagePath) {
-    
-
+    public static String convertAndResizeImageToBase64(String base64Image) {
         // Decodificar la imagen base64
-        BufferedImage originalImage = base64ToImage(imagePath);
+        BufferedImage originalImage = base64ToImage(base64Image);
+
+        // Verificar si la decodificación fue exitosa
+        if (originalImage == null) {
+            return null; // Devolver null si la decodificación falla
+        }
 
         // Obtener el ancho y alto originales
         int originalWidth = originalImage.getWidth();
@@ -25,7 +27,7 @@ public class PNGConverter {
 
         // Verificar si la imagen ya está en 512x512
         if (originalWidth == 512 && originalHeight == 512) {
-            return imagePath; // La imagen ya está en el tamaño deseado
+            return base64Image; // La imagen ya está en el tamaño deseado
         }
 
         // Crear una nueva imagen en blanco con el tamaño deseado (512x512)
@@ -40,24 +42,12 @@ public class PNGConverter {
             ImageIO.write(resizedImage, "png", bos);
         } catch (IOException e) {
             System.err.println("Error al escribir la imagen redimensionada: " + e.getMessage());
-            return imagePath; // Devolver la imagen original en caso de error
+            return null; // Devolver null en caso de error
         }
         byte[] resizedImageBytes = bos.toByteArray();
         String resizedBase64Image = "data:image/png;base64," + Base64.getEncoder().encodeToString(resizedImageBytes);
 
         return resizedBase64Image;
-    }
-
-    public static String convertImageToBase64(String imagePath) {
-        String base64Image = "";
-        try (FileInputStream fileInputStreamReader = new FileInputStream(imagePath)) {
-            byte[] imageData = new byte[fileInputStreamReader.available()];
-            fileInputStreamReader.read(imageData);
-            base64Image = Base64.getEncoder().encodeToString(imageData);
-        } catch (IOException e) {
-            System.err.println("Error al leer el archivo de imagen: " + e.getMessage());
-        }
-        return "data:image/png;base64," + base64Image;
     }
 
     private static BufferedImage base64ToImage(String base64Image) {
@@ -75,5 +65,4 @@ public class PNGConverter {
             return null;
         }
     }
-    
 }
