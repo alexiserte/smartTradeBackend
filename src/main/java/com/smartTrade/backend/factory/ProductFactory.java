@@ -2,7 +2,7 @@ package com.smartTrade.backend.factory;
 
 import com.smartTrade.backend.models.*;
 
-public class ProductFactory {
+public class ProductFactory{
 
     public Producto getProduct(String productType, String nombre, int id_vendedor, double precio, String descripcion,
             int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,
