@@ -18,7 +18,6 @@ public class ProductFactory{
             case HIGIENE:
                 return higieneFactory.getProduct(producto, args);    
             case ALIMENTACION:
-                
                 return alimentacionFactory.getProduct(productType,producto, args);    
             case COMIDA:
                 return alimentacionFactory.getProduct(productType,producto, args);
@@ -85,8 +84,12 @@ public class ProductFactory{
                     default:
                         return null;
                 }
-            } else {
+            } else if(type == Product_Types.BEBIDA) {
                 return bebidaFactory.getProduct(p, args);
+            }
+            else{
+                ComidaFactory comidaFactory = new ComidaFactory();
+                return comidaFactory.getProduct(type, p, args);
             }
 
         }
