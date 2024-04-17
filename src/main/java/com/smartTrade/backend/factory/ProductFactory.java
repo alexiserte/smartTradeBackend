@@ -1,6 +1,16 @@
 package com.smartTrade.backend.factory;
 
-import com.smartTrade.backend.models.*;
+import com.smartTrade.backend.models.Product_Types;
+import com.smartTrade.backend.models.Producto;
+import com.smartTrade.backend.models.Alimentacion;
+import com.smartTrade.backend.models.Bebida;
+import com.smartTrade.backend.models.Comida;
+import com.smartTrade.backend.models.Deporte;
+import com.smartTrade.backend.models.Electronica;
+import com.smartTrade.backend.models.Frescos;
+import com.smartTrade.backend.models.Higiene;
+import com.smartTrade.backend.models.Moda;
+import com.smartTrade.backend.models.Procesados;
 
 import java.util.List;
 
@@ -12,39 +22,44 @@ public class ProductFactory{
             return null;
         }
         Producto producto = new Producto(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
-        
+        AlimentacionFactory alimentacionFactory = new AlimentacionFactory();
+        HigieneFactory higieneFactory = new HigieneFactory();
         switch (productType) {
             case HIGIENE:
-                return HigieneFactory.getProduct(producto, args);    
+                return higieneFactory.getProduct(producto, args);    
             case ALIMENTACION:
-                return AlimentacionFactory.getProduct(productType,producto, args);    
+                
+                return alimentacionFactory.getProduct(productType,producto, args);    
             case COMIDA:
-                return AlimentacionFactory.getProduct(productType,producto, args);
+                return alimentacionFactory.getProduct(productType,producto, args);
             case BEBIDA:
-                return AlimentacionFactory.getProduct(productType, producto, args);
+                return alimentacionFactory.getProduct(productType, producto, args);
             case DEPORTE:
                 if (args.size() >= 4) {
-                    return DeporteFactory.getProduct(productType, producto, args);
+                    DeporteFactory deporteFactory = new DeporteFactory();
+                    return deporteFactory.getProduct(producto, args);
                 }
                 break;
             case ELECTRONICA:
                 if (args.size() >= 4) {
-                    return ElectronicaFactory.getProduct(productType, producto, args);   
+                    ElectronicaFactory electronicaFactory = new ElectronicaFactory();
+                    return electronicaFactory.getProduct(producto, args);   
                 }
                 break;
             case FRESCOS:
                 if (args.size() >= 2) {
-                    return AlimentacionFactory.getProduct(productType,producto, args);    
+                    return alimentacionFactory.getProduct(productType,producto, args);    
                 }
                 break;
             case MODA:
                 if (args.size() >= 5) {
-                    return ModaFactory.getProduct(productType, producto, args); 
+                    ModaFactory modaFactory = new ModaFactory();
+                    return modaFactory.getProduct(producto, args); 
                 }
                 break;
             case PROCESADOS:
                 if (args.size() >= 2) {
-                    return AlimentacionFactory.getProduct(productType,producto, args);
+                    return alimentacionFactory.getProduct(productType,producto, args);
                 }
                 break;
             default:
@@ -54,22 +69,25 @@ public class ProductFactory{
         return null;
     }
 
-    class HigieneFactory extends ProductFactory {
+     static class HigieneFactory extends ProductFactory {
         
-        public static Higiene getProduct(Producto producto, List<Object> args) {
+        public  Higiene getProduct(Producto producto, List<Object> args) {
             return new Higiene(producto.getNombre(), producto.getId_vendedor(), producto.getPrecio(), producto.getDescripcion(), producto.getId_categoria(), producto.getImagen(), producto.getFecha_publicacion(), producto.getValidado(), producto.getHuella_ecologica());
         }
     }
 
-    class AlimentacionFactory extends ProductFactory {
+     static class AlimentacionFactory extends ProductFactory {
 
-        public static Alimentacion getProduct(Product_Types type, Producto p, List<Object> args) {
+        public  Alimentacion getProduct(Product_Types type, Producto p, List<Object> args) {
+            BebidaFactory bebidaFactory = new BebidaFactory();
             if (type == Product_Types.PROCESADOS || type == Product_Types.FRESCOS) {
+                ComidaFactory comidaFactory = new ComidaFactory();
+                
                 switch (type) {
                     case PROCESADOS:
-                        return ComidaFactory.getProduct(type, p, args);
+                        return comidaFactory.getProduct(type, p, args);
                     case FRESCOS:
-                        return FrescosFactory.getProduct(p, args);
+                        return comidaFactory.getProduct(type,p, args);
                     case ALIMENTACION:
                         return new Alimentacion(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
                                 p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
@@ -78,20 +96,23 @@ public class ProductFactory{
                         return null;
                 }
             } else {
-                return BebidaFactory.getProduct(p, args);
+                return bebidaFactory.getProduct(p, args);
             }
 
         }
 
-        class ComidaFactory extends AlimentacionFactory {
+        static class ComidaFactory extends AlimentacionFactory {
 
-            public static Comida getProduct(Product_Types tipo, Producto p,
+            public  Comida getProduct(Product_Types tipo, Producto p,
                     List<Object> args) {
+                ProcesadosFactory procesadosFactory = new ProcesadosFactory();
+                FrescosFactory frescosFactory = new FrescosFactory();
                 switch (tipo) {
                     case FRESCOS:
-                        return FrescosFactory.getProduct(p, args);
+                        return frescosFactory.getProduct(p, args);
                     case PROCESADOS:
-                        return ProcesadosFactory.getProduct(p, args);
+                        return procesadosFactory
+                        .getProduct(p, args);
                     case COMIDA:
                         return new Comida(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
                                 p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
@@ -102,9 +123,9 @@ public class ProductFactory{
             }
         }
 
-        class ProcesadosFactory extends ComidaFactory {
+        static class ProcesadosFactory extends ComidaFactory {
 
-            public static Procesados getProduct(Producto p,
+            public  Procesados getProduct(Producto p,
                     List<Object> args) {
                 return new Procesados(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
@@ -112,9 +133,9 @@ public class ProductFactory{
             }
         }
 
-        class FrescosFactory extends ComidaFactory {
+        static class FrescosFactory extends ComidaFactory {
 
-            public static Frescos getProduct(Producto p,
+            public  Frescos getProduct(Producto p,
                     List<Object> args) {
                 return new Frescos(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
@@ -122,9 +143,9 @@ public class ProductFactory{
             }
         }
 
-        class BebidaFactory extends AlimentacionFactory {
+        static class BebidaFactory extends AlimentacionFactory {
 
-            public static Bebida getProduct(Producto p,
+            public  Bebida getProduct(Producto p,
                     List<Object> args) {
                 return new Bebida(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
@@ -134,9 +155,9 @@ public class ProductFactory{
     }
 
 
-    class DeporteFactory extends ProductFactory {
+     static class DeporteFactory extends ProductFactory {
         
-        public static Deporte getProduct(Producto p,
+        public  Deporte getProduct(Producto p,
                 List<Object> args) {
             return new Deporte(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
@@ -144,9 +165,9 @@ public class ProductFactory{
         }
     }
 
-    class ElectronicaFactory extends ProductFactory {
+    static  class ElectronicaFactory extends ProductFactory {
         
-        public static Electronica getProduct(Producto p,
+        public  Electronica getProduct(Producto p,
                 List<Object> args) {
             return new Electronica(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
@@ -155,14 +176,19 @@ public class ProductFactory{
     }
 
 
-    class ModaFactory extends ProductFactory {
+     static class ModaFactory extends ProductFactory {
         
-        public static Moda getProduct(Producto p,
+        public  Moda getProduct(Producto p,
                 List<Object> args) {
             return new Moda(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                         p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3), (String) args.get(4));
         }
+    }
+
+    public static void main(String [] args){
+        Producto producto = ProductFactory.getProduct(Product_Types.ELECTRONICA, "nombre", 1, 1.0, "descripcion", 1, "imagen", new java.sql.Date(2021, 1, 1), true, 1, List.of("marca", "modelo", "tipo", "especificacionesTecnicas"));
+        System.out.println(producto);
     }
 
 }
