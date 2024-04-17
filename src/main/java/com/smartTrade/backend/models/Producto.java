@@ -1,6 +1,7 @@
 package com.smartTrade.backend.models;
 
 public class Producto{
+
     private String nombre;
     private int id_vendedor;
     private double precio;

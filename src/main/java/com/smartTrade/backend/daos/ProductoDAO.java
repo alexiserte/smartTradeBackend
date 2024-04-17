@@ -45,7 +45,8 @@ public class ProductoDAO{
             int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
             database.update("INSERT INTO Producto(nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica) VALUES (?, ?, ?, ?, ?,?,?,?,?);", nombre, id_categoria, id_vendedor, precio, descripcion,imagenResized,fechaSQL, false, huella_ecologica);
             database.update("INSERT INTO Pendientes_Validacion(id_producto) SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
-            database.update("INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
+            int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?",Integer.class,nombre);
+            database.update("INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion) VALUES(?,?,?)", id_producto, precio,fechaSQL);
         }
     }
 
