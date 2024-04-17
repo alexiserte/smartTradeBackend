@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import com.smartTrade.backend.models.Producto;
+import com.smartTrade.backend.factory.ProductFactory;
 
 public class ProductMapper implements RowMapper<Producto> {
     @Override
