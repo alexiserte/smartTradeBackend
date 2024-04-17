@@ -6,20 +6,22 @@ import java.util.List;
 
 public class ProductFactory{
 
-    public static Producto getProduct(Product_Types productType,Producto producto, List<Object> args) {
+    public static Producto getProduct(Product_Types productType, String nombre, int id_vendedor, double precio, String descripcion,
+    int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, List<Object> args) {
         if (productType == null) {
             return null;
         }
+        Producto producto = new Producto(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
         
         switch (productType) {
             case HIGIENE:
                 return HigieneFactory.getProduct(producto, args);    
             case ALIMENTACION:
-                return AlimentacionFactory.getProduct(producto, args);    
+                return AlimentacionFactory.getProduct(productType,producto, args);    
             case COMIDA:
-                return ComidaFactory.getProduct(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica, args);
+                return AlimentacionFactory.getProduct(productType,producto, args);
             case BEBIDA:
-                return BebidaFactory.getProduct(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica, args);
+                return AlimentacionFactory.getProduct(productType, producto, args);
             case DEPORTE:
                 if (args.size() >= 4) {
                     return DeporteFactory.getProduct(productType, nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica, args);
@@ -32,7 +34,7 @@ public class ProductFactory{
                 break;
             case FRESCOS:
                 if (args.size() >= 2) {
-                    return FrescosFactory.getProduct(productType, nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica, args);    
+                    return AlimentacionFactory.getProduct(productType,producto, args);    
                 }
                 break;
             case MODA:
@@ -42,7 +44,7 @@ public class ProductFactory{
                 break;
             case PROCESADOS:
                 if (args.size() >= 2) {
-                    ;
+                    return AlimentacionFactory.getProduct(productType,producto, args);
                 }
                 break;
             default:
@@ -60,43 +62,77 @@ public class ProductFactory{
     }
 
     class AlimentacionFactory extends ProductFactory {
-        
-       public static Alimentacion getProduct(Producto p, List<Object> args) {
-            return new Alimentacion(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(), p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(), p.getValidado(), p.getHuella_ecologica());
+
+        public static Alimentacion getProduct(Product_Types type, Producto p, List<Object> args) {
+            if (type == Product_Types.PROCESADOS || type == Product_Types.FRESCOS) {
+                switch (type) {
+                    case PROCESADOS:
+                        return ComidaFactory.getProduct(type, p, args);
+                    case FRESCOS:
+                        return FrescosFactory.getProduct(p, args);
+                    case ALIMENTACION:
+                        return new Alimentacion(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                                p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
+                                p.getValidado(), p.getHuella_ecologica());
+                    default:
+                        return null;
+                }
+            } else {
+                return BebidaFactory.getProduct(p, args);
+            }
+
         }
 
+        class ComidaFactory extends AlimentacionFactory {
 
-
-        class ProcesadosFactory extends AlimentacionFactory {
-        
-            public static Procesados getProduct(String nombre, int id_vendedor, double precio, String descripcion,
-                    int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,
+            public static Comida getProduct(Product_Types tipo, Producto p,
                     List<Object> args) {
-                return new Procesados(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion,
-                        validado, huella_ecologica, (String) args.get(0), (double) args.get(1));
+                switch (tipo) {
+                    case FRESCOS:
+                        return FrescosFactory.getProduct(p, args);
+                    case PROCESADOS:
+                        return ProcesadosFactory.getProduct(p, args);
+                    case COMIDA:
+                        return new Comida(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                                p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
+                                p.getValidado(), p.getHuella_ecologica());
+                    default:
+                        return null;
+                }
+            }
+        }
+
+        class ProcesadosFactory extends ComidaFactory {
+
+            public static Procesados getProduct(Producto p,
+                    List<Object> args) {
+                return new Procesados(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                        p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
+                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (double) args.get(1));
+            }
+        }
+
+        class FrescosFactory extends ComidaFactory {
+
+            public static Frescos getProduct(Producto p,
+                    List<Object> args) {
+                return new Frescos(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                        p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
+                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (double) args.get(1));
+            }
+        }
+
+        class BebidaFactory extends AlimentacionFactory {
+
+            public static Bebida getProduct(Producto p,
+                    List<Object> args) {
+                return new Bebida(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                        p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
+                        p.getValidado(), p.getHuella_ecologica());
             }
         }
     }
 
-    class ComidaFactory extends ProductFactory {
-        
-        public static Comida getProduct(String nombre, int id_vendedor, double precio, String descripcion,
-                int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,
-                List<Object> args) {
-            return new Comida(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion,
-                    validado, huella_ecologica);
-        }
-    }
-
-    class BebidaFactory extends ProductFactory {
-        
-        public static Bebida getProduct(String nombre, int id_vendedor, double precio, String descripcion,
-                int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,
-                List<Object> args) {
-            return new Bebida(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion,
-                    validado, huella_ecologica);
-        }
-    }
 
     class DeporteFactory extends ProductFactory {
         
@@ -118,15 +154,6 @@ public class ProductFactory{
         }
     }
 
-    class FrescosFactory extends ProductFactory {
-        
-        public static Frescos getProduct(String nombre, int id_vendedor, double precio, String descripcion,
-                int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,
-                List<Object> args) {
-            return new Frescos(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion,
-                    validado, huella_ecologica, (String) args.get(0), (double) args.get(1));
-        }
-    }
 
     class ModaFactory extends ProductFactory {
         
