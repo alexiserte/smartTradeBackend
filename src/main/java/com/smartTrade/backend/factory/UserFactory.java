@@ -8,19 +8,6 @@ import com.smartTrade.backend.models.User_Types;
 
 public class UserFactory {
     
-    public Usuario createVoidUser(User_Types type){
-        switch(type){
-            case ADMINISTRADOR:
-                return new Administrador();
-            case VENDEDOR:
-                return new Vendedor();
-            case COMPRADOR:
-                return new Comprador();
-            default:
-                return null;
-        }
-    }
-
     public Usuario createUser(User_Types type, String nickname, String password, String direccion, String correo){
         switch(type){
             case ADMINISTRADOR:
