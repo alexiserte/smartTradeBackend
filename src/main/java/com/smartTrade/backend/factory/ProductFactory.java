@@ -69,7 +69,7 @@ public class ProductFactory{
 
         public  Alimentacion getProduct(Product_Types type, Producto p, List<Object> args) {
             BebidaFactory bebidaFactory = new BebidaFactory();
-            if (type == Product_Types.PROCESADOS || type == Product_Types.FRESCOS) {
+            if (type == Product_Types.PROCESADOS || type == Product_Types.FRESCOS || type == Product_Types.COMIDA) {
                 ComidaFactory comidaFactory = new ComidaFactory();
                 
                 switch (type) {
@@ -77,10 +77,8 @@ public class ProductFactory{
                         return comidaFactory.getProduct(type, p, args);
                     case FRESCOS:
                         return comidaFactory.getProduct(type,p, args);
-                    case ALIMENTACION:
-                        return new Alimentacion(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
-                                p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
-                                p.getValidado(), p.getHuella_ecologica());
+                    case COMIDA:
+                        return comidaFactory.getProduct(type, p, args);
                     default:
                         return null;
                 }
@@ -88,8 +86,9 @@ public class ProductFactory{
                 return bebidaFactory.getProduct(p, args);
             }
             else{
-                ComidaFactory comidaFactory = new ComidaFactory();
-                return comidaFactory.getProduct(type, p, args);
+                return new Alimentacion(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                        p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
+                        p.getValidado(), p.getHuella_ecologica());
             }
 
         }
