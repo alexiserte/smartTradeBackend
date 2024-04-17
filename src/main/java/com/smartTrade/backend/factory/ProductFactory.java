@@ -4,7 +4,7 @@ import com.smartTrade.backend.models.*;
 
 public class ProductFactory{
 
-    public Producto getProduct(Product_Types productType, String nombre, int id_vendedor, double precio, String descripcion,
+    public static Producto getProduct(Product_Types productType, String nombre, int id_vendedor, double precio, String descripcion,
             int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,
             Object... args) {
         if (productType == null) {

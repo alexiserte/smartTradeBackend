@@ -8,7 +8,7 @@ import com.smartTrade.backend.models.User_Types;
 
 public class UserFactory {
     
-    public Usuario createUser(User_Types type, String nickname, String password, String direccion, String correo){
+    public static Usuario createUser(User_Types type, String nickname, String password, String direccion, String correo){
         switch(type){
             case ADMINISTRADOR:
                 return new Administrador(nickname, password, direccion, correo);
