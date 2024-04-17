@@ -24,12 +24,12 @@ public class ProductFactory{
                 return AlimentacionFactory.getProduct(productType, producto, args);
             case DEPORTE:
                 if (args.size() >= 4) {
-                    return DeporteFactory.getProduct(productType, nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica, args);
+                    return DeporteFactory.getProduct(productType, producto, args);
                 }
                 break;
             case ELECTRONICA:
                 if (args.size() >= 4) {
-                    return ElectronicaFactory.getProduct(productType, nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica, args);   
+                    return ElectronicaFactory.getProduct(productType, producto, args);   
                 }
                 break;
             case FRESCOS:
@@ -39,7 +39,7 @@ public class ProductFactory{
                 break;
             case MODA:
                 if (args.size() >= 5) {
-                    return ModaFactory.getProduct(productType, nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica, args); 
+                    return ModaFactory.getProduct(productType, producto, args); 
                 }
                 break;
             case PROCESADOS:
@@ -136,32 +136,32 @@ public class ProductFactory{
 
     class DeporteFactory extends ProductFactory {
         
-        public static Deporte getProduct(String nombre, int id_vendedor, double precio, String descripcion,
-                int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,
+        public static Deporte getProduct(Producto p,
                 List<Object> args) {
-            return new Deporte(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion,
-                    validado, huella_ecologica, (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
+            return new Deporte(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                        p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
+                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
         }
     }
 
     class ElectronicaFactory extends ProductFactory {
         
-        public static Electronica getProduct(String nombre, int id_vendedor, double precio, String descripcion,
-                int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,
+        public static Electronica getProduct(Producto p,
                 List<Object> args) {
-            return new Electronica(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion,
-                    validado, huella_ecologica, (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
+            return new Electronica(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                        p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
+                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
         }
     }
 
 
     class ModaFactory extends ProductFactory {
         
-        public static Moda getProduct(String nombre, int id_vendedor, double precio, String descripcion,
-                int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,
+        public static Moda getProduct(Producto p
                 List<Object> args) {
-            return new Moda(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion,
-                    validado, huella_ecologica, (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3), (String) args.get(4));
+            return new Moda(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                        p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
+                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3), (String) args.get(4));
         }
     }
 
