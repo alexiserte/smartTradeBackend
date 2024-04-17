@@ -3,12 +3,12 @@ package com.smartTrade.backend.models;
 public class Frescos extends Comida{
 
     private String origen;
-    private Double peso;
+    private double peso;
 
-    public Frescos(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica) {
+    public Frescos(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, String origen, double peso) {
         super(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
-        this.origen = null;
-        this.peso = null;
+        this.origen = origen;
+        this.peso = peso;
     }
 
     public Frescos() {
