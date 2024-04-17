@@ -1,16 +1,6 @@
 package com.smartTrade.backend.factory;
 
-import com.smartTrade.backend.models.Product_Types;
-import com.smartTrade.backend.models.Producto;
-import com.smartTrade.backend.models.Alimentacion;
-import com.smartTrade.backend.models.Bebida;
-import com.smartTrade.backend.models.Comida;
-import com.smartTrade.backend.models.Deporte;
-import com.smartTrade.backend.models.Electronica;
-import com.smartTrade.backend.models.Frescos;
-import com.smartTrade.backend.models.Higiene;
-import com.smartTrade.backend.models.Moda;
-import com.smartTrade.backend.models.Procesados;
+import com.smartTrade.backend.models.*;
 
 import java.util.List;
 
@@ -184,11 +174,6 @@ public class ProductFactory{
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                         p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3), (String) args.get(4));
         }
-    }
-
-    public static void main(String [] args){
-        Producto producto = ProductFactory.getProduct(Product_Types.ELECTRONICA, "nombre", 1, 1.0, "descripcion", 1, "imagen", new java.sql.Date(2021, 1, 1), true, 1, List.of("marca", "modelo", "tipo", "especificacionesTecnicas"));
-        System.out.println(producto);
     }
 
 }

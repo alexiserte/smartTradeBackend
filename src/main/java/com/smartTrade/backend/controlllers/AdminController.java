@@ -13,9 +13,11 @@ import com.smartTrade.backend.daos.VendedorDAO;
 import com.smartTrade.backend.models.Administrador;
 import com.smartTrade.backend.models.Categoria;
 import com.smartTrade.backend.models.Comprador;
+import com.smartTrade.backend.models.Moda;
+import com.smartTrade.backend.models.Product_Types;
 import com.smartTrade.backend.models.Producto;
 import com.smartTrade.backend.models.Vendedor;
-
+import com.smartTrade.backend.factory.ProductFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
