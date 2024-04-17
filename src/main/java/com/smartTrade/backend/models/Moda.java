@@ -7,13 +7,13 @@ public class Moda extends Producto {
     private String tipoDePrenda;
     private String seccion;
 
-    public Moda(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, String talla, String marca, String color, String tipoDePrenda, String seccion) {
+    public Moda(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica) {
         super(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
-        this.talla = talla;
-        this.marca = marca;
-        this.color = color;
-        this.tipoDePrenda = tipoDePrenda;
-        this.seccion = seccion;
+        this.talla = null;
+        this.marca = null;
+        this.color = null;
+        this.tipoDePrenda = null;
+        this.seccion = null;
     }
 
     public Moda() {
