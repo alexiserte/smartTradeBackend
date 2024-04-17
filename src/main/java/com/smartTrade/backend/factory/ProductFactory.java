@@ -157,7 +157,7 @@ public class ProductFactory{
 
     class ModaFactory extends ProductFactory {
         
-        public static Moda getProduct(Producto p
+        public static Moda getProduct(Producto p,
                 List<Object> args) {
             return new Moda(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
