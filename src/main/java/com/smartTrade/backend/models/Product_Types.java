@@ -20,4 +20,13 @@ public enum Product_Types {
         public int getID() {
             return id;
         }
+
+        public static Product_Types fromID(int id) {
+            for (Product_Types type : Product_Types.values()) {
+                if (type.getID() == id) {
+                    return type;
+                }
+            }
+            return null;
+        }
 }
