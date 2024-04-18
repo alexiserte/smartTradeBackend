@@ -23,23 +23,16 @@ public class ProductMapper implements RowMapper<Producto> {
     VendedorDAO vendedorDAO;
     @Override
     public Producto mapRow(ResultSet rs, int rowNum) throws SQLException {
-        int id_vendedor = (rs.getInt("id_vendedor"));
-        int id_categoria = (rs.getInt("id_categoria"));
-        String descripcion = (rs.getString("descripcion"));
-        double precio = (rs.getDouble("precio"));
-        String nombre = (rs.getString("nombre"));
-        String image = (rs.getString("imagen"));
-        java.sql.Date fecha = (rs.getDate("fecha_añadido"));
-        boolean validado = (rs.getBoolean("validado"));
-        int huella_ecologica = (rs.getInt("huella_ecologica"));
-        Product_Types tipoDeProducto = Product_Types.fromID(rs.getInt("id_categoria"));
-        HashMap<String,String> atributos = caracteristicaProductoDAO.getSmartTag(rs.getString("nombre"), vendedorDAO.getVendorName(rs.getInt("id_vendedor")));
-        List<Object> listaDeParametros = new ArrayList<>();
-        for (String key : atributos.keySet()) {
-            listaDeParametros.add(key);
-            listaDeParametros.add((Object) atributos.get(key));
-        }
-        Producto producto = ProductFactory.getProduct(tipoDeProducto, nombre, id_vendedor, precio, descripcion, id_categoria, image, fecha, validado, huella_ecologica, listaDeParametros);
+        Producto producto = new Producto();
+        producto.setId_vendedor(rs.getInt("id_vendedor"));
+        producto.setId_categoria(rs.getInt("id_categoria"));
+        producto.setDescripcion(rs.getString("descripcion"));
+        producto.setPrecio(rs.getDouble("precio"));
+        producto.setNombre(rs.getString("nombre"));
+        producto.setImagen(rs.getString("imagen"));
+        producto.setFecha_publicacion(rs.getDate("fecha_añadido"));
+        producto.setValidado(rs.getBoolean("validado"));
+        producto.setHuella_ecologica(rs.getInt("huella_ecologica"));
         return producto;
     }
 }
