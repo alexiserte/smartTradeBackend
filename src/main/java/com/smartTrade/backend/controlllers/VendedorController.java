@@ -46,9 +46,8 @@ public class VendedorController {
             try {
                 Vendedor vendedor = vendedorDAO.readOne(identifier);
                 if (vendedor.getPassword().equals(password)) {
-                    MultiValueMap<String, String> headerHashMap = new LinkedMultiValueMap<>();
-                    headerHashMap.add("userType",User_Types.VENDEDOR.toString());
-                    return new ResponseEntity<>(vendedor,headerHashMap, HttpStatus.OK);
+                    
+                    return new ResponseEntity<>(vendedor, HttpStatus.OK);
                 }
                 return new ResponseEntity<>("Contraseña incorrecta", HttpStatus.UNAUTHORIZED);
             } catch (EmptyResultDataAccessException e) {
