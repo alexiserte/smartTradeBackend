@@ -40,7 +40,7 @@ public class UsuarioController {
     @GetMapping("/user/")
     private ResponseEntity<?> login(@RequestParam(name = "identifier", required = true) String identiFier,
                                     @RequestParam(name = "password", required = true) String password) {
-       User_Types userType = usuarioDAO.whatTypeIs(identiFier, password);
+       User_Types userType = usuarioDAO.whatTypeIs(identiFier);
 
        class Response<T>{
             private T user;
