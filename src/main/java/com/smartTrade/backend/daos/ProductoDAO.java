@@ -110,7 +110,6 @@ public class ProductoDAO{
  */
 public void update(String nombre, String vendorName, HashMap<String, ?> atributos) {
     List<String> keys = new ArrayList<>(atributos.keySet());
-    boolean precio = false;
     int id_vendedor = database.queryForObject(
             "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
             Integer.class, nombre, vendorName);
@@ -128,17 +127,7 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
             if ((int) atributos.get(key) == (product.getId_categoria())) {
                 iterator.remove();
             }
-        } else if (key.equals("id_vendedor")) {
-            if ((int) atributos.get(key) == product.getId_vendedor()) {
-                iterator.remove();
-            }
-        } else if (key.equals("precio")) {
-
-            if ((Double) atributos.get(key) == product.getPrecio()) {
-                iterator.remove();
-            } else {
-                precio = true;
-            }
+        
         } else if (key.equals("descripcion")) {
             if (((String) atributos.get(key)).equals(product.getDescripcion())) {
                 iterator.remove();
@@ -181,11 +170,6 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
         }
     }
 
-    if (precio) {
-        database.update(
-                "INSERT INTO Historico_Precios(id_producto,precio) SELECT id, precio FROM Producto WHERE nombre = ? AND id_vendedor = ?;",
-                nombre, id_vendedor);
-    }
 }
 
 
@@ -208,7 +192,7 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
 
     public boolean isFromOneCategory(String productName, String categoryName) {
     
-            return database.queryForObject("SELECT COUNT(*) FROM Producto WHERE nombre = ? AND id_categoria IN(SELECT id FROM Categoria WHERE nombre = ?)",Integer.class, productName, id_vendedor, categoryName) == 0;
+            return database.queryForObject("SELECT COUNT(*) FROM Producto WHERE nombre = ? AND id_categoria IN(SELECT id FROM Categoria WHERE nombre = ?)",Integer.class, productName, categoryName) == 0;
             
     }
 
