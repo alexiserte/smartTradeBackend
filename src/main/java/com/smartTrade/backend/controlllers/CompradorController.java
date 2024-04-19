@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
 import com.smartTrade.backend.models.Comprador;
 import com.smartTrade.backend.models.Producto;
+import com.smartTrade.backend.models.User_Types;
 
 @RestController
 public class CompradorController {
@@ -32,7 +35,7 @@ public class CompradorController {
         if(password == null){ // Si no se envía la contraseña, se asume que se quiere obtener la información del usuario
             try{
                 Comprador comprador = compradorDAO.readOne(identifier);
-                return ResponseEntity.ok(comprador);
+                return new ResponseEntity<>(comprador,HttpStatus.OK);
             }catch(EmptyResultDataAccessException e){
                 return new ResponseEntity<>("Usuario no existente",HttpStatus.NOT_FOUND);
             }catch(Exception e){
@@ -43,7 +46,9 @@ public class CompradorController {
             try {
                 Comprador comprador = compradorDAO.readOne(identifier);
                 if (comprador.getPassword().equals(password)) {
-                    return ResponseEntity.ok(comprador);
+                    MultiValueMap<String, String> headerHashMap = new LinkedMultiValueMap<>();
+                    headerHashMap.add("userType",User_Types.COMPRADOR.toString());
+                    return new ResponseEntity<>(comprador,headerHashMap,HttpStatus.OK);
                 }
                 return new ResponseEntity<>("Contraseña incorrecta",HttpStatus.UNAUTHORIZED);
             } catch (EmptyResultDataAccessException e) {

@@ -16,14 +16,18 @@ import com.smartTrade.backend.models.Comprador;
 import com.smartTrade.backend.models.Moda;
 import com.smartTrade.backend.models.Product_Types;
 import com.smartTrade.backend.models.Producto;
+import com.smartTrade.backend.models.User_Types;
 import com.smartTrade.backend.models.Vendedor;
 import com.smartTrade.backend.factory.ProductFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -239,6 +243,7 @@ public class AdminController {
             return new ResponseEntity<>("Error al obtener el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/admin/")
     public ResponseEntity<?> loginAdministrador(@RequestParam(value = "identifier", required = true) String identifier,
             @RequestParam(value = "password", required = false) String password) {
@@ -246,19 +251,22 @@ public class AdminController {
                                 // del usuario
             try {
                 Administrador administrador = admin.readOne(identifier);
-                return new ResponseEntity<>(administrador,HttpStatus.OK);
+                return new ResponseEntity<>(administrador, HttpStatus.OK);
             } catch (Exception e) {
-                return new ResponseEntity<>("Usuario no encontrado.",HttpStatus.NOT_FOUND);
+
+                return new ResponseEntity<>("Usuario no encontrado.", HttpStatus.NOT_FOUND);
             }
         } else { // Si se envía la contraseña, se asume que se quiere hacer login
             try {
                 Administrador administrador = admin.readOne(identifier);
                 if (administrador.getPassword().equals(password)) {
-                    return new ResponseEntity<>(administrador,HttpStatus.OK);
+                    MultiValueMap<String, String> headerHashMap = new LinkedMultiValueMap<>();
+                    headerHashMap.add("userType", User_Types.ADMINISTRADOR.toString());
+                    return new ResponseEntity<>(administrador, headerHashMap, HttpStatus.OK);
                 }
-                return new ResponseEntity<>("Contraseña incorreta",HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>("Contraseña incorreta", HttpStatus.UNAUTHORIZED);
             } catch (EmptyResultDataAccessException e) {
-                return new ResponseEntity<>("Usuario no encontrado.",HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Usuario no encontrado.", HttpStatus.NOT_FOUND);
             }
         }
     }

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
 import com.smartTrade.backend.models.Producto;
+import com.smartTrade.backend.models.User_Types;
 import com.smartTrade.backend.models.Vendedor;
 
 @RestController
@@ -43,7 +46,9 @@ public class VendedorController {
             try {
                 Vendedor vendedor = vendedorDAO.readOne(identifier);
                 if (vendedor.getPassword().equals(password)) {
-                    return new ResponseEntity<>(vendedor, HttpStatus.OK);
+                    MultiValueMap<String, String> headerHashMap = new LinkedMultiValueMap<>();
+                    headerHashMap.add("userType",User_Types.VENDEDOR.toString());
+                    return new ResponseEntity<>(vendedor,headerHashMap, HttpStatus.OK);
                 }
                 return new ResponseEntity<>("Contraseña incorrecta", HttpStatus.UNAUTHORIZED);
             } catch (EmptyResultDataAccessException e) {
