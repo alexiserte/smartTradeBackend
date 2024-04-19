@@ -7,8 +7,8 @@ public class Moda extends Producto {
     private String tipoDePrenda;
     private String seccion;
 
-    public Moda(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, String talla, String marca, String color, String tipoDePrenda, String seccion) {
-        super(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
+    public Moda(String nombre, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, String talla, String marca, String color, String tipoDePrenda, String seccion) {
+        super(nombre, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
         this.talla = talla;
         this.marca = marca;
         this.color = color;

@@ -4,8 +4,8 @@ public class Procesados extends Comida{
     private String ingredientes;
     private double peso;
 
-    public Procesados(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, String ingredientes, double peso) {
-        super(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
+    public Procesados(String nombre, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, String ingredientes, double peso) {
+        super(nombre, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
         this.ingredientes = ingredientes;
         this.peso = peso;
     }

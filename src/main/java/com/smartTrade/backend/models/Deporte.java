@@ -6,8 +6,8 @@ public class Deporte extends Producto{
     private String modelo;
     private String especificaciones;
 
-    public Deporte(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, String tipo, String marca, String modelo, String especificaciones) {
-        super(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
+    public Deporte(String nombre, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, String tipo, String marca, String modelo, String especificaciones) {
+        super(nombre, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
         this.tipo = tipo;
         this.marca = marca;
         this.modelo = modelo;

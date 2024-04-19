@@ -3,7 +3,6 @@ package com.smartTrade.backend.models;
 public class Producto{
 
     private String nombre;
-    private int id_vendedor;
     private double precio;
     private String descripcion;
     private int id_categoria;
@@ -11,9 +10,8 @@ public class Producto{
     private java.sql.Date fecha_publicacion;
     private boolean validado;
     private int huella_ecologica;
-    public Producto(String nombre, int id_vendedor, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica) {
+    public Producto(String nombre, double precio, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica) {
         this.nombre = nombre;
-        this.id_vendedor = id_vendedor;
         this.precio = precio;
         this.descripcion = descripcion;
         this.id_categoria = id_categoria;
@@ -29,9 +27,6 @@ public class Producto{
         return nombre;
     }
 
-    public int getId_vendedor() {
-        return id_vendedor;
-    }
 
     public double getPrecio() {
         return precio;
@@ -57,9 +52,6 @@ public class Producto{
         this.nombre = nombre;
     }
 
-    public void setId_vendedor(int id_vendedor) {
-        this.id_vendedor = id_vendedor;
-    }
 
     public void setPrecio(double precio) {
         this.precio = precio;
