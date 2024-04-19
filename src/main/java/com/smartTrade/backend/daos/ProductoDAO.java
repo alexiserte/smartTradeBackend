@@ -68,7 +68,7 @@ public class ProductoDAO{
         res.add(0,producto);
 
         res.add(1,caracteristicas);
-        String categoria = database.queryForObject("SELECT nombre FROM Categoria WHERE id IN(SELECT id_categoria FROM Producto WHERE nombre = ?",String.class,productName);
+        String categoria = database.queryForObject("SELECT nombre FROM Categoria WHERE id IN(SELECT id_categoria FROM Producto WHERE nombre = ?)",String.class,productName);
         res.add(2,categoria);
 
         List<String> vendedores = database.queryForList("SELECT nombre FROM Vendedores_Producto WHERE id_producto = ? ORDER BY id", String.class, id_producto);
