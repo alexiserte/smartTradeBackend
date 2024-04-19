@@ -6,12 +6,12 @@ import java.util.List;
 
 public class ProductFactory{
 
-    public static Producto getProduct(Product_Types productType, String nombre, int id_vendedor, double precio, String descripcion,
+    public static Producto getProduct(Product_Types productType, String nombre, double precio, String descripcion,
     int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, List<Object> args) {
         if (productType == null) {
             return null;
         }
-        Producto producto = new Producto(nombre, id_vendedor, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
+        Producto producto = new Producto(nombre, precio, descripcion, id_categoria, imagen, fecha_publicacion, validado, huella_ecologica);
         AlimentacionFactory alimentacionFactory = new AlimentacionFactory();
         HigieneFactory higieneFactory = new HigieneFactory();
         switch (productType) {
@@ -61,7 +61,7 @@ public class ProductFactory{
      static class HigieneFactory extends ProductFactory {
         
         public  Higiene getProduct(Producto producto, List<Object> args) {
-            return new Higiene(producto.getNombre(), producto.getId_vendedor(), producto.getPrecio(), producto.getDescripcion(), producto.getId_categoria(), producto.getImagen(), producto.getFecha_publicacion(), producto.getValidado(), producto.getHuella_ecologica());
+            return new Higiene(producto.getNombre(), producto.getPrecio(), producto.getDescripcion(), producto.getId_categoria(), producto.getImagen(), producto.getFecha_publicacion(), producto.getValidado(), producto.getHuella_ecologica());
         }
     }
 
@@ -86,7 +86,7 @@ public class ProductFactory{
                 return bebidaFactory.getProduct(p, args);
             }
             else{
-                return new Alimentacion(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                return new Alimentacion(p.getNombre(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                         p.getValidado(), p.getHuella_ecologica());
             }
@@ -106,7 +106,7 @@ public class ProductFactory{
                         return procesadosFactory
                         .getProduct(p, args);
                     case COMIDA:
-                        return new Comida(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                        return new Comida(p.getNombre(), p.getPrecio(), p.getDescripcion(),
                                 p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                                 p.getValidado(), p.getHuella_ecologica());
                     default:
@@ -119,7 +119,7 @@ public class ProductFactory{
 
             public  Procesados getProduct(Producto p,
                     List<Object> args) {
-                return new Procesados(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                return new Procesados(p.getNombre(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                         p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (double) args.get(1));
             }
@@ -129,7 +129,7 @@ public class ProductFactory{
 
             public  Frescos getProduct(Producto p,
                     List<Object> args) {
-                return new Frescos(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                return new Frescos(p.getNombre(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                         p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (double) args.get(1));
             }
@@ -139,7 +139,7 @@ public class ProductFactory{
 
             public  Bebida getProduct(Producto p,
                     List<Object> args) {
-                return new Bebida(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+                return new Bebida(p.getNombre(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                         p.getValidado(), p.getHuella_ecologica());
             }
@@ -151,7 +151,7 @@ public class ProductFactory{
         
         public  Deporte getProduct(Producto p,
                 List<Object> args) {
-            return new Deporte(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+            return new Deporte(p.getNombre(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                         p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
         }
@@ -161,7 +161,7 @@ public class ProductFactory{
         
         public  Electronica getProduct(Producto p,
                 List<Object> args) {
-            return new Electronica(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+            return new Electronica(p.getNombre(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                         p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
         }
@@ -172,7 +172,7 @@ public class ProductFactory{
         
         public  Moda getProduct(Producto p,
                 List<Object> args) {
-            return new Moda(p.getNombre(), p.getId_vendedor(), p.getPrecio(), p.getDescripcion(),
+            return new Moda(p.getNombre(), p.getPrecio(), p.getDescripcion(),
                         p.getId_categoria(), p.getImagen(), p.getFecha_publicacion(),
                         p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3), (String) args.get(4));
         }
