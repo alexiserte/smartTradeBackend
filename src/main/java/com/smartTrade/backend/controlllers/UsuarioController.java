@@ -41,27 +41,41 @@ public class UsuarioController {
                                     @RequestParam(name = "password", required = true) String password) {
        User_Types userType = usuarioDAO.whatTypeIs(identiFier, password);
 
+       class Response<T>{
+            private T user;
+            private User_Types userType;
+
+            public Response(T user, User_Types userType){
+                this.user = user;
+                this.userType = userType;
+            }
+
+            public T getUser(){
+                return user;
+            }
+
+            public User_Types getUserType(){
+                return userType;
+            }
+       }
        switch(userType){
               case ADMINISTRADOR:
                 Administrador administrador = admin.readOne(identiFier);
                 if(administrador.getPassword().equals(password)){
-                    MultiValueMap<String, String> headerHashMap = new LinkedMultiValueMap<>();
-                    headerHashMap.add("userType",User_Types.ADMINISTRADOR.toString());
-                    return ResponseEntity.ok(administrador);
+                    Response<Administrador> response = new Response<>(administrador, User_Types.ADMINISTRADOR);
+                    return ResponseEntity.ok(response);
                 }
               case VENDEDOR:
                 Vendedor vendedor = vendedorDAO.readOne(identiFier);
                 if(vendedor.getPassword().equals(password)){
-                    MultiValueMap<String, String> headerHashMap = new LinkedMultiValueMap<>();
-                    headerHashMap.add("userType",User_Types.VENDEDOR.toString());
-                    return ResponseEntity.ok(vendedor);
+                    Response<Vendedor> response = new Response<>(vendedor, User_Types.VENDEDOR);
+                    return ResponseEntity.ok(response);
                 }
               case COMPRADOR:
                 Comprador comprador = compradorDAO.readOne(identiFier);
                 if(comprador.getPassword().equals(password)){
-                    MultiValueMap<String, String> headerHashMap = new LinkedMultiValueMap<>();
-                    headerHashMap.add("userType",User_Types.COMPRADOR.toString());
-                    return ResponseEntity.ok(comprador);
+                    Response<Comprador> response = new Response<>(comprador, User_Types.COMPRADOR);
+                    return ResponseEntity.ok(response);
                 }
               default:
                 return ResponseEntity.badRequest().body("Los parámetros ingresados no corresponden a un usuario existente en la base de datos.");
