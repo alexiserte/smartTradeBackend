@@ -41,26 +41,27 @@ public class UsuarioController {
     @GetMapping("/user/")
     private ResponseEntity<?> login(@RequestParam(name = "identifier", required = true) String identiFier,
             @RequestParam(name = "password", required = true) String password) {
-        User_Types userType = usuarioDAO.whatTypeIs(identiFier);
-
-        class Response<T> {
-            private T user;
-            private User_Types userType;
-
-            public Response(T user, User_Types userType) {
-                this.user = user;
-                this.userType = userType;
-            }
-
-            public T getUser() {
-                return user;
-            }
-
-            public User_Types getUserType() {
-                return userType;
-            }
-        }
         try {
+            User_Types userType = usuarioDAO.whatTypeIs(identiFier);
+
+            class Response<T> {
+                private T user;
+                private User_Types userType;
+
+                public Response(T user, User_Types userType) {
+                    this.user = user;
+                    this.userType = userType;
+                }
+
+                public T getUser() {
+                    return user;
+                }
+
+                public User_Types getUserType() {
+                    return userType;
+                }
+            }
+
             switch (userType) {
                 case ADMINISTRADOR:
                     Administrador administrador = admin.readOne(identiFier);
