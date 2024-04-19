@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
+import com.smartTrade.backend.factory.ProductFactory;
+import com.smartTrade.backend.models.Product_Types;
 import com.smartTrade.backend.models.Producto;
 import com.smartTrade.backend.models.Vendedor;
 import com.smartTrade.backend.utils.StringComparison;
@@ -61,7 +63,6 @@ public class ProductoController {
             }
         } else {
             return new ResponseEntity<>(res, HttpStatus.OK);
-
         }
     }
 
