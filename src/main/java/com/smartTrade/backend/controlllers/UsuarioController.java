@@ -3,6 +3,7 @@ package com.smartTrade.backend.controlllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -65,11 +66,17 @@ public class UsuarioController {
                     Response<Administrador> response = new Response<>(administrador, User_Types.ADMINISTRADOR);
                     return ResponseEntity.ok(response);
                 }
+                else{
+                    return new ResponseEntity<>("Contraseña incorrecta",HttpStatus.UNAUTHORIZED);
+                }
               case VENDEDOR:
                 Vendedor vendedor = vendedorDAO.readOne(identiFier);
                 if(vendedor.getPassword().equals(password)){
                     Response<Vendedor> response = new Response<>(vendedor, User_Types.VENDEDOR);
                     return ResponseEntity.ok(response);
+                }
+                else{
+                    return new ResponseEntity<>("Contraseña incorrecta",HttpStatus.UNAUTHORIZED);
                 }
               case COMPRADOR:
                 Comprador comprador = compradorDAO.readOne(identiFier);
@@ -77,8 +84,11 @@ public class UsuarioController {
                     Response<Comprador> response = new Response<>(comprador, User_Types.COMPRADOR);
                     return ResponseEntity.ok(response);
                 }
+                else{
+                    return new ResponseEntity<>("Contraseña incorrecta",HttpStatus.UNAUTHORIZED);
+                }
               default:
-                return ResponseEntity.badRequest().body("Los parámetros ingresados no corresponden a un usuario existente en la base de datos.");
+                return new ResponseEntity<>("Nombre de usuario incorrecto",HttpStatus.NOT_FOUND);
        }
     }
 }
