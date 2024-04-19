@@ -59,10 +59,10 @@ public class Caracteristica_ProductoDAO {
         database.update("DELETE FROM Caracteristica WHERE nombre = ? AND id_producto = ?;", nombre, id_producto);
     }
     
-    public HashMap<String, String> getSmartTag(String productName, String vendorName) {
+    public HashMap<String, String> getSmartTag(String productName) {
         List<String> listaDeCaracteristica = new ArrayList<>();
 
-        int id_categoria = database.queryForObject("SELECT id_categoria FROM Producto WHERE nombre = ? AND id_vendedor = ANY(SELECT id FROM Usuario WHERE  nickname = ?);", Integer.class, productName, vendorName);
+        int id_categoria = database.queryForObject("SELECT id_categoria FROM Producto WHERE nombre = ?", Integer.class, productName);
         String categoria = database.queryForObject("SELECT nombre FROM Categoria WHERE id = ?;", String.class, id_categoria);
 
         listaDeCaracteristica = caracteristicaDAO.getCaracteristicasFromOneCategoria(categoria);
@@ -76,8 +76,8 @@ public class Caracteristica_ProductoDAO {
         HashMap<String, String> res = new HashMap<>();
         try {
             int id_producto = database.queryForObject(
-                    "SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ANY(SELECT id_usuario FROM Vendedor WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?))",
-                    Integer.class, productName, vendorName);
+                    "SELECT id FROM Producto WHERE nombre = ?",
+                    Integer.class, productName);
 
             List<Caracteristica> queryResult = database.query(
                     "SELECT id_caracteristica, valor, id_categoria, id_producto FROM Caracteristica WHERE id_producto = ?",

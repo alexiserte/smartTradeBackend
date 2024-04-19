@@ -78,7 +78,7 @@ public class ProductoController {
         
             try {
             try{
-                productoDAO.readOne(nombre, vendorName);
+                productoDAO.readOne(nombre);
                 return new ResponseEntity<>("El producto ya existe", HttpStatus.CONFLICT);
             }
             catch(EmptyResultDataAccessException e){
@@ -136,19 +136,21 @@ public class ProductoController {
             @RequestParam(name = "vendor", required = true) int id_vendedor) {
         try {
             String vendorName = vendedorDAO.getVendorName(id_vendedor);
-            List<Object> resultado = productoDAO.readOne(productName, vendorName);
+            List<Object> resultado = productoDAO.readOne(productName);
 
             class Resultado {
                 Producto producto;
                 HashMap<String, String> smartTag;
                 String vendedor;
                 String categoria;
+                Map<String, Double> vendedores;
 
-                public Resultado(Producto producto, HashMap<String, String> smartTag, String vendedor,String categoria) {
+                public Resultado(Producto producto, HashMap<String, String> smartTag, String vendedor,String categoria, Map<String, Double> vendedores) {
                     this.producto = producto;
                     this.smartTag = smartTag;
                     this.vendedor = vendedor;
                     this.categoria = categoria;
+                    this.vendedores = vendedores;
                 }
 
                 public Producto getProducto() {
@@ -167,10 +169,13 @@ public class ProductoController {
                     return vendedor;
                 }
 
+                public Map<String, Double> getVendedores() {
+                    return vendedores;
+                }
             }
 
             @SuppressWarnings("unchecked")
-            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),vendorName,(String) resultado.get(2));
+            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),vendorName,(String) resultado.get(2),(Map<String, Double>) resultado.get(3));
             return ResponseEntity.ok(r);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
