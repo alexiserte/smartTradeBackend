@@ -132,23 +132,19 @@ public class ProductoController {
 
     @SuppressWarnings("unused")
     @GetMapping("/producto/")
-    public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName,
-            @RequestParam(name = "vendor", required = true) int id_vendedor) {
+    public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName) {
         try {
-            String vendorName = vendedorDAO.getVendorName(id_vendedor);
             List<Object> resultado = productoDAO.readOne(productName);
 
             class Resultado {
                 Producto producto;
                 HashMap<String, String> smartTag;
-                String vendedor;
                 String categoria;
                 Map<String, Double> vendedores;
 
-                public Resultado(Producto producto, HashMap<String, String> smartTag, String vendedor,String categoria, Map<String, Double> vendedores) {
+                public Resultado(Producto producto, HashMap<String, String> smartTag,String categoria, Map<String, Double> vendedores) {
                     this.producto = producto;
                     this.smartTag = smartTag;
-                    this.vendedor = vendedor;
                     this.categoria = categoria;
                     this.vendedores = vendedores;
                 }
@@ -165,9 +161,7 @@ public class ProductoController {
                     return categoria;
                 }
 
-                public String getVendedor() {
-                    return vendedor;
-                }
+            
 
                 public Map<String, Double> getVendedores() {
                     return vendedores;
@@ -175,7 +169,7 @@ public class ProductoController {
             }
 
             @SuppressWarnings("unchecked")
-            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),vendorName,(String) resultado.get(2),(Map<String, Double>) resultado.get(3));
+            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),(String) resultado.get(2),(Map<String, Double>) resultado.get(3));
             return ResponseEntity.ok(r);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
