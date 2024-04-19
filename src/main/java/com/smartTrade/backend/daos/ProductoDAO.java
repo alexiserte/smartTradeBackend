@@ -61,7 +61,7 @@ public class ProductoDAO{
         List<Object> res = new ArrayList<>();
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
 
-        Producto producto = database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion, imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id = ?", new ProductMapper(), id_producto);
+        Producto producto = database.queryForObject("SELECT nombre, id_categoria, descripcion, imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id = ?", new ProductMapper(), id_producto);
         
        
         HashMap<String,String> caracteristicas = CaracteristicaDAO.getSmartTag(productName);
@@ -85,11 +85,11 @@ public class ProductoDAO{
     }
 
     public Producto readOneProduct(String productName) {
-       return database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado, huella_ecologica FROM Producto WHERE nombre = ?", new ProductMapper(), productName);
+       return database.queryForObject("SELECT nombre, id_categoria, descripcion,imagen,fecha_añadido,validado, huella_ecologica FROM Producto WHERE nombre = ?", new ProductMapper(), productName);
     }
 
     public List<Producto> readAll() {
-        return database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto", new ProductMapper());
+        return database.query("SELECT nombre, id_categoria, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto", new ProductMapper());
     }
 
 /**
@@ -178,7 +178,7 @@ public void update(String nombre, HashMap<String, ?> atributos) {
 
 
     public List<Producto> getProductsByCategory(String categoryName) {
-        return database.query("SELECT nombre,id_vendedor,id_categoria,descripcion,precio,imagen,fecha_añadido, validado FROM Producto WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), categoryName);
+        return database.query("SELECT nombre,id_categoria,descripcion,imagen,fecha_añadido, validado FROM Producto WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)", new ProductMapper(), categoryName);
     }
 
     public List<Producto> getProductsBySeller(String vendorName) {
@@ -208,7 +208,7 @@ public void update(String nombre, HashMap<String, ?> atributos) {
     }
 
     public List<Producto> getProductosPendientesDeValidacion() throws Exception{
-        List<Producto> productos = database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE validado = false", new ProductMapper());
+        List<Producto> productos = database.query("SELECT nombre, id_categoria, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE validado = false", new ProductMapper());
         int productosSize = database.queryForObject("SELECT COUNT(*) FROM Pendientes_Validacion", Integer.class);
         if(productosSize == productos.size()){
             return productos;
@@ -218,7 +218,7 @@ public void update(String nombre, HashMap<String, ?> atributos) {
 }
 
     public List<Producto> getProductosComprados(String nickname) throws EmptyResultDataAccessException{
-        List<Producto> lista =  database.query("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ANY(SELECT id FROM Pedido WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)))",new ProductMapper(),nickname);
+        List<Producto> lista =  database.query("SELECT nombre, id_categoria, descripcion,imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ANY(SELECT id FROM Pedido WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)))",new ProductMapper(),nickname);
         if(lista.size() == 0){
             throw new EmptyResultDataAccessException(1);
         }
