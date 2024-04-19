@@ -15,8 +15,8 @@ public class UsuarioDAO {
         this.database = database;
     }
 
-    public User_Types whatTypeIs(String identifier, String password){
-        int id_usuario = database.queryForObject("SELECT id FROM Usuario WHERE (nickname = ? OR correo = ?) AND user_password = ?;", Integer.class, identifier, identifier, password);
+    public User_Types whatTypeIs(String identifier){
+        int id_usuario = database.queryForObject("SELECT id FROM Usuario WHERE (nickname = ? OR correo = ?);", Integer.class, identifier, identifier);
         
         boolean existsAdmin = database.queryForObject("SELECT COUNT(*) FROM Administrador WHERE id_usuario = ?", Integer.class, id_usuario) > 0;
         boolean existsVendor = database.queryForObject("SELECT COUNT(*) FROM Vendedor WHERE id_usuario = ?", Integer.class, id_usuario) > 0;
