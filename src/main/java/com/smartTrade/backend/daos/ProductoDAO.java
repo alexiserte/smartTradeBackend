@@ -84,9 +84,8 @@ public class ProductoDAO{
         return res;
     }
 
-    public Producto readOneProduct(String productName, String vendorName) {
-        int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
-        return database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado, huella_ecologica FROM Producto WHERE nombre = ? AND id_vendedor = ?", new ProductMapper(), productName, id_vendedor);
+    public Producto readOneProduct(String productName) {
+       return database.queryForObject("SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado, huella_ecologica FROM Producto WHERE nombre = ?", new ProductMapper(), productName);
     }
 
     public List<Producto> readAll() {
@@ -108,14 +107,11 @@ public class ProductoDAO{
  * producto en la base de datos. Las claves en `HashMap` corresponden a los atributos del producto (por
  * ejemplo, "
  */
-public void update(String nombre, String vendorName, HashMap<String, ?> atributos) {
+public void update(String nombre, HashMap<String, ?> atributos) {
     List<String> keys = new ArrayList<>(atributos.keySet());
-    int id_vendedor = database.queryForObject(
-            "SELECT id_vendedor FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?))",
-            Integer.class, nombre, vendorName);
     Producto product = database.queryForObject(
-            "SELECT nombre, id_categoria, id_vendedor, precio, descripcion,imagen,fecha_añadido,validado ,huella_ecologica FROM Producto WHERE nombre = ? AND id_vendedor = ?",
-            new ProductMapper(), nombre, id_vendedor);
+            "SELECT nombre, id_categoria, descripcion,imagen,fecha_añadido,validado ,huella_ecologica FROM Producto WHERE nombre = ?",
+            new ProductMapper(), nombre);
 
     for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
         String key = iterator.next();
@@ -159,14 +155,14 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
     for (String key : keys) {
         Object valor = atributos.get(key);
         if (valor instanceof Integer) {
-            database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
-                    (Integer) valor, nombre, id_vendedor);
+            database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?",
+                    (Integer) valor, nombre);
         } else if (valor instanceof String) {
-            database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
-                    (String) valor, nombre, id_vendedor);
+            database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?",
+                    (String) valor, nombre );
         } else if (valor instanceof Double) {
-            database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND id_vendedor = ?;",
-                    (Double) valor, nombre, id_vendedor);
+            database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?",
+                    (Double) valor, nombre );
         }
     }
 
@@ -174,9 +170,9 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
 
 
 
-    public void delete(String nombre, String vendorName) {
+    public void delete(String nombre,String vendorName) {
         int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
-        database.update("DELETE FROM Producto WHERE nombre = ? AND id_vendedor = ?;", nombre, id_vendedor);
+        database.update("DELETE FROM Producto WHERE nombre = ?", nombre);
         database.update("DELETE FROM Historico_Precios WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?);", nombre, id_vendedor);
     }
 
@@ -186,8 +182,7 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
     }
 
     public List<Producto> getProductsBySeller(String vendorName) {
-        int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
-        return database.query("SELECT nombre,id_vendedor,id_categoria,descripcion,precio,imagen,fecha_añadido, validado, huella_ecologica FROM Producto WHERE id_vendedor = ?", new ProductMapper(), id_vendedor);
+        return database.query("SELECT nombre,id_categoria,descripcion,imagen,fecha_añadido, validado, huella_ecologica FROM Producto WHERE id IN(SELECT id_producto FROM Vendedores_Producto WHERE id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ?))", new ProductMapper(), vendorName);
     }
 
     public boolean isFromOneCategory(String productName, String categoryName) {
@@ -196,21 +191,18 @@ public void update(String nombre, String vendorName, HashMap<String, ?> atributo
             
     }
 
-    public void validate(String nombre, String vendorName) throws EmptyResultDataAccessException{
+    public void validate(String nombre) throws EmptyResultDataAccessException{
         int exists = database.queryForObject(
-                "SELECT COUNT(*) FROM Pendientes_Validacion WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)))",
-                Integer.class, nombre, vendorName);
+                "SELECT COUNT(*) FROM Pendientes_Validacion WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ?",
+                Integer.class, nombre);
         if (exists == 0) {
             throw new EmptyResultDataAccessException(1);
         } else {
-            int id_vendedor = database.queryForObject(
-                    "SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
-                    Integer.class, vendorName);
+
             database.update(
-                    "DELETE FROM Pendientes_Validacion WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?)",
-                    nombre, id_vendedor);
-            database.update("UPDATE Producto SET validado = true WHERE nombre = ? AND id_vendedor = ?", nombre,
-                    id_vendedor);
+                    "DELETE FROM Pendientes_Validacion WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ?)",
+                    nombre);
+            database.update("UPDATE Producto SET validado = true WHERE nombre = ?", nombre);
 
         }
     }
