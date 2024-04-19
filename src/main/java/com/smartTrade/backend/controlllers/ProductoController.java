@@ -52,7 +52,7 @@ public class ProductoController {
             resultado = todosLosProductos
                     .stream()
                     .filter(producto -> StringComparison.areSimilar(nombre, producto.getNombre()))
-                    .filter(producto -> !productoDAO.isFromOneCategory(producto.getNombre(), producto.getId_vendedor(),
+                    .filter(producto -> !productoDAO.isFromOneCategory(producto.getNombre(),
                             category))
                     .toList();
             if (resultado.size() == 0) {
@@ -118,7 +118,7 @@ public class ProductoController {
             @RequestParam(name = "vendor", required = true) String vendorName,
             @RequestBody(required = true) HashMap<String, ?> atributos) {
         try {
-            productoDAO.update(nombre, vendorName, atributos);
+            productoDAO.update(nombre, atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
@@ -190,7 +190,7 @@ public class ProductoController {
     public ResponseEntity<?> validarProducto(@RequestParam(name = "name", required = true) String nombre,
             @RequestParam(name = "vendor", required = true) String vendorName) {
         try {
-            Producto producto = productoDAO.readOneProduct(nombre, vendorName);
+            Producto producto = productoDAO.readOneProduct(nombre);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -199,7 +199,7 @@ public class ProductoController {
         }
 
         try {
-            productoDAO.validate(nombre, vendorName);
+            productoDAO.validate(nombre);
             return new ResponseEntity<>("Producto validado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("El producto ya ha sido validado", HttpStatus.CONFLICT);
@@ -216,7 +216,7 @@ public class ProductoController {
             try{
                 Vendedor vendedor = vendedorDAO.readOne(vendorName);
                 try{
-                    Producto producto = productoDAO.readOneProduct(productName, vendedor.getNickname());
+                    Producto producto = productoDAO.readOneProduct(productName);
                     HashMap<String,?> mapaCaracteristicas = precioDAO.getStats(producto.getNombre(), vendedor.getNickname());
 
                     class ProductoEstadisticas{
