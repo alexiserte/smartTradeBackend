@@ -77,11 +77,6 @@ public class ProductoController {
             @RequestBody(required = false) Map<String,String> body) {
         
             try {
-            try{
-                productoDAO.readOne(nombre);
-                return new ResponseEntity<>("El producto ya existe", HttpStatus.CONFLICT);
-            }
-            catch(EmptyResultDataAccessException e){
                 String imageToAdd;
                 if(body != null && body.containsKey("imagen")){
                     imageToAdd = body.get("imagen");
@@ -91,7 +86,7 @@ public class ProductoController {
                 }
                 productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
                 return new ResponseEntity<>(HttpStatus.CREATED);
-            }
+            
             
         } catch (Exception e) {
             return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
