@@ -7,11 +7,11 @@ import java.util.List;
 public class ProductFactory{
 
     public static Producto getProduct(Product_Types productType, String nombre, String descripcion,
-    int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, List<Object> args) {
+    int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,int id_imagen, List<Object> args) {
         if (productType == null) {
             return null;
         }
-        Producto producto = new Producto(nombre, descripcion, id_categoria, fecha_publicacion, validado, huella_ecologica);
+        Producto producto = new Producto(nombre, descripcion, id_categoria, fecha_publicacion, validado, huella_ecologica,id_imagen);
         AlimentacionFactory alimentacionFactory = new AlimentacionFactory();
         HigieneFactory higieneFactory = new HigieneFactory();
         switch (productType) {
@@ -61,7 +61,7 @@ public class ProductFactory{
      static class HigieneFactory extends ProductFactory {
         
         public  Higiene getProduct(Producto producto, List<Object> args) {
-            return new Higiene(producto.getNombre(), producto.getDescripcion(), producto.getId_categoria(), producto.getFecha_publicacion(), producto.getValidado(), producto.getHuella_ecologica());
+            return new Higiene(producto.getNombre(), producto.getDescripcion(), producto.getId_categoria(), producto.getFecha_publicacion(), producto.getValidado(), producto.getHuella_ecologica(),producto.getId_imagen());
         }
     }
 
@@ -88,7 +88,7 @@ public class ProductFactory{
             else{
                 return new Alimentacion(p.getNombre(), p.getDescripcion(),
                         p.getId_categoria(), p.getFecha_publicacion(),
-                        p.getValidado(), p.getHuella_ecologica());
+                        p.getValidado(), p.getHuella_ecologica(), p.getId_imagen());
             }
 
         }
@@ -108,7 +108,7 @@ public class ProductFactory{
                     case COMIDA:
                         return new Comida(p.getNombre(), p.getDescripcion(),
                                 p.getId_categoria(), p.getFecha_publicacion(),
-                                p.getValidado(), p.getHuella_ecologica());
+                                p.getValidado(), p.getHuella_ecologica(), p.getId_imagen());
                     default:
                         return null;
                 }
@@ -121,7 +121,7 @@ public class ProductFactory{
                     List<Object> args) {
                 return new Procesados(p.getNombre(), p.getDescripcion(),
                         p.getId_categoria(),  p.getFecha_publicacion(),
-                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (double) args.get(1));
+                        p.getValidado(), p.getHuella_ecologica(),p.getId_imagen(), (String) args.get(0), (double) args.get(1));
             }
         }
 
@@ -131,7 +131,7 @@ public class ProductFactory{
                     List<Object> args) {
                 return new Frescos(p.getNombre(), p.getDescripcion(),
                         p.getId_categoria(), p.getFecha_publicacion(),
-                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (double) args.get(1));
+                        p.getValidado(), p.getHuella_ecologica(),p.getId_imagen(), (String) args.get(0), (double) args.get(1));
             }
         }
 
@@ -141,7 +141,7 @@ public class ProductFactory{
                     List<Object> args) {
                 return new Bebida(p.getNombre(), p.getDescripcion(),
                         p.getId_categoria(), p.getFecha_publicacion(),
-                        p.getValidado(), p.getHuella_ecologica());
+                        p.getValidado(), p.getHuella_ecologica(),p.getId_imagen());
             }
         }
     }
@@ -153,7 +153,7 @@ public class ProductFactory{
                 List<Object> args) {
             return new Deporte(p.getNombre(), p.getDescripcion(),
                         p.getId_categoria(), p.getFecha_publicacion(),
-                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
+                        p.getValidado(), p.getHuella_ecologica(),p.getId_imagen(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
         }
     }
 
@@ -163,7 +163,7 @@ public class ProductFactory{
                 List<Object> args) {
             return new Electronica(p.getNombre(), p.getDescripcion(),
                         p.getId_categoria(), p.getFecha_publicacion(),
-                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
+                        p.getValidado(), p.getHuella_ecologica(), p.getId_imagen(),(String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3));
         }
     }
 
@@ -174,7 +174,7 @@ public class ProductFactory{
                 List<Object> args) {
             return new Moda(p.getNombre(), p.getDescripcion(),
                         p.getId_categoria(), p.getFecha_publicacion(),
-                        p.getValidado(), p.getHuella_ecologica(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3), (String) args.get(4));
+                        p.getValidado(), p.getHuella_ecologica(),p.getId_imagen(), (String) args.get(0), (String) args.get(1), (String) args.get(2), (String) args.get(3), (String) args.get(4));
         }
     }
 
