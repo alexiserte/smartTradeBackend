@@ -317,12 +317,12 @@ public class ProductoController {
                 }catch(EmptyResultDataAccessException e){
                     return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
                 }catch(Exception e){
-                    return new ResponseEntity<>("Error al obtener el producto", HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<>("Error al obtener el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }catch(EmptyResultDataAccessException e){
                 return new ResponseEntity<>("Vendedor no econtrado", HttpStatus.NOT_FOUND);
             }catch(Exception e){
-                return new ResponseEntity<>("Error al obtener el vendedor", HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>("Error al obtener el vendedor: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
     
         

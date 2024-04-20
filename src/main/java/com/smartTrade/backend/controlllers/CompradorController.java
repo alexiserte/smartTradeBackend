@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
@@ -60,11 +61,13 @@ public class CompradorController {
     public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "mail", required = true) String correo,
-            @RequestParam(value = "direction", required = true) String direccion){
+            @RequestParam(value = "direction", required = true) String direccion,
+            @RequestBody(required = true) MultiValueMap<String, String> body){
         try{
             Comprador comprador = compradorDAO.readOne(nickname);
             return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);
         }catch(EmptyResultDataAccessException e){
+            
             compradorDAO.create(nickname, password,correo,direccion);
             return new ResponseEntity<>("Comprador creado correctamente",HttpStatus.CREATED);
         }catch(Exception e){
