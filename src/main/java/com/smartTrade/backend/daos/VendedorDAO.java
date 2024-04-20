@@ -106,4 +106,7 @@ public class VendedorDAO{
     public String getVendorName(int id_vendedor) {
         return database.queryForObject("SELECT nickname FROM Usuario WHERE id = ?", String.class, id_vendedor);
     }
+
+
+    
 }

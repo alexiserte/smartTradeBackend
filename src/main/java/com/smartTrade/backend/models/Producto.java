@@ -5,15 +5,13 @@ public class Producto{
     private String nombre;
     private String descripcion;
     private int id_categoria;
-    private String imagen;
     private java.sql.Date fecha_publicacion;
     private boolean validado;
     private int huella_ecologica;
-    public Producto(String nombre, String descripcion, int id_categoria, String imagen, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica) {
+    public Producto(String nombre, String descripcion, int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.id_categoria = id_categoria;
-        this.imagen = imagen;
         this.fecha_publicacion = fecha_publicacion;
         this.validado = validado;
         this.huella_ecologica = huella_ecologica;
@@ -34,9 +32,7 @@ public class Producto{
         return id_categoria;
     }
 
-    public String getImagen() {
-        return imagen;
-    }
+
 
     public java.sql.Date getFecha_publicacion() {
         return fecha_publicacion;
@@ -57,9 +53,6 @@ public class Producto{
         this.id_categoria = id_categoria;
     }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
 
     public void setFecha_publicacion(java.sql.Date fecha_publicacion) {
         this.fecha_publicacion = fecha_publicacion;
