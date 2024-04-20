@@ -99,10 +99,9 @@ public class ProductoController {
     }
 
     @DeleteMapping("/producto/")
-    public ResponseEntity<?> deleteProduct(@RequestParam(name = "name", required = true) String nombre,
-            @RequestParam(name = "vendor", required = true) String vendorName) {
+    public ResponseEntity<?> deleteProduct(@RequestParam(name = "name", required = true) String nombre) {
         try {
-            productoDAO.delete(nombre, vendorName);
+            productoDAO.delete(nombre);
             return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.NOT_FOUND);
@@ -115,7 +114,7 @@ public class ProductoController {
 
     @PutMapping("/producto/")
     public ResponseEntity<?> updateProduct(@RequestParam(name = "name", required = true) String nombre,
-            @RequestParam(name = "vendor", required = true) String vendorName,
+            
             @RequestBody(required = true) HashMap<String, ?> atributos) {
         try {
             productoDAO.update(nombre, atributos);

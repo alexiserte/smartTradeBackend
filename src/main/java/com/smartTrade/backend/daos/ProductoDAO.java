@@ -174,10 +174,10 @@ public void update(String nombre, HashMap<String, ?> atributos) {
 
 
 
-    public void delete(String nombre,String vendorName) {
-        int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
+    public void delete(String nombre) {
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, nombre);
         database.update("DELETE FROM Producto WHERE nombre = ?", nombre);
-        database.update("DELETE FROM Historico_Precios WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = ?);", nombre, id_vendedor);
+        database.update("DELETE FROM Historico_Precios WHERE id_producto = ?", id_producto);
     }
 
 
