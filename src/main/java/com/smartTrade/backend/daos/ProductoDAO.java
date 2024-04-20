@@ -131,10 +131,7 @@ public void update(String nombre, HashMap<String, ?> atributos) {
             if (((String) atributos.get(key)).equals(product.getDescripcion())) {
                 iterator.remove();
             }
-        } else if (key.equals("imagen")) {
-            if (((String) atributos.get(key)).equals(product.getImagen())) {
-                iterator.remove();
-            }
+        
         } else if (key.equals("fecha_añadido")) {
             if (((Date) atributos.get(key)).equals(product.getFecha_publicacion())) {
                 iterator.remove();
