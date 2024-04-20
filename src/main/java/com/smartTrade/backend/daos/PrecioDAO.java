@@ -17,7 +17,7 @@ public class PrecioDAO {
     }
 
     public HashMap<String, ?> getStats(String productName,String vendorName) {
-        int id_product = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ?)",Integer.class,productName,vendorName);
+        int id_product = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?",Integer.class,productName);
         int numerodecambios = database.queryForObject("SELECT COUNT(*) FROM Historico_Precios WHERE id_producto = ?",Integer.class,id_product);
         double preciominimo = database.queryForObject("SELECT MIN(precio) FROM Historico_Precios WHERE id_producto = ?",Double.class,id_product);
         double preciomaximo = database.queryForObject("SELECT MAX(precio) FROM Historico_Precios WHERE id_producto = ?",Double.class,id_product);
