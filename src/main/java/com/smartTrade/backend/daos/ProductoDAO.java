@@ -265,4 +265,21 @@ public void update(String nombre, HashMap<String, ?> atributos) {
         }
     }
 
+    public String getImageFromOneProduct(String productName){
+        int id_imagen = database.queryForObject("SELECT id_imagen FROM Producto WHERE nombre = ?", Integer.class, productName);
+        return database.queryForObject("SELECT imagen FROM Imagen WHERE id = ?", String.class, id_imagen);
+    }
+
+    public HashMap<Producto,String> getImagenesFromProductos(List<Producto> productList){
+        HashMap<Producto,String> res = new HashMap<>();
+        for(Producto producto : productList){
+            int id_imagen = database.queryForObject("SELECT id_imagen FROM Producto WHERE nombre = ?", Integer.class, producto.getNombre());
+            String imagen = database.queryForObject("SELECT imagen FROM Imagen WHERE id = ?", String.class, id_imagen);
+            res.put(producto,imagen);
+        }
+        return res;
+    }
+
+
+
 }

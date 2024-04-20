@@ -36,7 +36,7 @@ public class ImagenDAO{
 
 
     public List<String> readAll() {
-        return database.queryForList("SELECT imagen FROM Imagen", String.class);
+        return database.queryForList("SELECT imagen FROM Imagen ORDER BY id", String.class);
     }
 
     
