@@ -232,7 +232,7 @@ public void update(String nombre, HashMap<String, ?> atributos) {
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
         database.update("DELETE FROM Historico_Precios WHERE id_producto = ? AND id_vendedor = ?", id_producto, id_vendedor);
-        database.update("DELETE FROM Vendedores_Producto WHERE id_producto = ? AND id_vendedor", id_producto, id_vendedor);
+        database.update("DELETE FROM Vendedores_Producto WHERE id_producto = ? AND id_vendedor = ?", id_producto, id_vendedor);
     }
 
     public void updateProductFromOneVendor(String nombre, String vendorName, HashMap<String, ?> atributos) {
