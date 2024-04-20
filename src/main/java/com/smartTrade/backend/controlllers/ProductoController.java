@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -93,6 +94,23 @@ public class ProductoController {
         }
     }
 
+
+
+    @DeleteMapping("/producto/{name}/vendedor/{vendor}")
+    public ResponseEntity<?> deleteProductFromOneVendor(@PathVariable(name = "name", required = true) String productName,
+            @PathVariable(name = "vendor", required = true) String vendorName) {
+        
+        try {
+            productoDAO.deleteProduct(productName, vendorName);
+            return new ResponseEntity<>("Producto eliminado correctamente", HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar el producto: " + e.getLocalizedMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @DeleteMapping("/producto/")
     public ResponseEntity<?> deleteProduct(@RequestParam(name = "name", required = true) String nombre) {
         try {
@@ -122,6 +140,21 @@ public class ProductoController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @PutMapping("/producto/{name}/vendedor/{vendor}")
+    public ResponseEntity<?> updateProductFromOneVendor(@PathVariable(name = "name", required = true) String productName,
+            @PathVariable(name = "vendor", required = true) String vendorName,
+            @RequestBody(required = true) HashMap<String, ?> atributos) {
+        try {
+            productoDAO.updateProductFromOneVendor(productName, vendorName, atributos);
+            return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @SuppressWarnings("unused")
