@@ -70,21 +70,22 @@ public class ProductoController {
 
 
     @PostMapping("/producto/")
-    public ResponseEntity<?> insertarProducto(@RequestParam(name = "name", required = true) String nombre,
-            @RequestParam(name = "vendor", required = true) String vendorName,
-            @RequestParam(name = "price", required = true) double precio,
-            @RequestParam(name = "description", required = true) String descripcion,
-            @RequestParam(name = "category", required = true) String characteristicName,
-            @RequestBody(required = false) Map<String,String> body) {
+    public ResponseEntity<?> insertarProducto(
+            @RequestBody(required = true) Map<String,?> body) {
         
             try {
                 String imageToAdd;
-                if(body != null && body.containsKey("imagen")){
-                    imageToAdd = body.get("imagen");
+                if(body.containsKey("imagen")){
+                    imageToAdd = (String) body.get("imagen");
                 }
                 else{
                     imageToAdd = DEFAULT_IMAGE;
                 }
+                String nombre = (String) body.get("nombre");
+                String vendorName = (String) body.get("vendedor");
+                double precio = (double) body.get("precio");
+                String descripcion = (String) body.get("descripcion");
+                String characteristicName = (String) body.get("categoria");
                 productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
                 return new ResponseEntity<>(HttpStatus.CREATED);
             
@@ -127,7 +128,6 @@ public class ProductoController {
 
     @PutMapping("/producto/")
     public ResponseEntity<?> updateProduct(@RequestParam(name = "name", required = true) String nombre,
-            
             @RequestBody(required = true) HashMap<String, ?> atributos) {
         try {
             productoDAO.update(nombre, atributos);
