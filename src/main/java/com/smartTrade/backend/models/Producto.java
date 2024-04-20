@@ -8,13 +8,15 @@ public class Producto{
     private java.sql.Date fecha_publicacion;
     private boolean validado;
     private int huella_ecologica;
-    public Producto(String nombre, String descripcion, int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica) {
+    private int id_imagen;
+    public Producto(String nombre, String descripcion, int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, int id_imagen) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.id_categoria = id_categoria;
         this.fecha_publicacion = fecha_publicacion;
         this.validado = validado;
         this.huella_ecologica = huella_ecologica;
+        this.id_imagen = id_imagen;
     }
 
     public Producto(){}
@@ -72,5 +74,13 @@ public class Producto{
 
     public void setHuella_ecologica(int huella_ecologica) {
         this.huella_ecologica = huella_ecologica;
+    }
+
+    public int getId_imagen() {
+        return id_imagen;
+    }
+
+    public void setId_imagen(int id_imagen) {
+        this.id_imagen = id_imagen;
     }
 }
