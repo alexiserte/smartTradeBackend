@@ -3,7 +3,9 @@ package com.smartTrade.backend.daos;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -43,17 +45,22 @@ public class PrecioDAO {
             for (int i = 0; i < preciosFromOneProduct.size(); i++) {
                 preciosVendedor.put("Precio " + (i + 1), preciosFromOneProduct.get(i));
                 double precioActual = preciosFromOneProduct.get(preciosFromOneProduct.size() - 1);
-                if (preciosFromOneProduct.size() == 1) {
+                if (preciosFromOneProduct.size() <= 1) {
                     preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
+                    System.out.println("No hay suficientes datos para analizar el precio del producto");
                 } else {
                     if (precioActual <= preciominimo) {
                         preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MINIMO, productName));
+                        System.out.println("El precio del producto es el más bajo que ha tenido");
                     } else if (precioActual >= preciomaximo) {
                         preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
+                        System.out.println("El precio del producto es el más alto que ha tenido");
                     } else if (isPrecioDisminuido(precioActual, productName)) {
                         preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_RECIENTE, productName));
+                        System.out.println("El precio del producto ha disminuido recientemente");
                     } else {
                         preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
+                        System.out.println("El precio del producto es normal");
                     }
                 }
             }
