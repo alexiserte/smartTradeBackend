@@ -75,10 +75,10 @@ public class PrecioDAO {
 
     private boolean isPrecioDisminuido(double precio, String productName) {
         List<java.sql.Date> fechas = database.queryForList(
-                "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY fecha_modificacion DESC",
+                "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
                 java.sql.Date.class, productName);
         List<Double> precios = database.queryForList(
-                "SELECT precio FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY fecha_modificacion DESC",
+                "SELECT precio FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
                 Double.class, productName);
         LocalDate fechaAnterior = fechas.get(fechas.size() - 2).toLocalDate();
         LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
