@@ -1,5 +1,6 @@
 package com.smartTrade.backend.daos;
 
+import org.springframework.cglib.core.Local;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -62,8 +63,13 @@ public class PrecioDAO {
                     } else if (precioActual >= preciomaximo) {
                         preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
 
-                    } else if (isPrecioDisminuido(precioActual, productName)) {
-                        preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_RECIENTE, productName));
+                    } else if (!isPrecioDisminuido(precioActual, productName)) {
+                        List<java.sql.Date> fechas = database.queryForList(
+                                "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
+                                java.sql.Date.class, productName);
+                        LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
+                        long diferenciaDias = DateMethods.calcularDiferenciaDias(fechaActual, LocalDate.now());
+                        preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_DISMINUIDO, productName,diferenciaDias));
 
                     } else {
                         preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
@@ -95,15 +101,9 @@ public class PrecioDAO {
     }
 
     private boolean isPrecioDisminuido(double precio, String productName) {
-        List<java.sql.Date> fechas = database.queryForList(
-                "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
-                java.sql.Date.class, productName);
         List<Double> precios = database.queryForList(
                 "SELECT precio FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
                 Double.class, productName);
-        LocalDate fechaAnterior = fechas.get(fechas.size() - 2).toLocalDate();
-        LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
-        long diferenciaDias = DateMethods.calcularDiferenciaDias(fechaActual, fechaAnterior);
         return precios.get(precios.size() - 2) > precio;
     }
 
