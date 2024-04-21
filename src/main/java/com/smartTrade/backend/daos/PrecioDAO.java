@@ -2,9 +2,14 @@ package com.smartTrade.backend.daos;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
+
+import com.smartTrade.backend.utils.DateMethods;
+import com.smartTrade.backend.utils.StringTemplates;
 
 @Repository
 public class PrecioDAO {
@@ -37,7 +42,21 @@ public class PrecioDAO {
             preciosVendedor.put("Número de cambios", database.queryForObject("SELECT COUNT(*) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, id_product, vendedores.get(j)));
     
             stats.put("Vendedor " + (j + 1), preciosVendedor);
-            // AQUÍ PUEDES AGREGAR MÉTODOS ADICIONALES PARA OBTENER DATOS CURIOSOS SOBRE EL PRECIO DE UN PRODUCTO
+
+
+            if(isPrecioMinimo(preciominimo, productName)){
+                stats.put("Dato", String.format(StringTemplates.PRECIO_MINIMO, productName));
+            }
+            else if(isPrecioMaximo(preciomaximo, productName)){
+                stats.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
+            }
+            else if(isPrecioDisminuido(productName)){
+                stats.put("Dato", String.format(StringTemplates.PRECIO_RECIENTE, productName));
+            }
+            else{
+                stats.put("Dato", StringTemplates.PRECIO_NORMAL);
+            }
+
         }
     
         // Estadísticas generales
@@ -47,5 +66,31 @@ public class PrecioDAO {
         return stats;
     }
     
-    
+    private boolean isPrecioMinimo(double precio, String productName){
+        boolean minimo =  precio == database.queryForObject("SELECT MIN(precio) FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?)", Double.class,productName);
+        return minimo;
+    }
+
+    private boolean isPrecioMaximo(double precio, String productName){
+         boolean maximo = precio == database.queryForObject("SELECT MAX(precio) FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?)", Double.class,productName);
+         return maximo;
+        }
+
+    private boolean isPrecioDisminuido(String productName) {
+        List<java.sql.Date> fechas = database.queryForList(
+                "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY fecha DESC",
+                java.sql.Date.class, productName);
+        double precioAnterior = database.queryForObject(
+                "SELECT precio FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) AND fecha_modificacion = ?",
+                Double.class, productName, fechas.get(fechas.size() - 2));
+        double precioActual = database.queryForObject(
+                "SELECT precio FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) AND fecha_modificacion = ?",
+                Double.class, productName, fechas.get(fechas.size() - 1));
+        LocalDate fechaAnterior = fechas.get(fechas.size() - 2).toLocalDate();
+        LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
+        long diferenciaDias = DateMethods.calcularDiferenciaDias(fechaActual, fechaAnterior);
+        return precioActual < precioAnterior && diferenciaDias > 0;
+    }  
+
+
 }
