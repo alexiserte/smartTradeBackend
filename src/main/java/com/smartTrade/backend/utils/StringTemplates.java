@@ -6,4 +6,5 @@ public class StringTemplates {
     public static final String PRECIO_DISMINUIDO = "El precio más bajo en %d días.";
     public static final String PRECIO_NORMAL = null;
     public static final String PRECIO_AUMENTADO = "El precio ha aumentado recientemente.";
+    public static final String PRECIO_NOVEDAD = "¡Atención! ¡El precio acaba de bajar!";
 }
