@@ -36,7 +36,7 @@ public class PrecioDAO {
         List<LocalDate> fechas = database.queryForList(
                 "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
                 LocalDate.class, productName);
-        LocalDate fechaActual = fechas.get(0);
+        LocalDate fechaActual = fechas.get(fechas.size() - 1);
 
         for (int j = 0; j < vendedores.size(); j++) {
             List<Double> preciosFromOneProduct = database.queryForList(
