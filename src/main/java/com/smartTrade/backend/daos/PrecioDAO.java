@@ -68,7 +68,7 @@ public class PrecioDAO {
                                 "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
                                 java.sql.Date.class, productName);
                         LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
-                        long diferenciaDias = DateMethods.calcularDiferenciaDias(fechaActual, LocalDate.now());
+                        long diferenciaDias = DateMethods.calcularDiferenciaDias(LocalDate.now(), fechaActual);
                         preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_DISMINUIDO, productName,diferenciaDias));
 
                     } else {
