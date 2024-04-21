@@ -46,6 +46,9 @@ public class PrecioDAO {
             TreeMap<String, Object> preciosVendedor = new TreeMap<>();
             preciosVendedor.put("Vendedor", vendedores.get(j));
 
+            for (int i = 0; i < preciosFromOneProduct.size(); i++) {
+                preciosVendedor.put("Precio " + (i + 1), preciosFromOneProduct.get(i));
+            }
             double precioActual = preciosFromOneProduct.get(preciosFromOneProduct.size() - 1);
 
             if (preciosFromOneProduct.size() <= 1) {
