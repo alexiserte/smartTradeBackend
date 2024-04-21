@@ -34,35 +34,26 @@ public class PrecioDAO {
             preciosVendedor.put("Vendedor", vendedores.get(j));
             for (int i = 0; i < preciosFromOneProduct.size(); i++) {
                 preciosVendedor.put("Precio " + (i + 1), preciosFromOneProduct.get(i));
-                double precioActual = preciosFromOneProduct.get(i);
-                if(preciosFromOneProduct.size() == 1){
-                    preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
-                }
-                else{
-                if(precioActual <= preciominimo){
-                    preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MINIMO, productName));
-                }
-                else if(precioActual >= preciomaximo){
-                    preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
-                }
-                else if(isPrecioDisminuido(productName)){
-                    preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_RECIENTE, productName));
-                }
-                else{
-                    preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
-                }
             }
+            double precioActual = preciosFromOneProduct.get(preciosFromOneProduct.size() - 1);
+            if (preciosFromOneProduct.size() == 1) {
+                preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
+            } else if (precioActual <= preciominimo) {
+                preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MINIMO, productName));
+            } else if (precioActual >= preciomaximo) {
+                preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
+            } else if (isPrecioDisminuido(productName)) {
+                preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_RECIENTE, productName));
+            } else {
+                preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
             }
+            
             preciosVendedor.put("Precio mínimo", database.queryForObject("SELECT MIN(precio) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Double.class, id_product, vendedores.get(j)));
             preciosVendedor.put("Precio máximo", database.queryForObject("SELECT MAX(precio) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Double.class, id_product, vendedores.get(j)));
             preciosVendedor.put("Precio promedio", database.queryForObject("SELECT AVG(precio) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Double.class, id_product, vendedores.get(j)));
             preciosVendedor.put("Número de cambios", database.queryForObject("SELECT COUNT(*) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, id_product, vendedores.get(j)));
     
             stats.put("Vendedor " + (j + 1), preciosVendedor);
-
-
-  
-
         }
     
         // Estadísticas generales
@@ -71,6 +62,7 @@ public class PrecioDAO {
         stats.put("Precio promedio general", preciomedio);
         return stats;
     }
+    
     
 
     private boolean isPrecioDisminuido(String productName) {
