@@ -79,7 +79,7 @@ public class PrecioDAO {
                 java.sql.Date.class, productName);
         List<Double> precios = database.queryForList(
                 "SELECT precio FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY fecha_modificacion DESC",
-                Double.class, productName, fechas.get(fechas.size() - 2));
+                Double.class, productName);
         LocalDate fechaAnterior = fechas.get(fechas.size() - 2).toLocalDate();
         LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
         long diferenciaDias = DateMethods.calcularDiferenciaDias(fechaActual, fechaAnterior);
