@@ -22,47 +22,55 @@ public class PrecioDAO {
 
     public TreeMap<String, Object> getStats(String productName) {
         TreeMap<String, Object> stats = new TreeMap<>();
-        int id_product = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
-        double preciominimo = database.queryForObject("SELECT MIN(precio) FROM Historico_Precios WHERE id_producto = ?", Double.class, id_product);
-        double preciomaximo = database.queryForObject("SELECT MAX(precio) FROM Historico_Precios WHERE id_producto = ?", Double.class, id_product);
-        double preciomedio = database.queryForObject("SELECT AVG(precio) FROM Historico_Precios WHERE id_producto = ?", Double.class, id_product);
+        int id_product = database.queryForObject(
+                "SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
+        double preciominimo = database.queryForObject(
+                "SELECT MIN(precio) FROM Historico_Precios WHERE id_producto = ?", Double.class, id_product);
+        double preciomaximo = database.queryForObject(
+                "SELECT MAX(precio) FROM Historico_Precios WHERE id_producto = ?", Double.class, id_product);
+        double preciomedio = database.queryForObject(
+                "SELECT AVG(precio) FROM Historico_Precios WHERE id_producto = ?", Double.class, id_product);
     
-        List<String> vendedores = database.queryForList("SELECT nickname FROM Usuario WHERE id IN (SELECT id_vendedor FROM Vendedores_Producto WHERE id_producto IN (SELECT id FROM Producto WHERE nombre = ?))", String.class, productName);
+        List<String> vendedores = database.queryForList(
+                "SELECT nickname FROM Usuario WHERE id IN (SELECT id_vendedor FROM Vendedores_Producto WHERE id_producto IN (SELECT id FROM Producto WHERE nombre = ?))",
+                String.class, productName);
         for (int j = 0; j < vendedores.size(); j++) {
-            List<Double> preciosFromOneProduct = database.queryForList("SELECT precio FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?) ORDER BY id", Double.class, id_product, vendedores.get(j));
+            List<Double> preciosFromOneProduct = database.queryForList(
+                    "SELECT precio FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?) ORDER BY id",
+                    Double.class, id_product, vendedores.get(j));
             TreeMap<String, Object> preciosVendedor = new TreeMap<>();
             preciosVendedor.put("Vendedor", vendedores.get(j));
             for (int i = 0; i < preciosFromOneProduct.size(); i++) {
                 preciosVendedor.put("Precio " + (i + 1), preciosFromOneProduct.get(i));
                 double precioActual = preciosFromOneProduct.get(preciosFromOneProduct.size() - 1);
-                if(preciosFromOneProduct.size() == 1){
+                if (preciosFromOneProduct.size() == 1) {
                     preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
-                }
-                else{
-                if(precioActual <= preciominimo){
-                    preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MINIMO, productName));
-                }
-                else if(precioActual >= preciomaximo){
-                    preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
-                }
-                else if(isPrecioDisminuido(precioActual,productName)){
-                    preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_RECIENTE, productName));
-                }
-                else{
-                    preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
+                } else {
+                    if (precioActual <= preciominimo) {
+                        preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MINIMO, productName));
+                    } else if (precioActual >= preciomaximo) {
+                        preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
+                    } else if (isPrecioDisminuido(precioActual, productName)) {
+                        preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_RECIENTE, productName));
+                    } else {
+                        preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
+                    }
                 }
             }
-            }
-            preciosVendedor.put("Precio mínimo", database.queryForObject("SELECT MIN(precio) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Double.class, id_product, vendedores.get(j)));
-            preciosVendedor.put("Precio máximo", database.queryForObject("SELECT MAX(precio) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Double.class, id_product, vendedores.get(j)));
-            preciosVendedor.put("Precio promedio", database.queryForObject("SELECT AVG(precio) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Double.class, id_product, vendedores.get(j)));
-            preciosVendedor.put("Número de cambios", database.queryForObject("SELECT COUNT(*) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, id_product, vendedores.get(j)));
+            preciosVendedor.put("Precio mínimo", database.queryForObject(
+                    "SELECT MIN(precio) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)",
+                    Double.class, id_product, vendedores.get(j)));
+            preciosVendedor.put("Precio máximo", database.queryForObject(
+                    "SELECT MAX(precio) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)",
+                    Double.class, id_product, vendedores.get(j)));
+            preciosVendedor.put("Precio promedio", database.queryForObject(
+                    "SELECT AVG(precio) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)",
+                    Double.class, id_product, vendedores.get(j)));
+            preciosVendedor.put("Número de cambios", database.queryForObject(
+                    "SELECT COUNT(*) FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)",
+                    Integer.class, id_product, vendedores.get(j)));
     
             stats.put("Vendedor " + (j + 1), preciosVendedor);
-
-
-  
-
         }
     
         // Estadísticas generales
@@ -72,7 +80,6 @@ public class PrecioDAO {
         return stats;
     }
     
-
     private boolean isPrecioDisminuido(double precio, String productName) {
         List<java.sql.Date> fechas = database.queryForList(
                 "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
@@ -84,7 +91,8 @@ public class PrecioDAO {
         LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
         long diferenciaDias = DateMethods.calcularDiferenciaDias(fechaActual, fechaAnterior);
         return precios.get(precios.size() - 2) < precio && diferenciaDias >= 0;
-    }  
+    }
+    
 
 
 }
