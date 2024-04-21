@@ -34,7 +34,7 @@ public class PrecioDAO {
             preciosVendedor.put("Vendedor", vendedores.get(j));
             for (int i = 0; i < preciosFromOneProduct.size(); i++) {
                 preciosVendedor.put("Precio " + (i + 1), preciosFromOneProduct.get(i));
-                double precioActual = preciosFromOneProduct.get(preciosFromOneProduct.size() - 1);
+                double precioActual = preciosFromOneProduct.get(i);
                 if(preciosFromOneProduct.size() == 1){
                     preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
                 }
