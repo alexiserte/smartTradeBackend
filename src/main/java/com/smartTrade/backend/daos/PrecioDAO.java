@@ -75,7 +75,7 @@ public class PrecioDAO {
 
     private boolean isPrecioDisminuido(String productName) {
         List<java.sql.Date> fechas = database.queryForList(
-                "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY fecha DESC",
+                "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY fecha_modificacion DESC",
                 java.sql.Date.class, productName);
         double precioAnterior = database.queryForObject(
                 "SELECT precio FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) AND fecha_modificacion = ?",
