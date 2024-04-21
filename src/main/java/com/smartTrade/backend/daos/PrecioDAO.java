@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 @Repository
 public class PrecioDAO {
@@ -14,8 +15,8 @@ public class PrecioDAO {
         this.database = database;
     }
 
-    public HashMap<String, Object> getStats(String productName) {
-        HashMap<String, Object> stats = new HashMap<>();
+    public TreeMap<String, Object> getStats(String productName) {
+        TreeMap<String, Object> stats = new TreeMap<>();
         int id_product = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
         double preciominimo = database.queryForObject("SELECT MIN(precio) FROM Historico_Precios WHERE id_producto = ?", Double.class, id_product);
         double preciomaximo = database.queryForObject("SELECT MAX(precio) FROM Historico_Precios WHERE id_producto = ?", Double.class, id_product);
@@ -25,7 +26,7 @@ public class PrecioDAO {
     
         for (int j = 0; j < vendedores.size(); j++) {
             List<Double> preciosFromOneProduct = database.queryForList("SELECT precio FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Double.class, id_product, vendedores.get(j));
-            HashMap<String, Object> preciosVendedor = new HashMap<>();
+            TreeMap<String, Object> preciosVendedor = new TreeMap<>();
             preciosVendedor.put("Vendedor", vendedores.get(j));
             for (int i = 0; i < preciosFromOneProduct.size(); i++) {
                 preciosVendedor.put("Precio " + (i + 1), preciosFromOneProduct.get(i));

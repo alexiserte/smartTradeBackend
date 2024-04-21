@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -285,13 +286,13 @@ public class ProductoController {
             try{
                 try{
                     Producto producto = productoDAO.readOneProduct(productName);
-                    HashMap<String,Object> mapaCaracteristicas = precioDAO.getStats(producto.getNombre());
+                    TreeMap<String,Object> mapaCaracteristicas = precioDAO.getStats(producto.getNombre());
 
                     class ProductoEstadisticas{
                         String producto;
-                        java.util.HashMap<String,?> estadisticas;
+                        java.util.TreeMap<String,?> estadisticas;
 
-                        public ProductoEstadisticas(String producto,java.util.HashMap<String,?> estadisticas){
+                        public ProductoEstadisticas(String producto,java.util.TreeMap<String,?> estadisticas){
                             this.producto = producto;
                             this.estadisticas = estadisticas;
                         }
@@ -301,7 +302,7 @@ public class ProductoController {
                         }
 
 
-                        public java.util.HashMap<String,?> getEstadisticas(){
+                        public java.util.TreeMap<String,?> getEstadisticas(){
                             return estadisticas;
                         }
                     }
