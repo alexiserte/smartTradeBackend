@@ -58,16 +58,18 @@ public class CompradorController {
 
     @SuppressWarnings("unused")
     @PostMapping("/comprador/")
-    public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
+    public ResponseEntity<?> register(
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "mail", required = true) String correo,
             @RequestParam(value = "direction", required = true) String direccion,
-            @RequestBody(required = true) MultiValueMap<String, String> body){
-        try{
+            @RequestBody(required = true) HashMap<String, ?> body){
+        String nickname = "";
+                try{
+            nickname = body.get("nickname").toString();
             Comprador comprador = compradorDAO.readOne(nickname);
             return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);
         }catch(EmptyResultDataAccessException e){
-            
+           
             compradorDAO.create(nickname, password,correo,direccion);
             return new ResponseEntity<>("Comprador creado correctamente",HttpStatus.CREATED);
         }catch(Exception e){

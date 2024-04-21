@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -280,22 +281,18 @@ public class ProductoController {
 
     @SuppressWarnings("unused")
     @GetMapping("/producto/estadisticas/")
-    public ResponseEntity<?> getEstadisticas(@RequestParam(name = "name", required = true) String productName,
-        @RequestParam(name = "vendor", required = true) String vendorName){
+    public ResponseEntity<?> getEstadisticas(@RequestParam(name = "name", required = true) String productName){
             try{
-                Vendedor vendedor = vendedorDAO.readOne(vendorName);
                 try{
                     Producto producto = productoDAO.readOneProduct(productName);
-                    HashMap<String,?> mapaCaracteristicas = precioDAO.getStats(producto.getNombre(), vendedor.getNickname());
+                    HashMap<String,Object> mapaCaracteristicas = precioDAO.getStats(producto.getNombre());
 
                     class ProductoEstadisticas{
                         String producto;
-                        String vendedor;
                         java.util.HashMap<String,?> estadisticas;
 
-                        public ProductoEstadisticas(String producto, String vendedor,java.util.HashMap<String,?> estadisticas){
+                        public ProductoEstadisticas(String producto,java.util.HashMap<String,?> estadisticas){
                             this.producto = producto;
-                            this.vendedor = vendedor;
                             this.estadisticas = estadisticas;
                         }
 
@@ -303,16 +300,13 @@ public class ProductoController {
                             return producto;
                         }
 
-                        public String getVendedor(){
-                            return vendedor;
-                        }
 
                         public java.util.HashMap<String,?> getEstadisticas(){
                             return estadisticas;
                         }
                     }
 
-                    ProductoEstadisticas pe = new ProductoEstadisticas(producto.getNombre(),vendedor.getNickname(), mapaCaracteristicas);
+                    ProductoEstadisticas pe = new ProductoEstadisticas(producto.getNombre(), mapaCaracteristicas);
                     return new ResponseEntity<>(pe,HttpStatus.OK);
                 }catch(EmptyResultDataAccessException e){
                     return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
