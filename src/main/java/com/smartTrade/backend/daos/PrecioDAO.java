@@ -60,8 +60,8 @@ public class PrecioDAO {
                     preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
                 } else if (isPrecioDisminuido(preciosFromOneProduct, precioActual)) {
                     long diferenciaDias = Math.abs(DateMethods.calcularDiferenciaDias(LocalDate.now(), fechaActual));
-                    if(diferenciaDias == 0) preciosVendedor.put("Dato", StringTemplates.PRECIO_NOVEDAD);
-                    else preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_DISMINUIDO, diferenciaDias));
+                    if(diferenciaDias == 0){preciosVendedor.put("Dato", StringTemplates.PRECIO_NOVEDAD);} 
+                    else {preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_DISMINUIDO, diferenciaDias));};
                 } else {
                     long diferenciaDias = Math.abs(DateMethods.calcularDiferenciaDias(fechaActual,LocalDate.now()));
                     if (diferenciaDias <= 7) {
