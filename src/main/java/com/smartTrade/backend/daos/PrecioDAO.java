@@ -53,6 +53,12 @@ public class PrecioDAO {
                 
                 double precioActual = preciosFromOneProduct.get(preciosFromOneProduct.size() - 1);
                 
+                List<java.sql.Date> fechas = database.queryForList(
+                                "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
+                                java.sql.Date.class, productName);
+                        LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
+                        long diferenciaDias = DateMethods.calcularDiferenciaDias(LocalDate.now(), fechaActual);
+
                 if (preciosFromOneProduct.size() <= 1) {
                     preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
 
@@ -63,17 +69,15 @@ public class PrecioDAO {
                     } else if (precioActual >= preciomaximo) {
                         preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
 
-                    } else if (!isPrecioDisminuido(precioActual, productName)) {
-                        List<java.sql.Date> fechas = database.queryForList(
-                                "SELECT fecha_modificacion FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?) ORDER BY id DESC",
-                                java.sql.Date.class, productName);
-                        LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
-                        long diferenciaDias = DateMethods.calcularDiferenciaDias(LocalDate.now(), fechaActual);
-                        preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_DISMINUIDO, productName,diferenciaDias));
+                    } else if (isPrecioDisminuido(precioActual, productName)) {
+                        preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_DISMINUIDO,diferenciaDias));
 
                     } else {
-                        preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
-
+                        if (diferenciaDias <= 7) {
+                            preciosVendedor.put("Dato", StringTemplates.PRECIO_AUMENTADO);
+                        } else {
+                            preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
+                        }
                     }
                 }
             }
