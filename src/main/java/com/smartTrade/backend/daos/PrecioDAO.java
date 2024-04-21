@@ -104,7 +104,7 @@ public class PrecioDAO {
         LocalDate fechaAnterior = fechas.get(fechas.size() - 2).toLocalDate();
         LocalDate fechaActual = fechas.get(fechas.size() - 1).toLocalDate();
         long diferenciaDias = DateMethods.calcularDiferenciaDias(fechaActual, fechaAnterior);
-        return precios.get(precios.size() - 2) < precio;
+        return precios.get(precios.size() - 2) > precio;
     }
 
 }
