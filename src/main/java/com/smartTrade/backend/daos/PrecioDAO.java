@@ -29,7 +29,7 @@ public class PrecioDAO {
     
         List<String> vendedores = database.queryForList("SELECT nickname FROM Usuario WHERE id IN (SELECT id_vendedor FROM Vendedores_Producto WHERE id_producto IN (SELECT id FROM Producto WHERE nombre = ?))", String.class, productName);
         for (int j = 0; j < vendedores.size(); j++) {
-            List<Double> preciosFromOneProduct = database.queryForList("SELECT precio FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?)", Double.class, id_product, vendedores.get(j));
+            List<Double> preciosFromOneProduct = database.queryForList("SELECT precio FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?) ORDER BY id", Double.class, id_product, vendedores.get(j));
             TreeMap<String, Object> preciosVendedor = new TreeMap<>();
             preciosVendedor.put("Vendedor", vendedores.get(j));
             for (int i = 0; i < preciosFromOneProduct.size(); i++) {
