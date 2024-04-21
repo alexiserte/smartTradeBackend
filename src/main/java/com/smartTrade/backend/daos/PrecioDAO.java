@@ -39,10 +39,10 @@ public class PrecioDAO {
                     preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
                 }
                 else{
-                if(isPrecioMinimo(precioActual, productName)){
+                if(precioActual <= preciominimo){
                     preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MINIMO, productName));
                 }
-                else if(isPrecioMaximo(precioActual, productName)){
+                else if(precioActual >= preciomaximo){
                     preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
                 }
                 else if(isPrecioDisminuido(productName)){
@@ -72,15 +72,6 @@ public class PrecioDAO {
         return stats;
     }
     
-    private boolean isPrecioMinimo(double precio, String productName){
-        boolean minimo =  precio == database.queryForObject("SELECT MIN(precio) FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?)", Double.class,productName);
-        return minimo;
-    }
-
-    private boolean isPrecioMaximo(double precio, String productName){
-         boolean maximo = precio == database.queryForObject("SELECT MAX(precio) FROM Historico_Precios WHERE id_producto = ANY(SELECT id FROM Producto WHERE nombre = ?)", Double.class,productName);
-         return maximo;
-        }
 
     private boolean isPrecioDisminuido(String productName) {
         List<java.sql.Date> fechas = database.queryForList(
