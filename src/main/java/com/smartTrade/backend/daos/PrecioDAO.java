@@ -62,7 +62,7 @@ public class PrecioDAO {
                     long diferenciaDias = DateMethods.calcularDiferenciaDias(LocalDate.now(), fechaActual);
                     preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_DISMINUIDO, diferenciaDias));
                 } else {
-                    long diferenciaDias = DateMethods.calcularDiferenciaDias(LocalDate.now(), fechaActual);
+                    long diferenciaDias = DateMethods.calcularDiferenciaDias(fechaActual,LocalDate.now());
                     if (diferenciaDias <= 7) {
                         preciosVendedor.put("Dato", StringTemplates.PRECIO_AUMENTADO);
                     } else {
