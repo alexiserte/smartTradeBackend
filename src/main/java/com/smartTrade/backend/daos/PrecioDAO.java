@@ -47,20 +47,20 @@ public class PrecioDAO {
                 double precioActual = preciosFromOneProduct.get(preciosFromOneProduct.size() - 1);
                 if (preciosFromOneProduct.size() <= 1) {
                     preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
-                    System.out.println("No hay suficientes datos para analizar el precio del producto");
+                    System.out.println(i + "No hay suficientes datos para analizar el precio del producto");
                 } else {
                     if (precioActual <= preciominimo) {
                         preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MINIMO, productName));
-                        System.out.println("El precio del producto es el más bajo que ha tenido");
+                        System.out.println(i + "El precio del producto es el más bajo que ha tenido");
                     } else if (precioActual >= preciomaximo) {
                         preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
-                        System.out.println("El precio del producto es el más alto que ha tenido");
+                        System.out.println(i + "El precio del producto es el más alto que ha tenido");
                     } else if (isPrecioDisminuido(precioActual, productName)) {
                         preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_RECIENTE, productName));
-                        System.out.println("El precio del producto ha disminuido recientemente");
+                        System.out.println(i + "El precio del producto ha disminuido recientemente");
                     } else {
                         preciosVendedor.put("Dato", StringTemplates.PRECIO_NORMAL);
-                        System.out.println("El precio del producto es normal");
+                        System.out.println(i + "El precio del producto es normal");
                     }
                 }
             }
