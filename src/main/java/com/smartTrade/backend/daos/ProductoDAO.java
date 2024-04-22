@@ -35,7 +35,7 @@ public class ProductoDAO{
     public void create(String nombre, String characteristicName, String vendorName, double precio, String descripcion,String imagen) {
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-        String imagenResized = converter.convertFileToString(imagen);
+        String imagenResized = converter.processData(imagen);
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         java.util.Random random = new java.util.Random();

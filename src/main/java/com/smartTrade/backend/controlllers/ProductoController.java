@@ -43,7 +43,7 @@ public class ProductoController {
 
     ConverterFactory factory = new ConverterFactory();
     PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-    private static final String DEFAULT_IMAGE = converter.("src/main/resources/default_image.png");
+    private final String DEFAULT_IMAGE = converter.processData("src/main/resources/default_image.png");
 
     @GetMapping("/productos/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre,
