@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.smartTrade.backend.daos.*;
+import com.smartTrade.backend.factory.ConverterFactory;
 import com.smartTrade.backend.factory.ProductFactory;
 import com.smartTrade.backend.models.Product_Types;
 import com.smartTrade.backend.models.Producto;
@@ -40,7 +41,9 @@ public class ProductoController {
     PrecioDAO precioDAO;
     
 
-    private static final String DEFAULT_IMAGE = PNGConverter.convertAndResizeImageToBase64("src/main/resources/default_image.png");
+    ConverterFactory factory = new ConverterFactory();
+    PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
+    private static final String DEFAULT_IMAGE = converter.("src/main/resources/default_image.png");
 
     @GetMapping("/productos/")
     public ResponseEntity<?> searchProductByName(@RequestParam(name = "name", required = true) String nombre,

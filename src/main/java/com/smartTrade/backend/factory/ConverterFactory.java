@@ -3,11 +3,8 @@ import com.smartTrade.backend.utils.PNGConverter;
 
 import com.smartTrade.backend.utils.MP3Converter;
 import com.smartTrade.backend.utils.JPEGConverter;
-public class ConversorFactory {
+public class ConverterFactory {
     
-    
-    public ConversorFactory(){}
-
     public Object createConversor(String type){
         switch(type){
             case "JPEG":

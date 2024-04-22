@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import com.smartTrade.backend.utils.ImageResizer;
 import com.smartTrade.backend.utils.PNGConverter;
+import com.smartTrade.backend.factory.ConverterFactory;
 
 
 @Repository
@@ -33,7 +33,9 @@ public class ProductoDAO{
     }
   
     public void create(String nombre, String characteristicName, String vendorName, double precio, String descripcion,String imagen) {
-        String imagenResized = PNGConverter.convertAndResizeImageToBase64(imagen);
+        ConverterFactory factory = new ConverterFactory();
+        PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
+        String imagenResized = converter.convertFileToString(imagen);
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         java.util.Random random = new java.util.Random();

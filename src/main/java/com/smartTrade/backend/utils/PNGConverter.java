@@ -7,14 +7,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 import java.io.ByteArrayInputStream;
-
+import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import java.io.File;
 
-public class PNGConverter {
+public class PNGConverter extends Converter<BufferedImage>{
 
-    public static String convertAndResizeImageToBase64(String base64Image) {
+    public String processData(String base64Image) {
         // Decodificar la imagen base64
-        BufferedImage originalImage = base64ToImage(base64Image);
+        BufferedImage originalImage = convertStringToObject(base64Image);
 
         // Verificar si la decodificación fue exitosa
         if (originalImage == null) {
@@ -50,7 +51,8 @@ public class PNGConverter {
         return resizedBase64Image;
     }
 
-    private static BufferedImage base64ToImage(String base64Image) {
+
+    public BufferedImage convertStringToObject(String base64Image) {
         try {
             String[] parts = base64Image.split(",");
             if (parts.length < 2) {
@@ -63,6 +65,18 @@ public class PNGConverter {
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Error al decodificar la imagen base64: " + e.getMessage());
             return null;
+        }
+    }
+
+    public void convertStringToFile(String data, String path) {
+        BufferedImage image = convertStringToObject(data);
+        if (image == null) {
+            return;
+        }
+        try {
+            ImageIO.write(image, "png", new File(path));
+        } catch (IOException e) {
+            System.err.println("Error al escribir la imagen en el archivo: " + e.getMessage());
         }
     }
 }
