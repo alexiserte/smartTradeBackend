@@ -59,7 +59,7 @@ public class PrecioDAO {
                 } else if (precioActual >= preciomaximo) {
                     preciosVendedor.put("Dato", String.format(StringTemplates.PRECIO_MAXIMO, productName));
                 } else if (isPrecioDisminuido(preciosFromOneProduct, precioActual)) {
-                    long diferenciaDias = DateMethods.calcularDiferenciaDias(fechaActual, LocalDate.now());
+                    long diferenciaDias = DateMethods.calcularDiferenciaDias(LocalDate.now(), fechaActual);
                     if (diferenciaDias < 1) {
                         preciosVendedor.put("Dato", StringTemplates.PRECIO_NOVEDAD);
                     } else {
