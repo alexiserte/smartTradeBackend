@@ -2,6 +2,8 @@ package com.smartTrade.backend.daos;
 
 import com.smartTrade.backend.mappers.CompradorMapper;
 import com.smartTrade.backend.models.Comprador;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,15 @@ public class CompradorDAO {
         this.database = database;
     }
 
+    
+    @Autowired
+    Carrito_CompraDAO carritoCompraDAO;
+
+    @Autowired
+    GuardarMasTardeDAO guardarMasTardeDAO;
+
+    @Autowired
+    ListaDeDeseosDAO listaDeDeseosDAO;
 
     /**
      * El método "crear" inserta un nuevo usuario en la base de datos junto con entradas relacionadas
@@ -49,10 +60,9 @@ public class CompradorDAO {
 
         database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?);", nickname, correo, password, direccion, fechaSQL);
         database.update("INSERT INTO Comprador(id_usuario, puntos_responsabilidad) SELECT id, 0 FROM Usuario WHERE nickname = ?;", nickname);
-        database.update("INSERT INTO Carrito_Compra(id_comprador) SELECT id FROM Usuario WHERE nickname = ?;", nickname);
-        database.update("INSERT INTO Guardar_Mas_Tarde(id_comprador) SELECT id FROM Usuario WHERE nickname = ?;", nickname);
-        database.update("INSERT INTO Lista_De_Deseos(id_comprador) SELECT id FROM Usuario WHERE nickname = ?;", nickname);
-
+        carritoCompraDAO.create(nickname);
+        guardarMasTardeDAO.create(nickname);
+        listaDeDeseosDAO.create(nickname);
     }
 
 

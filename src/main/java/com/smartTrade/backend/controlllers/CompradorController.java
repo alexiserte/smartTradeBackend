@@ -29,6 +29,7 @@ public class CompradorController {
 
     @Autowired
     ProductoDAO productoDAO;
+    
 
     @GetMapping("/comprador/")
     public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
