@@ -1,32 +1,8 @@
-package com.smartTrade.backend.controlllers;
+package com.smartTrade.backend.Controllers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
-import com.smartTrade.backend.DAO.AdministradorDAO;
-import com.smartTrade.backend.DAO.CategoriaDAO;
-import com.smartTrade.backend.DAO.CompradorDAO;
-import com.smartTrade.backend.DAO.ProductoDAO;
-import com.smartTrade.backend.DAO.VendedorDAO;
-import com.smartTrade.backend.Factory.ProductFactory;
-import com.smartTrade.backend.Models.Administrador;
-import com.smartTrade.backend.Models.Categoria;
-import com.smartTrade.backend.Models.Comprador;
-import com.smartTrade.backend.Models.Moda;
-import com.smartTrade.backend.Models.Product_Types;
-import com.smartTrade.backend.Models.Producto;
-import com.smartTrade.backend.Models.User_Types;
-import com.smartTrade.backend.Models.Vendedor;
-
+import com.smartTrade.backend.Fachada.AdministradorFachada;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,249 +15,89 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     @Autowired
-    AdministradorDAO admin;
-
-    @Autowired
-    CompradorDAO comprador;
-
-    @Autowired
-    VendedorDAO vendedor;
-
-    @Autowired
-    ProductoDAO producto;
-
-    @Autowired
-    CategoriaDAO categoria;
+    AdministradorFachada fechada;
 
     @GetMapping("/admin/categorias")
-    public List<Categoria> mostrarCategorias() {
-        return categoria.readAll();
+    public ResponseEntity<?> mostrarCategorias() {
+        return fechada.mostrarCategorias();
     }
+    
+    
     @GetMapping("/admin/categorias/principales")
-    public List<Categoria> mostrarCategoriasPrincipales() {
-        return categoria.getCategoriasPrincipales();
+    public ResponseEntity<?> mostrarCategoriasPrincipales() {
+        return fechada.mostrarCategoriasPrincipales();
     }
+    
 
     @GetMapping("/admin/database")
-    public List<String> mostrarBasesDeDatos() {
-        return admin.getAllDatabases();
+    public ResponseEntity<?> mostrarBasesDeDatos() {
+        return fechada.mostrarBasesDeDatos();
     }
 
     @GetMapping("/admin/compradores")
-    public List<Comprador> mostrarUsuarios() {
-        return comprador.readAll();
+    public ResponseEntity<?> mostrarUsuarios() {
+        return fechada.mostrarUsuarios();
     }
+    
 
     @GetMapping("/admin/vendedores")
-    public List<Vendedor> mostrarVendedores() {
-        return vendedor.readAll();
+    public ResponseEntity<?> mostrarVendedores() {
+        return fechada.mostrarVendedores();
     }
 
+
     @GetMapping("/admin/productos")
-    public List<Producto> mostrarProductos() {
-        return producto.readAll();
+    public ResponseEntity<?> mostrarProductos() {
+        return fechada.mostrarProductos();
     }
+
 
     @GetMapping("/admin/pendientes_validacion")
     public ResponseEntity<?> mostrarProductosPendientesDeValidacion() {
-        try{
-            List<Producto> res =  producto.getProductosPendientesDeValidacion();
-            return new ResponseEntity<>(res,HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener los productos pendientes de validación",HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
+        return fechada.mostrarProductosPendientesDeValidacion();
     }
+    
 
     @GetMapping("/admin/categoria/existen_subcategorias/")
     public ResponseEntity<?> existenSubcategorias(@RequestParam(value = "name", required = true) String name) {
-        try {
-            try {
-                boolean res = categoria.hasSubcategories(name);
-
-                class Result{
-                    private String name;
-                    private boolean hasSubcategories;
-
-                    public Result(String name, boolean hasSubcategories){
-                        this.name = name;
-                        this.hasSubcategories = hasSubcategories;
-                    }
-
-                    public String getName(){
-                        return name;
-                    }
-
-                    public boolean getHasSubcategories(){
-                        return hasSubcategories;
-                    }
-                }
-
-                Result r = new Result(name,res);
-
-                return new ResponseEntity<>(r, HttpStatus.OK);
-            } catch (EmptyResultDataAccessException e) {
-                return new ResponseEntity<>("No se encontraron subcategorías", HttpStatus.NOT_FOUND);
-            } catch (Exception e) {
-                return new ResponseEntity<>("Error al obtener las subcategorías", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } catch (EmptyResultDataAccessException e) {
-            return new ResponseEntity<>("Categoría no encontrada", HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error al obtener las subcategorías", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return fechada.existenSubcategorias(name);
     }
+    
 
     @GetMapping("/admin/categoria/")
-    public ResponseEntity<?> mostrarCategorias(@RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "id", required = false) Integer id) {
-        try{
-            if(name == null && id == null){
-                return new ResponseEntity<>(categoria.readAll(),HttpStatus.OK);
-            }
-            if(name != null && id != null){
-                return new ResponseEntity<>("No se pueden enviar ambos parámetros",HttpStatus.BAD_REQUEST);
-            }
-            if(name != null){
-                Categoria res = categoria.readOne(name);
-                return new ResponseEntity<>(res,HttpStatus.OK);
-            }
-            if(id != null){
-                String res = categoria.getNombre(id);
-                return new ResponseEntity<>(res,HttpStatus.OK);
-            }
-            return new ResponseEntity<>("Error al obtener las categorías",HttpStatus.BAD_REQUEST);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener las categorías",HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> mostrarCategoria(@RequestParam(value = "name", required = true) String name, @RequestParam(value = "id", required = false) Integer id){
+        return fechada.mostrarCategorias(name,id);
     }
 
     @GetMapping("admin/categoria/subcategorias/")
-    public ResponseEntity<?> mostrarSubcategorias(@RequestParam(value = "name", required = true) String name) {
-        try{
-            Categoria c = categoria.readOne(name);
-            try{
-                List<Categoria> res = categoria.getSubcategorias(c.getNombre());
-                return new ResponseEntity<>(res,HttpStatus.OK);
-            }catch(EmptyResultDataAccessException e){
-                return new ResponseEntity<>("No se encontraron subcategorías",HttpStatus.NOT_FOUND);
-            }catch(Exception e){
-                return new ResponseEntity<>("Error al obtener las subcategorías",HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("Categoría no encontrada",HttpStatus.NOT_FOUND);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>("Error al obtener las subcategorías",HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> mostrarSubcategorias(@RequestParam(value = "name", required = true) String name){
+        return fechada.mostrarSubcategorias(name);
     }
-    @SuppressWarnings("unused")
-    @GetMapping("/admin/productos/comprador/")
-    public ResponseEntity<?> productsBoughtByUser(@RequestParam(value = "identifier", required = true) String identifier){
-        try{
-            Comprador c = comprador.readOne(identifier);
-            int result = comprador.productosCompradosPorUnUsuario(identifier);
-            
-            class Return{
-                private String identifier;
-                private int productosComprados;
-
-                public Return(String identifier, Integer productosComprados){
-                    this.identifier = identifier;
-                    this.productosComprados = productosComprados;
-                }
-
-                public String getIdentifier(){
-                    return identifier;
-                }
-
-                public int getProductosComprados(){
-                    return productosComprados;
-                }
-            }
-
-            Return r = new Return(identifier,result);
-            return new ResponseEntity<>(r,HttpStatus.OK);
-    }catch(EmptyResultDataAccessException e){
-        return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
     
-    }catch(Exception e){
-        return new ResponseEntity<>("Error al obtener el usuario: " + e.getLocalizedMessage() + "\n",HttpStatus.INTERNAL_SERVER_ERROR);
+    @GetMapping("/admin/productos/comprador/")
+    public ResponseEntity<?> productsBoughtByOneBuyer(@RequestParam(value = "identifier", required = true) String identifier){
+        return fechada.productsBoughtByUser(identifier);
     }
-}
-    @SuppressWarnings("unused")
+   
     @GetMapping("/admin/productos/vendedor/")
-    public ResponseEntity<?> productsSoldByOneVendor(@RequestParam(value = "identifier", required = true) String identifier){
-        try{
-            Vendedor v = vendedor.readOne(identifier);
-            int result = vendedor.productosVendidosPorUnVendedor(identifier);
-            
-            class Return{
-                private String identifier;
-                private int productosVendidos;
-
-                public Return(String identifier, Integer productosVendidos){
-                    this.identifier = identifier;
-                    this.productosVendidos = productosVendidos;
-                }
-
-                public String getIdentifier(){
-                    return identifier;
-                }
-
-                public int getProductosVendidos(){
-                    return productosVendidos;
-                }
-            }
-
-                Return r = new Return(identifier,result);
-                return new ResponseEntity<>(r,HttpStatus.OK);
-        }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> getProductsFromOneVendor(@RequestParam(value = "identifier", required = true) String identifier){
+        return fechada.productsSoldByOneVendor(identifier);
     }
+    
     @GetMapping("/admin/")
-    public ResponseEntity<?> loginAdministrador(@RequestParam(value = "identifier", required = true) String identifier,
-            @RequestParam(value = "password", required = false) String password) {
-        if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información
-                                // del usuario
-            try {
-                Administrador administrador = admin.readOne(identifier);
-                return new ResponseEntity<>(administrador,HttpStatus.OK);
-            } catch (Exception e) {
-                return new ResponseEntity<>("Usuario no encontrado.",HttpStatus.NOT_FOUND);
-            }
-        } else { // Si se envía la contraseña, se asume que se quiere hacer login
-            try {
-                Administrador administrador = admin.readOne(identifier);
-                if (administrador.getPassword().equals(password)) {
-                    return new ResponseEntity<>(administrador,HttpStatus.OK);
-                }
-                return new ResponseEntity<>("Contraseña incorreta",HttpStatus.UNAUTHORIZED);
-            } catch (EmptyResultDataAccessException e) {
-                return new ResponseEntity<>("Usuario no encontrado.",HttpStatus.NOT_FOUND);
-            }
-        }
+    public ResponseEntity<?> loginAdministrador(@RequestParam(value = "identifier", required = true) String identifier, @RequestParam(value = "password", required = false) String password){
+        return fechada.loginAdministrador(identifier, password);
     }
+    
 
-    @SuppressWarnings("unused")
     @PostMapping("/admin/")
     public ResponseEntity<?> registerAdministrador(@RequestParam(value = "nickname", required = true) String nickname,
             @RequestParam(value = "password", required = true) String password,
             @RequestParam(value = "mail", required = true) String correo,
-            @RequestParam(value = "direccion", required = true) String direccion){
-        try{
-            Administrador administrador = admin.readOne(direccion);
-            return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);
-        }catch(EmptyResultDataAccessException e){
-            admin.create(nickname, password,correo,direccion);
-            return new ResponseEntity<>("Administrador creado correctamente",HttpStatus.CREATED);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al crear el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            @RequestParam(value = "direction", required = true) String dirección) {
+        return fechada.registerAdministrador(nickname, password, correo, dirección);
     }
+    
 
 
     @PutMapping("/admin/")
@@ -289,41 +105,14 @@ public class AdminController {
             @RequestParam(value = "password", required = false) String password,
             @RequestParam(value = "mail", required = false) String correo,
             @RequestParam(value = "direction", required = false) String dirección) {
-        try {
-            Administrador administrador = admin.readOne(nickname);
-            Map<String, Object> attributes = new HashMap<>();
-            if(password == null && dirección == null && correo == null){
-                return new ResponseEntity<>("No se han enviado atributos para actualizar",HttpStatus.BAD_REQUEST);
-            }
-            if (password != null) {
-                attributes.put("user_password", password);
-            }
-            if (dirección != null) {
-                attributes.put("direccion", dirección);
-            }
-            if (correo != null) {
-                attributes.put("correo", correo);
-            }
-            admin.update(administrador.getNickname(), attributes);
-            return new ResponseEntity<>("Usuario actualizado correctamente", HttpStatus.OK);
-        } catch (EmptyResultDataAccessException e) {
-            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error al actualizar un archivo: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return fechada.updateAdministrador(nickname, password, correo, dirección);
     }
 
+
     @DeleteMapping("/admin/")
-    public ResponseEntity<?> deleteAdministrador(@RequestParam(value = "nickname", required = true) String  nickname) {
-        try{  
-            Administrador administrador = admin.readOne(nickname);
-           admin.delete(administrador.getNickname());
-            return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
-        }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al eliminar el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> deleteAdministrador(@RequestParam(value = "nickname", required = true) String nickname) {
+        return fechada.deleteAdministrador(nickname);
     }
+    
 }
 

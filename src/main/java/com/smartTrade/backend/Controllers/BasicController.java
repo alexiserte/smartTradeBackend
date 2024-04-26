@@ -1,8 +1,10 @@
-package com.smartTrade.backend.controlllers;
+package com.smartTrade.backend.Controllers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +20,11 @@ public class BasicController {
     public String mensaje(HttpServletRequest request) {
         System.out.println(" -- Nueva conexión registrada -- Hora: " + LocalDateTime.now());
         return "¡Bienvenido a smartTrade!";
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return new ResponseEntity<>("Servidor en funcionamiento", HttpStatus.OK);
     }
 
     @GetMapping("/five-guys")
