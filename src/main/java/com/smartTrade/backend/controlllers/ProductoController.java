@@ -176,7 +176,7 @@ public class ProductoController {
                     HashMap<String, String> smartTag;
                     String categoria;
                     Map<String, Double> vendedores;
-                    String image;
+                    String imagen;
 
                     public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria,
                             Map<String, Double> vendedores,String image) {
@@ -184,7 +184,7 @@ public class ProductoController {
                         this.smartTag = smartTag;
                         this.categoria = categoria;
                         this.vendedores = vendedores;
-                        this.image = image;
+                        this.imagen = image;
                     }
 
                     public Producto getProducto() {
@@ -204,7 +204,7 @@ public class ProductoController {
                     }
 
                     public String getImage(){
-                        return image;
+                        return imagen;
                     }
                 }
 
