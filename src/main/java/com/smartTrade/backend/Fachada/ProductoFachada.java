@@ -124,7 +124,7 @@ public class ProductoFachada extends Fachada {
     @SuppressWarnings("unused")
     public ResponseEntity<?> getProduct(String productName, boolean image) {
         try {
-            if (!image) {
+            
                 List<Object> resultado = productoDAO.readOne(productName);
 
                 class Resultado {
@@ -132,53 +132,15 @@ public class ProductoFachada extends Fachada {
                     HashMap<String, String> smartTag;
                     String categoria;
                     Map<String, Double> vendedores;
+                    String imagen;
 
                     public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria,
-                            Map<String, Double> vendedores) {
+                            Map<String, Double> vendedores, String imagenS) {
                         this.producto = producto;
                         this.smartTag = smartTag;
                         this.categoria = categoria;
                         this.vendedores = vendedores;
-                    }
-
-                    public Producto getProducto() {
-                        return producto;
-                    }
-
-                    public HashMap<String, String> getSmartTag() {
-                        return smartTag;
-                    }
-
-                    public String getCategoria() {
-                        return categoria;
-                    }
-
-                    public Map<String, Double> getVendedores() {
-                        return vendedores;
-                    }
-                }
-
-                @SuppressWarnings("unchecked")
-                Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),
-                        (String) resultado.get(2), (Map<String, Double>) resultado.get(3));
-                return ResponseEntity.ok(r);
-            } else {
-                List<Object> resultado = productoDAO.readOne(productName);
-
-                class Resultado {
-                    Producto producto;
-                    HashMap<String, String> smartTag;
-                    String categoria;
-                    Map<String, Double> vendedores;
-                    String image;
-
-                    public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria,
-                            Map<String, Double> vendedores, String image) {
-                        this.producto = producto;
-                        this.smartTag = smartTag;
-                        this.categoria = categoria;
-                        this.vendedores = vendedores;
-                        this.image = image;
+                        this.imagen = imagen;
                     }
 
                     public Producto getProducto() {
@@ -197,16 +159,22 @@ public class ProductoFachada extends Fachada {
                         return vendedores;
                     }
 
-                    public String getImage() {
-                        return image;
+                    public String getImagen() {
+                        return imagen;
                     }
                 }
+
+                String imagen = "";
+                if (image) {
+                    imagen = productoDAO.getImageFromOneProduct(productName);
+                }
+
+
                 @SuppressWarnings("unchecked")
                 Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),
-                        (String) resultado.get(2), (Map<String, Double>) resultado.get(3),
-                        productoDAO.getImageFromOneProduct(productName));
+                        (String) resultado.get(2), (Map<String, Double>) resultado.get(3),imagen);
                 return ResponseEntity.ok(r);
-            }
+            
 
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
