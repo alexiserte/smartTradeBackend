@@ -168,45 +168,7 @@ public class ProductoController {
     public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName,
             @RequestParam(name = "image", required = true) boolean image) {
         try {
-            if (!image) {
-                List<Object> resultado = productoDAO.readOne(productName);
-
-                class Resultado {
-                    Producto producto;
-                    HashMap<String, String> smartTag;
-                    String categoria;
-                    Map<String, Double> vendedores;
-
-                    public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria,
-                            Map<String, Double> vendedores) {
-                        this.producto = producto;
-                        this.smartTag = smartTag;
-                        this.categoria = categoria;
-                        this.vendedores = vendedores;
-                    }
-
-                    public Producto getProducto() {
-                        return producto;
-                    }
-
-                    public HashMap<String, String> getSmartTag() {
-                        return smartTag;
-                    }
-
-                    public String getCategoria() {
-                        return categoria;
-                    }
-
-                    public Map<String, Double> getVendedores() {
-                        return vendedores;
-                    }
-                }
-
-                @SuppressWarnings("unchecked")
-                Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),
-                        (String) resultado.get(2), (Map<String, Double>) resultado.get(3));
-                return ResponseEntity.ok(r);
-            } else {
+            
                 List<Object> resultado = productoDAO.readOne(productName);
 
                 class Resultado {
@@ -217,7 +179,7 @@ public class ProductoController {
                     String image;
 
                     public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria,
-                            Map<String, Double> vendedores, String image) {
+                            Map<String, Double> vendedores,String image) {
                         this.producto = producto;
                         this.smartTag = smartTag;
                         this.categoria = categoria;
@@ -240,18 +202,17 @@ public class ProductoController {
                     public Map<String, Double> getVendedores() {
                         return vendedores;
                     }
+                }
 
-                    public String getImage() {
-                        return image;
-                    }
+                String imagenProducto = "";
+                if(image){
+                    imagenProducto = productoDAO.getImageFromOneProduct(productName);
                 }
                 @SuppressWarnings("unchecked")
                 Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),
-                        (String) resultado.get(2), (Map<String, Double>) resultado.get(3),
-                        productoDAO.getImageFromOneProduct(productName));
+                        (String) resultado.get(2), (Map<String, Double>) resultado.get(3),imagenProducto);
                 return ResponseEntity.ok(r);
-            }
-
+            
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
