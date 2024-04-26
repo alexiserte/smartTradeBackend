@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Base64;
 import javax.imageio.ImageIO;
-
 import com.smartTrade.backend.Utils.PNGConverter;
+
 
 public class ImageResizer {
     /*/
