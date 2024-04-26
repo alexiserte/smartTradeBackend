@@ -21,7 +21,8 @@ import java.io.File;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-public class JPEGConverter extends Converter<BufferedImage>{
+public class JPEGConverter{
+
 
     public String processData(String base64Image){
          // Decodificar la imagen base64

@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 
-public class PNGConverter extends Converter<BufferedImage>{
+public class PNGConverter{
 
     public String processData(String base64Image) {
         // Decodificar la imagen base64
