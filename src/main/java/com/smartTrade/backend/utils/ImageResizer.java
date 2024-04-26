@@ -1,4 +1,4 @@
-package com.smartTrade.backend.utils;
+package com.smartTrade.backend.Utils;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Base64;
 import javax.imageio.ImageIO;
-import com.smartTrade.backend.utils.PNGConverter;
+
+import com.smartTrade.backend.Utils.PNGConverter;
 
 public class ImageResizer {
     /*/

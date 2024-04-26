@@ -1,4 +1,4 @@
-package com.smartTrade.backend.utils;
+package com.smartTrade.backend.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

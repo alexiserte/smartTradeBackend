@@ -1,4 +1,4 @@
-package com.smartTrade.backend.utils;
+package com.smartTrade.backend.Utils;
 
 public abstract class Converter<T>{
     public void processAndInsert(String path){
