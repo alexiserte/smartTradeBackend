@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.smartTrade.backend.Factory.ConverterFactory;
-import com.smartTrade.backend.utils.PNGConverter;
+import com.smartTrade.backend.Utils.*;
 
 @Repository
 public class ImagenDAO{
