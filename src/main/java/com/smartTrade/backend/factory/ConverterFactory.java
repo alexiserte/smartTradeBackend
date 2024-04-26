@@ -1,4 +1,4 @@
-package com.smartTrade.backend.factory;
+package com.smartTrade.backend.Factory;
 import com.smartTrade.backend.utils.PNGConverter;
 
 import com.smartTrade.backend.utils.MP3Converter;

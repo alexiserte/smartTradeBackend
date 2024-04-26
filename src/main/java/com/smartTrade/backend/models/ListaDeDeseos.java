@@ -1,4 +1,4 @@
-package com.smartTrade.backend.models;
+package com.smartTrade.backend.Models;
 
 public class ListaDeDeseos {
     private int id_lista_de_datos;

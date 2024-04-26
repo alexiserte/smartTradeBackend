@@ -1,4 +1,4 @@
-package com.smartTrade.backend.models;
+package com.smartTrade.backend.Models;
 
 public class Electronica extends Producto{
     private String marca;

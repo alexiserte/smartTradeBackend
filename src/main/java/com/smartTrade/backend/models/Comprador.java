@@ -1,4 +1,4 @@
-package com.smartTrade.backend.models;
+package com.smartTrade.backend.Models;
 
 import java.sql.Date;
 public class Comprador extends Usuario{

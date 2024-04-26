@@ -1,11 +1,11 @@
-package com.smartTrade.backend.daos;
+package com.smartTrade.backend.DAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.smartTrade.backend.models.User_Types;
-import com.smartTrade.backend.models.Usuario;
+import com.smartTrade.backend.Models.User_Types;
+import com.smartTrade.backend.Models.Usuario;
 
 @Repository
 public class UsuarioDAO {

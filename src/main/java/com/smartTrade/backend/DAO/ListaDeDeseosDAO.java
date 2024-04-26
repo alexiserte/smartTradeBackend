@@ -1,20 +1,20 @@
-package com.smartTrade.backend.daos;
+package com.smartTrade.backend.DAO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class GuardarMasTardeDAO{
+public class ListaDeDeseosDAO{
     
     private JdbcTemplate database;
 
-    public GuardarMasTardeDAO(JdbcTemplate database) {
+    public ListaDeDeseosDAO(JdbcTemplate database) {
         this.database = database;
     }
     
 
     public void create(String compradorName) {
         int id_comprador = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, compradorName);
-        database.update("INSERT INTO Guardar_Mas_Tarde(id_comprador) VALUES (?)",id_comprador);
+        database.update("INSERT INTO Lista_De_Deseos(id_comprador) VALUES (?)",id_comprador);
     }
     
 

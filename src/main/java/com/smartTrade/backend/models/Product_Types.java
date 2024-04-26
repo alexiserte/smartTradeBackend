@@ -1,4 +1,4 @@
-package com.smartTrade.backend.models;
+package com.smartTrade.backend.Models;
 
 public enum Product_Types {
         ALIMENTACION(1),

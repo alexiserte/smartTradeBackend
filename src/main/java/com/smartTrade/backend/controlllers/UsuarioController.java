@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.smartTrade.backend.daos.AdministradorDAO;
-import com.smartTrade.backend.daos.CompradorDAO;
-import com.smartTrade.backend.daos.UsuarioDAO;
-import com.smartTrade.backend.daos.VendedorDAO;
-import com.smartTrade.backend.mappers.VendedorMapper;
-import com.smartTrade.backend.models.Administrador;
-import com.smartTrade.backend.models.Comprador;
-import com.smartTrade.backend.models.User_Types;
-import com.smartTrade.backend.models.Usuario;
-import com.smartTrade.backend.models.Vendedor;
+import com.smartTrade.backend.DAO.AdministradorDAO;
+import com.smartTrade.backend.DAO.CompradorDAO;
+import com.smartTrade.backend.DAO.UsuarioDAO;
+import com.smartTrade.backend.DAO.VendedorDAO;
+import com.smartTrade.backend.Mappers.VendedorMapper;
+import com.smartTrade.backend.Models.Administrador;
+import com.smartTrade.backend.Models.Comprador;
+import com.smartTrade.backend.Models.User_Types;
+import com.smartTrade.backend.Models.Usuario;
+import com.smartTrade.backend.Models.Vendedor;
 
 @RestController
 public class UsuarioController {

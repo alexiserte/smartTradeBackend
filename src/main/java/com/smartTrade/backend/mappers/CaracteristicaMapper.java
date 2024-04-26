@@ -1,10 +1,10 @@
-package com.smartTrade.backend.mappers;
+package com.smartTrade.backend.Mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.smartTrade.backend.models.Caracteristica;
+import com.smartTrade.backend.Models.Caracteristica;
 
 
 public class CaracteristicaMapper implements RowMapper<Caracteristica> {

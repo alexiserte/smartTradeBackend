@@ -1,4 +1,4 @@
-package com.smartTrade.backend.models;
+package com.smartTrade.backend.Models;
 
 public // The `Consejo` class is a Java class that represents a model for a piece of advice or
 // recommendation. It has two private fields `consejo_id` and `id_producto` along with their

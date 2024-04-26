@@ -1,4 +1,4 @@
-package com.smartTrade.backend.daos;
+package com.smartTrade.backend.DAO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
-import com.smartTrade.backend.mappers.CategoriaMapper;
-import com.smartTrade.backend.models.Categoria;
+import com.smartTrade.backend.Mappers.CategoriaMapper;
+import com.smartTrade.backend.Models.Categoria;
 
 @Repository
 public class CategoriaDAO {

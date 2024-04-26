@@ -1,11 +1,12 @@
-package com.smartTrade.backend.mappers;
+package com.smartTrade.backend.Mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
-import com.smartTrade.backend.models.Vendedor;
-import com.smartTrade.backend.factory.UserFactory;
-import com.smartTrade.backend.models.User_Types;
+
+import com.smartTrade.backend.Factory.UserFactory;
+import com.smartTrade.backend.Models.User_Types;
+import com.smartTrade.backend.Models.Vendedor;
 
 public class VendedorMapper implements RowMapper<Vendedor> {
     @Override

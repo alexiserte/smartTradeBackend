@@ -1,4 +1,4 @@
-package com.smartTrade.backend.mappers;
+package com.smartTrade.backend.Mappers;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;

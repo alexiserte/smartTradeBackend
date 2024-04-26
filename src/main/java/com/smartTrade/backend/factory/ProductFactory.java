@@ -1,8 +1,8 @@
-package com.smartTrade.backend.factory;
-
-import com.smartTrade.backend.models.*;
+package com.smartTrade.backend.Factory;
 
 import java.util.List;
+
+import com.smartTrade.backend.Models.*;
 
 public class ProductFactory{
 

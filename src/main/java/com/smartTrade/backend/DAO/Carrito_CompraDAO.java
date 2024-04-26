@@ -1,12 +1,12 @@
-package com.smartTrade.backend.daos;
+package com.smartTrade.backend.DAO;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.smartTrade.backend.mappers.ProductMapper;
-import com.smartTrade.backend.models.*;
+import com.smartTrade.backend.Mappers.ProductMapper;
+import com.smartTrade.backend.Models.*;
 
 @Repository
 public class Carrito_CompraDAO{

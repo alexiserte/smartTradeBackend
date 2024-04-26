@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.smartTrade.backend.daos.*;
-import com.smartTrade.backend.models.Producto;
-import com.smartTrade.backend.models.User_Types;
-import com.smartTrade.backend.models.Vendedor;
+
+import com.smartTrade.backend.DAO.*;
+import com.smartTrade.backend.Models.Producto;
+import com.smartTrade.backend.Models.User_Types;
+import com.smartTrade.backend.Models.Vendedor;
 
 @RestController
 public class VendedorController {

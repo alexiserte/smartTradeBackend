@@ -1,10 +1,10 @@
-package com.smartTrade.backend.factory;
+package com.smartTrade.backend.Factory;
 
-import com.smartTrade.backend.models.Administrador;
-import com.smartTrade.backend.models.Usuario;
-import com.smartTrade.backend.models.Vendedor;
-import com.smartTrade.backend.models.Comprador;
-import com.smartTrade.backend.models.User_Types;
+import com.smartTrade.backend.Models.Administrador;
+import com.smartTrade.backend.Models.Comprador;
+import com.smartTrade.backend.Models.User_Types;
+import com.smartTrade.backend.Models.Usuario;
+import com.smartTrade.backend.Models.Vendedor;
 
 public class UserFactory {
     

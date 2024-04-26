@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.smartTrade.backend.models.MiembroEquipo;
+import com.smartTrade.backend.Models.MiembroEquipo;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;

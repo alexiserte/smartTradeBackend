@@ -1,7 +1,7 @@
-package com.smartTrade.backend.daos;
+package com.smartTrade.backend.DAO;
 
-import com.smartTrade.backend.mappers.CompradorMapper;
-import com.smartTrade.backend.models.Comprador;
+import com.smartTrade.backend.Mappers.CompradorMapper;
+import com.smartTrade.backend.Models.Comprador;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,6 +1,4 @@
-package com.smartTrade.backend.daos;
-import com.smartTrade.backend.mappers.ProductMapper;
-import com.smartTrade.backend.models.Producto;
+package com.smartTrade.backend.DAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +10,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import com.smartTrade.backend.utils.PNGConverter;
-import com.smartTrade.backend.factory.ConverterFactory;
+import com.smartTrade.backend.Factory.ConverterFactory;
+import com.smartTrade.backend.Mappers.ProductMapper;
+import com.smartTrade.backend.Models.Producto;
 
 
 @Repository

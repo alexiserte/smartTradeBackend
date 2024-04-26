@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.smartTrade.backend.daos.*;
-import com.smartTrade.backend.factory.ConverterFactory;
-import com.smartTrade.backend.factory.ProductFactory;
-import com.smartTrade.backend.models.Product_Types;
-import com.smartTrade.backend.models.Producto;
-import com.smartTrade.backend.models.Vendedor;
+
+import com.smartTrade.backend.DAO.*;
+import com.smartTrade.backend.Factory.ConverterFactory;
+import com.smartTrade.backend.Factory.ProductFactory;
+import com.smartTrade.backend.Models.Product_Types;
+import com.smartTrade.backend.Models.Producto;
+import com.smartTrade.backend.Models.Vendedor;
 import com.smartTrade.backend.utils.StringComparison;
 import com.smartTrade.backend.utils.PNGConverter;
 

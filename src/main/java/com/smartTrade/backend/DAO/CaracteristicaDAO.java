@@ -1,18 +1,17 @@
-package com.smartTrade.backend.daos;
+package com.smartTrade.backend.DAO;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import com.smartTrade.backend.mappers.CaracteristicaMapper;
-import com.smartTrade.backend.mappers.Categoria_CaracteristicaMapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.smartTrade.backend.models.Caracteristica;
-import com.smartTrade.backend.models.Categoria_Caracteristica;
+import com.smartTrade.backend.Mappers.CaracteristicaMapper;
+import com.smartTrade.backend.Mappers.Categoria_CaracteristicaMapper;
+import com.smartTrade.backend.Models.Caracteristica;
+import com.smartTrade.backend.Models.Categoria_Caracteristica;
 
 @Repository
 public class CaracteristicaDAO {
