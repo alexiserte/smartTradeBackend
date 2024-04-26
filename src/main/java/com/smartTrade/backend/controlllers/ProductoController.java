@@ -202,6 +202,10 @@ public class ProductoController {
                     public Map<String, Double> getVendedores() {
                         return vendedores;
                     }
+
+                    public String getImage(){
+                        return image;
+                    }
                 }
 
                 String imagenProducto = "";
