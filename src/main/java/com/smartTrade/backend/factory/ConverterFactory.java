@@ -1,8 +1,5 @@
 package com.smartTrade.backend.Factory;
-import com.smartTrade.backend.utils.PNGConverter;
-
-import com.smartTrade.backend.utils.MP3Converter;
-import com.smartTrade.backend.utils.JPEGConverter;
+import com.smartTrade.backend.Utils.*;
 public class ConverterFactory {
     
     public Object createConversor(String type){

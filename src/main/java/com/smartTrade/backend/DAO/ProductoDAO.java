@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import com.smartTrade.backend.utils.PNGConverter;
+
 import com.smartTrade.backend.Factory.ConverterFactory;
 import com.smartTrade.backend.Mappers.ProductMapper;
 import com.smartTrade.backend.Models.Producto;
-
+import com.smartTrade.backend.Utils.*;
 
 @Repository
 public class ProductoDAO{
