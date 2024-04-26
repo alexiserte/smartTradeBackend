@@ -135,7 +135,7 @@ public class ProductoFachada extends Fachada {
                     String imagen;
 
                     public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria,
-                            Map<String, Double> vendedores, String imagenS) {
+                            Map<String, Double> vendedores, String imagen) {
                         this.producto = producto;
                         this.smartTag = smartTag;
                         this.categoria = categoria;
