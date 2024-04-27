@@ -14,7 +14,7 @@ import com.smartTrade.backend.Mappers.CategoriaMapper;
 import com.smartTrade.backend.Models.Categoria;
 
 @Repository
-public class CategoriaDAO {
+public class CategoriaDAO implements DAOInterface<Categoria>{
 
     private JdbcTemplate database;
 
@@ -22,15 +22,21 @@ public class CategoriaDAO {
         this.database = database;
     }
 
-    public void create(String nombre, String categoria_principal) {
+    public void create(Object... args) {
+        String nombre = (String) args[0];
+        String categoria_principal = (String) args[1];
         database.update("INSERT INTO Categoria(nombre, categoria_principal) VALUES (?, ?);", nombre, categoria_principal);
     }
 
-    public void delete(String nombre) {
+    public void delete(Object... args) {
+        String nombre = (String) args[0];
         database.update("DELETE FROM Categoria WHERE nombre = ?;", nombre);
     }
 
-    public void update(String nombre, HashMap<String, ?> atributos) {
+    @SuppressWarnings("unchecked")
+    public void update(Object... args) {
+        String nombre = (String) args[0];
+        HashMap<String, Object> atributos = (HashMap<String, Object>) args[1];
         List<String> keys = new ArrayList<>(atributos.keySet());
         for (String key : keys) {
             Object valor = atributos.get(key);
@@ -53,7 +59,8 @@ public class CategoriaDAO {
         }    
     }
 
-    public Categoria readOne(String nombre) {
+    public Categoria readOne(Object... args) {
+        String nombre = (String) args[0];
         return database.queryForObject("SELECT nombre, categoria_principal FROM Categoria WHERE nombre = ?", new CategoriaMapper(), nombre);
     }
 
