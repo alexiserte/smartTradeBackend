@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class AdministradorDAO {
+public class AdministradorDAOPrev {
 
     private final JdbcTemplate database;
 
-    public AdministradorDAO(JdbcTemplate database) {
+    public AdministradorDAOPrev(JdbcTemplate database) {
         this.database = database;
     }
 
