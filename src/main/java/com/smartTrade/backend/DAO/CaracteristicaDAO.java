@@ -13,20 +13,26 @@ import com.smartTrade.backend.Mappers.Categoria_CaracteristicaMapper;
 import com.smartTrade.backend.Models.Caracteristica;
 import com.smartTrade.backend.Models.Categoria_Caracteristica;
 
+import lombok.experimental.SuperBuilder;
+
 @Repository
-public class CaracteristicaDAO {
+public class CaracteristicaDAO implements DAOInterface<Categoria_Caracteristica>{
     private JdbcTemplate database;
 
     public CaracteristicaDAO (JdbcTemplate database) {
         this.database = database;
     }
 
-    public void create(String nombre, String characteristicName) {
+    public void create(Object ...args) {
+        String nombre = (String) args[0];
+        String characteristicName = (String) args[1];
         int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?;", Integer.class, characteristicName);
         database.update("INSERT INTO Caracteristicas_Categoria(nombre, id_categoria) VALUES (?, ?);", nombre, id_categoria);
     }
 
-    public Categoria_Caracteristica readOne(String nombre, String characteristicName) {
+    public Categoria_Caracteristica readOne(Object ...args) {
+        String nombre = (String) args[0];
+        String characteristicName = (String) args[1];
         int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?;", Integer.class, characteristicName);
         return database.queryForObject("SELECT nombre, id_categoria FROM Caracteristicas_Categoria WHERE nombre = ? AND id_categoria = ?", new Categoria_CaracteristicaMapper(), nombre, id_categoria);
     }
@@ -35,7 +41,11 @@ public class CaracteristicaDAO {
         return database.query("SELECT nombre, id_categoria FROM Caracteristicas_Categoria", new Categoria_CaracteristicaMapper());
     }
 
-    public void update(String nombre, String characteristicName, HashMap<String, ?> atributos) {
+    @SuppressWarnings("unchecked")
+    public void update(Object ...args) {
+        String nombre = (String) args[0];
+        String characteristicName = (String) args[1];
+        Map<String, Object> atributos = (HashMap<String, Object>) args[2];
         List<String> keys = new ArrayList<>(atributos.keySet());
         for (String key : keys) {
             int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?;", Integer.class, characteristicName);
@@ -50,7 +60,9 @@ public class CaracteristicaDAO {
         }
     }
 
-    public void delete(String nombre, String characteristicName, String vendorName) {
+    public void delete(Object ...args) {
+        String nombre = (String) args[0];
+        String characteristicName = (String) args[1];
         int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?;", Integer.class, characteristicName);
         database.update("DELETE FROM Caracteristicas_Categoria WHERE nombre = ? AND id_categoria = ?;", nombre, id_categoria);
     }
