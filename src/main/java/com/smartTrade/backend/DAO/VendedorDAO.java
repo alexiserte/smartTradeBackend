@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 
 @Repository
-public class VendedorDAO{
+public class VendedorDAO implements DAOInterface<Vendedor>{
     
     private JdbcTemplate database;
 
@@ -24,7 +24,11 @@ public class VendedorDAO{
     }
 
     @Transactional
-    public void create(String nickname, String password, String correo, String direccion){
+    public void create(Object ...args) {
+        String nickname = (String) args[0];
+        String password = (String) args[1];
+        String correo = (String) args[2];
+        String direccion = (String) args[3];
         
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
@@ -34,7 +38,8 @@ public class VendedorDAO{
 
     }
 
-    public Vendedor readOne(String identifier) {
+    public Vendedor readOne(Object ...args) {
+        String identifier = (String) args[0];
         return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new VendedorMapper(), identifier, identifier);
     }
 
@@ -42,7 +47,10 @@ public class VendedorDAO{
         return database.query("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id", new VendedorMapper());
     }
 
-    public void update(String nickname, Map<String, ?> atributos) {
+    @SuppressWarnings("unchecked")
+    public void update(Object ...args) {
+        String nickname = (String) args[0];
+        Map<String, Object> atributos = (Map<String, Object>) args[1];
         List<String> keys = new ArrayList<>(atributos.keySet());
         Vendedor compradorObject = readOne(nickname);
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
@@ -84,7 +92,8 @@ public class VendedorDAO{
         }
     }
 
-    public void delete(String nickname) {
+    public void delete(Object ...args) {
+        String nickname = (String) args[0];
         database.update("DELETE FROM Vendedor WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
         database.update("DELETE FROM Usuario WHERE nickname = ?;", nickname);
