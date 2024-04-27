@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 @Repository
-public class CompradorDAO {
+public class CompradorDAO implements DAOInterface<Comprador>{
 
     private JdbcTemplate database;
 
@@ -53,7 +53,11 @@ public class CompradorDAO {
      * con otra información del usuario durante la creación del usuario.
      */
     @Transactional
-    public void create(String nickname, String password, String correo, String direccion){
+    public void create(Object ...args) {
+        String nickname = (String) args[0];
+        String password = (String) args[1];
+        String correo = (String) args[2];
+        String direccion = (String) args[3];
         
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
@@ -88,7 +92,8 @@ public class CompradorDAO {
      *         `Usuario` y `Comprador` donde está el `id_usuario` en el `Comprador`
      *         partidos de mesa
      */
-    public Comprador readOne(String identifier) {
+    public Comprador readOne(Object ...args) {
+        String identifier = (String) args[0];
         return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new CompradorMapper(), identifier, identifier);
     }
 
@@ -125,7 +130,10 @@ public class CompradorDAO {
      *                  la base de datos "Usuario" para el
      *                  apodo dado.
      */
-    public void update(String nickname, Map<String, ?> atributos) {
+    @SuppressWarnings("unchecked")
+    public void update(Object ...args) {
+    String nickname = (String) args[0];
+    Map<String, Object> atributos = (Map<String, Object>) args[1];
         List<String> keys = new ArrayList<>(atributos.keySet());
     Comprador compradorObject = readOne(nickname);
     for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
@@ -187,7 +195,8 @@ public class CompradorDAO {
      *                 eliminar registros del `Comprador`,
      *                 `Usuario`, `Carrito_Compra`, `
      */
-    public void delete(String nickname) {
+    public void delete(Object ...args) {
+        String nickname = (String) args[0];
         database.update("DELETE FROM Comprador WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
         database.update("DELETE FROM Usuario WHERE nickname = ?;", nickname);
