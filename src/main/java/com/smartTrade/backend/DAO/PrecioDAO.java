@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 @Repository
-public class PrecioDAO {
+public class PrecioDAO implements DAOInterface<Object>{
 
     private final JdbcTemplate database;
 
@@ -96,4 +96,10 @@ public class PrecioDAO {
         double precioAnterior = precios.get(precios.size() - 2);
         return precioAnterior > precioActual;
     }
+
+    public void create(Object ...args) {;}
+    public void delete(Object ...args) {;}
+    public void update(Object ...args) {;}
+    public Object readOne(Object ...args) {return null;}
+    public List<Object> readAll() {return null;}
 }

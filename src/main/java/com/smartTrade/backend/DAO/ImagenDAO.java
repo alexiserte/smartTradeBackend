@@ -8,7 +8,7 @@ import com.smartTrade.backend.Factory.ConverterFactory;
 import com.smartTrade.backend.Utils.*;
 
 @Repository
-public class ImagenDAO{
+public class ImagenDAO implements DAOInterface<String>{
     
     private JdbcTemplate database;
 
@@ -20,21 +20,26 @@ public class ImagenDAO{
     PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
     
 
-    public void create(String image) {
+    public void create(Object ...args) {
+        String image = (String) args[0];
         String imagenResized = converter.processData(image);
         database.update("INSERT INTO Imagen(imagen) VALUES (?)",imagenResized);
     }
 
-    public void update(int id_imagen, String image) {
+    public void update(Object ...args) {
+        int id_imagen = (int) args[0];
+        String image = (String) args[1];
         String imagenResized = converter.processData(image);
         database.update("UPDATE Imagen SET imagen = ? WHERE id_imagen = ?",imagenResized,id_imagen);
     }
 
-    public void delete(int id_imagen) {
+    public void delete(Object ...args) {
+        int id_imagen = (int) args[0];
         database.update("DELETE FROM Imagen WHERE id_imagen = ?",id_imagen);
     }
 
-    public String read(int id_imagen) {
+    public String readOne(Object ...args) {
+        int id_imagen = (int) args[0];
         return database.queryForObject("SELECT imagen FROM Imagen WHERE id_imagen = ?", String.class, id_imagen);
     }
 

@@ -9,7 +9,7 @@ import com.smartTrade.backend.Mappers.ProductMapper;
 import com.smartTrade.backend.Models.*;
 
 @Repository
-public class Carrito_CompraDAO{
+public class Carrito_CompraDAO implements DAOInterface<Object>{
     
     private JdbcTemplate database;
 
@@ -18,7 +18,8 @@ public class Carrito_CompraDAO{
     }
     
 
-    public void create(String compradorName) {
+    public void create(Object ...args) {
+        String compradorName = (String) args[0];
         int id_comprador = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, compradorName);
         database.update("INSERT INTO Carrito_Compra(id_comprador) VALUES (?)",id_comprador);
     }
@@ -40,6 +41,11 @@ public class Carrito_CompraDAO{
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         database.update("DELETE FROM Productos_Carrito WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?",id_carrito,id_producto, id_vendedor);
     }
+
+    public void delete(Object ...args) {;}
+    public void update(Object ...args) {;}
+    public Object readOne(Object ...args) {return null;}
+    public List<Object> readAll() {return null;}
     
 
 }
