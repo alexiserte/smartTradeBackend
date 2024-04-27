@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class AdministradorDAO implements DAOInterface<Administrador>{
+public class AdministradorDAO {
 
     private final JdbcTemplate database;
 
@@ -50,11 +50,8 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
      *                  ciudad, estado y código postal.
      */
     @Transactional
-    public void create(Object... args) {
-        String nickname = (String) args[0];
-        String password = (String) args[1];
-        String correo = (String) args[2];
-        String direccion = (String) args[3];
+    public void create(String nickname, String password, String correo, String direccion) {
+
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
 
@@ -85,8 +82,7 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
      *         resultados a un objeto "Administrador"
      *         utilizando "AdministradorMapper".
      */
-    public Administrador readOne(Object ...args) {
-        String identifier = (String) args[0];
+    public Administrador readOne(String identifier) {
         return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro FROM Usuario u, Administrador a WHERE a.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new AdministradorMapper(), identifier, identifier);
     }
 
@@ -103,8 +99,8 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
      *         Administrador. Luego, los resultados se
      *         asignan a objetos Comprador utilizando CompradorMapper.
      */
-    public List<Administrador> readAll() {
-        return database.query("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro FROM Usuario u, Administrador a WHERE a.id_usuario = u.id", new AdministradorMapper());
+    public List<Comprador> readAll() {
+        return database.query("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro FROM Usuario u, Administrador a WHERE a.id_usuario = u.id", new CompradorMapper());
     }
 
     /**
@@ -125,10 +121,7 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
      *                  recupera el valor correspondiente y, según el
      *                  tipo de
      */
-    @SuppressWarnings("unchecked")
-    public void update(Object... args) {
-        String nickname = (String) args[0];
-        Map<String, Object> atributos = (Map<String, Object>) args[1];
+    public void update(String nickname, Map<String, ?> atributos) {
         List<String> keys = new ArrayList<>(atributos.keySet());
         Administrador compradorObject = readOne(nickname);
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
@@ -183,8 +176,7 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
      *                 coincide con el `id` del usuario con el
      *                 especificado
      */
-    public void delete(Object... args) {
-        String nickname = (String) args[0];
+    public void delete(String nickname) {
         database.update("DELETE FROM Administrador WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
         database.update("DELETE FROM Usuario WHERE nickname = ?;", nickname);
