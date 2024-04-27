@@ -11,10 +11,9 @@ import java.util.List;
 
 import com.smartTrade.backend.Mappers.CaracteristicaMapper;
 import com.smartTrade.backend.Models.Caracteristica;
-import com.smartTrade.backend.Models.Categoria;
 
 @Repository
-public class Caracteristica_ProductoDAO {
+public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica>{
     private JdbcTemplate database;
 
     public Caracteristica_ProductoDAO(JdbcTemplate database) {
@@ -24,13 +23,21 @@ public class Caracteristica_ProductoDAO {
     @Autowired
     CaracteristicaDAO caracteristicaDAO;
 
-    public void create(String nombre, String productName, String vendorName, String valor, String characteristicName) {
+    public void create(Object ...args) {
+        String nombre = (String) args[0];
+        String productName = (String) args[1];
+        String vendorName = (String) args[2];
+        String valor = (String) args[3];
+        String characteristicName = (String) args[4];
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = (SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?));", Integer.class, productName, vendorName);
         int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?;", Integer.class, characteristicName);
         database.update("INSERT INTO Caracteristica(nombre, id_producto, valor, id_categoria) VALUES (?, ?, ?, ?);", nombre, id_producto, valor, id_categoria);
     }
 
-    public Caracteristica readOne(String nombre, String productName, String vendorName) {
+    public Caracteristica readOne(Object ...args) {
+        String nombre = (String) args[0];
+        String productName = (String) args[1];
+        String vendorName = (String) args[2];
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = (SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?));", Integer.class, productName, vendorName);
         return database.queryForObject("SELECT nombre, valor, id_categoria, id_producto FROM Caracteristica WHERE nombre = ? AND id_producto = ?", new CaracteristicaMapper(), nombre, id_producto);
     }
@@ -39,7 +46,12 @@ public class Caracteristica_ProductoDAO {
         return database.query("SELECT nombre, valor, id_categoria, id_producto FROM Caracteristica", new CaracteristicaMapper());
     }
 
-    public void update(String nombre, String productName, String vendorName, HashMap<String, ?> atributos) {
+    @SuppressWarnings("unchecked")
+    public void update(Object ...args) {
+        String nombre = (String) args[0];
+        String productName = (String) args[1];
+        String vendorName = (String) args[2];
+        HashMap<String, Object> atributos = (HashMap<String, Object>) args[3];
         List<String> keys = new ArrayList<>(atributos.keySet());
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = (SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?));", Integer.class, productName, vendorName);
         for (String key : keys) {
@@ -54,7 +66,10 @@ public class Caracteristica_ProductoDAO {
         }
     }
 
-    public void delete(String nombre, String productName, String vendorName) {
+    public void delete(Object ...args) {
+        String nombre = (String) args[0];
+        String productName = (String) args[1];
+        String vendorName = (String) args[2];
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = (SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?));", Integer.class, productName, vendorName);
         database.update("DELETE FROM Caracteristica WHERE nombre = ? AND id_producto = ?;", nombre, id_producto);
     }
