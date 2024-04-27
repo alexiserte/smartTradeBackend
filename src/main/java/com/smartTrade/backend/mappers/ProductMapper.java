@@ -2,17 +2,11 @@ package com.smartTrade.backend.Mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.smartTrade.backend.DAO.Caracteristica_ProductoDAO;
 import com.smartTrade.backend.DAO.VendedorDAO;
-import com.smartTrade.backend.Factory.ProductFactory;
-import com.smartTrade.backend.Models.Product_Types;
 import com.smartTrade.backend.Models.Producto;
 
 public class ProductMapper implements RowMapper<Producto> {
