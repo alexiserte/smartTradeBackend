@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class AdministradorDAO implements DAOInterface<Administrador>{
+public class AdministradorDAO implements DAOInterface{
 
     private final JdbcTemplate database;
 
@@ -85,7 +85,7 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
      *         resultados a un objeto "Administrador"
      *         utilizando "AdministradorMapper".
      */
-    public Administrador readOne(Object ...args) {
+    public <Administrador> Administrador readOne(Object ...args) {
         String identifier = (String) args[0];
         return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro FROM Usuario u, Administrador a WHERE a.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new AdministradorMapper(), identifier, identifier);
     }

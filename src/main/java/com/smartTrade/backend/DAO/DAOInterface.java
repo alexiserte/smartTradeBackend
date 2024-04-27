@@ -6,7 +6,7 @@ public interface DAOInterface<T>{
     // Operaciones CRUD a implementar por todos los DAO y cumplir con el patrón de Fábrica Abstracta
     public void create(Object ...args);
     public T readOne(Object ...args);
-    public List<T> readAll();
+    public List<? extends T> readAll();
     public void update(Object ...args);
     public void delete(Object ...args);
 }
