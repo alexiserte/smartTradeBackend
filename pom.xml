@@ -82,11 +82,11 @@
     		<artifactId>jaxb-api</artifactId>
     		<version>2.3.1</version> <!-- O la versión más reciente -->
 		</dependency>
-		<dependency>
-  			<groupId>com.google.zxing</groupId>
-  			<artifactId>zxing-parent</artifactId>
-  			<version>3.5.3</version>	
-		</dependency>
+  		<dependency>
+    		<groupId>com.google.zxing</groupId>
+    		<artifactId>core</artifactId>
+    		<version>3.5.3</version>
+  		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
