@@ -33,6 +33,10 @@ public class smartTagDAO implements DAOInterface<Object> {
         }
     }
 
+    public static void main(String[] args) {
+        smartTagDAO smartTagDAO = new smartTagDAO();
+        smartTagDAO.createSmartTag("Producto");
+    }
 
 
 }
