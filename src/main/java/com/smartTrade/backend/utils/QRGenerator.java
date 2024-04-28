@@ -15,21 +15,21 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 public class QRGenerator
 {
     //static function that creates QR Code
-    public static void generateQRcode(String data, String path, String charset, Map map, int h, int w) throws WriterException, IOException
+    private static void generateQRcode(String data, String path, String charset, Map map, int h, int w) throws WriterException, IOException
     {
     BitMatrix matrix = new MultiFormatWriter().encode(new String(data.getBytes(charset), charset), BarcodeFormat.QR_CODE, w, h);
         MatrixToImageWriter.writeToFile(matrix, path.substring(path.lastIndexOf('.') + 1), new File(path));
     }
-    //main() method
-    public static void main(String args[]) throws WriterException, IOException, NotFoundException
-    {
-        String str= "THE HABIT OF PERSISTENCE IS THE HABIT OF VICTORY.";
-        String path = "qr.png";
+
+
+    public static void crearQR(String str) throws IOException, WriterException {
+        String fechaHoy = java.time.LocalDate.now().toString();
+        String path = "src/main/resources//qr/"+fechaHoy+".png";
         String charset = "UTF-8";
         Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
         hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 
-        generateQRcode(str, path, charset, hashMap, 200, 200);//increase or decrease height and width accodingly
+        generateQRcode(str, path, charset, hashMap, 512, 512);//increase or decrease height and width accodingly
 
         System.out.println("QR Code created successfully.");
     }
