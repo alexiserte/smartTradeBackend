@@ -1,0 +1,1 @@
+# En esta carpeta se almacenan los códigos QR generados por el sistema.
