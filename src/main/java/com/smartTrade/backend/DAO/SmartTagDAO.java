@@ -2,10 +2,18 @@ package com.smartTrade.backend.DAO;
 
 import com.smartTrade.backend.Utils.SmartTag;
 import com.smartTrade.backend.Utils.QRGenerator;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class SmartTagDAO implements DAOInterface<Object> {
+    private JdbcTemplate database;
+
+    public SmartTagDAO (JdbcTemplate database) {
+        this.database = database;
+    }
     @Override
     public void create(Object ...args) {}
 
