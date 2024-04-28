@@ -30,17 +30,12 @@
 			<groupId>software.amazon.jdbc</groupId>
 			<artifactId>aws-advanced-jdbc-wrapper</artifactId>
 			<version>LATEST</version>
-		<!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
-		<dependency>
-    		<groupId>com.google.zxing</groupId>
-    		<artifactId>core</artifactId>
-    		<version>3.3.0</version>
-	</dependency>
-		<dependency>  
-			<groupId>com.google.zxing</groupId>  
-			<artifactId>javase</artifactId>  
-			<version>3.3.0</version>  
-	</dependency>  
+		</dependency>
+<dependency>
+    <groupId>io.nayuki</groupId>
+    <artifactId>qrcodegen</artifactId>
+    <version>1.8.0</version>
+</dependency> 
 		<dependency>
 			<groupId>software.aws.rds</groupId>
 			<artifactId>aws-mysql-jdbc</artifactId>
