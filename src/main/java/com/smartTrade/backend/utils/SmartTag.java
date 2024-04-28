@@ -1,4 +1,5 @@
 package com.smartTrade.backend.Utils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class SmartTag {
 
     public static List<Field> getFields() throws ClassNotFoundException {
         Field[] listaDeAtributos;
-        listaDeAtributos = Class.forName("SmartTagStrings").getDeclaredFields();
+        listaDeAtributos = Class.forName("com.smartTrade.backend.Utils.SmartTagStrings").getDeclaredFields();
         List<Field> listaDeAtributosList = new ArrayList<>();
         for (Field field : listaDeAtributos) {
             listaDeAtributosList.add(field);
@@ -32,7 +33,7 @@ public class SmartTag {
         int random = new Random().nextInt(mensajes.size());
         Field field = mensajes.get(random);
         field.setAccessible(true);
-        return (String) field.get(Class.forName("SmartTagStrings"));
+        return (String) field.get(null); // Aquí pasamos null para indicar que es un campo estático
     }
 
     public static String getRandomMensajeProduccion() throws IllegalAccessException, ClassNotFoundException {
@@ -66,6 +67,4 @@ public class SmartTag {
         String ods = String.format(getRandomMensajeOds(), producto);
         return String.format(SMART_TAG, pais, producto, produccion, impacto, ods);
     }
-
-    
 }

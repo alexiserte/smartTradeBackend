@@ -22,15 +22,15 @@ public class QRGenerator
     }
 
 
-    public static void crearQR(String str) throws IOException, WriterException {
+    public static String crearQR(String str) throws IOException, WriterException {
         String fechaHoy = java.time.LocalDate.now().toString();
-        String path = "src/main/resources//qr/"+fechaHoy+".png";
+        String path = "src/main/resources/" + System.currentTimeMillis() +  "---" +fechaHoy+".png";
         String charset = "UTF-8";
         Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
         hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 
-        generateQRcode(str, path, charset, hashMap, 512, 512);//increase or decrease height and width accodingly
+        generateQRcode(str, path, charset, hashMap, 1024, 1024);//increase or decrease height and width accodingly
 
-        System.out.println("QR Code created successfully.");
+        return path;
     }
 }

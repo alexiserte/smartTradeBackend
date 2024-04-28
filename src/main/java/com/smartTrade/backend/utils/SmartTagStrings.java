@@ -78,5 +78,4 @@ public class SmartTagStrings {
     public static final String MENSAJE_ODS_EXTRA18 = "Al adoptar prácticas sostenibles en la producción y distribución de %s, apoyamos simultáneamente los Objetivos de Desarrollo Sostenible (ODS) números 12 y 13, contribuyendo así a un futuro más sostenible y equitativo.";
     public static final String MENSAJE_ODS_EXTRA19 = "Nos comprometemos a informar y educar a nuestros clientes sobre los Objetivos de Desarrollo Sostenible (ODS) y cómo pueden apoyarlos al elegir %s y otras opciones sostenibles en sus decisiones de compra.";
     public static final String MENSAJE_ODS_EXTRA20 = "Al promover %s, abordamos múltiples Objetivos de Desarrollo Sostenible (ODS) de las Naciones Unidas, contribuyendo así al progreso global y al logro de un futuro más sostenible y equitativo.";
-
 }
