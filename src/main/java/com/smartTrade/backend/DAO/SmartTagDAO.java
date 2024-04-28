@@ -5,7 +5,7 @@ import com.smartTrade.backend.Utils.QRGenerator;
 
 import java.util.List;
 
-public class smartTagDAO implements DAOInterface<Object> {
+public class SmartTagDAO implements DAOInterface<Object> {
     @Override
     public void create(Object ...args) {}
 
@@ -34,7 +34,7 @@ public class smartTagDAO implements DAOInterface<Object> {
     }
 
     public static void main(String[] args) {
-        smartTagDAO smartTagDAO = new smartTagDAO();
+        SmartTagDAO smartTagDAO = new SmartTagDAO();
         smartTagDAO.createSmartTag("Producto");
     }
 

@@ -244,7 +244,11 @@ public class ProductoFachada extends Fachada {
             }catch(Exception e){
                 return new ResponseEntity<>("|| Error al obtener el vendedor: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
-    
-        
         }
+
+    public ResponseEntity<?> qr(String name) {
+        System.out.println("Generando QR para el producto: " + name);
+        smartTagDAO.createSmartTag(name);
+        return new ResponseEntity<>("QR Generado", HttpStatus.OK);
+    }
 }

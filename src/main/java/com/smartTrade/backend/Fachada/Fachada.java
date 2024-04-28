@@ -47,6 +47,9 @@ public class Fachada {
     @Autowired
     public Caracteristica_ProductoDAO caracteristicaProductoDAO;
 
+    @Autowired
+    public SmartTagDAO smartTagDAO;
+
 
     
 }

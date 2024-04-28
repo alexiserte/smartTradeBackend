@@ -2,6 +2,7 @@ package com.smartTrade.backend.Controllers;
 
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,6 +84,12 @@ public class ProductoController {
     @GetMapping("/producto/estadisticas/")
     public ResponseEntity<?> getStatistics(@RequestParam(name = "name", required = true) String productName){
         return fechada.getEstadisticas(productName);
+    }
+
+    @GetMapping("/qr/")
+    public ResponseEntity<?> qr(@RequestParam(name = "name", required = true) String name) {
+        System.out.println("Generando QR para el producto: " + name);
+        return fechada.qr(name);
     }
     
 
