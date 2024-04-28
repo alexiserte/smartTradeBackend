@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public class SmartTagDAO implements DAOInterface<Object> {
+    
     private JdbcTemplate database;
 
     public SmartTagDAO (JdbcTemplate database) {
@@ -41,10 +42,6 @@ public class SmartTagDAO implements DAOInterface<Object> {
         }
     }
 
-    public static void main(String[] args) {
-        SmartTagDAO smartTagDAO = new SmartTagDAO();
-        smartTagDAO.createSmartTag("Producto");
-    }
 
 
 }
