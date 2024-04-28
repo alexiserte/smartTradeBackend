@@ -33,13 +33,14 @@ public class SmartTagDAO implements DAOInterface<Object> {
     public List<Object> readAll() {return null;}
 
 
-    public void createSmartTag(String productName){
+    public String createSmartTag(String productName){
         try {
             String smartTag = SmartTag.createSmartTag(productName);
-            QRGenerator.crearQR(smartTag);
+            return QRGenerator.crearQR(smartTag);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 
