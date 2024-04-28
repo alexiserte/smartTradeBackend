@@ -92,8 +92,8 @@ public class ProductoController {
     }
 
     @GetMapping("/qr/update")
-    public ResponseEntity<?> qr_update(@RequestParam(name = "name", required = true) String name) {
-        System.out.println("Generando QR para el producto: " + name);
+    public ResponseEntity<?> qr_update() {
+        System.out.println("Generando QR");
         return fechada.qr_update();
     }
     
