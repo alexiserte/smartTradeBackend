@@ -250,4 +250,9 @@ public class ProductoFachada extends Fachada {
         System.out.println("Generando QR para el producto: " + name);
         return new ResponseEntity<>(smartTagDAO.createSmartTag(name), HttpStatus.OK);
     }
+
+    public ResponseEntity<?> qr_update() {
+        productoDAO.updateSmartTag();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

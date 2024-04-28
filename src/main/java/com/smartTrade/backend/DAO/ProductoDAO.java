@@ -27,6 +27,9 @@ public class ProductoDAO implements DAOInterface<Object> {
     @Autowired
     Caracteristica_ProductoDAO CaracteristicaDAO;
 
+    @Autowired
+    SmartTagDAO SmartTagDAO;
+
     public ProductoDAO(JdbcTemplate database) {
         this.database = database;
     }
@@ -45,6 +48,8 @@ public class ProductoDAO implements DAOInterface<Object> {
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         java.util.Random random = new java.util.Random();
         int huella_ecologica = random.nextInt(0, 6);
+        String smartTag = SmartTagDAO.createSmartTag(nombre);
+
 
         try {
             database.queryForObject(
@@ -77,8 +82,8 @@ public class ProductoDAO implements DAOInterface<Object> {
                     "SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
                     Integer.class, vendorName);
             database.update(
-                    "INSERT INTO Producto(nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica) VALUES (?, ?,?,?,?,?,?);",
-                    nombre, id_categoria, descripcion, id_imagen, fechaSQL, false, huella_ecologica);
+                    "INSERT INTO Producto(nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica,etiqueta_inteligente) VALUES (?, ?,?,?,?,?,?,?);",
+                    nombre, id_categoria, descripcion, id_imagen, fechaSQL, false, huella_ecologica,smartTag);
             database.update("INSERT INTO Pendientes_Validacion(id_producto) SELECT id FROM Producto WHERE nombre = ?;",
                     nombre);
             int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class,
@@ -346,4 +351,12 @@ public class ProductoDAO implements DAOInterface<Object> {
         return res;
     }
 
+
+    public void updateSmartTag(){
+        List<Integer> productos = database.queryForList("SELECT id FROM Producto", Integer.class);
+        for (Integer producto : productos) {
+            String smartTag = SmartTagDAO.createSmartTag(database.queryForObject("SELECT nombre FROM Producto WHERE id = ?", String.class, producto));
+            database.update("UPDATE Producto SET etiqueta_inteligente = ? WHERE id = ?", smartTag, producto);
+        }
+    }
 }

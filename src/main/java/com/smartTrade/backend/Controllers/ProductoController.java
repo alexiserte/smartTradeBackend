@@ -90,6 +90,12 @@ public class ProductoController {
         System.out.println("Generando QR para el producto: " + name);
         return fechada.qr(name);
     }
+
+    @GetMapping("/qr/update")
+    public ResponseEntity<?> qr_update(@RequestParam(name = "name", required = true) String name) {
+        System.out.println("Generando QR para el producto: " + name);
+        return fechada.qr_update();
+    }
     
 
 }
