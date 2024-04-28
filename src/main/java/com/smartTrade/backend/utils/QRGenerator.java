@@ -12,6 +12,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.smartTrade.backend.Factory.ConverterFactory;
+
 public class QRGenerator
 {
     //static function that creates QR Code
@@ -31,6 +33,9 @@ public class QRGenerator
 
         generateQRcode(str, path, charset, hashMap, 1024, 1024);//increase or decrease height and width accodingly
 
-        return path;
+        ConverterFactory factory = new ConverterFactory();
+        PNGConverter converter = ( PNGConverter) factory.createConversor("PNG");
+        return converter.convertFileToBase64(path);
+
     }
 }

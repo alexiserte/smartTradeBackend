@@ -10,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileInputStream;
 
 public class PNGConverter{
 
@@ -68,7 +69,7 @@ public class PNGConverter{
         }
     }
 
-    public void convertStringToFile(String data, String path) {
+    public  void convertStringToFile(String data, String path) {
         BufferedImage image = convertStringToObject(data);
         if (image == null) {
             return;
@@ -79,4 +80,24 @@ public class PNGConverter{
             System.err.println("Error al escribir la imagen en el archivo: " + e.getMessage());
         }
     }
+
+    public String convertFileToBase64(String filePath) {
+        try {
+            // Leer el archivo de la ruta especificada
+            File file = new File(filePath);
+            FileInputStream fileInputStream = new FileInputStream(file);
+            byte[] fileBytes = new byte[(int) file.length()];
+            fileInputStream.read(fileBytes);
+            fileInputStream.close();
+
+            // Convertir los bytes a base64
+            String base64Image = "data:image/png;base64," + Base64.getEncoder().encodeToString(fileBytes);
+
+            return base64Image;
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo o convertirlo a base64: " + e.getMessage());
+            return null;
+        }
+    }
 }
+

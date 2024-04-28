@@ -1,7 +1,6 @@
 package com.smartTrade.backend.Utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
@@ -9,13 +8,11 @@ import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 import java.io.ByteArrayInputStream;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.io.File;
 
 
 import java.awt.Graphics2D;
@@ -89,4 +86,24 @@ public class JPEGConverter{
             System.err.println("Error al escribir la imagen en el archivo: " + e.getMessage());
         }
     }
+
+    public String convertFileToBase64(String filePath) {
+        try {
+            // Leer el archivo de la ruta especificada
+            File file = new File(filePath);
+            FileInputStream fileInputStream = new FileInputStream(file);
+            byte[] fileBytes = new byte[(int) file.length()];
+            fileInputStream.read(fileBytes);
+            fileInputStream.close();
+
+            // Convertir los bytes a base64
+            String base64Image = "data:image/png;base64," + Base64.getEncoder().encodeToString(fileBytes);
+
+            return base64Image;
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo o convertirlo a base64: " + e.getMessage());
+            return null;
+        }
+    }
 }
+
