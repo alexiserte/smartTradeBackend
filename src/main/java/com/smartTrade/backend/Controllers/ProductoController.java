@@ -85,7 +85,7 @@ public class ProductoController {
         return fechada.getEstadisticas(productName);
     }
 
-    @GetMapping("/GeneratedQR/")
+    @GetMapping("/qr/")
     public ResponseEntity<?> qr(@RequestParam(name = "name", required = true) String name) {
         System.out.println("Generando QR para el producto: " + name);
         return fechada.qr(name);
