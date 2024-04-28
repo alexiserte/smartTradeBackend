@@ -26,7 +26,7 @@ public class QRGenerator
 
     public static String crearQR(String str) throws IOException, WriterException {
         String fechaHoy = java.time.LocalDate.now().toString();
-        String path = "src/main/resources/" + System.currentTimeMillis() +  "---" +fechaHoy+".png";
+        String path = "src/main/resources/GeneratedQR/" + System.currentTimeMillis() +  "---" +fechaHoy+".png";
         String charset = "UTF-8";
         Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
         hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
