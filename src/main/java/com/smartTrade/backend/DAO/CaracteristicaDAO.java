@@ -8,12 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.smartTrade.backend.Mappers.CaracteristicaMapper;
 import com.smartTrade.backend.Mappers.Categoria_CaracteristicaMapper;
-import com.smartTrade.backend.Models.Caracteristica;
 import com.smartTrade.backend.Models.Categoria_Caracteristica;
-
-import lombok.experimental.SuperBuilder;
 
 @Repository
 public class CaracteristicaDAO implements DAOInterface<Categoria_Caracteristica>{
