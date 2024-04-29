@@ -68,13 +68,13 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         } catch (EmptyResultDataAccessException e) {
             int id_imagen = 0;
-            boolean imagenExists = database.queryForObject("SELECT COUNT(*) FROM Imagenes WHERE imagen = ?",
+            boolean imagenExists = database.queryForObject("SELECT COUNT(*) FROM Imagen WHERE imagen = ?",
                     Integer.class, imagen) > 0;
             if (!imagenExists) {
-                database.update("INSERT INTO Imagenes(imagen) VALUES(?)", imagenResized);
-                id_imagen = database.queryForObject("SELECT id FROM Imagenes WHERE imagen = ?", Integer.class, imagen);
+                database.update("INSERT INTO Imagen(imagen) VALUES(?)", imagenResized);
+                id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagen);
             } else {
-                id_imagen = database.queryForObject("SELECT id FROM Imagenes WHERE imagen = ?", Integer.class, imagen);
+                id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagen);
             }
             int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class,
                     characteristicName);
