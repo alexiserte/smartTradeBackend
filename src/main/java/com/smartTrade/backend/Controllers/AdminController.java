@@ -3,12 +3,9 @@ package com.smartTrade.backend.Controllers;
 import com.smartTrade.backend.Fachada.AdministradorFachada;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 
 @RestController
@@ -91,11 +88,11 @@ public class AdminController {
     
 
     @PostMapping("/admin/")
-    public ResponseEntity<?> registerAdministrador(@RequestParam(value = "nickname", required = true) String nickname,
-            @RequestParam(value = "password", required = true) String password,
-            @RequestParam(value = "mail", required = true) String correo,
-            @RequestParam(value = "direction", required = true) String dirección) {
-        return fechada.registerAdministrador(nickname, password, correo, dirección);
+    public ResponseEntity<?> registerAdministrador(@RequestBody HashMap<String, ?> body) {
+        if (!body.containsKey("nickname") || !body.containsKey("user_password") || !body.containsKey("correo")
+                || !body.containsKey("direccion"))
+            return ResponseEntity.badRequest().body("Faltan campos obligatorios");
+        return fechada.registerAdministrador(body);
     }
     
 

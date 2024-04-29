@@ -40,11 +40,12 @@ public class CompradorFachada extends Fachada {
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity<?> register(String password, String correo, String direccion,
-            HashMap<String, ?> body) {
-        String nickname = "";
+    public ResponseEntity<?> register(HashMap<String, ?> body) {
+        String nickname = body.get("nickname").toString();
+        String password = body.get("user_password").toString();
+        String correo = body.get("correo").toString();
+        String direccion = body.get("direccion").toString();
         try {
-            nickname = body.get("nickname").toString();
             Comprador comprador = compradorDAO.readOne(nickname);
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
         } catch (EmptyResultDataAccessException e) {

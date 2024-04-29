@@ -58,7 +58,11 @@ public class VendedorFachada extends Fachada{
 
 
     @SuppressWarnings("unused")
-    public ResponseEntity<?> registerVendedor(String nickname, String password,String correo,String direccion){
+    public ResponseEntity<?> registerVendedor(HashMap<String, ?> body) {
+        String nickname = body.get("nickname").toString();
+        String password = body.get("user_password").toString();
+        String correo = body.get("correo").toString();
+        String direccion = body.get("direccion").toString();
         try{
             Vendedor vendedor = vendedorDAO.readOne(nickname);
             return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);  

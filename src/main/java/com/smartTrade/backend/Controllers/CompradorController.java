@@ -27,11 +27,10 @@ public class CompradorController {
 
     
     @PostMapping("/comprador/")
-    public ResponseEntity<?> register(@RequestParam(value = "password", required = true) String password,
-                                     @RequestParam(value = "correo", required = true) String correo,
-                                     @RequestParam(value = "direccion", required = true) String direccion,
-                                     @RequestBody HashMap<String, ?> body) {
-        return mediador.register(password, correo, direccion, body);
+    public ResponseEntity<?> register(@RequestBody HashMap<String, ?> body) {
+        if(!body.containsKey("nickname") || !body.containsKey("user_password") || !body.containsKey("correo") || !body.containsKey("direccion"))
+            return ResponseEntity.badRequest().body("Faltan campos obligatorios");
+        return mediador.register(body);
     }
 
 

@@ -2,14 +2,11 @@ package com.smartTrade.backend.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.smartTrade.backend.Fachada.VendedorFachada;
+
+import java.util.HashMap;
 
 @RestController
 public class VendedorController {
@@ -32,11 +29,11 @@ public class VendedorController {
 
     
     @PostMapping("/vendedor/")
-    public ResponseEntity<?> register(@RequestParam(value = "nickname", required = true) String nickname,
-            @RequestParam(value = "password", required = true) String password,
-            @RequestParam(value = "direccion", required = true) String dirección,
-            @RequestParam(value = "mail", required = true) String mail) {
-        return fechada.registerVendedor(nickname, password, dirección, mail);
+    public ResponseEntity<?> register(@RequestBody HashMap<String, ?> body) {
+        if (!body.containsKey("nickname") || !body.containsKey("user_password") || !body.containsKey("correo")
+                || !body.containsKey("direccion"))
+            return ResponseEntity.badRequest().body("Faltan campos obligatorios");
+        return fechada.registerVendedor(body);
     }
     
     @DeleteMapping("/vendedor/")

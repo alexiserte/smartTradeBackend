@@ -224,7 +224,11 @@ public class AdministradorFachada extends Fachada {
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity<?> registerAdministrador(String nickname, String password, String correo, String direccion) {
+    public ResponseEntity<?> registerAdministrador(HashMap<String, ?> body) {
+        String nickname = body.get("nickname").toString();
+        String password = body.get("user_password").toString();
+        String correo = body.get("correo").toString();
+        String direccion = body.get("direccion").toString();
         try {
             Administrador administrador = adminDAO.readOne(direccion);
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
