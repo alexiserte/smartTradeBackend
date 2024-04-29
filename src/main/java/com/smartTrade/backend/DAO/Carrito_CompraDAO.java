@@ -1,5 +1,6 @@
 package com.smartTrade.backend.DAO;
 import java.util.List;
+import java.sql.Date;
 
 import com.smartTrade.backend.Mappers.ProductoCarritoCompraMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,11 +53,64 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
         return total;
     }
 
+    public void aumentarCantidad(String productName, String vendorName, String userNickname){
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
+        int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
+        int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
+        database.update("UPDATE Productos_Carrito SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?",id_carrito,id_producto, id_vendedor);
+    }
+
+    public void disminuirCantidad(String productName, String vendorName, String userNickname){
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
+        int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
+        int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
+        database.update("UPDATE Productos_Carrito SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?",id_carrito,id_producto, id_vendedor);
+    }
+
     public boolean productInCarrito(String productName,String vendorName,String userNickname){
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         return database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?",Integer.class,id_carrito,id_producto, id_vendedor) > 0;
+    }
+
+    public double aplicarDescuento(String userNickname,String discountCode){
+        double total = getTotalPrice(userNickname);
+        double descuento = database.queryForObject("SELECT descuento FROM Codigo_Descuento WHERE codigo = ?", Double.class, discountCode);
+        int usos = database.queryForObject("SELECT usos FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
+        Date fecha_inicio = database.queryForObject("SELECT fecha_validez_inicio FROM Codigo_Descuento WHERE codigo = ?", java.sql.Date.class, discountCode);
+        Date fecha_final = database.queryForObject("SELECT fecha_validez_final FROM Codigo_Descuento WHERE codigo = ?", java.sql.Date.class, discountCode);
+
+        Date fecha_actual = new Date(System.currentTimeMillis());
+
+        if(fecha_actual.before(fecha_inicio)){
+            throw new IllegalArgumentException("El código de descuento aún no es válido");
+        }
+        else if(fecha_actual.after(fecha_final)){
+            throw new IllegalArgumentException("El código de descuento ha expirado");
+        }
+        else{
+            int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
+            int id_codigo = database.queryForObject("SELECT id FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
+            int veces_usados = database.queryForObject("SELECT COUNT(*) FROM Codigos_Usados WHERE id_codigo = ? AND id_comprador = ?", Integer.class, discountCode,id_comprador);
+            if(veces_usados >= usos){
+                throw new IllegalArgumentException("El código de descuento ha alcanzado su límite de usos");
+            }
+            else{
+                database.update("INSERT INTO Codigos_Usados(id_codigo,id_comprador) VALUES(?,?)",id_codigo,id_comprador);
+                return total - (total * descuento);
+            }
+        }
+    }
+
+    public void vaciarCarrito(String userNickname){
+        int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
+        database.update("DELETE FROM Productos_Carrito WHERE id_carrito = ?",id_carrito);
+    }
+
+    public int productosInCarrito(String userNickname){
+        int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
+        return database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ?",Integer.class,id_carrito);
     }
 
     public void delete(Object ...args) {;}
