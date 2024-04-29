@@ -143,14 +143,11 @@ public class CarritoCompraFachada extends Fachada{
 
     public ResponseEntity<?> insertarProducto(String productName, String vendorName, String userNickname){
         try {
-            if (carritoCompraDAO.productInCarrito(productName, vendorName, userNickname)) {
+               carritoCompraDAO.productInCarrito(productName, vendorName, userNickname);
                 return modificarCantidad(userNickname, productName, vendorName, "+");
-            } else {
-                carritoCompraDAO.insertarProduct(productName, vendorName, userNickname);
-                return new ResponseEntity<>("Producto insertado", HttpStatus.OK);
-            }
         }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+            carritoCompraDAO.insertarProduct(productName, vendorName, userNickname);
+            return new ResponseEntity<>("Producto insertado", HttpStatus.OK);
         }
     }
 
