@@ -150,6 +150,7 @@ public class ProductoDAO implements DAOInterface<Object> {
                 new ProductMapper());
     }
 
+
     /**
      * El método "actualizar" en Java actualiza los atributos del producto en una
      * base de datos en función
@@ -359,5 +360,16 @@ public class ProductoDAO implements DAOInterface<Object> {
             String smartTag = SmartTagDAO.createSmartTag(database.queryForObject("SELECT nombre FROM Producto WHERE id = ?", String.class, producto));
             database.update("UPDATE Producto SET etiqueta_inteligente = ? WHERE id = ?", smartTag, producto);
         }
+    }
+
+
+    public Producto getSimpleProducto(int id_product) {
+        return database.queryForObject(
+                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id = ?",
+                new ProductMapper(), id_product);
+    }
+
+    public double getPrecioProducto(int id_vendedor, int id_producto) {
+        return database.queryForObject("SELECT precio FROM Vendedores_Producto WHERE id_vendedor = ? AND id_producto = ?", Double.class, id_vendedor, id_producto);
     }
 }

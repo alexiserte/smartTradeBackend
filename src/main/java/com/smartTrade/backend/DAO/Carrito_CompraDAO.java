@@ -25,9 +25,16 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
         database.update("INSERT INTO Carrito_Compra(id_comprador) VALUES (?)",id_comprador);
     }
 
-    public List<Producto> getCarritoFromUser(String nickname){
-        return database.query("SELECT nombre, id_categoria, descripcion, id_imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id IN(SELECT id_producto FROM Productos_Carrito WHERE id_carrito IN(SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)))",new ProductMapper(),nickname);
+    public List<ProductoCarrito> getCarritoFromUser(String nickname){
+        return database.query("SELECT id_carrito,id_producto, id_vendedor, cantidad FROM Productos_Carrito WHERE id_carrito IN(SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?))", new ProductoCarritoCompraMapper(), nickname);
     }
+
+    public int getCantidadFromOneProduct(String productName,String vendorName, String nickname){
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
+        int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
+        int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, nickname);
+        return database.queryForObject("SELECT cantidad FROM Productos_Carrito WHERE id_producto = ? AND id_vendedor = ? AND id_carrito = ?", Integer.class, id_producto, id_vendedor, id_carrito);
+        }
 
     public void insertarProduct(String productName,String vendorName, String userNickname){
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
