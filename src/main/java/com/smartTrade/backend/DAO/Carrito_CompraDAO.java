@@ -99,7 +99,7 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
         else{
             int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
             int id_codigo = database.queryForObject("SELECT id FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
-            int veces_usados = database.queryForObject("SELECT COUNT(*) FROM Codigos_Usados WHERE id_codigo = ? AND id_comprador = ?", Integer.class, discountCode,id_comprador);
+            int veces_usados = database.queryForObject("SELECT COUNT(*) FROM Codigos_Usados WHERE id_codigo = ? AND id_comprador = ?", Integer.class, id_codigo,id_comprador);
             if(veces_usados >= usos){
                 throw new IllegalArgumentException("El código de descuento ha alcanzado su límite de usos");
             }
