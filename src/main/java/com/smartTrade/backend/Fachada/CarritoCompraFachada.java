@@ -104,6 +104,9 @@ public class CarritoCompraFachada extends Fachada{
             }catch(EmptyResultDataAccessException e){
                 return new ResponseEntity<>("El carrito esta vacío.", HttpStatus.NOT_FOUND);
             }
+            catch(IllegalArgumentException e){
+                return new ResponseEntity<>("El código de descuento no existe o ya ha sido utilizado un número máximo de veces.", HttpStatus.NOT_FOUND);
+            }
         }catch(EmptyResultDataAccessException e){
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
 
