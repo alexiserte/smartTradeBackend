@@ -85,6 +85,14 @@ public class CarritoCompraFachada extends Fachada{
                     public int getNumeroProductos(){
                         return numeroProductos;
                     }
+
+                    public String getDiscountCode(){
+                        return discountCode;
+                    }
+
+                    public double getDescuentoAAplicar(){
+                        return descuentoAAplicar;
+                    }
                 }
 
                 if(discountCode == null){
