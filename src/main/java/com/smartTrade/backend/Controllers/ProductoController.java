@@ -71,6 +71,11 @@ public class ProductoController {
         return fechada.getProduct(productName,image);
     }
 
+    @GetMapping("/productos/vendedor/")
+    public ResponseEntity<?> getProductsFromOneVendor(@RequestParam(name = "identifier", required = true) String vendorName){
+        return fechada.getProductsFromOneVendor(vendorName);
+    }
+
 
 
     @PutMapping("/producto/validar/")

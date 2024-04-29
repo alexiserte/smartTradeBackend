@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.smartTrade.backend.Models.Vendedor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -253,5 +254,23 @@ public class ProductoFachada extends Fachada {
     public ResponseEntity<?> qr_update() {
         productoDAO.updateSmartTag();
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getProductsFromOneVendor(String vendorName) {
+        try {
+            Vendedor vendedor = vendedorDAO.readOne(vendorName);
+            List<Producto> productos = productoDAO.getProductsBySeller(vendedor.getNickname());
+            HashMap<Producto,Double> productosConPrecio = new HashMap<>();
+            for(Producto producto : productos){
+                double precio = productoDAO.getPrecioProducto(vendorName,producto.getNombre());
+                productosConPrecio.put(producto,precio);
+            }
+            return new ResponseEntity<>(productosConPrecio, HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Vendedor no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener los productos del vendedor: " + e.getLocalizedMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
