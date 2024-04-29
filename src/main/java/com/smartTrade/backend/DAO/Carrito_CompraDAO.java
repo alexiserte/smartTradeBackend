@@ -1,6 +1,7 @@
 package com.smartTrade.backend.DAO;
 import java.util.List;
 
+import com.smartTrade.backend.Mappers.ProductoCarritoCompraMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -42,8 +43,13 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
     }
 
     public double getTotalPrice(String nickname){
-        int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, nickname);
-        
+        List<ProductoCarrito> productos = database.query("SELECT id_carrito,id_producto, id_vendedor, cantidad FROM Productos_Carrito WHERE id_carrito IN(SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?))", new ProductoCarritoCompraMapper(), nickname);
+        double total = 0;
+        for(ProductoCarrito producto : productos){
+            double precioProducto = database.queryForObject("SELECT precio FROM Vendedores_Producto WHERE id_vendedor = ? AND id_producto = ?", Double.class, producto.getId_vendedor(),producto.getId_producto());
+            total = total + (precioProducto * producto.getCantidad());
+        }
+        return total;
     }
 
     public boolean productInCarrito(String productName,String vendorName,String userNickname){
