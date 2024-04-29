@@ -89,7 +89,7 @@ public class ProductoDAO implements DAOInterface<Object> {
             int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class,
                     nombre);
             database.update(
-                    "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?)",
+                    "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)",
                     id_producto, precio, fechaSQL, id_vendedor);
             database.update("INSERT INTO Vendedores_Producto(id_vendedor,id_producto,precio) VALUES(?,?;?)",
                     id_vendedor, id_producto, precio);
