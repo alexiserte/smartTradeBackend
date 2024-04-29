@@ -68,6 +68,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         } catch (EmptyResultDataAccessException e) {
             int id_imagen = 0;
+
             boolean imagenExists = database.queryForObject("SELECT COUNT(*) FROM Imagen WHERE imagen = ?",
                     Integer.class, imagen) > 0;
             if (!imagenExists) {
@@ -91,7 +92,7 @@ public class ProductoDAO implements DAOInterface<Object> {
             database.update(
                     "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)",
                     id_producto, precio, fechaSQL, id_vendedor);
-            database.update("INSERT INTO Vendedores_Producto(id_vendedor,id_producto,precio) VALUES(?,?;?)",
+            database.update("INSERT INTO Vendedores_Producto(id_vendedor,id_producto,precio) VALUES(?,?,?)",
                     id_vendedor, id_producto, precio);
         }
     }

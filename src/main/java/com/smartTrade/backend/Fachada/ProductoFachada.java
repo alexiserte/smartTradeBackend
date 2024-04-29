@@ -48,13 +48,14 @@ public class ProductoFachada extends Fachada {
     }
 
     public ResponseEntity<?> insertarProducto(Map<String, ?> body) {
-
+        ConverterFactory factory = new ConverterFactory();
+        PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
         try {
             String imageToAdd;
             if (body.containsKey("imagen")) {
                 imageToAdd = (String) body.get("imagen");
             } else {
-                imageToAdd = DEFAULT_IMAGE;
+                imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
             }
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
