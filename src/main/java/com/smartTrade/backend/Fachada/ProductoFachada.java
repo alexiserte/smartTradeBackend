@@ -18,9 +18,7 @@ import com.smartTrade.backend.Utils.*;
 @Component
 public class ProductoFachada extends Fachada {
 
-    ConverterFactory factory = new ConverterFactory();
-    PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-    private final String DEFAULT_IMAGE = converter.convertFileToBase64("src/main/resources/default_image.png");
+    private final String DEFAULT_IMAGE = "src/main/resources/default_image.png";
 
     public ResponseEntity<?> searchProductByName(String nombre, String category) {
         List<Producto> resultado = new ArrayList<>();
