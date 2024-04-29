@@ -17,7 +17,7 @@ import com.smartTrade.backend.Utils.*;
 
 @Component
 public class ProductoFachada extends Fachada {
-
+    // Se usa solo en un método pero se podria usar más adelante
     private final String DEFAULT_IMAGE = "src/main/resources/default_image.png";
 
     public ResponseEntity<?> searchProductByName(String nombre, String category) {
