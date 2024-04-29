@@ -61,4 +61,26 @@ public class CompradorController {
         return carritoCompraFachada.getCarritoCompra(identifier, discountCode);
     }
 
+    @PutMapping("/comprador/carrito-compra/")
+    public ResponseEntity<?> updateCantidad(@RequestParam(value = "productName", required = true) String productName,
+                                            @RequestParam(value = "vendorName", required = true) String vendorName,
+                                            @RequestParam(value = "userNickname", required = true) String userNickname,
+                                            @RequestParam(value = "op", required = true) String op) {
+        return carritoCompraFachada.modificarCantidad(userNickname, productName, vendorName, op);
+    }
+
+    @PostMapping("/comprador/carrito-compra/")
+    public ResponseEntity<?> addProduct(@RequestParam(value = "productName", required = true) String productName,
+                                        @RequestParam(value = "vendorName", required = true) String vendorName,
+                                        @RequestParam(value = "userNickname", required = true) String userNickname) {
+        return carritoCompraFachada.insertarProducto(userNickname, productName, vendorName);
+    }
+
+    @DeleteMapping("/comprador/carrito-compra/")
+    public ResponseEntity<?> deleteProduct(@RequestParam(value = "productName", required = true) String productName,
+                                           @RequestParam(value = "vendorName", required = true) String vendorName,
+                                           @RequestParam(value = "userNickname", required = true) String userNickname) {
+        return carritoCompraFachada.deleteProduct(userNickname, productName, vendorName);
+    }
+
 }

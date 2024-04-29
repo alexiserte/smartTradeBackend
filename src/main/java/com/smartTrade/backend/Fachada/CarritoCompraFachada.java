@@ -118,4 +118,53 @@ public class CarritoCompraFachada extends Fachada{
 
         }
     }
+
+
+    public ResponseEntity<?> modificarCantidad(String nickname, String productName, String vendorName, String action){
+        try {
+            if (!carritoCompraDAO.productInCarrito(productName, vendorName,nickname)) {
+                return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+            } else {
+                if (action.equals("+")) {
+                    carritoCompraDAO.aumentarCantidad(productName, vendorName, nickname);
+                    return new ResponseEntity<>("Cantidad aumentada", HttpStatus.OK);
+                } else if (action.equals("-")) {
+                    carritoCompraDAO.disminuirCantidad(productName, vendorName, nickname);
+                    return new ResponseEntity<>("Cantidad disminuida", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Acción no válida", HttpStatus.BAD_REQUEST);
+                }
+            }
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    public ResponseEntity<?> insertarProducto(String productName, String vendorName, String userNickname){
+        try {
+            if (carritoCompraDAO.productInCarrito(productName, vendorName, userNickname)) {
+                return modificarCantidad(userNickname, productName, vendorName, "+");
+            } else {
+                carritoCompraDAO.insertarProduct(productName, vendorName, userNickname);
+                return new ResponseEntity<>("Producto insertado", HttpStatus.OK);
+            }
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    public ResponseEntity<?> deleteProduct(String productName, String vendorName, String userNickname){
+        try {
+            if (!carritoCompraDAO.productInCarrito(productName, vendorName, userNickname)) {
+                return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+            } else {
+                carritoCompraDAO.deleteProduct(productName, vendorName, userNickname);
+                return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
+            }
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
 }
