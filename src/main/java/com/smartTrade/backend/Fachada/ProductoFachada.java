@@ -260,10 +260,27 @@ public class ProductoFachada extends Fachada {
         try {
             Vendedor vendedor = vendedorDAO.readOne(vendorName);
             List<Producto> productos = productoDAO.getProductsBySeller(vendedor.getNickname());
-            Map<Producto, Double> productosConPrecio = new HashMap<>();
+            class Producto_Precio{
+                private Producto producto;
+                private double precio;
+
+                public Producto_Precio(Producto producto, double precio){
+                    this.producto = producto;
+                    this.precio = precio;
+                }
+
+                public Producto getProducto(){
+                    return producto;
+                }
+
+                public double getPrecio(){
+                    return precio;
+                }
+            }
+            List<Producto_Precio> productosConPrecio = new ArrayList<>();
             for (Producto producto : productos) {
                 double precio = productoDAO.getPrecioProducto(vendorName, producto.getNombre());
-                productosConPrecio.put(producto, precio);
+                productosConPrecio.add(new Producto_Precio(producto, precio));
             }
             return new ResponseEntity<>(productosConPrecio, HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
