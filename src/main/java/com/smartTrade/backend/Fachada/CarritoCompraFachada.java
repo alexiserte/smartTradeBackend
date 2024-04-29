@@ -60,7 +60,7 @@ public class CarritoCompraFachada extends Fachada{
                     private int numeroProductos;
                     private List<Producto_Vendedor> productos;
                     private String discountCode;
-                    private double descuentoAAplicar;
+                    private String descuentoAAplicar;
                     private double total;
                     public Carrito(String nickname, int numeroProductos, List<Producto_Vendedor> productos, String discount,double descuento, double total)
                     {
@@ -68,7 +68,13 @@ public class CarritoCompraFachada extends Fachada{
                         this.numeroProductos = numeroProductos;
                         this.productos = productos;
                         this.discountCode = discount;
-                        this.descuentoAAplicar = descuento;
+                        if(descuento == 1){
+                            this.descuentoAAplicar = "¡GRATIS!";
+                        }else{
+                            double descuentoPorcentaje = descuento * 100;
+                            this.descuentoAAplicar = descuentoPorcentaje + "%";
+                        }
+
                         this.total = total;
                     }
                     public List<Producto_Vendedor> getProductos(){
@@ -90,7 +96,7 @@ public class CarritoCompraFachada extends Fachada{
                         return discountCode;
                     }
 
-                    public double getDescuentoAAplicar(){
+                    public String getDescuentoAAplicar(){
                         return descuentoAAplicar;
                     }
                 }

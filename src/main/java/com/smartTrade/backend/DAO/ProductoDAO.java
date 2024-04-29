@@ -324,7 +324,7 @@ public class ProductoDAO implements DAOInterface<Object> {
             int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class,
                     nombre);
             int id_vendedor = database.queryForObject(
-                    "SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
+                    "SELECT id_usuario FROM Vendedor WHERE id_usa vuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
                     Integer.class, vendorName);
             double precio = (double) atributos.get("precio");
             java.sql.Date fechaActual = new java.sql.Date(System.currentTimeMillis());
