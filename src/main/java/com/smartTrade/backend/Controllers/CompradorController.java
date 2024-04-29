@@ -56,8 +56,8 @@ public class CompradorController {
         return mediador.productosComprados(nickname);
     }
 
-    @GetMapping("/comprador/{identifier}/carrito-compra")
-    public ResponseEntity<?> getCarritoCompra(@PathVariable(value = "identifier", required = true) String identifier) {
+    @GetMapping("/comprador/carrito-compra/")
+    public ResponseEntity<?> getCarritoCompra(@RequestParam(value = "identifier", required = true) String identifier) {
         return carritoCompraFachada.getCarritoCompra(identifier);
     }
 
