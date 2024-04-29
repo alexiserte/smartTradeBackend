@@ -128,8 +128,11 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
     }
 
     public double getDiscount(String codigo){
-        return database.queryForObject("SELECT descuento FROM Codigo_Descuento WHERE codigo = ?", Double.class, codigo);
-
+        try {
+            return database.queryForObject("SELECT descuento FROM Codigo_Descuento WHERE codigo = ?", Double.class, codigo);
+        }catch(EmptyResultDataAccessException e){
+            throw new IllegalArgumentException("El código de descuento ingresado no es válido");
+        }
     }
     public void delete(Object ...args) {;}
     public void update(Object ...args) {;}
