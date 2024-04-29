@@ -57,8 +57,9 @@ public class CompradorController {
     }
 
     @GetMapping("/comprador/carrito-compra/")
-    public ResponseEntity<?> getCarritoCompra(@RequestParam(value = "identifier", required = true) String identifier) {
-        return carritoCompraFachada.getCarritoCompra(identifier);
+    public ResponseEntity<?> getCarritoCompra(@RequestParam(value = "identifier", required = true) String identifier,
+                                             @RequestParam(value = "discountCode", required = false) String discountCode) {
+        return carritoCompraFachada.getCarritoCompra(identifier, discountCode);
     }
 
 }

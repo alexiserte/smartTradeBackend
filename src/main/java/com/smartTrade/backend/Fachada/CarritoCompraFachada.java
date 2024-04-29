@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 public class CarritoCompraFachada extends Fachada{
-    public ResponseEntity<?> getCarritoCompra(String identifier) {
+    public ResponseEntity<?> getCarritoCompra(String identifier,String discountCode) {
         try {
             Comprador comprador = compradorDAO.readOne(identifier);
             try{
@@ -59,11 +59,16 @@ public class CarritoCompraFachada extends Fachada{
                     private String nickname;
                     private int numeroProductos;
                     private List<Producto_Vendedor> productos;
+                    private String discountCode;
+                    private double descuentoAAplicar;
                     private double total;
-                    public Carrito(String nickname, int numeroProductos, List<Producto_Vendedor> productos, double total){
+                    public Carrito(String nickname, int numeroProductos, List<Producto_Vendedor> productos, String discount,double descuento, double total)
+                    {
                         this.nickname = nickname;
                         this.numeroProductos = numeroProductos;
                         this.productos = productos;
+                        this.discountCode = discount;
+                        this.descuentoAAplicar = descuento;
                         this.total = total;
                     }
                     public List<Producto_Vendedor> getProductos(){
@@ -82,8 +87,12 @@ public class CarritoCompraFachada extends Fachada{
                     }
                 }
 
-                return new ResponseEntity<>(new Carrito(comprador.getNickname(),carritoCompraDAO.productosInCarrito(comprador.getNickname()),productos_vendedores,carritoCompraDAO.getTotalPrice(comprador.getNickname())), HttpStatus.OK);
+                if(discountCode == null){
+                    return new ResponseEntity<>(new Carrito(comprador.getNickname(),carritoCompraDAO.productosInCarrito(comprador.getNickname()),productos_vendedores,null,0,carritoCompraDAO.getTotalPrice(comprador.getNickname())), HttpStatus.OK);
+                }else {
 
+                    return new ResponseEntity<>(new Carrito(comprador.getNickname(), carritoCompraDAO.productosInCarrito(comprador.getNickname()), productos_vendedores, discountCode,carritoCompraDAO.getDiscount(discountCode), carritoCompraDAO.aplicarDescuento(identifier, discountCode) ), HttpStatus.OK);
+                }
             }catch(EmptyResultDataAccessException e){
                 return new ResponseEntity<>("El carrito esta vacío.", HttpStatus.NOT_FOUND);
             }

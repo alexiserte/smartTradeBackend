@@ -120,6 +120,10 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
         return database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ?",Integer.class,id_carrito);
     }
 
+    public double getDiscount(String codigo){
+        return database.queryForObject("SELECT descuento FROM Codigo_Descuento WHERE codigo = ?", Double.class, codigo);
+
+    }
     public void delete(Object ...args) {;}
     public void update(Object ...args) {;}
     public Object readOne(Object ...args) {return null;}
