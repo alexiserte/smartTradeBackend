@@ -14,11 +14,11 @@ import java.util.List;
 
 @Component
 public class CarritoCompraFachada extends Fachada{
-    public ResponseEntity<?> getCarritoCompra(String userNickname) {
+    public ResponseEntity<?> getCarritoCompra(String identifier) {
         try {
-            Comprador comprador = compradorDAO.readOne(userNickname);
+            Comprador comprador = compradorDAO.readOne(identifier);
             try{
-                List<ProductoCarrito> productos = carritoCompraDAO.getCarritoFromUser(userNickname);
+                List<ProductoCarrito> productos = carritoCompraDAO.getCarritoFromUser(comprador.getNickname());
 
                 class Producto_Vendedor{
                     private Producto producto;
@@ -82,7 +82,7 @@ public class CarritoCompraFachada extends Fachada{
                     }
                 }
 
-                return new ResponseEntity<>(new Carrito(userNickname,carritoCompraDAO.productosInCarrito(userNickname),productos_vendedores,carritoCompraDAO.getTotalPrice(userNickname)), HttpStatus.OK);
+                return new ResponseEntity<>(new Carrito(comprador.getNickname(),carritoCompraDAO.productosInCarrito(comprador.getNickname()),productos_vendedores,carritoCompraDAO.getTotalPrice(comprador.getNickname())), HttpStatus.OK);
 
             }catch(EmptyResultDataAccessException e){
                 return new ResponseEntity<>("El carrito esta vacío.", HttpStatus.NOT_FOUND);
