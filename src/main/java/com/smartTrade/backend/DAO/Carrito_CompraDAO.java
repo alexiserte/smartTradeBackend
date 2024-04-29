@@ -3,6 +3,7 @@ import java.util.List;
 import java.sql.Date;
 
 import com.smartTrade.backend.Mappers.ProductoCarritoCompraMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -83,8 +84,14 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
 
     public double aplicarDescuento(String userNickname,String discountCode){
         double total = getTotalPrice(userNickname);
-        double descuento = database.queryForObject("SELECT descuento FROM Codigo_Descuento WHERE codigo = ?", Double.class, discountCode);
-        int usos = database.queryForObject("SELECT usos FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
+        double descuento;
+        int usos;
+        try {
+            descuento = database.queryForObject("SELECT descuento FROM Codigo_Descuento WHERE codigo = ?", Double.class, discountCode);
+            usos = database.queryForObject("SELECT usos FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
+        }catch(EmptyResultDataAccessException e){
+            throw new IllegalArgumentException("El código de descuento ingresado no es válido");
+        }
         Date fecha_inicio = database.queryForObject("SELECT fecha_validez_inicio FROM Codigo_Descuento WHERE codigo = ?", java.sql.Date.class, discountCode);
         Date fecha_final = database.queryForObject("SELECT fecha_validez_final FROM Codigo_Descuento WHERE codigo = ?", java.sql.Date.class, discountCode);
 
