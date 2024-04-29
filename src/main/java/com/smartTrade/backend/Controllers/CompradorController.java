@@ -5,13 +5,7 @@ import java.util.HashMap;
 import com.smartTrade.backend.Fachada.CarritoCompraFachada;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.smartTrade.backend.Fachada.CompradorFachada;;
 
@@ -63,7 +57,7 @@ public class CompradorController {
     }
 
     @GetMapping("/comprador/{identifier}/carrito-compra")
-    public ResponseEntity<?> getCarritoCompra(@RequestParam(value = "identifier", required = true) String identifier) {
+    public ResponseEntity<?> getCarritoCompra(@PathVariable(value = "identifier", required = true) String identifier) {
         return carritoCompraFachada.getCarritoCompra(identifier);
     }
 
