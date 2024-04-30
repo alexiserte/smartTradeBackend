@@ -73,7 +73,7 @@ public class CompradorController {
     public ResponseEntity<?> addProduct(@RequestParam(value = "productName", required = true) String productName,
                                         @RequestParam(value = "vendorName", required = true) String vendorName,
                                         @RequestParam(value = "userNickname", required = true) String userNickname) {
-        return carritoCompraFachada.insertarProducto(userNickname, productName, vendorName);
+        return carritoCompraFachada.insertarProducto(productName,vendorName,userNickname);
     }
 
     @DeleteMapping("/comprador/carrito-compra/")
