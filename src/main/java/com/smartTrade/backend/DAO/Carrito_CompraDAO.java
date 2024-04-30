@@ -84,14 +84,18 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
     }
 
     public boolean productInCarrito(String productName,String vendorName,String userNickname){
-        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
-        int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
-        int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         try {
-            boolean exists = database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?", Integer.class, id_carrito, id_producto, id_vendedor) > 0;
-            return true;
+            int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
+            int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
+            int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
+            try {
+                boolean exists = database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?", Integer.class, id_carrito, id_producto, id_vendedor) > 0;
+                return true;
+            } catch (EmptyResultDataAccessException e) {
+                return false;
+            }
         }catch(EmptyResultDataAccessException e){
-            return false;
+            throw new IllegalArgumentException("El producto ingresado no existe || ProductInCarrito");
         }
     }
 
