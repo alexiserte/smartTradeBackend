@@ -62,17 +62,25 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
     }
 
     public void aumentarCantidad(String productName, String vendorName, String userNickname){
+        try{
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         database.update("UPDATE Productos_Carrito SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?",id_carrito,id_producto, id_vendedor);
+        }catch(EmptyResultDataAccessException e){
+            throw new IllegalArgumentException("El producto ingresado no existe || Aumentar cantidad");
+        }
     }
 
     public void disminuirCantidad(String productName, String vendorName, String userNickname){
-        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
-        int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
-        int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
-        database.update("UPDATE Productos_Carrito SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?",id_carrito,id_producto, id_vendedor);
+        try {
+            int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
+            int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
+            int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
+            database.update("UPDATE Productos_Carrito SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?", id_carrito, id_producto, id_vendedor);
+        }catch(EmptyResultDataAccessException e){
+            throw new IllegalArgumentException("El producto ingresado no existe || Disminuir cantidad");
+        }
     }
 
     public boolean productInCarrito(String productName,String vendorName,String userNickname){
