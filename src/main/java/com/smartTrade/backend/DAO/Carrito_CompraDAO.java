@@ -84,8 +84,7 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
     }
 
     public boolean productInCarrito(String productName,String vendorName,String userNickname){
-        System.out.println("Producto: " + productName + " Vendedor: " + vendorName + " Usuario: " + userNickname);
-        int id_carrito,id_producto,id_vendedor;
+       int id_carrito,id_producto,id_vendedor;
              id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
              id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
              id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
@@ -93,8 +92,9 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
             boolean exists = database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?", Integer.class, id_carrito, id_producto, id_vendedor) > 0;
             return true;
         }catch(EmptyResultDataAccessException e){
-            return false;
+            ;
         }
+        return false;
     }
 
     public double aplicarDescuento(String userNickname,String discountCode){
