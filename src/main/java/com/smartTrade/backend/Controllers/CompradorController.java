@@ -80,7 +80,7 @@ public class CompradorController {
     public ResponseEntity<?> deleteProduct(@RequestParam(value = "productName", required = true) String productName,
                                            @RequestParam(value = "vendorName", required = true) String vendorName,
                                            @RequestParam(value = "userNickname", required = true) String userNickname) {
-        return carritoCompraFachada.deleteProduct(userNickname, productName, vendorName);
+        return carritoCompraFachada.deleteProduct(productName, vendorName, userNickname);
     }
 
 }
