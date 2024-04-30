@@ -89,12 +89,11 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
              id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
              id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         try {
-            boolean exists = database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?", Integer.class, id_carrito, id_producto, id_vendedor) > 0;
-            return true;
+            ProductoCarrito producto = database.queryForObject("SELECT id_carrito,id_producto, id_vendedor, cantidad FROM Productos_Carrito WHERE id_carrito = ? AND id_producto = ? AND id_vendedor = ?", new ProductoCarritoCompraMapper(), id_carrito, id_producto, id_vendedor);
         }catch(EmptyResultDataAccessException e){
-            ;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public double aplicarDescuento(String userNickname,String discountCode){
