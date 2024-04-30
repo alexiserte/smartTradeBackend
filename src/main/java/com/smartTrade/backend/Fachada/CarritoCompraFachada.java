@@ -143,7 +143,7 @@ public class CarritoCompraFachada extends Fachada{
 
     public ResponseEntity<?> insertarProducto(String productName, String vendorName, String userNickname){
         try {
-            if(!carritoCompraDAO.productInCarrito(productName, vendorName, userNickname)) {
+            if(carritoCompraDAO.productInCarrito(productName, vendorName, userNickname)) {
                 return modificarCantidad(userNickname, productName, vendorName, "+");
             }
             else{
