@@ -84,6 +84,7 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
     }
 
     public boolean productInCarrito(String productName,String vendorName,String userNickname){
+        System.out.println("Producto: " + productName + " Vendedor: " + vendorName + " Usuario: " + userNickname);
         int id_carrito,id_producto,id_vendedor;
         try {
              id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
