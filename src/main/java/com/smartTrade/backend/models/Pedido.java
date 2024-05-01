@@ -4,12 +4,14 @@ import java.util.List;
 import java.sql.Date;
 
 public class Pedido{
+    private int id;
     private int id_comprador;
     private List<Producto> productos;
     private String estado;
     private Date fecha_realizacion;
 
-    public Pedido(int id_comprador, List<Producto> productos, String estado, Date fecha_realizacion){
+    public Pedido(int id,int id_comprador, List<Producto> productos, String estado, Date fecha_realizacion){
+        this.id = id;
         this.id_comprador = id_comprador;
         this.productos = productos;
         this.estado = estado;
@@ -57,6 +59,14 @@ public class Pedido{
 
     public void setFecha_realizacion(Date fecha_realizacion) {
         this.fecha_realizacion = fecha_realizacion;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }
