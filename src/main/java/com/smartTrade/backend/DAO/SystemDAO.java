@@ -1,10 +1,12 @@
 package com.smartTrade.backend.DAO;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class SystemDAO implements DAOInterface<String>{
 
     private final JdbcTemplate database;
