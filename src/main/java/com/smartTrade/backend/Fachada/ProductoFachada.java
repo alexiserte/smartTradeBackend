@@ -293,6 +293,7 @@ public class ProductoFachada extends Fachada {
     }
 
 
+<<<<<<< HEAD
     public ResponseEntity<?> getOldProduct(String productName){
         try{
             ProductoDAO.ProductoAntiguo producto = productoDAO.readOneProductAntiguo(productName);
@@ -340,6 +341,16 @@ Resultado r = new Resultado(producto, smartTag, categoria, vendedores);
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
         }catch(Exception e){
             return new ResponseEntity<>("Error al obtener el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+=======
+    public ResponseEntity<?> getImagen(String productName){
+        try{
+            String imagen = productoDAO.getImageFromOneProduct(productName);
+            return new ResponseEntity<>(imagen,HttpStatus.OK);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener la imagen del producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+>>>>>>> 0d354c57bf4f9cdd19fcf0f4bceff6cbf3a11b16
         }
     }
 

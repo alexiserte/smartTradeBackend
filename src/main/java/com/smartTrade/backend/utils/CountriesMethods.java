@@ -29,4 +29,9 @@ public class CountriesMethods {
     }
 
 
+    public static void main(String[] args){
+        System.out.println("Tu pedido se encuentra en tránsito actualmente. Actualmente se localiza en el siguiente país: " + getRandomCountry());
+    }
+
+
 }

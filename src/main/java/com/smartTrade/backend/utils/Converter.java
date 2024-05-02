@@ -9,6 +9,5 @@ public abstract class Converter<T>{
     public abstract void convertStringToFile(String data, String path);
     public abstract T convertStringToObject(String data);
     public abstract void convertFile(String path);
-    
-    
+
 }
