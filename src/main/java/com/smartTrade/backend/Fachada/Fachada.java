@@ -50,6 +50,9 @@ public class Fachada {
     @Autowired
     public SmartTagDAO smartTagDAO;
 
+    @Autowired
+    public SystemDAO systemDAO;
+
 
     
 }

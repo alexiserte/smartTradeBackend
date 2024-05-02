@@ -27,7 +27,7 @@ public class AdministradorFachada extends Fachada {
     }
 
     public ResponseEntity<?> mostrarBasesDeDatos() {
-        return new ResponseEntity<>(adminDAO.getAllDatabases(), HttpStatus.OK);
+        return new ResponseEntity<>(systemDAO.readAll(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> mostrarUsuarios() {
