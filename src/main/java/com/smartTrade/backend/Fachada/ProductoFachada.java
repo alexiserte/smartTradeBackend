@@ -291,4 +291,16 @@ public class ProductoFachada extends Fachada {
         }
     }
 
+
+    public ResponseEntity<?> getImagen(String productName){
+        try{
+            String imagen = productoDAO.getImageFromOneProduct(productName);
+            return new ResponseEntity<>(imagen,HttpStatus.OK);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener la imagen del producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

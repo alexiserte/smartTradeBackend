@@ -90,6 +90,11 @@ public class ProductoController {
         return fechada.getEstadisticas(productName);
     }
 
+    @GetMapping("/producto/imagen/")
+    public ResponseEntity<?> getImage(@RequestParam(name = "name", required = true) String productName){
+        return fechada.getImagen(productName);
+    }
+
     
 
 }
