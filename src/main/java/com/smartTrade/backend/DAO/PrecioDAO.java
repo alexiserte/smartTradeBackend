@@ -76,7 +76,7 @@ public class PrecioDAO implements DAOInterface<Object>{
 
             preciosVendedor.put("Precio mínimo", preciominimo);
             preciosVendedor.put("Precio máximo", preciomaximo);
-            preciosVendedor.put("Precio promedio", preciomedio);
+            preciosVendedor.put("Precio promedio", Math.round(preciomedio * 100.0) / 100.0);
             preciosVendedor.put("Número de cambios", preciosFromOneProduct.size());
 
             stats.put("Vendedor " + (j + 1), preciosVendedor);
@@ -85,7 +85,7 @@ public class PrecioDAO implements DAOInterface<Object>{
         // Estadísticas generales
         stats.put("Precio máximo general", preciomaximo);
         stats.put("Precio mínimo general", preciominimo);
-        stats.put("Precio promedio general", preciomedio);
+        stats.put("Precio promedio general", Math.round(preciomedio * 100.0) / 100.0);
         return stats;
     }
 
