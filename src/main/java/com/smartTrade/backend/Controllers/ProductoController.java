@@ -67,8 +67,11 @@ public class ProductoController {
 
     @GetMapping("/producto/")
     public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName,
-            @RequestParam(name = "image", required = true) boolean image){
-        return fechada.getProduct(productName,image);
+            @RequestParam(name = "image", required = true) boolean image,
+                                        @RequestParam(name = "oldMode", required = false) boolean oldMode) {
+
+        if(!oldMode)   return fechada.getProduct(productName,image);
+        else           return fechada.getOldProduct(productName);
     }
 
     @GetMapping("/productos/vendedor/")

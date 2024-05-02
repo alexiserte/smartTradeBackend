@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Models.Vendedor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -288,6 +289,57 @@ public class ProductoFachada extends Fachada {
         } catch (Exception e) {
             return new ResponseEntity<>("Error al obtener los productos del vendedor: " + e.getLocalizedMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    public ResponseEntity<?> getOldProduct(String productName){
+        try{
+            ProductoDAO.ProductoAntiguo producto = productoDAO.readOneProductAntiguo(productName);
+
+            List<Object> resultado = productoDAO.readOne(productName);
+            Producto productNewVersion = (Producto) resultado.get(0);
+            HashMap<String, String> smartTag = (HashMap<String, String>) resultado.get(1);
+            String categoria = (String) resultado.get(2);
+            Map<String, Double> vendedores = (Map<String, Double>) resultado.get(3);
+
+            class Resultado {
+                ProductoDAO.ProductoAntiguo producto;
+                HashMap<String, String> smartTag;
+                String categoria;
+                Map<String, Double> vendedores;
+
+                public Resultado(ProductoDAO.ProductoAntiguo producto, HashMap<String, String> smartTag, String categoria,
+                                 Map<String, Double> vendedores) {
+                    this.producto = producto;
+                    this.smartTag = smartTag;
+                    this.categoria = categoria;
+                    this.vendedores = vendedores;
+                }
+
+                public ProductoDAO.ProductoAntiguo getProducto() {
+                    return producto;
+                }
+
+                public HashMap<String, String> getSmartTag() {
+                    return smartTag;
+                }
+
+                public String getCategoria() {
+                    return categoria;
+                }
+
+                public Map<String, Double> getVendedores() {
+                    return vendedores;
+                }
+            }
+            @SuppressWarnings("unchecked")
+Resultado r = new Resultado(producto, smartTag, categoria, vendedores);
+            return new ResponseEntity<>(r,HttpStatus.OK);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

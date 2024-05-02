@@ -19,6 +19,53 @@ import com.smartTrade.backend.Utils.*;
 @Repository
 public class ProductoDAO implements DAOInterface<Object> {
 
+    public static class ProductoAntiguo{
+        private String nombre;
+        private int id_categoria;
+        private String descripcion;
+        private String imagen;
+        private Date fecha_publicacion;
+        private boolean validado;
+        private int huella_ecologica;
+
+        public ProductoAntiguo(Producto p,String imagen) {
+            this.nombre = p.getNombre();
+            this.id_categoria = p.getId_categoria();
+            this.descripcion = p.getDescripcion();
+            this.imagen = imagen;
+            this.fecha_publicacion = p.getFecha_publicacion();
+            this.validado = p.getValidado();
+            this.huella_ecologica = p.getHuella_ecologica();
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public int getId_categoria() {
+            return id_categoria;
+        }
+
+        public String getDescripcion() {
+            return descripcion;
+        }
+
+        public String getImagen() {
+            return imagen;
+        }
+
+        public Date getFecha_publicacion() {
+            return fecha_publicacion;
+        }
+
+        public boolean isValidado() {
+            return validado;
+        }
+
+        public int getHuella_ecologica() {
+            return huella_ecologica;
+        }
+    }
     private JdbcTemplate database;
 
     @Autowired
@@ -142,6 +189,13 @@ public class ProductoDAO implements DAOInterface<Object> {
         return database.queryForObject(
                 "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado, huella_ecologica FROM Producto WHERE nombre = ?",
                 new ProductMapper(), productName);
+    }
+
+    public ProductoAntiguo readOneProductAntiguo(String productName) {
+        int id_imagen = database.queryForObject("SELECT id_imagen FROM Producto WHERE nombre = ?", Integer.class,
+                productName);
+        String imagen = database.queryForObject("SELECT imagen FROM Imagen WHERE id = ?", String.class, id_imagen);
+        return new ProductoAntiguo(readOneProduct(productName), imagen);
     }
 
     public List<Producto> readAll() {

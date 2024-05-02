@@ -187,33 +187,4 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
         database.update("DELETE FROM Usuario WHERE nickname = ?;", nickname);
     }
 
-    /**
-     * La función getAllDatabases recupera todas las tablas y sus atributos de un
-     * esquema de base de
-     * datos específico en Java.
-     * 
-     * @return Este método devuelve una lista de cadenas, donde cada cadena
-     *         representa información
-     *         sobre una tabla de base de datos en 'FiveGuysDatabase'. Cada cadena
-     *         incluye el nombre de la
-     *         tabla y sus atributos.
-     */
-    public List<String> getAllDatabases() {
-        List<String> result = new ArrayList<>();
-        String sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'FiveGuysDatabase' AND TABLE_TYPE = 'BASE TABLE'";
-        List<String> tables = database.queryForList(sql, String.class);
-        for (String table : tables) {
-            String attributesSql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + table
-                    + "'";
-            List<String> attributes = database.queryForList(attributesSql, String.class);
-            StringBuilder tableInfo = new StringBuilder();
-            tableInfo.append("Table: ").append(table).append(", Attributes: ");
-            for (String attribute : attributes) {
-                tableInfo.append(attribute).append(" ");
-            }
-            result.add(tableInfo.toString());
-        }
-        return result;
-    }
-
 }
