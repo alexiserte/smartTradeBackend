@@ -36,6 +36,13 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
         database.update("DELETE FROM Productos_Guardar_Mas_Tarde WHERE id_producto = ? AND id_guardar_mas_tarde = ? AND id_vendedor = ?",id_producto,id_guardar_mas_tarde,id_vendedor);
     }
 
+    public void vaciarLista(String userNickname){
+        int id_comprador = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
+        int id_guardar_mas_tarde = database.queryForObject("SELECT id FROM Guardar_Mas_Tarde WHERE id_comprador = ?", Integer.class, id_comprador);
+        database.update("DELETE FROM Productos_Guardar_Mas_Tarde WHERE id_guardar_mas_tarde = ?",id_guardar_mas_tarde);
+
+    }
+
     public void delete(Object ...args) {;}
     public void update(Object ...args) {;}
     public Object readOne(Object ...args) {return null;}
