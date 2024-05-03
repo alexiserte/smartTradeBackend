@@ -28,7 +28,7 @@ public class AdminController {
 
     @GetMapping("/admin/database")
     public ResponseEntity<?> mostrarBasesDeDatos() {
-        return fechada.mostrarBasesDeDatos();
+        System.out.println("Hola!!"); fechada.mostrarBasesDeDatos();
     }
 
     @GetMapping("/admin/compradores")
