@@ -359,6 +359,15 @@ public class ProductoFachada extends Fachada {
                 }
             }
 
+            public ResponseEntity<?> productAllNames(){
+                try{
+                    List<String> nombres = productoDAO.readAllNames();
+                    return new ResponseEntity<>(nombres, HttpStatus.OK);
+                }catch(Exception e){
+                    return new ResponseEntity<>("Error al obtener los nombres de los productos: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
+
         }
 
 

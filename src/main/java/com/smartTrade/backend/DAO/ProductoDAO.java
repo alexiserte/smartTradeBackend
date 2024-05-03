@@ -205,6 +205,11 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
 
+    public List<String> readAllNames() {
+        return database.queryForList("SELECT nombre FROM Producto", String.class);
+    }
+
+
     /**
      * El método "actualizar" en Java actualiza los atributos del producto en una
      * base de datos en función

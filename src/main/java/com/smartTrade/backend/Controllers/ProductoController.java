@@ -98,6 +98,11 @@ public class ProductoController {
         return fechada.getImagen(productName);
     }
 
+    @GetMapping("/productos/nombres")
+    public ResponseEntity<?> getProductsNames(){
+        return fechada.productAllNames();
+    }
+
     
 
 }
