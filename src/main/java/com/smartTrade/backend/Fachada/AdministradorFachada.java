@@ -1,9 +1,11 @@
 package com.smartTrade.backend.Fachada;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.smartTrade.backend.DAO.ProductoDAO;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +40,18 @@ public class AdministradorFachada extends Fachada {
         return new ResponseEntity<>(vendedorDAO.readAll(), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> mostrarProductos() {
-        return new ResponseEntity<>(productoDAO.readAll(), HttpStatus.OK);
+    public ResponseEntity<?> mostrarProductos(boolean oldMode) {
+        if(oldMode) return new ResponseEntity<>(productoDAO.readAll(), HttpStatus.OK);
+        else{
+            List<Producto> listaDeProductos = productoDAO.readAll();
+            List<ProductoDAO.ProductoAntiguo> listaDeProductosAntiguos = new ArrayList<>();
+            for(Producto p : listaDeProductos){
+                String imagen = productoDAO.getImageFromOneProduct(p.getNombre());
+                ProductoDAO.ProductoAntiguo productoAntiguo = new ProductoDAO.ProductoAntiguo(p,imagen);
+                listaDeProductosAntiguos.add(productoAntiguo);
+            }
+            return new ResponseEntity<>(listaDeProductosAntiguos, HttpStatus.OK);
+        }
     }
 
     public ResponseEntity<?> mostrarProductosPendientesDeValidacion() {

@@ -42,8 +42,9 @@ public class AdminController {
 
 
     @GetMapping("/admin/productos")
-    public ResponseEntity<?> mostrarProductos() {
-        return fechada.mostrarProductos();
+    public ResponseEntity<?> mostrarProductos(@RequestParam(value = "oldMode", required = false) boolean oldMode{
+        if(oldMode) return fechada.mostrarProductos(false);
+        else return fechada.mostrarProductos(true);
     }
 
 
