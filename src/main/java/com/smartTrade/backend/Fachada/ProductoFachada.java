@@ -308,6 +308,7 @@ public class ProductoFachada extends Fachada {
                 HashMap<String, String> smartTag;
                 String categoria;
                 Map<String, Double> vendedores;
+                String imagen;
 
                 public Resultado(ProductoDAO.ProductoAntiguo producto, HashMap<String, String> smartTag, String categoria,
                                  Map<String, Double> vendedores) {
@@ -315,6 +316,7 @@ public class ProductoFachada extends Fachada {
                     this.smartTag = smartTag;
                     this.categoria = categoria;
                     this.vendedores = vendedores;
+                    this.imagen = producto.getImagen();
                 }
 
                 public ProductoDAO.ProductoAntiguo getProducto() {
@@ -331,6 +333,10 @@ public class ProductoFachada extends Fachada {
 
                 public Map<String, Double> getVendedores() {
                     return vendedores;
+                }
+
+                public String getImagen() {
+                    return imagen;
                 }
             }
             @SuppressWarnings("unchecked")
