@@ -13,6 +13,19 @@ import com.smartTrade.backend.Models.Vendedor;
 @Component
 public class UsuarioFachada extends Fachada{
     
+
+    @SuppressWarnings("unused") 
+    public ResponseEntity<?> register(HashMap<String, ?> body, String userType) {
+        switch (userType){
+            case "vendedor":
+                 return vendedorFachada.registerVendedor(body);
+            case "comprador":
+            return compradorFachada.register(body);
+        }
+
+    }
+
+
     @SuppressWarnings("unused") 
     public ResponseEntity<?> login(String identiFier,String password) {
         try {

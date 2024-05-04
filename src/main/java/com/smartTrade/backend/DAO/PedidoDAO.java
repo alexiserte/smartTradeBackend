@@ -38,7 +38,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     @Override
     public Pedido readOne(Object... args) {
         int id_pedido = (int) args[0];
-        List<Producto> productos = database.query("SELECT nombre,descripcion, id_categoria,fecha_añadido, validado, huella_ecologica, id_imagen FROM producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ?)", new ProductMapper(), id_pedido);
+        List<Producto> productos = database.query("SELECT nombre,descripcion, id_categoria,fecha_añadido, validado, huella_ecologica, id_imagen, stock FROM producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ?)", new ProductMapper(), id_pedido);
         return database.queryForObject("SELECT * FROM pedido WHERE id = ?", new PedidoMapper(productos), id_pedido);
     }
 
