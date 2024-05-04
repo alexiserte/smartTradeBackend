@@ -30,6 +30,7 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
         return database.query("SELECT id_carrito,id_producto, id_vendedor, cantidad FROM Productos_Carrito WHERE id_carrito IN(SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?))", new ProductoCarritoCompraMapper(), nickname);
     }
 
+
     public int getCantidadFromOneProduct(String productName,String vendorName, String nickname){
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
@@ -43,6 +44,8 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         database.update("INSERT INTO Productos_Carrito(id_carrito,id_producto,id_vendedor) VALUES(?,?,?)",id_carrito,id_producto,id_vendedor);
     }
+
+    
 
     public void deleteProduct(String productName, String vendorName, String userNickname){
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
