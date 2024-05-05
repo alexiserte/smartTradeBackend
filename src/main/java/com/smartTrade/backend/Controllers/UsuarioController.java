@@ -19,5 +19,11 @@ public class UsuarioController {
                                   @RequestParam(value = "password", required = false) String password) {
         return fechada.login(identifier, password);
     }
+
+    @PostMapping("/user/")
+    public ResponseEntity<?> register(@RequestParam(value = "userType", required = true) String userType,
+                                    @RequestBody(required = true) HashMap<String,?> body){
+
+    }
    
 }

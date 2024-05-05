@@ -100,7 +100,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         try {
             database.queryForObject(
-                    "SELECT nombre, id_categoria, id_imagen,descripcion,fecha_añadido,validado, huella_ecologica FROM Producto WHERE nombre = ?",
+                    "SELECT nombre, id_categoria, id_imagen,descripcion,fecha_añadido,validado, huella_ecologica, stock FROM Producto WHERE nombre = ?",
                     new ProductMapper(), nombre);
             int id_vendedor = database.queryForObject(
                     "SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
@@ -152,7 +152,7 @@ public class ProductoDAO implements DAOInterface<Object> {
                 productName);
 
         Producto producto = database.queryForObject(
-                "SELECT nombre, id_categoria, descripcion, id_imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id = ?",
+                "SELECT nombre, id_categoria, descripcion, id_imagen,fecha_añadido,validado,huella_ecologica, stock FROM Producto WHERE id = ?",
                 new ProductMapper(), id_producto);
 
         HashMap<String, String> caracteristicas = CaracteristicaDAO.getSmartTag(productName);
@@ -187,7 +187,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public Producto readOneProduct(String productName) {
         return database.queryForObject(
-                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado, huella_ecologica FROM Producto WHERE nombre = ?",
+                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado, huella_ecologica, stock FROM Producto WHERE nombre = ?",
                 new ProductMapper(), productName);
     }
 
@@ -200,7 +200,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public List<Producto> readAll() {
         return database.query(
-                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica FROM Producto",
+                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica, stock FROM Producto",
                 new ProductMapper());
     }
 
@@ -240,7 +240,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         HashMap<String, ?> atributos = (HashMap<String, ?>) args[1];
         List<String> keys = new ArrayList<>(atributos.keySet());
         Producto product = database.queryForObject(
-                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado ,huella_ecologica FROM Producto WHERE nombre = ?",
+                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado ,huella_ecologica, stock FROM Producto WHERE nombre = ?",
                 new ProductMapper(), nombre);
 
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
@@ -309,13 +309,13 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public List<Producto> getProductsByCategory(String categoryName) {
         return database.query(
-                "SELECT nombre,id_categoria,descripcion,id_imagen,fecha_añadido, validado FROM Producto WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)",
+                "SELECT nombre,id_categoria,descripcion,id_imagen,fecha_añadido, validado, huella_ecologica, stock FROM Producto WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)",
                 new ProductMapper(), categoryName);
     }
 
     public List<Producto> getProductsBySeller(String vendorName) {
         return database.query(
-                "SELECT nombre,id_categoria,descripcion,id_imagen,fecha_añadido, validado, huella_ecologica FROM Producto WHERE id IN(SELECT id_producto FROM Vendedores_Producto WHERE id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ?))",
+                "SELECT nombre,id_categoria,descripcion,id_imagen,fecha_añadido, validado, huella_ecologica, stock FROM Producto WHERE id IN(SELECT id_producto FROM Vendedores_Producto WHERE id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ?))",
                 new ProductMapper(), vendorName);
     }
 
@@ -345,7 +345,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public List<Producto> getProductosPendientesDeValidacion() throws Exception {
         List<Producto> productos = database.query(
-                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE validado = false",
+                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica, stock FROM Producto WHERE validado = false",
                 new ProductMapper());
         int productosSize = database.queryForObject("SELECT COUNT(*) FROM Pendientes_Validacion", Integer.class);
         if (productosSize == productos.size()) {
@@ -357,7 +357,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public List<Producto> getProductosComprados(String nickname) throws EmptyResultDataAccessException {
         List<Producto> lista = database.query(
-                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ANY(SELECT id FROM Pedido WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)))",
+                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica, stock FROM Producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ANY(SELECT id FROM Pedido WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)))",
                 new ProductMapper(), nickname);
         if (lista.size() == 0) {
             throw new EmptyResultDataAccessException(1);
@@ -424,7 +424,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public Producto getSimpleProducto(int id_product) {
         return database.queryForObject(
-                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica FROM Producto WHERE id = ?",
+                "SELECT nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica, stock FROM Producto WHERE id = ?",
                 new ProductMapper(), id_product);
     }
 
