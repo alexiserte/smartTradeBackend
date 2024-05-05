@@ -19,7 +19,7 @@ import com.smartTrade.backend.Utils.*;
 @Repository
 public class ProductoDAO implements DAOInterface<Object> {
 
-    private static final String PRODUCT_ATTRIBUTES = "nombre, id_categoria, descripcion, id_imagen, fecha_añadido, validado, huella_ecologica, stock";
+    private static final String PRODUCT_BASE_QUERY = "SELECT nombre, id_categoria, descripcion, id_imagen, fecha_añadido, validado, huella_ecologica, stock FROM Producto";
     public static class ProductoAntiguo{
         private String nombre;
         private int id_categoria;
@@ -100,7 +100,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
 
         try {
-            database.queryForObject("SELECT " + PRODUCT_ATTRIBUTES + "FROM Producto WHERE nombre = ?", new ProductMapper(), nombre);
+            database.queryForObject(PRODUCT_BASE_QUERY + " WHERE nombre = ?", new ProductMapper(), nombre);
             int id_vendedor = database.queryForObject(
                     "SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
                     Integer.class, vendorName);
@@ -151,7 +151,7 @@ public class ProductoDAO implements DAOInterface<Object> {
                 productName);
 
         Producto producto = database.queryForObject(
-                "SELECT " + PRODUCT_ATTRIBUTES + " FROM Producto WHERE id = ?",
+                PRODUCT_BASE_QUERY + " WHERE id = ?",
                 new ProductMapper(), id_producto);
 
         HashMap<String, String> caracteristicas = CaracteristicaDAO.getSmartTag(productName);
@@ -185,8 +185,7 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
     public Producto readOneProduct(String productName) {
-        return database.queryForObject(
-                "SELECT " + PRODUCT_ATTRIBUTES + " FROM  Producto WHERE nombre = ?",
+        return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE nombre = ?",
                 new ProductMapper(), productName);
     }
 
@@ -198,7 +197,7 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
     public List<Producto> readAll() {
-        return database.query("SELECT " + PRODUCT_ATTRIBUTES + " FROM Producto", new ProductMapper());
+        return database.query(PRODUCT_BASE_QUERY, new ProductMapper());
     }
 
 
@@ -236,8 +235,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         String nombre = (String) args[0];
         HashMap<String, ?> atributos = (HashMap<String, ?>) args[1];
         List<String> keys = new ArrayList<>(atributos.keySet());
-        Producto product = database.queryForObject(
-                "SELECT " + PRODUCT_ATTRIBUTES + "FROM Producto WHERE nombre = ?", new ProductMapper(), nombre);
+        Producto product = database.queryForObject(PRODUCT_BASE_QUERY + " WHERE nombre = ?", new ProductMapper(), nombre);
 
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
             String key = iterator.next();
@@ -305,13 +303,13 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public List<Producto> getProductsByCategory(String categoryName) {
         return database.query(
-                "SELECT " + PRODUCT_ATTRIBUTES + " FROM Producto WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)",
+                PRODUCT_BASE_QUERY + " WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)",
                 new ProductMapper(), categoryName);
     }
 
     public List<Producto> getProductsBySeller(String vendorName) {
         return database.query(
-                "SELECT " + PRODUCT_ATTRIBUTES " FROM Producto WHERE id IN(SELECT id_producto FROM Vendedores_Producto WHERE id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ?))",
+                PRODUCT_BASE_QUERY + " WHERE id IN(SELECT id_producto FROM Vendedores_Producto WHERE id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ?))",
                 new ProductMapper(), vendorName);
     }
 
@@ -341,7 +339,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public List<Producto> getProductosPendientesDeValidacion() throws Exception {
         List<Producto> productos = database.query(
-                "SELECT " + PRODUCT_ATTRIBUTES + " FROM Producto WHERE validado = false",
+               PRODUCT_BASE_QUERY + " WHERE validado = false",
                 new ProductMapper());
         int productosSize = database.queryForObject("SELECT COUNT(*) FROM Pendientes_Validacion", Integer.class);
         if (productosSize == productos.size()) {
@@ -353,7 +351,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public List<Producto> getProductosComprados(String nickname) throws EmptyResultDataAccessException {
         List<Producto> lista = database.query(
-                "SELECT " + PRODUCT_ATTRIBUTES + " FROM Producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ANY(SELECT id FROM Pedido WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)))",
+                PRODUCT_BASE_QUERY + " WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ANY(SELECT id FROM Pedido WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)))",
                 new ProductMapper(), nickname);
         if (lista.size() == 0) {
             throw new EmptyResultDataAccessException(1);
@@ -419,8 +417,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
 
     public Producto getSimpleProducto(int id_product) {
-        return database.queryForObject(
-                "SELECT " + PRODUCT_ATTRIBUTES + " FROM Producto WHERE id = ?",
+        return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE id = ?",
                 new ProductMapper(), id_product);
     }
 
