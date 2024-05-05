@@ -10,6 +10,8 @@ import com.smartTrade.backend.Models.Comprador;
 import com.smartTrade.backend.Models.User_Types;
 import com.smartTrade.backend.Models.Vendedor;
 
+import java.util.HashMap;
+
 @Component
 public class UsuarioFachada extends Fachada{
     
@@ -18,9 +20,16 @@ public class UsuarioFachada extends Fachada{
     public ResponseEntity<?> register(HashMap<String, ?> body, String userType) {
         switch (userType){
             case "vendedor":
+                VendedorFachada vendedorFachada = new VendedorFachada();
                  return vendedorFachada.registerVendedor(body);
             case "comprador":
+                CompradorFachada compradorFachada = new CompradorFachada();
             return compradorFachada.register(body);
+            case "administrador":
+                AdministradorFachada administradorFachada = new AdministradorFachada();
+                return administradorFachada.registerAdministrador(body);
+            default:
+                return new ResponseEntity<>("Tipo de usuario no válido", HttpStatus.BAD_REQUEST);
         }
 
     }

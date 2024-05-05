@@ -2,11 +2,11 @@ package com.smartTrade.backend.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.smartTrade.backend.Fachada.UsuarioFachada;
+
+import java.util.HashMap;
 
 @RestController
 public class UsuarioController {
@@ -23,7 +23,7 @@ public class UsuarioController {
     @PostMapping("/user/")
     public ResponseEntity<?> register(@RequestParam(value = "userType", required = true) String userType,
                                     @RequestBody(required = true) HashMap<String,?> body){
-
+        return null;
     }
    
 }
