@@ -1,13 +1,13 @@
 package com.smartTrade.backend.Utils;
 
 public abstract class Converter<T>{
-    public void processAndInsert(String path){
-        String data = processData(path);
-        convertStringToFile(data, path);
+    public void procesar(String source){
+        T file = convertToFile(source);
+        transformFile(file);
+        convertToBase64(file);
     }
-    public abstract String processData(String path);
-    public abstract void convertStringToFile(String data, String path);
-    public abstract T convertStringToObject(String data);
-    public abstract void convertFile(String path);
 
+    public abstract T convertToFile(String source);
+    public abstract void transformFile(T file);
+    public abstract String convertToBase64(T file);
 }
