@@ -24,7 +24,7 @@ public class ListaDeDeseosDAO implements DAOInterface<Object>{
         int id_comprador = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
         int id_producto = database.queryForObject("SELECT id_producto FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_vendedor = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
-        int id_guardar_mas_tarde = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ?", Integer.class, id_comprador);
+        int id_lista_de_deseos = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ?", Integer.class, id_comprador);
         database.update("INSERT INTO Productos_Lista_Deseos(id_producto,id_lista_de_deseos,id_vendedor) VALUES (?,?,?)",id_producto,id_lista_de_deseos,id_vendedor);
     }
 
@@ -32,13 +32,13 @@ public class ListaDeDeseosDAO implements DAOInterface<Object>{
         int id_comprador = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
         int id_producto = database.queryForObject("SELECT id_producto FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_vendedor = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
-        int id_guardar_mas_tarde = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ?", Integer.class, id_comprador);
+        int id_lista_de_deseos = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ?", Integer.class, id_comprador);
         database.update("DELETE FROM Productos_Lista_Deseos WHERE id_producto = ? AND id_lista_de_deseos = ? AND id_vendedor = ?",id_producto,id_lista_de_deseos,id_vendedor);
     }
 
     public void vaciarLista(String userNickname){
         int id_comprador = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
-        int id_guardar_mas_tarde = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ?", Integer.class, id_comprador);
+        int id_lista_de_deseos = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ?", Integer.class, id_comprador);
         database.update("DELETE FROM Productos_Lista_Deseos WHERE id_id_lista_de_deseos = ?",id_lista_de_deseos);
 
     }
