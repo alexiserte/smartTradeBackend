@@ -50,7 +50,7 @@ public class Producto{
         this.nombre = nombre;
     }
 
-    public void setStock(Int stock) {
+    public void setStock(int stock) {
         this.stock = stock;
     }
 
