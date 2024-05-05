@@ -125,10 +125,10 @@ public class CarritoCompraFachada extends Fachada{
             if (!carritoCompraDAO.productInCarrito(productName, vendorName,nickname)) {
                 return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
             } else {
-                if (action.equals("+")) {
+                if (action.equalsIgnoreCase("+")) {
                     carritoCompraDAO.aumentarCantidad(productName, vendorName, nickname);
                     return new ResponseEntity<>("Cantidad aumentada", HttpStatus.OK);
-                } else if (action.equals("-")) {
+                } else if (action.equalsIgnoreCase("-")) {
                     carritoCompraDAO.disminuirCantidad(productName, vendorName, nickname);
                     return new ResponseEntity<>("Cantidad disminuida", HttpStatus.OK);
                 } else {
