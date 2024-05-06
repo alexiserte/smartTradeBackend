@@ -73,9 +73,9 @@ public class ProductoFachada extends Fachada {
             for (String part : partsFinal) {
                 String[] keyValue = part.replace("\"","").split(":");
                 if(keyValue[0].contains("imagen")) {
-                    map.put(keyValue[0], keyValue[1] + ":" + keyValue[2]);
+                    map.put(keyValue[0].replaceAll("\\s",""), keyValue[1] + ":" + keyValue[2]);
                 }else {
-                    map.put(keyValue[0], keyValue[1]);
+                    map.put(keyValue[0].replaceAll("\\s",""), keyValue[1]);
                 }
 
 
