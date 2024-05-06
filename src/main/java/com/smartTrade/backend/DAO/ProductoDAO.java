@@ -4,12 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
+
+import java.util.*;
 
 import com.smartTrade.backend.Factory.ConverterFactory;
 import com.smartTrade.backend.Mappers.ProductMapper;
@@ -94,10 +90,10 @@ public class ProductoDAO implements DAOInterface<Object> {
         String imagen = (String) args[5];
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-        String imagenResized = converter.processData(imagen);
+        // String imagenResized = converter.processData(imagen);
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
-        java.util.Random random = new java.util.Random();
+        Random random = new Random();
         int huella_ecologica = random.nextInt(0, 6);
         String smartTag = SmartTagDAO.createSmartTag(nombre);
 
@@ -209,30 +205,6 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
 
-    /**
-     * El método "actualizar" en Java actualiza los atributos del producto en una
-     * base de datos en función
-     * de los atributos de entrada y la información del proveedor.
-     * 
-     * @param nombre     El parámetro `nombre` en el método `update` representa el
-     *                   nombre del producto que
-     *                   deseas actualizar en la base de datos. Se utiliza para
-     *                   identificar el producto específico que
-     *                   necesita ser modificado.
-     * @param vendorName El parámetro `vendorName` en el método `update` representa
-     *                   el nombre del proveedor
-     *                   asociado con el producto que se actualiza. Se utiliza para
-     *                   identificar al proveedor en la base de
-     *                   datos y recuperar la información del producto
-     *                   correspondiente para actualizarla.
-     * @param atributos  El parámetro `atributos` en el método `update` es un
-     *                   `HashMap` que contiene pares
-     *                   clave-valor que representan los atributos y sus nuevos
-     *                   valores que deben actualizarse para un
-     *                   producto en la base de datos. Las claves en `HashMap`
-     *                   corresponden a los atributos del producto (por
-     *                   ejemplo, "
-     */
     @SuppressWarnings("unchecked")
     public void update(Object... args) {
         String nombre = (String) args[0];

@@ -11,15 +11,13 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileInputStream;
 
-public class PNGConverter extends Converter<BufferedImage>{
-
-    public String processData(String base64Image) {
-        // Decodificar la imagen base64
-        BufferedImage originalImage = convertStringToObject(base64Image);
+public class PNGConverter {
+/*
+    public void transformFile(BufferedImage originalImage) {
 
         // Verificar si la decodificación fue exitosa
         if (originalImage == null) {
-            return base64Image; 
+            return base64Image;
         }
 
         // Obtener el ancho y alto originales
@@ -52,7 +50,7 @@ public class PNGConverter extends Converter<BufferedImage>{
     }
 
 
-    public BufferedImage convertStringToObject(String base64Image) {
+    public BufferedImage convertToFile(String base64Image) {
         try {
             String[] parts = base64Image.split(",");
             if (parts.length < 2) {
@@ -69,7 +67,7 @@ public class PNGConverter extends Converter<BufferedImage>{
     }
 
     public  void convertStringToFile(String data, String path) {
-        BufferedImage image = convertStringToObject(data);
+        BufferedImage image = convertToFile(data);
         if (image == null) {
             return;
         }
@@ -98,5 +96,7 @@ public class PNGConverter extends Converter<BufferedImage>{
             return null;
         }
     }
+    */
+
 }
 
