@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,21 +56,71 @@ public class ProductoFachada extends Fachada {
     public ResponseEntity<?> insertarProducto(String bodyJSON) {
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap<String, Object> body = null;
-        try {
-            body = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String,Object>>(){});
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error de procesamiento JSON: " + e.getMessage());
+
+        class ProductoJSON {
+            String nombre;
+            String categoria;
+            String vendedor;
+            double precio;
+            String descripcion;
+            String imagen;
+
+            @JsonCreator
+            public ProductoJSON(@JsonProperty("nombre") String nombre, @JsonProperty("categoria") String categoria,
+                    @JsonProperty("vendedor") String vendedor, @JsonProperty("precio") double precio,
+                    @JsonProperty("descripcion") String descripcion, @JsonProperty("imagen") String imagen) {
+                this.nombre = nombre;
+                this.categoria = categoria;
+                this.vendedor = vendedor;
+                this.precio = precio;
+                this.descripcion = descripcion;
+                this.imagen = imagen;
+            }
+
+            public String getNombre() {
+                return nombre;
+            }
+
+            public String getCategoria() {
+                return categoria;
+            }
+
+            public String getVendedor() {
+                return vendedor;
+            }
+
+            public double getPrecio() {
+                return precio;
+            }
+
+            public String getDescripcion() {
+                return descripcion;
+            }
+
+            public String getImagen() {
+                return imagen;
+            }
         }
 
         PNGConverter converter = new PNGConverter();
+
         try {
+            ProductoJSON productoJSON = objectMapper.readValue(bodyJSON, ProductoJSON.class);
+        try {
+            /*
             String imageToAdd = body.containsKey("imagen") ? (String) body.get("imagen") : converter.convertFileToBase64(DEFAULT_IMAGE);
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
             double precio = ((double) body.get("precio"));
             String descripcion = (String) body.get("descripcion");
             String characteristicName = (String) body.get("categoria");
+            */
+            String imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
+            String nombre = productoJSON.getNombre();
+            String vendorName = productoJSON.getVendedor();
+            double precio = productoJSON.getPrecio();
+            String descripcion = productoJSON.getDescripcion();
+            String characteristicName = productoJSON.getCategoria();
 
             // Convertir los argumentos al tipo correcto
             Object[] arguments = {nombre, characteristicName, vendorName, precio, descripcion, imageToAdd};
@@ -80,6 +132,9 @@ public class ProductoFachada extends Fachada {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
