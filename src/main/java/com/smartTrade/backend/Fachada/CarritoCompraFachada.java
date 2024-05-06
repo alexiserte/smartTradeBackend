@@ -41,7 +41,6 @@ public class CarritoCompraFachada extends Fachada{
                     public int getCantidad(){
                         return cantidad;
                     }
-
                     public double getPrecio(){
                         return precio;
                     }
