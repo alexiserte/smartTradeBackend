@@ -60,14 +60,12 @@ public class ProductoFachada extends Fachada {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error de procesamiento JSON: " + e.getMessage());
         }
 
-        ConverterFactory factory = new ConverterFactory();
-        PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-
+        PNGConverter converter = new PNGConverter(); // Cambiado para eliminar la creación de la fábrica
         try {
             String imageToAdd = body.containsKey("imagen") ? (String) body.get("imagen") : converter.convertFileToBase64(DEFAULT_IMAGE);
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
-            double precio = (double) body.get("precio");
+            double precio = ((Number) body.get("precio")).doubleValue(); // Cambiado para asegurar la conversión correcta
             String descripcion = (String) body.get("descripcion");
             String characteristicName = (String) body.get("categoria");
             productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
@@ -76,6 +74,8 @@ public class ProductoFachada extends Fachada {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+
 
 
     public ResponseEntity<?> deleteProductFromOneVendor(String productName, String vendorName) {
