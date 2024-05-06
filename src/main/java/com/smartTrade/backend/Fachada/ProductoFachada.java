@@ -57,6 +57,7 @@ public class ProductoFachada extends Fachada {
         try {
             body = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String,Object>>(){});
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error de procesamiento JSON: " + e.getMessage());
         }
 
