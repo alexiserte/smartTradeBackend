@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Models.Vendedor;
@@ -60,29 +61,46 @@ public class ProductoFachada extends Fachada {
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
         String imageToAdd;
         Gson gson = new Gson();
-        try{
-            HashMap<String, ?> body = gson.fromJson(peticionMap, new TypeToken<HashMap<String, ?>>() {
-            }.getType());
-        if (!body.containsKey("imagen")) {
-            imageToAdd = converter.procesar(DEFAULT_IMAGE);
-        } else {
-            imageToAdd = (String) body.get("imagen");
-        }
+        try {
+            // Elimina las barras invertidas de la cadena JSON
+            String jsonWithoutEscapes = peticionMap.replaceAll("\\\\", "");
 
+            // Convierte la cadena JSON en un HashMap
+            HashMap<String, ?> body = gson.fromJson(jsonWithoutEscapes, new TypeToken<HashMap<String, ?>>() {}.getType());
+
+            // Verifica si la imagen está presente en el cuerpo de la solicitud
+            if (!body.containsKey("imagen")) {
+                // Si no hay imagen, convierte la imagen predeterminada a Base64
+                imageToAdd = converter.procesar(DEFAULT_IMAGE);
+            } else {
+                // Si hay una imagen, obtén la imagen del cuerpo de la solicitud
+                imageToAdd = (String) body.get("imagen");
+            }
+
+            // Extrae los otros campos del cuerpo de la solicitud
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
-            double precio = (double) body.get("precio");
+            double precio = Double.parseDouble((String) body.get("precio"));
             String descripcion = (String) body.get("descripcion");
             String characteristicName = (String) body.get("categoria");
+
+            // Crea el producto utilizando los datos extraídos
             productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
+
+            // Retorna una respuesta de éxito
             return new ResponseEntity<>(HttpStatus.CREATED);
 
-        } catch(Exception e) {
+        } catch (JsonSyntaxException | NumberFormatException e) {
+            // Manejo de excepciones para errores de sintaxis JSON o errores de formato de número
             System.out.println("Error al insertar el producto: " + e.getLocalizedMessage());
-            return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            // Manejo de otras excepciones
+            System.out.println("Error al insertar el producto: " + e.getLocalizedMessage());
+            return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
 
