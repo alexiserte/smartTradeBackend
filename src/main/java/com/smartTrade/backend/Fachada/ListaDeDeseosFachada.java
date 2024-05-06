@@ -102,7 +102,7 @@ public class ListaDeDeseosFachada extends Fachada {
     public ResponseEntity<?> insertarProducto(String productName, String vendorName, String userNickname) {
         try {
             if (!listaDeDeseosDAO.productInListaDeseos(productName, vendorName, userNickname)) {
-                listaDeDeseosDAO.insertarProducto(productName, vendorName, userNickname);
+                listaDeDeseosDAO.insertarProducto(userNickname, productName, vendorName);
                 return new ResponseEntity<>("Producto insertado", HttpStatus.OK);
             }else{
                 return new ResponseEntity<>("Producto ya existente en la lista de deseos", HttpStatus.OK);
