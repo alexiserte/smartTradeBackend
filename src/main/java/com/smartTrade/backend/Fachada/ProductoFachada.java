@@ -58,16 +58,26 @@ public class ProductoFachada extends Fachada {
         HashMap<String, Object> body = null;
 
         try {
-            ProductoJSON productoJSON = objectMapper.readValue(bodyJSON, ProductoJSON.class);
+            body = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String, Object>>() {
+            });
 
             ConverterFactory factory = new ConverterFactory();
             PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
+            /*
             String imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
             String nombre = productoJSON.getNombre();
             String vendorName = productoJSON.getVendedor();
             double precio = productoJSON.getPrecio();
             String descripcion = productoJSON.getDescripcion();
             String characteristicName = productoJSON.getCategoria();
+*/
+
+            String imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
+            String nombre = (String) body.get("nombre");
+            String vendorName = (String) body.get("vendedor");
+            double precio = (double) body.get("precio");
+            String descripcion = (String) body.get("descripcion");
+            String characteristicName = (String) body.get("categoria");
 
             // Convertir los argumentos al tipo correcto
             Object[] arguments = {nombre, characteristicName, vendorName, precio, descripcion, imageToAdd};
@@ -83,74 +93,6 @@ public class ProductoFachada extends Fachada {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
-    // Define ProductoJSON as a nested static class
-    static class ProductoJSON {
-        String nombre;
-        String categoria;
-        String vendedor;
-        double precio;
-        String descripcion;
-        String imagen;
-
-        @JsonCreator
-        public ProductoJSON(@JsonProperty("nombre") String nombre, @JsonProperty("categoria") String categoria,
-                            @JsonProperty("vendedor") String vendedor, @JsonProperty("precio") double precio,
-                            @JsonProperty("descripcion") String descripcion, @JsonProperty("imagen") String imagen) {
-            this.nombre = nombre;
-            this.categoria = categoria;
-            this.vendedor = vendedor;
-            this.precio = precio;
-            this.descripcion = descripcion;
-            this.imagen = imagen;
-        }
-
-        @JsonCreator
-        public ProductoJSON(String json) {
-            // Parse JSON string and set fields accordingly
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                ProductoJSON temp = objectMapper.readValue(json, ProductoJSON.class);
-                this.nombre = temp.getNombre();
-                this.categoria = temp.getCategoria();
-                this.vendedor = temp.getVendedor();
-                this.precio = temp.getPrecio();
-                this.descripcion = temp.getDescripcion();
-                this.imagen = temp.getImagen();
-            } catch (JsonProcessingException e) {
-                // Handle exception
-                e.printStackTrace();
-            }
-        }
-
-        public String getNombre() {
-            return nombre;
-        }
-
-        public String getCategoria() {
-            return categoria;
-        }
-
-        public String getVendedor() {
-            return vendedor;
-        }
-
-        public double getPrecio() {
-            return precio;
-        }
-
-        public String getDescripcion() {
-            return descripcion;
-        }
-
-        public String getImagen() {
-            return imagen;
-        }
-    }
-
-
-
-
 
     public ResponseEntity<?> deleteProductFromOneVendor(String productName, String vendorName) {
         try {
