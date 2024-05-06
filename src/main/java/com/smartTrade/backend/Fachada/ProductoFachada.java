@@ -53,9 +53,14 @@ public class ProductoFachada extends Fachada {
         }
     }
 
-    public ResponseEntity<?> insertarProducto(Map<String, ?> body) {
+    public ResponseEntity<?> insertarProducto(Map<String, ?> peticionMap) {
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
+        HashMap<String,?> body = (HashMap<String, ?>) peticionMap;
+        List<String> keys = new ArrayList<>(body.keySet());
+        if("nameValuePairs".equals(keys.get(0))){
+            body = (HashMap<String, ?>) body.get("nameValuePairs");
+        }
         try {
             String imageToAdd;
             if (body.containsKey("imagen")) {
