@@ -59,47 +59,43 @@ public class ProductoFachada extends Fachada {
     public ResponseEntity<?> insertarProducto(String peticionMap) {
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-        String imageToAdd;
+
         Gson gson = new Gson();
         try {
-            // Elimina las barras invertidas de la cadena JSON
-            String jsonWithoutEscapes = peticionMap.replaceAll("\\\\", "");
+            // Eliminar las barras invertidas de la cadena JSON
+            String jsonWithoutBackslashes = peticionMap.replaceAll("\\\\", "");
 
-            // Convierte la cadena JSON en un HashMap
-            HashMap<String, ?> body = gson.fromJson(jsonWithoutEscapes, new TypeToken<HashMap<String, ?>>() {}.getType());
+            // Parsear el JSON
+            HashMap<String, ?> body = gson.fromJson(jsonWithoutBackslashes, new TypeToken<HashMap<String, ?>>() {}.getType());
 
-            // Verifica si la imagen está presente en el cuerpo de la solicitud
-            if (!body.containsKey("imagen")) {
-                // Si no hay imagen, convierte la imagen predeterminada a Base64
-                imageToAdd = converter.procesar(DEFAULT_IMAGE);
-            } else {
-                // Si hay una imagen, obtén la imagen del cuerpo de la solicitud
-                imageToAdd = (String) body.get("imagen");
-            }
-
-            // Extrae los otros campos del cuerpo de la solicitud
+            // Obtener los valores del JSON
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
-            double precio = Double.parseDouble((String) body.get("precio"));
+            double precio = Double.parseDouble((String) body.get("precio")); // Convertir el precio a double
             String descripcion = (String) body.get("descripcion");
             String characteristicName = (String) body.get("categoria");
 
-            // Crea el producto utilizando los datos extraídos
+            // Obtener la imagen del JSON
+            String imagenData = (String) body.get("imagen");
+            String imageToAdd;
+            if (imagenData.startsWith("data:image")) {
+                // Si la imagen está codificada en base64, extraer los datos base64
+                imageToAdd = imagenData.split(",")[1];
+            } else {
+                // Si no está codificada en base64, utilizar la imagen predeterminada
+                imageToAdd = converter.procesar(DEFAULT_IMAGE);
+            }
+
+            // Crear el producto
             productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
 
-            // Retorna una respuesta de éxito
             return new ResponseEntity<>(HttpStatus.CREATED);
-
-        } catch (JsonSyntaxException | NumberFormatException e) {
-            // Manejo de excepciones para errores de sintaxis JSON o errores de formato de número
-            System.out.println("Error al insertar el producto: " + e.getLocalizedMessage());
-            return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            // Manejo de otras excepciones
             System.out.println("Error al insertar el producto: " + e.getLocalizedMessage());
             return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
 
