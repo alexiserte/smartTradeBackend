@@ -100,15 +100,18 @@ public class ProductoFachada extends Fachada {
             String descripcion = (String) body.get("descripcion");
             String characteristicName = (String) body.get("categoria");
 
+            System.out.println("Nombre: " + nombre);
+            System.out.println("Vendedor: " + vendorName);
+            System.out.println("Precio: " + precio);
+            System.out.println("Descripcion: " + descripcion);
+            System.out.println("Categoria: " + characteristicName);
             // Obtener la imagen del JSON
             String imagenData = (String) body.get("imagen");
             String imageToAdd;
-            if (imagenData.startsWith("data:image")) {
-                // Si la imagen está codificada en base64, extraer los datos base64
-                imageToAdd = imagenData.split(",")[1];
-            } else {
-                // Si no está codificada en base64, utilizar la imagen predeterminada
+            if (!imagenData.startsWith("data:image")) {
                 imageToAdd = converter.procesar(DEFAULT_IMAGE);
+            } else {
+                imageToAdd = converter.procesar(imagenData);
             }
 
             // Crear el producto
