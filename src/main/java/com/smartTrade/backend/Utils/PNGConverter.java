@@ -29,7 +29,7 @@ public class PNGConverter extends Converter<BufferedImage> {
         }
     }
 
-    public BufferedImage transformFile(BufferedImage image) {
+    public String transformFileAndConvertToBase64(BufferedImage image) {
         if (image == null || image.getWidth() == 512 && image.getHeight() == 512) {
             return null;
         }
@@ -42,7 +42,7 @@ public class PNGConverter extends Converter<BufferedImage> {
         g.drawImage(image.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH), 0, 0, targetWidth, targetHeight, null);
         g.dispose();
 
-        return resizedImage;
+        return convertToBase64(resizedImage);
     }
 
     public String convertToBase64(BufferedImage image) {
