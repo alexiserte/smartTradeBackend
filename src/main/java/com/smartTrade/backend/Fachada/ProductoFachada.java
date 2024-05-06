@@ -72,7 +72,8 @@ public class ProductoFachada extends Fachada {
             return new ResponseEntity<>(HttpStatus.CREATED);
 
         } catch (Exception e) {
-            return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
+            return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
