@@ -69,8 +69,8 @@ public class ProductoFachada extends Fachada {
 
             System.out.println("JSON sin barras invertidas: " + jsonWithoutBackslashes);
             // Parsear el JSON
-            HashMap<String, ?> body = gson.fromJson(jsonWithoutBackslashes, new TypeToken<HashMap<String, ?>>() {}.getType());
-
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> body = mapper.readValue(jsonWithoutBackslashes,HashMap.class);
             // Obtener los valores del JSON
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
