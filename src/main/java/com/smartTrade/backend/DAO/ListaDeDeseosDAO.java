@@ -57,7 +57,7 @@ public class ListaDeDeseosDAO implements DAOInterface<Object>{
         id_listaDeseos = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
         id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         try {
-            ProductoListaDeseos producto = database.queryForObject("SELECT id_lista_de_deseos,id_producto, id_vendedor, cantidad FROM Productos_Lista_Deseos WHERE id_lista_de_deseos = ? AND id_producto = ? AND id_vendedor = ?", new ProductoListaDeseosMapper(), id_listaDeseos, id_producto, id_vendedor);
+            ProductoListaDeseos producto = database.queryForObject("SELECT id_lista_de_deseos,id_producto, id_vendedor FROM Productos_Lista_Deseos WHERE id_lista_de_deseos = ? AND id_producto = ? AND id_vendedor = ?", new ProductoListaDeseosMapper(), id_listaDeseos, id_producto, id_vendedor);
         }catch(EmptyResultDataAccessException e){
             return false;
         }
