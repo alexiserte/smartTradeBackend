@@ -73,8 +73,18 @@ public class ProductoFachada extends Fachada {
             System.out.println("------------------------------------------");
             String[] parts = pureJSON.split(",");
             HashMap<String, Object> map = new HashMap<>();
-            for(int i = 0; i < parts.length; i++){
-                System.out.println("Parte: " + parts[i]);
+            String imagenTotal = parts[parts.length - 2] + "," + parts[parts.length - 1];
+            String[] partsFinal = new String[parts.length - 1];
+            for (int i = 0; i < parts.length - 1; i++) {
+                partsFinal[i] = parts[i];
+            }
+            partsFinal[partsFinal.length - 1] = imagenTotal;
+
+            for (String part : partsFinal) {
+                String[] keyValue = part.split(":");
+                String key = keyValue[0].replace("\"", "");
+                String value = keyValue[1].replace("\"", "");
+                map.put(key, value);
             }
             map.replace("precio", Double.parseDouble((String) map.get("precio")));
             System.out.println("Mapa: " + map);
