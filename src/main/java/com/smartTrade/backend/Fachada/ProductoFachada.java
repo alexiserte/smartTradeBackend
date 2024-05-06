@@ -61,26 +61,26 @@ public class ProductoFachada extends Fachada {
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
 
         Gson gson = new Gson();
-        Type type = new TypeToken<HashMap<String, ?>>(){}.getType();
-        HashMap<String, ?> body = gson.fromJson(peticionMap, type);
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType(); // Corregido: Ahora es HashMap<String, String>
+        HashMap<String, String> body = gson.fromJson(peticionMap, type);
         List<String> keys = new ArrayList<>(body.keySet());
         if("nameValuePairs".equals(keys.get(0))){
-            body = (HashMap<String, ?>) body.get("nameValuePairs");
+            body = gson.fromJson(body.get("nameValuePairs"), type); // Corregido: Se deserializa de nuevo si es necesario
         }
 
         try {
             String imageToAdd;
             if (body.containsKey("imagen")) {
-                imageToAdd = (String) body.get("imagen");
+                imageToAdd = body.get("imagen");
             } else {
                 imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
             }
 
-            String nombre = (String) body.get("nombre");
-            String vendorName = (String) body.get("vendedor");
-            double precio = (double) body.get("precio");
-            String descripcion = (String) body.get("descripcion");
-            String characteristicName = (String) body.get("categoria");
+            String nombre = body.get("nombre");
+            String vendorName = body.get("vendedor");
+            double precio = Double.parseDouble(body.get("precio")); // Corregido: Convertir a double
+            String descripcion = body.get("descripcion");
+            String characteristicName = body.get("categoria");
             productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
             return new ResponseEntity<>(HttpStatus.CREATED);
 
