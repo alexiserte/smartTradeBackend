@@ -98,5 +98,9 @@ public class PNGConverter {
     }
     */
 
+    public String processData(String image) {
+        return image;
+    }
+
 }
 
