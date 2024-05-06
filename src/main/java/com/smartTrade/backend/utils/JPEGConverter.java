@@ -1,22 +1,13 @@
 package com.smartTrade.backend.Utils;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Base64;
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Base64;
 import java.io.ByteArrayInputStream;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-
-
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 public class JPEGConverter{
 

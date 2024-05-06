@@ -2,7 +2,6 @@ package com.smartTrade.backend.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 
 public class CountriesMethods {
