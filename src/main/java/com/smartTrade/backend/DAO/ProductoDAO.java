@@ -90,7 +90,8 @@ public class ProductoDAO implements DAOInterface<Object> {
         String imagen = (String) args[5];
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-        String imagenResized = converter.procesar(imagen);
+        // String imagenResized = converter.procesar(imagen);
+        String imagenResized = imagen;
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         Random random = new Random();
