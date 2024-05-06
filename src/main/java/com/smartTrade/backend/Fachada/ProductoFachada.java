@@ -67,13 +67,10 @@ public class ProductoFachada extends Fachada {
             // Eliminar las barras invertidas de la cadena JSON
             String jsonWithoutBackslashes = peticionMap.replace("\\", "");
             String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");
-            System.out.println("JSON puro: " + pureJSON);
             String[] parts = pureJSON.split(",");
-            System.out.println(parts.length);
             HashMap<String, Object> map = new HashMap<>();
             for (String part : parts) {
-                String[] keyValue = part.split(":");
-                map.put(keyValue[0].replace("\"", ""),(String) keyValue[1].replace("\"", ""));
+                System.out.println("Parte: " + part);
             }
             map.replace("precio", Double.parseDouble((String) map.get("precio")));
             System.out.println("Mapa: " + map);
