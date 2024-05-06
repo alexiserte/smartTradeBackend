@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.reflect.TypeToken;
 import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Models.Vendedor;
 import org.apache.tomcat.util.json.JSONParser;
@@ -55,44 +56,33 @@ public class ProductoFachada extends Fachada {
     }
 
     public ResponseEntity<?> insertarProducto(String peticionMap) {
-       try{
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-
+        String imageToAdd;
         Gson gson = new Gson();
-        ProductoUso producto = gson.fromJson(peticionMap, ProductoUso.class);
-        String imageToAdd = producto.getImagen();
-        if (imageToAdd.equals("null") || imageToAdd == null) {
-            imageToAdd = DEFAULT_IMAGE;
+        try{
+            HashMap<String, ?> body = gson.fromJson(peticionMap, new TypeToken<HashMap<String, ?>>() {
+            }.getType());
+        if (!body.containsKey("imagen")) {
+            imageToAdd = converter.procesar(DEFAULT_IMAGE);
         } else {
-            imageToAdd = converter.procesar(imageToAdd);
+            imageToAdd = (String) body.get("imagen");
         }
-        String nombre = producto.getNombre();
-        String vendorName = producto.getVendedor();
-        double precio = producto.getPrecio();
-        String descripcion = producto.getDescripcion();
-        String characteristicName = producto.getCategoria();
 
-    /*
-        String nombre = (String) body.get("nombre");
-        String vendorName = (String) body.get("vendedor");
-        double precio = (double) body.get("precio");
-        String descripcion = (String) body.get("descripcion");
-        String characteristicName = (String) body.get("categoria");
+            String nombre = (String) body.get("nombre");
+            String vendorName = (String) body.get("vendedor");
+            double precio = (double) body.get("precio");
+            String descripcion = (String) body.get("descripcion");
+            String characteristicName = (String) body.get("categoria");
+            productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
+            return new ResponseEntity<>(HttpStatus.CREATED);
 
-     */
-        productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-
-    }catch(
-    Exception e){
-        System.out.println("Error al insertar el producto: " + e.getLocalizedMessage());
-        return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch(Exception e) {
+            System.out.println("Error al insertar el producto: " + e.getLocalizedMessage());
+            return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-}
-
-
 
 
 
@@ -393,49 +383,6 @@ public class ProductoFachada extends Fachada {
                     return new ResponseEntity<>(nombres, HttpStatus.OK);
                 }catch(Exception e){
                     return new ResponseEntity<>("Error al obtener los nombres de los productos: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
-
-            static class ProductoUso{
-                private String nombre;
-                private String categoria;
-                private String vendedor;
-                private double precio;
-                private String descripcion;
-                private String imagen;
-
-                @JsonCreator
-                public ProductoUso(@JsonProperty("nombre") String nombre, @JsonProperty("categoria") String categoria, @JsonProperty("vendedor") String vendedor, @JsonProperty("precio") double precio, @JsonProperty("descripcion") String descripcion, @JsonProperty("imagen") String imagen){
-                    this.nombre = nombre;
-                    this.categoria = categoria;
-                    this.vendedor = vendedor;
-                    this.precio = precio;
-                    this.descripcion = descripcion;
-                    this.imagen = imagen;
-                }
-
-                public String getNombre(){
-                    return nombre;
-                }
-
-                public String getCategoria(){
-                    return categoria;
-                }
-
-                public String getVendedor(){
-                    return vendedor;
-                }
-
-                public double getPrecio(){
-                    return precio;
-                }
-
-                public String getDescripcion(){
-                    return descripcion;
-                }
-
-                public String getImagen(){
-                    return imagen;
                 }
             }
 
