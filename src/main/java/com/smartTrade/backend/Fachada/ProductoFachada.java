@@ -60,13 +60,14 @@ public class ProductoFachada extends Fachada {
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
 
-        System.out.println(peticionMap);
+
 
         Gson gson = new Gson();
         try {
             // Eliminar las barras invertidas de la cadena JSON
             String jsonWithoutBackslashes = peticionMap.replace("\\", "");
 
+            System.out.println("JSON sin barras invertidas: " + jsonWithoutBackslashes);
             // Parsear el JSON
             HashMap<String, ?> body = gson.fromJson(jsonWithoutBackslashes, new TypeToken<HashMap<String, ?>>() {}.getType());
 
