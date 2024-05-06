@@ -1,6 +1,5 @@
 package com.smartTrade.backend.Fachada;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.reflect.TypeToken;
 import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Models.Vendedor;
 import org.apache.tomcat.util.json.JSONParser;
@@ -57,39 +55,44 @@ public class ProductoFachada extends Fachada {
     }
 
     public ResponseEntity<?> insertarProducto(String peticionMap) {
+       try{
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
 
         Gson gson = new Gson();
-        Type type = new TypeToken<HashMap<String, String>>(){}.getType(); // Corregido: Ahora es HashMap<String, String>
-        HashMap<String, String> body = gson.fromJson(peticionMap, type);
-        List<String> keys = new ArrayList<>(body.keySet());
-        if("nameValuePairs".equals(keys.get(0))){
-            body = gson.fromJson(body.get("nameValuePairs"), type); // Corregido: Se deserializa de nuevo si es necesario
+        ProductoUso producto = gson.fromJson(peticionMap, ProductoUso.class);
+        String imageToAdd = producto.getImagen();
+        if (imageToAdd.equals("null") || imageToAdd == null) {
+            imageToAdd = DEFAULT_IMAGE;
+        } else {
+            imageToAdd = converter.procesar(imageToAdd);
         }
+        String nombre = producto.getNombre();
+        String vendorName = producto.getVendedor();
+        double precio = producto.getPrecio();
+        String descripcion = producto.getDescripcion();
+        String characteristicName = producto.getCategoria();
 
-        try {
-            String imageToAdd;
-            if (body.containsKey("imagen")) {
-                imageToAdd = body.get("imagen");
-            } else {
-                imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
-            }
+    /*
+        String nombre = (String) body.get("nombre");
+        String vendorName = (String) body.get("vendedor");
+        double precio = (double) body.get("precio");
+        String descripcion = (String) body.get("descripcion");
+        String characteristicName = (String) body.get("categoria");
 
-            String nombre = body.get("nombre");
-            String vendorName = body.get("vendedor");
-            double precio = Double.parseDouble(body.get("precio")); // Corregido: Convertir a double
-            String descripcion = body.get("descripcion");
-            String characteristicName = body.get("categoria");
-            productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+     */
+        productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
+        return new ResponseEntity<>(HttpStatus.CREATED);
 
-        } catch (Exception e) {
-            System.out.println("Error al insertar el producto: " + e.getLocalizedMessage());
-            return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    }catch(
+    Exception e){
+        System.out.println("Error al insertar el producto: " + e.getLocalizedMessage());
+        return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
+
 
 
 
@@ -393,6 +396,48 @@ public class ProductoFachada extends Fachada {
                 }
             }
 
+            static class ProductoUso{
+                private String nombre;
+                private String categoria;
+                private String vendedor;
+                private double precio;
+                private String descripcion;
+                private String imagen;
+
+                @JsonCreator
+                public ProductoUso(@JsonProperty("nombre") String nombre, @JsonProperty("categoria") String categoria, @JsonProperty("vendedor") String vendedor, @JsonProperty("precio") double precio, @JsonProperty("descripcion") String descripcion, @JsonProperty("imagen") String imagen){
+                    this.nombre = nombre;
+                    this.categoria = categoria;
+                    this.vendedor = vendedor;
+                    this.precio = precio;
+                    this.descripcion = descripcion;
+                    this.imagen = imagen;
+                }
+
+                public String getNombre(){
+                    return nombre;
+                }
+
+                public String getCategoria(){
+                    return categoria;
+                }
+
+                public String getVendedor(){
+                    return vendedor;
+                }
+
+                public double getPrecio(){
+                    return precio;
+                }
+
+                public String getDescripcion(){
+                    return descripcion;
+                }
+
+                public String getImagen(){
+                    return imagen;
+                }
+            }
 
         }
 
