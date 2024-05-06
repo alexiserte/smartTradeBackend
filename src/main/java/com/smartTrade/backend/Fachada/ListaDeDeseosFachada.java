@@ -27,7 +27,7 @@ public class ListaDeDeseosFachada extends Fachada {
                     private double precio;
 
 
-                    public Producto_Vendedor(Producto producto, String vendedor, double precio, int cantidad) {
+                    public Producto_Vendedor(Producto producto, String vendedor, double precio) {
                         this.producto = producto;
                         this.vendedor = vendedor;
                         this.precio = precio;
@@ -53,6 +53,7 @@ public class ListaDeDeseosFachada extends Fachada {
                     Producto p = productoDAO.getSimpleProducto(producto.getId_producto());
                     String vendedor = vendedorDAO.getVendorName(producto.getId_vendedor());
                     double precio = productoDAO.getPrecioProducto(producto.getId_vendedor(), producto.getId_producto());
+                    productos_vendedores.add(new Producto_Vendedor(p,vendedor,precio));
                 }
 
                 class ListaDeseos {
