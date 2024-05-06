@@ -60,6 +60,8 @@ public class ProductoFachada extends Fachada {
         try {
             ProductoJSON productoJSON = objectMapper.readValue(bodyJSON, ProductoJSON.class);
 
+            ConverterFactory factory = new ConverterFactory();
+            PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
             String imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
             String nombre = productoJSON.getNombre();
             String vendorName = productoJSON.getVendedor();
