@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Models.Vendedor;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +49,15 @@ public class ProductoFachada extends Fachada {
         }
     }
 
-    public ResponseEntity<?> insertarProducto(Map<String, ?> body) {
+    public ResponseEntity<?> insertarProducto(String bodyJSON) {
+        // Inicializa un ObjectMapper
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // Convierte el JSON a un HashMap
+        HashMap<String, Object> body = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String,Object>>(){});
+
+
+
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
         try {
