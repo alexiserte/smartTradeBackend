@@ -78,11 +78,12 @@ public class ProductoFachada extends Fachada {
 
             }
 
-            String nombre = (String) map.get("nombre");
-            String descripcion = (String) map.get("descripcion");
-            String categoria = (String) map.get("categoria");
-            String imagen = (String) map.get("imagen");
-            String vendedor = (String) map.get("vendedor");
+            String nombre = ((String) map.get("nombre")).trim();
+            String descripcion = ((String) map.get("descripcion")).trim();
+            String categoria = ((String) map.get("categoria")).trim();
+            String imagen = ((String) map.get("imagen")).trim();
+            String vendedor = ((String) map.get("vendedor")).trim();
+
             double precio = Double.parseDouble((String) map.get("precio"));
 
             System.out.println("HOLA");
