@@ -11,44 +11,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileInputStream;
 
-public class PNGConverter {
-/*
-    public void transformFile(BufferedImage originalImage) {
-
-        // Verificar si la decodificación fue exitosa
-        if (originalImage == null) {
-            return base64Image;
-        }
-
-        // Obtener el ancho y alto originales
-        int originalWidth = originalImage.getWidth();
-        int originalHeight = originalImage.getHeight();
-
-        // Verificar si la imagen ya está en 512x512
-        if (originalWidth == 512 && originalHeight == 512) {
-            return base64Image; // La imagen ya está en el tamaño deseado
-        }
-
-        // Crear una nueva imagen en blanco con el tamaño deseado (512x512)
-        BufferedImage resizedImage = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage.getScaledInstance(512, 512, Image.SCALE_SMOOTH), 0, 0, 512, 512, null);
-        g.dispose();
-
-        // Convertir la imagen redimensionada a base64
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(resizedImage, "png", bos);
-        } catch (IOException e) {
-            System.err.println("Error al escribir la imagen redimensionada: " + e.getMessage());
-            return null; // Devolver null en caso de error
-        }
-        byte[] resizedImageBytes = bos.toByteArray();
-        String resizedBase64Image = "data:image/png;base64," + Base64.getEncoder().encodeToString(resizedImageBytes);
-
-        return resizedBase64Image;
-    }
-
+public class PNGConverter extends Converter<BufferedImage>{
 
     public BufferedImage convertToFile(String base64Image) {
         try {
@@ -66,18 +29,44 @@ public class PNGConverter {
         }
     }
 
-    public  void convertStringToFile(String data, String path) {
-        BufferedImage image = convertToFile(data);
-        if (image == null) {
-            return;
+    public BufferedImage transformFile(BufferedImage image){
+        BufferedImage originalImage = image;
+
+        if (originalImage == null) {
+            return null;
         }
-        try {
-            ImageIO.write(image, "png", new File(path));
-        } catch (IOException e) {
-            System.err.println("Error al escribir la imagen en el archivo: " + e.getMessage());
+
+        int originalWidth = originalImage.getWidth();
+        int originalHeight = originalImage.getHeight();
+
+        if (originalWidth == 512 && originalHeight == 512) {
+            return null;
         }
+
+        BufferedImage resizedImage = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage.getScaledInstance(512, 512, Image.SCALE_SMOOTH), 0, 0, 512, 512, null);
+        g.dispose();
+
+        return resizedImage;
     }
-*/
+
+
+    public String convertToBase64(BufferedImage image){
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "png", bos);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+        byte[] resizedImageBytes = bos.toByteArray();
+        String resizedBase64Image = "data:image/png;base64," + Base64.getEncoder().encodeToString(resizedImageBytes);
+
+        return resizedBase64Image;
+    }
+
+
+    // Este método solo se usa para convertir los códigos QR a PNG. ¡ NO SE DEBE DE USAR PARA EL RESTO DE PRODUCTOS!
     public String convertFileToBase64(String filePath) {
         try {
             // Leer el archivo de la ruta especificada
@@ -97,10 +86,6 @@ public class PNGConverter {
         }
     }
 
-
-    public String processData(String image) {
-        return image;
-    }
 
 }
 

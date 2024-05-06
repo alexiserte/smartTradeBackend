@@ -23,14 +23,14 @@ public class ImagenDAO implements DAOInterface<String>{
 
     public void create(Object ...args) {
         String image = (String) args[0];
-        String imagenResized = converter.processData(image);
+        String imagenResized = converter.procesar(image);
         database.update("INSERT INTO Imagen(imagen) VALUES (?)",imagenResized);
     }
 
     public void update(Object ...args) {
         int id_imagen = (int) args[0];
         String image = (String) args[1];
-        String imagenResized = converter.processData(image);
+        String imagenResized = converter.procesar(image);
         database.update("UPDATE Imagen SET imagen = ? WHERE id_imagen = ?",imagenResized,id_imagen);
     }
 
