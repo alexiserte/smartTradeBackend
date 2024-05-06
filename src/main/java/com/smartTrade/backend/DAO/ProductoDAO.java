@@ -114,8 +114,14 @@ public class ProductoDAO implements DAOInterface<Object> {
         } catch (EmptyResultDataAccessException e) {
             int id_imagen = 0;
 
-            boolean imagenExists = database.queryForObject("SELECT COUNT(*) FROM Imagen WHERE imagen = ?",
-                    Integer.class, imagen) > 0;
+            boolean imagenExists;
+            try {
+                database.queryForObject("SELECT COUNT(*) FROM Imagen WHERE imagen = ?",
+                        Integer.class, imagen);
+                imagenExists = true;
+            } catch (EmptyResultDataAccessException e1) {
+                imagenExists = false;
+            }
             if (!imagenExists) {
                 database.update("INSERT INTO Imagen(imagen) VALUES(?)", imagenResized);
                 id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagen);
