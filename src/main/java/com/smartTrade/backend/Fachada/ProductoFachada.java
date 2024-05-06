@@ -68,7 +68,7 @@ public class ProductoFachada extends Fachada {
             String jsonWithoutBackslashes = peticionMap.replace("\\", "");
 
             System.out.println("JSON sin barras invertidas: " + jsonWithoutBackslashes);
-            String pureJSON = jsonWithoutBackslashes.substring(2, jsonWithoutBackslashes.length() - 1);
+            String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "").replace("\"", "");
             System.out.println("JSON puro: " + pureJSON);
             String[] parts = pureJSON.split(",");
             System.out.println(parts.length);
