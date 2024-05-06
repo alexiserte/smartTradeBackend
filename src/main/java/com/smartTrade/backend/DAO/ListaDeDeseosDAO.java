@@ -1,8 +1,10 @@
 package com.smartTrade.backend.DAO;
 import java.util.List;
 
+
 import com.smartTrade.backend.Mappers.ProductoListaDeseosMapper;
 import com.smartTrade.backend.Models.ProductoListaDeseos;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -48,6 +50,43 @@ public class ListaDeDeseosDAO implements DAOInterface<Object>{
         database.update("DELETE FROM Productos_Lista_Deseos WHERE id_id_lista_de_deseos = ?",id_lista_de_deseos);
 
     }
+
+    public boolean productInListaDeseos(String productName,String vendorName,String userNickname){
+        int id_listaDeseos,id_producto,id_vendedor;
+        id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
+        id_listaDeseos = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
+        id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
+        try {
+            ProductoListaDeseos producto = database.queryForObject("SELECT id_lista_de_deseos,id_producto, id_vendedor, cantidad FROM Productos_Lista_Deseos WHERE id_lista_de_deseos = ? AND id_producto = ? AND id_vendedor = ?", new ProductoListaDeseosMapper(), id_listaDeseos, id_producto, id_vendedor);
+        }catch(EmptyResultDataAccessException e){
+            return false;
+        }
+        return true;
+    }
+
+    public double getTotalPrice(String nickname){
+        List<ProductoListaDeseos> productos = database.query("SELECT id_lista_de_deseos,id_producto, id_vendedor, cantidad FROM Productos_Lista_Deseos WHERE id_lista_de_deseos IN(SELECT id FROM Lista_De_Deseos WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?))", new ProductoListaDeseosMapper(), nickname);
+        double total = 0;
+        for(ProductoListaDeseos producto : productos){
+            double precioProducto = database.queryForObject("SELECT precio FROM Vendedores_Producto WHERE id_vendedor = ? AND id_producto = ?", Double.class, producto.getId_vendedor(),producto.getId_producto());
+        }
+        return total;
+    }
+
+    public int productosInListaDeseos(String userNickname){
+        int id_listaDeseos = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
+        return database.queryForObject("SELECT COUNT(*) FROM Productos_Lista_Deseos WHERE id_lista_de_deseos = ?",Integer.class,id_listaDeseos);
+    }
+
+    public void deleteProduct(String productName, String vendorName, String userNickname){
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
+        int id_listaDeseos = database.queryForObject("SELECT id FROM Lista_De_Deseos WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
+        int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
+        database.update("DELETE FROM Productos_Lista_Deseos WHERE id_lista_de_deseos = ? AND id_producto = ? AND id_vendedor = ?",id_listaDeseos,id_producto, id_vendedor);
+    }
+
+
+
 
     public void delete(Object ...args) {;}
     public void update(Object ...args) {;}

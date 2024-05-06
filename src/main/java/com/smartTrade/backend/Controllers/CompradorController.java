@@ -3,6 +3,7 @@ package com.smartTrade.backend.Controllers;
 import java.util.HashMap;
 
 import com.smartTrade.backend.Fachada.CarritoCompraFachada;
+import com.smartTrade.backend.Fachada.ListaDeDeseosFachada;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,9 @@ public class CompradorController {
 
     @Autowired
     CarritoCompraFachada carritoCompraFachada;
+
+    @Autowired
+    ListaDeDeseosFachada listaDeDeseosFachada;
 
 
     @GetMapping("/comprador/")
@@ -61,6 +65,11 @@ public class CompradorController {
         return carritoCompraFachada.getCarritoCompra(identifier, discountCode);
     }
 
+    @GetMapping("/comprador/lista-deseos/")
+    public ResponseEntity<?> getListaDeDeseos(@RequestParam(value = "identifier", required = true) String identifier) {
+        return listaDeDeseosFachada.getListaDeDeseos(identifier);
+    }
+
     @PutMapping("/comprador/carrito-compra/")
     public ResponseEntity<?> updateCantidad(@RequestParam(value = "productName", required = true) String productName,
                                             @RequestParam(value = "vendorName", required = true) String vendorName,
@@ -69,18 +78,33 @@ public class CompradorController {
         return carritoCompraFachada.modificarCantidad(userNickname, productName, vendorName, op);
     }
 
+
     @PostMapping("/comprador/carrito-compra/")
-    public ResponseEntity<?> addProduct(@RequestParam(value = "productName", required = true) String productName,
+    public ResponseEntity<?> addProductCarrito(@RequestParam(value = "productName", required = true) String productName,
                                         @RequestParam(value = "vendorName", required = true) String vendorName,
                                         @RequestParam(value = "userNickname", required = true) String userNickname) {
         return carritoCompraFachada.insertarProducto(productName,vendorName,userNickname);
     }
 
+    @PostMapping("/comprador/lista-deseos/")
+    public ResponseEntity<?> addProductListaDeseos(@RequestParam(value = "productName", required = true) String productName,
+                                        @RequestParam(value = "vendorName", required = true) String vendorName,
+                                        @RequestParam(value = "userNickname", required = true) String userNickname) {
+        return listaDeDeseosFachada.insertarProducto(productName,vendorName,userNickname);
+    }
+
     @DeleteMapping("/comprador/carrito-compra/")
-    public ResponseEntity<?> deleteProduct(@RequestParam(value = "productName", required = true) String productName,
+    public ResponseEntity<?> deleteProductCarrito(@RequestParam(value = "productName", required = true) String productName,
                                            @RequestParam(value = "vendorName", required = true) String vendorName,
                                            @RequestParam(value = "userNickname", required = true) String userNickname) {
         return carritoCompraFachada.deleteProduct(productName, vendorName, userNickname);
+    }
+
+    @DeleteMapping("/comprador/lista-deseos/")
+    public ResponseEntity<?> deleteProductListaDeseos(@RequestParam(value = "productName", required = true) String productName,
+                                                  @RequestParam(value = "vendorName", required = true) String vendorName,
+                                                  @RequestParam(value = "userNickname", required = true) String userNickname) {
+        return listaDeDeseosFachada.deleteProduct(productName, vendorName, userNickname);
     }
 
 }
