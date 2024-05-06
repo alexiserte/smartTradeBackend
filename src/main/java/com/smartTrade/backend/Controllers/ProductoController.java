@@ -33,6 +33,7 @@ public class ProductoController {
     public ResponseEntity<?> insertarProducto(@RequestBody(required = true) HashMap<String, ?> body) {
         System.out.println("SERGIO ME HA HECHO UNA PETICION!!!!");
         System.out.println(body);
+        System.out.println("SERGIO ME HA HECHO UNA PETICION!!!!");
         return fechada.insertarProducto(body);
     }
 
