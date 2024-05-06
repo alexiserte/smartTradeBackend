@@ -85,6 +85,7 @@ public class ProductoFachada extends Fachada {
             String vendedor = (String) map.get("vendedor");
             double precio = Double.parseDouble((String) map.get("precio"));
 
+            System.out.println("HOLA");
             productoDAO.create(nombre, categoria, vendedor, precio, descripcion, imagen);
 
             return new ResponseEntity<>(HttpStatus.CREATED);
