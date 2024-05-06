@@ -122,11 +122,13 @@ public class ProductoDAO implements DAOInterface<Object> {
             } catch (EmptyResultDataAccessException e1) {
                 imagenExists = false;
             }
-            if (!imagenExists) {
-                database.update("INSERT INTO Imagen(imagen) VALUES(?)", imagenResized);
-                id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagenResized);
+
+            if (imagenExists) {
+                id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagen);
             } else {
-                id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagenResized);
+                database.update("INSERT INTO Imagen(imagen) VALUES(?)", imagen);
+                id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagen);
+
             }
             int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class,
                     characteristicName);
