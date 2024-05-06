@@ -66,7 +66,7 @@ public class ProductoFachada extends Fachada {
             String imageToAdd = body.containsKey("imagen") ? (String) body.get("imagen") : converter.convertFileToBase64(DEFAULT_IMAGE);
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
-            double precio = ((Number) body.get("precio")).doubleValue();
+            double precio = ((double) body.get("precio"));
             String descripcion = (String) body.get("descripcion");
             String characteristicName = (String) body.get("categoria");
 
