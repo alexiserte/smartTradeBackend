@@ -55,10 +55,10 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> insertarProducto(String bodyJSON) {
         ObjectMapper objectMapper = new ObjectMapper();
-        HashMap<String, Object> body = null;
+        HashMap<String, Object> response = null;
 
         try {
-            body = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String, Object>>() {
+            response = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String, Object>>() {
             });
 
             ConverterFactory factory = new ConverterFactory();
@@ -71,7 +71,7 @@ public class ProductoFachada extends Fachada {
             String descripcion = productoJSON.getDescripcion();
             String characteristicName = productoJSON.getCategoria();
 */
-
+            HashMap<String,?> body = (HashMap<String, ?>) response.get("nameValuePairs");
             String imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
