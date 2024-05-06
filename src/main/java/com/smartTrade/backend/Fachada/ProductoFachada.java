@@ -71,6 +71,7 @@ public class ProductoFachada extends Fachada {
             String pureJSON = jsonWithoutBackslashes.substring(2, jsonWithoutBackslashes.length() - 1);
             System.out.println("JSON puro: " + pureJSON);
             String[] parts = pureJSON.split(",");
+            System.out.println(parts.length);
             HashMap<String, Object> map = new HashMap<>();
             for (String part : parts) {
                 String[] keyValue = part.split(":");
