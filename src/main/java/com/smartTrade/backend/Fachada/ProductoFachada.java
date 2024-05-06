@@ -72,7 +72,13 @@ public class ProductoFachada extends Fachada {
 
             for (String part : partsFinal) {
                 String[] keyValue = part.replace("\"","").split(":");
-                System.out.println("Key: " + keyValue[0] + " Value: " + keyValue[1]);
+                String key = keyValue[0];
+                if(key.equalsIgnoreCase("imagen")){
+                    map.put(key, keyValue[1] + ":" + keyValue[2]);
+                }
+                else{
+                    map.put(key, keyValue[1]);
+                }
 
             }
             map.replace("precio", Double.parseDouble((String) map.get("precio")));
@@ -88,18 +94,13 @@ public class ProductoFachada extends Fachada {
             double precio = Double.parseDouble((String) body.get("precio"));
             String descripcion = (String) body.get("descripcion");
             String characteristicName = (String) body.get("categoria");
+            String imageToAdd = (String) body.get("imagen");
 
             System.out.println("Nombre: " + nombre);
             System.out.println("Vendedor: " + vendorName);
             System.out.println("Precio: " + precio);
             System.out.println("Descripcion: " + descripcion);
             System.out.println("Categoria: " + characteristicName);
-
-            String imagenData = (String) body.get("imagen");
-            String imageToAdd = (!imagenData.startsWith("data:image")) ?
-                    converter.procesar(DEFAULT_IMAGE) :
-                    converter.procesar(imagenData);
-
             productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
 
             return new ResponseEntity<>(HttpStatus.CREATED);
