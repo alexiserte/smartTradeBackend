@@ -74,11 +74,11 @@ public class ProductoFachada extends Fachada {
                 String[] keyValue = part.replace("\"","").split(":");
                 String key = keyValue[0];
                 if(key.equalsIgnoreCase("imagen")){
-                    String imagen = keyValue[1];
+                    StringBuilder imagen = new StringBuilder(keyValue[1]);
                     for (int i = 2; i < keyValue.length; i++) {
-                        imagen += ":" + keyValue[i];
+                        imagen.append(":").append(keyValue[i]);
                     }
-                    map.put(key, imagen);
+                    map.put(key, imagen.toString());
                 }
                 else{
                     map.put(key, keyValue[1]);
