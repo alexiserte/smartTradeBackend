@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Models.Vendedor;
@@ -54,8 +56,12 @@ public class ProductoFachada extends Fachada {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // Convierte el JSON a un HashMap
-        HashMap<String, Object> body = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String,Object>>(){});
-
+        HashMap<String, Object> body = null;
+        try {
+            body = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String,Object>>(){});
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
 
         ConverterFactory factory = new ConverterFactory();
