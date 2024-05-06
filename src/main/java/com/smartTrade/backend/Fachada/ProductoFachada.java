@@ -52,27 +52,19 @@ public class ProductoFachada extends Fachada {
     }
 
     public ResponseEntity<?> insertarProducto(String bodyJSON) {
-        // Inicializa un ObjectMapper
         ObjectMapper objectMapper = new ObjectMapper();
-
-        // Convierte el JSON a un HashMap
         HashMap<String, Object> body = null;
         try {
             body = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String,Object>>(){});
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error de procesamiento JSON: " + e.getMessage());
         }
-
 
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
+
         try {
-            String imageToAdd;
-            if (body.containsKey("imagen")) {
-                imageToAdd = (String) body.get("imagen");
-            } else {
-                imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
-            }
+            String imageToAdd = body.containsKey("imagen") ? (String) body.get("imagen") : converter.convertFileToBase64(DEFAULT_IMAGE);
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
             double precio = (double) body.get("precio");
@@ -80,14 +72,11 @@ public class ProductoFachada extends Fachada {
             String characteristicName = (String) body.get("categoria");
             productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
             return new ResponseEntity<>(HttpStatus.CREATED);
-
         } catch (Exception e) {
-            System.out.println("-------------------");
-            System.out.println(e.getMessage());
-            System.out.println("-------------------");
-            return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 
     public ResponseEntity<?> deleteProductFromOneVendor(String productName, String vendorName) {
         try {
