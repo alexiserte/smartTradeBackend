@@ -133,6 +133,7 @@ public class ProductoDAO implements DAOInterface<Object> {
                      id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagen);
                 }
             }
+            System.out.println(characteristicName);
             int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class,
                     characteristicName);
             int id_vendedor = database.queryForObject(
