@@ -69,8 +69,20 @@ public class ProductoFachada extends Fachada {
             String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");
             String[] parts = pureJSON.split(",");
             HashMap<String, Object> map = new HashMap<>();
-            for (String part : parts) {
-                System.out.println("Parte: " + part);
+            for(int i = 0; i < parts.length; i++){
+                if(i > 0){
+                    if(parts[i - 1].contains("imagen")){
+                        String nuevaImagen = parts[i - 1] + "," + parts[i];
+                        map.put("imagen", nuevaImagen);
+                    }
+                    else if(parts[i].contains("imagen")){
+                        continue;
+                    }
+                    else{
+                        String[] keyValue = parts[i].split(":");
+                        map.put(keyValue[0].replace("\"", ""), keyValue[1].replace("\"", ""));
+                    }
+                }
             }
             map.replace("precio", Double.parseDouble((String) map.get("precio")));
             System.out.println("Mapa: " + map);
@@ -78,6 +90,8 @@ public class ProductoFachada extends Fachada {
             if(!map.containsKey("imagen")){
                 map.put("imagen", converter.procesar(DEFAULT_IMAGE));
             }
+
+
             Map<String, Object> body = map;
             // Obtener los valores del JSON
             String nombre = (String) body.get("nombre");
