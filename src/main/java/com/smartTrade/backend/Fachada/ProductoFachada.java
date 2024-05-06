@@ -57,64 +57,9 @@ public class ProductoFachada extends Fachada {
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap<String, Object> body = null;
 
-        class ProductoJSON {
-            String nombre;
-            String categoria;
-            String vendedor;
-            double precio;
-            String descripcion;
-            String imagen;
-
-            @JsonCreator
-            public ProductoJSON(@JsonProperty("nombre") String nombre, @JsonProperty("categoria") String categoria,
-                    @JsonProperty("vendedor") String vendedor, @JsonProperty("precio") double precio,
-                    @JsonProperty("descripcion") String descripcion, @JsonProperty("imagen") String imagen) {
-                this.nombre = nombre;
-                this.categoria = categoria;
-                this.vendedor = vendedor;
-                this.precio = precio;
-                this.descripcion = descripcion;
-                this.imagen = imagen;
-            }
-
-            public String getNombre() {
-                return nombre;
-            }
-
-            public String getCategoria() {
-                return categoria;
-            }
-
-            public String getVendedor() {
-                return vendedor;
-            }
-
-            public double getPrecio() {
-                return precio;
-            }
-
-            public String getDescripcion() {
-                return descripcion;
-            }
-
-            public String getImagen() {
-                return imagen;
-            }
-        }
-
-        PNGConverter converter = new PNGConverter();
-
         try {
             ProductoJSON productoJSON = objectMapper.readValue(bodyJSON, ProductoJSON.class);
-        try {
-            /*
-            String imageToAdd = body.containsKey("imagen") ? (String) body.get("imagen") : converter.convertFileToBase64(DEFAULT_IMAGE);
-            String nombre = (String) body.get("nombre");
-            String vendorName = (String) body.get("vendedor");
-            double precio = ((double) body.get("precio"));
-            String descripcion = (String) body.get("descripcion");
-            String characteristicName = (String) body.get("categoria");
-            */
+
             String imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
             String nombre = productoJSON.getNombre();
             String vendorName = productoJSON.getVendedor();
@@ -129,12 +74,57 @@ public class ProductoFachada extends Fachada {
             productoDAO.create(arguments);
 
             return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+    }
+
+    // Define ProductoJSON as a nested static class
+    static class ProductoJSON {
+        String nombre;
+        String categoria;
+        String vendedor;
+        double precio;
+        String descripcion;
+        String imagen;
+
+        @JsonCreator
+        public ProductoJSON(@JsonProperty("nombre") String nombre, @JsonProperty("categoria") String categoria,
+                            @JsonProperty("vendedor") String vendedor, @JsonProperty("precio") double precio,
+                            @JsonProperty("descripcion") String descripcion, @JsonProperty("imagen") String imagen) {
+            this.nombre = nombre;
+            this.categoria = categoria;
+            this.vendedor = vendedor;
+            this.precio = precio;
+            this.descripcion = descripcion;
+            this.imagen = imagen;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public String getCategoria() {
+            return categoria;
+        }
+
+        public String getVendedor() {
+            return vendedor;
+        }
+
+        public double getPrecio() {
+            return precio;
+        }
+
+        public String getDescripcion() {
+            return descripcion;
+        }
+
+        public String getImagen() {
+            return imagen;
         }
     }
 
