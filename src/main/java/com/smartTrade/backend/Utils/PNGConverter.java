@@ -3,15 +3,15 @@ package com.smartTrade.backend.Utils;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Base64;
 import java.io.ByteArrayInputStream;
-import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Base64;
+import javax.imageio.ImageIO;
 
-public class PNGConverter extends Converter<BufferedImage>{
+public class PNGConverter extends Converter<BufferedImage> {
 
     public BufferedImage convertToFile(String base64Image) {
         try {
@@ -29,28 +29,21 @@ public class PNGConverter extends Converter<BufferedImage>{
         }
     }
 
-    public BufferedImage transformFile(BufferedImage image){
-        BufferedImage originalImage = image;
-
-        if (originalImage == null) {
+    public BufferedImage transformFile(BufferedImage image) {
+        if (image == null || image.getWidth() == 512 && image.getHeight() == 512) {
             return null;
         }
 
-        int originalWidth = originalImage.getWidth();
-        int originalHeight = originalImage.getHeight();
+        int targetWidth = 512;
+        int targetHeight = 512;
 
-        if (originalWidth == 512 && originalHeight == 512) {
-            return null;
-        }
-
-        BufferedImage resizedImage = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage.getScaledInstance(512, 512, Image.SCALE_SMOOTH), 0, 0, 512, 512, null);
+        g.drawImage(image.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH), 0, 0, targetWidth, targetHeight, null);
         g.dispose();
 
         return resizedImage;
     }
-
 
     public String convertToBase64(BufferedImage image) {
         if (image == null) {
@@ -67,7 +60,6 @@ public class PNGConverter extends Converter<BufferedImage>{
         }
     }
 
-
     // Este método solo se usa para convertir los códigos QR a PNG. ¡ NO SE DEBE DE USAR PARA EL RESTO DE PRODUCTOS!
     public String convertFileToBase64(String filePath) {
         try {
@@ -79,15 +71,10 @@ public class PNGConverter extends Converter<BufferedImage>{
             fileInputStream.close();
 
             // Convertir los bytes a base64
-            String base64Image = "data:image/png;base64," + Base64.getEncoder().encodeToString(fileBytes);
-
-            return base64Image;
+            return "data:image/png;base64," + Base64.getEncoder().encodeToString(fileBytes);
         } catch (IOException e) {
             System.err.println("Error al leer el archivo o convertirlo a base64: " + e.getMessage());
             return null;
         }
     }
-
-
 }
-
