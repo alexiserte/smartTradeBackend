@@ -64,9 +64,13 @@ public class ProductoFachada extends Fachada {
 
         Gson gson = new Gson();
         try {
+
             // Eliminar las barras invertidas de la cadena JSON
             String jsonWithoutBackslashes = peticionMap.replace("\\", "");
             String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");
+            System.out.println("------------------------------------------");
+            System.out.println("JSON sin barras: " + pureJSON);
+            System.out.println("------------------------------------------");
             String[] parts = pureJSON.split(",");
             HashMap<String, Object> map = new HashMap<>();
             for(int i = 0; i < parts.length; i++){
