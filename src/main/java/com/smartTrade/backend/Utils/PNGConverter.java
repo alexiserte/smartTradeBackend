@@ -77,7 +77,7 @@ public class PNGConverter {
             System.err.println("Error al escribir la imagen en el archivo: " + e.getMessage());
         }
     }
-
+*/
     public String convertFileToBase64(String filePath) {
         try {
             // Leer el archivo de la ruta especificada
@@ -96,7 +96,7 @@ public class PNGConverter {
             return null;
         }
     }
-    */
+
 
     public String processData(String image) {
         return image;
