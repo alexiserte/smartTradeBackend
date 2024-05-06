@@ -1,10 +1,6 @@
 package com.smartTrade.backend.Fachada;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -60,24 +56,14 @@ public class ProductoFachada extends Fachada {
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
 
-
-
         Gson gson = new Gson();
         try {
-
-            // Eliminar las barras invertidas de la cadena JSON
             String jsonWithoutBackslashes = peticionMap.replace("\\", "");
             String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");
-            System.out.println("------------------------------------------");
-            System.out.println("JSON sin barras: " + pureJSON);
-            System.out.println("------------------------------------------");
             String[] parts = pureJSON.split(",");
             HashMap<String, Object> map = new HashMap<>();
             String imagenTotal = parts[parts.length - 2] + "," + parts[parts.length - 1];
-            String[] partsFinal = new String[parts.length - 1];
-            for (int i = 0; i < parts.length - 1; i++) {
-                partsFinal[i] = parts[i];
-            }
+            String[] partsFinal = Arrays.copyOf(parts, parts.length - 1);
             partsFinal[partsFinal.length - 1] = imagenTotal;
 
             for (String part : partsFinal) {
@@ -89,16 +75,14 @@ public class ProductoFachada extends Fachada {
             map.replace("precio", Double.parseDouble((String) map.get("precio")));
             System.out.println("Mapa: " + map);
 
-            if(!map.containsKey("imagen")){
+            if (!map.containsKey("imagen")) {
                 map.put("imagen", converter.procesar(DEFAULT_IMAGE));
             }
 
-
             Map<String, Object> body = map;
-            // Obtener los valores del JSON
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
-            double precio = Double.parseDouble((String) body.get("precio")); // Convertir el precio a double
+            double precio = Double.parseDouble((String) body.get("precio"));
             String descripcion = (String) body.get("descripcion");
             String characteristicName = (String) body.get("categoria");
 
@@ -107,16 +91,12 @@ public class ProductoFachada extends Fachada {
             System.out.println("Precio: " + precio);
             System.out.println("Descripcion: " + descripcion);
             System.out.println("Categoria: " + characteristicName);
-            // Obtener la imagen del JSON
-            String imagenData = (String) body.get("imagen");
-            String imageToAdd;
-            if (!imagenData.startsWith("data:image")) {
-                imageToAdd = converter.procesar(DEFAULT_IMAGE);
-            } else {
-                imageToAdd = converter.procesar(imagenData);
-            }
 
-            // Crear el producto
+            String imagenData = (String) body.get("imagen");
+            String imageToAdd = (!imagenData.startsWith("data:image")) ?
+                    converter.procesar(DEFAULT_IMAGE) :
+                    converter.procesar(imagenData);
+
             productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
 
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -125,6 +105,7 @@ public class ProductoFachada extends Fachada {
             return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
 
