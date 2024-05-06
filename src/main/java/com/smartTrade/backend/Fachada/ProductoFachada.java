@@ -53,46 +53,32 @@ public class ProductoFachada extends Fachada {
         }
     }
 
-    public ResponseEntity<?> insertarProducto(String bodyJSON) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        HashMap<String, Object> response = null;
-
+    public ResponseEntity<?> insertarProducto(Map<String, ?> body) {
+        ConverterFactory factory = new ConverterFactory();
+        PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
         try {
-            response = objectMapper.readValue(bodyJSON, new TypeReference<HashMap<String, Object>>() {
-            });
-
-            ConverterFactory factory = new ConverterFactory();
-            PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-            /*
-            String imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
-            String nombre = productoJSON.getNombre();
-            String vendorName = productoJSON.getVendedor();
-            double precio = productoJSON.getPrecio();
-            String descripcion = productoJSON.getDescripcion();
-            String characteristicName = productoJSON.getCategoria();
-*/
-            HashMap<String,?> body = (HashMap<String, ?>) response.get("nameValuePairs");
-            String imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
+            String imageToAdd;
+            if (body.containsKey("imagen")) {
+                imageToAdd = (String) body.get("imagen");
+            } else {
+                imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
+            }
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
             double precio = (double) body.get("precio");
             String descripcion = (String) body.get("descripcion");
             String characteristicName = (String) body.get("categoria");
-
-            // Convertir los argumentos al tipo correcto
-            Object[] arguments = {nombre, characteristicName, vendorName, precio, descripcion, imageToAdd};
-
-            // Llamar a create con los argumentos convertidos
-            productoDAO.create(arguments);
-
+            productoDAO.create(nombre, characteristicName, vendorName, precio, descripcion, imageToAdd);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
         }
     }
+
+
+
+
 
     public ResponseEntity<?> deleteProductFromOneVendor(String productName, String vendorName) {
         try {
