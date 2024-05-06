@@ -30,8 +30,9 @@ public class ProductoController {
 
 
     @PostMapping("/producto/")
-    public ResponseEntity<?> insertarProducto(@RequestBody(required = true) String body) {
-        return fechada.insertarProducto(body);
+    public ResponseEntity<?> insertarProducto(@RequestBody(required = true) Object body) {
+        if (body instanceof HashMap<?, ?>) return fechada.insertarProducto(body.toString());
+        else return fechada.insertarProducto((String) body);
     }
 
 
