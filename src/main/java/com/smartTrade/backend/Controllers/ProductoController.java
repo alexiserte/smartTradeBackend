@@ -31,9 +31,6 @@ public class ProductoController {
 
     @PostMapping("/producto/")
     public ResponseEntity<?> insertarProducto(@RequestBody(required = true) String body) {
-        System.out.println("SERGIO ME HA HECHO UNA PETICION!!!!");
-        System.out.println(body);
-        System.out.println("SERGIO ME HA HECHO UNA PETICION!!!!");
         return fechada.insertarProducto(body);
     }
 

@@ -60,6 +60,8 @@ public class ProductoFachada extends Fachada {
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
 
+        System.out.println(peticionMap);
+
         Gson gson = new Gson();
         try {
             // Eliminar las barras invertidas de la cadena JSON
