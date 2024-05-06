@@ -72,6 +72,9 @@ public class ProductoFachada extends Fachada {
 
             for (String part : partsFinal) {
                 String[] keyValue = part.replace("\"","").split(":");
+                for(String s : keyValue){
+                    System.out.println(s);
+                }
                 String key = keyValue[0];
                 if(key.equalsIgnoreCase("imagen")){
                     StringBuilder imagen = new StringBuilder(keyValue[1]);
