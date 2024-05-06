@@ -66,6 +66,9 @@ public class ProductoFachada extends Fachada {
             return new ResponseEntity<>(HttpStatus.CREATED);
 
         } catch (Exception e) {
+            System.out.println("-------------------");
+            System.out.println(e.getMessage());
+            System.out.println("-------------------");
             return ResponseEntity.ok(ResponseEntity.status(400).body(e.getMessage()));
         }
     }
