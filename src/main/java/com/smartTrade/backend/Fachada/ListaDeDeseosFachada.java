@@ -42,8 +42,58 @@ public class ListaDeDeseosFachada extends Fachada{
                     public double getPrecio(){
                         return precio;
                     }
+
+
                 }
-            }
+                List<Producto_Vendedor> productos_vendedores = new ArrayList<>();
+                for(ProductoListaDeseos producto : productos){
+                    Producto p = productoDAO.getSimpleProducto(producto.getId_producto());
+                    String vendedor = vendedorDAO.getVendorName(producto.getId_vendedor());
+                    double precio = productoDAO.getPrecioProducto(producto.getId_vendedor(),producto.getId_producto());
+                }
+
+                class ListaDeseos{
+                    private String nickname;
+                    private int numeroProductos;
+                    private List<Producto_Vendedor> productos;
+                    private double total;
+                    public ListaDeseos(String nickname, int numeroProductos, List<Producto_Vendedor> productos, double total)
+                    {
+                        this.nickname = nickname;
+                        this.numeroProductos = numeroProductos;
+                        this.productos = productos;
+                        this.total = total;
+                    }
+                    public List<Producto_Vendedor> getProductos(){
+                        return productos;
+                    }
+                    public double getTotal(){
+                        return total;
+                    }
+
+                    public String getNickname(){
+                        return nickname;
+                    }
+
+                    public int getNumeroProductos(){
+                        return numeroProductos;
+                    }
+
+
+                }
+
+                return new ResponseEntity<>(new ListaDeseos(comprador.getNickname(),carritoCompraDAO.productosInCarrito(comprador.getNickname()),productos_vendedores,carritoCompraDAO.getTotalPrice(comprador.getNickname())), HttpStatus.OK);
+            }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("El carrito esta vacío.", HttpStatus.NOT_FOUND);
         }
+        catch(IllegalArgumentException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }catch(EmptyResultDataAccessException e){
+        return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+
     }
 }
+}
+
+
