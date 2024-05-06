@@ -3,8 +3,8 @@ package com.smartTrade.backend.Utils;
 public abstract class Converter<T>{
     public String procesar(String source){
         T file = convertToFile(source);
-        file = transformFile(file);
-        return convertToBase64(file);
+        T fileTransformed = transformFile(file);
+        return convertToBase64(fileTransformed);
     }
 
     public abstract T convertToFile(String source);
