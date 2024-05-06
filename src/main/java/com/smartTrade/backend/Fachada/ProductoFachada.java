@@ -76,11 +76,9 @@ public class ProductoFachada extends Fachada {
                         map.put("imagen", nuevaImagen);
                     }
                     else if(parts[i].contains("imagen")){
-                        continue;
-                    }
+                        continue;}
                     else{
-                        String[] keyValue = parts[i].split(":");
-                        map.put(keyValue[0].replace("\"", ""), keyValue[1].replace("\"", ""));
+                        System.out.println("Parte: " + parts[i]);
                     }
                 }
             }
