@@ -105,7 +105,7 @@ public class ProductoFachada extends Fachada {
             this.imagen = imagen;
         }
 
-
+        @JsonCreator
         public ProductoJSON(String json) {
             // Parse JSON string and set fields accordingly
             ObjectMapper objectMapper = new ObjectMapper();
