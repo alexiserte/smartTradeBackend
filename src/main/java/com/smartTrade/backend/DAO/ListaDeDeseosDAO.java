@@ -65,7 +65,7 @@ public class ListaDeDeseosDAO implements DAOInterface<Object>{
     }
 
     public double getTotalPrice(String nickname){
-        List<ProductoListaDeseos> productos = database.query("SELECT id_lista_de_deseos,id_producto, id_vendedor, cantidad FROM Productos_Lista_Deseos WHERE id_lista_de_deseos IN(SELECT id FROM Lista_De_Deseos WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?))", new ProductoListaDeseosMapper(), nickname);
+        List<ProductoListaDeseos> productos = database.query("SELECT id_lista_de_deseos,id_producto, id_vendedor FROM Productos_Lista_Deseos WHERE id_lista_de_deseos IN(SELECT id FROM Lista_De_Deseos WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?))", new ProductoListaDeseosMapper(), nickname);
         double total = 0;
         for(ProductoListaDeseos producto : productos){
             double precioProducto = database.queryForObject("SELECT precio FROM Vendedores_Producto WHERE id_vendedor = ? AND id_producto = ?", Double.class, producto.getId_vendedor(),producto.getId_producto());
