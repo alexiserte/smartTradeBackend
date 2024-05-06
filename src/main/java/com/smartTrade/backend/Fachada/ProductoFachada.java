@@ -66,6 +66,10 @@ public class ProductoFachada extends Fachada {
             String[] partsFinal = Arrays.copyOf(parts, parts.length - 1);
             partsFinal[partsFinal.length - 1] = imagenTotal;
 
+            for(String part : partsFinal){
+                System.out.println(part);
+            }
+
             for (String part : partsFinal) {
                 String[] keyValue = part.split(":");
                 String key = keyValue[0].replace("\"", "");
