@@ -1,5 +1,6 @@
 package com.smartTrade.backend.Fachada;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.reflect.TypeToken;
 import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Models.Vendedor;
 import org.apache.tomcat.util.json.JSONParser;
+import com.google.gson.Gson;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,14 +56,18 @@ public class ProductoFachada extends Fachada {
         }
     }
 
-    public ResponseEntity<?> insertarProducto(Map<String, ?> peticionMap) {
+    public ResponseEntity<?> insertarProducto(String peticionMap) {
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-        HashMap<String,?> body = (HashMap<String, ?>) peticionMap;
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<HashMap<String, ?>>(){}.getType();
+        HashMap<String, ?> body = gson.fromJson(peticionMap, type);
         List<String> keys = new ArrayList<>(body.keySet());
         if("nameValuePairs".equals(keys.get(0))){
             body = (HashMap<String, ?>) body.get("nameValuePairs");
         }
+
         try {
             String imageToAdd;
             if (body.containsKey("imagen")) {
@@ -68,6 +75,7 @@ public class ProductoFachada extends Fachada {
             } else {
                 imageToAdd = converter.convertFileToBase64(DEFAULT_IMAGE);
             }
+
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
             double precio = (double) body.get("precio");
@@ -384,6 +392,7 @@ public class ProductoFachada extends Fachada {
                     return new ResponseEntity<>("Error al obtener los nombres de los productos: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
+
 
         }
 
