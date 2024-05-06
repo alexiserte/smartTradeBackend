@@ -71,10 +71,9 @@ public class ProductoFachada extends Fachada {
             }
 
             for (String part : partsFinal) {
-                String[] keyValue = part.split(":");
-                String key = keyValue[0].replace("\"", "");
-                String value = keyValue[1].replace("\"", "");
-                map.put(key, value);
+                String[] keyValue = part.replace("\"","").split(":");
+                System.out.println("Key: " + keyValue[0] + " Value: " + keyValue[1]);
+
             }
             map.replace("precio", Double.parseDouble((String) map.get("precio")));
             System.out.println("Mapa: " + map);
