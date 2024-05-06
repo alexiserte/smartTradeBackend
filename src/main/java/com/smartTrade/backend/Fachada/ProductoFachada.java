@@ -66,9 +66,6 @@ public class ProductoFachada extends Fachada {
             String[] partsFinal = Arrays.copyOf(parts, parts.length - 1);
             partsFinal[partsFinal.length - 1] = imagenTotal;
 
-            for(String part : partsFinal){
-                System.out.println(part);
-            }
 
             for (String part : partsFinal) {
                 String[] keyValue = part.replace("\"","").split(":");
@@ -80,9 +77,15 @@ public class ProductoFachada extends Fachada {
 
 
             }
-            for(String key : map.keySet()){
-                System.out.println(key + " : " + map.get(key));
-            }
+
+            String nombre = (String) map.get("nombre");
+            String descripcion = (String) map.get("descripcion");
+            String categoria = (String) map.get("categoria");
+            String imagen = (String) map.get("imagen");
+            String vendedor = (String) map.get("vendedor");
+            double precio = Double.parseDouble((String) map.get("precio"));
+
+            productoDAO.create(nombre, categoria, vendedor, precio, descripcion, imagen);
 
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
