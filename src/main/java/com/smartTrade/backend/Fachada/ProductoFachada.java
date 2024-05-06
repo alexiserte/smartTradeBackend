@@ -105,6 +105,24 @@ public class ProductoFachada extends Fachada {
             this.imagen = imagen;
         }
 
+
+        public ProductoJSON(String json) {
+            // Parse JSON string and set fields accordingly
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                ProductoJSON temp = objectMapper.readValue(json, ProductoJSON.class);
+                this.nombre = temp.getNombre();
+                this.categoria = temp.getCategoria();
+                this.vendedor = temp.getVendedor();
+                this.precio = temp.getPrecio();
+                this.descripcion = temp.getDescripcion();
+                this.imagen = temp.getImagen();
+            } catch (JsonProcessingException e) {
+                // Handle exception
+                e.printStackTrace();
+            }
+        }
+
         public String getNombre() {
             return nombre;
         }
