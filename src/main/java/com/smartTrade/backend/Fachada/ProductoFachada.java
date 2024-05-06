@@ -90,8 +90,7 @@ public class ProductoFachada extends Fachada {
 
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println("Error al insertar el producto: " + e.getMessage());
-            System.out.println("Error al insertar el producto: " + e.getCause());
+            e.printStackTrace();
             return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
