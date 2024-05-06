@@ -68,11 +68,21 @@ public class ProductoFachada extends Fachada {
             String jsonWithoutBackslashes = peticionMap.replace("\\", "");
 
             System.out.println("JSON sin barras invertidas: " + jsonWithoutBackslashes);
-            String pureJSON = jsonWithoutBackslashes.substring(2, jsonWithoutBackslashes.length() - 2);
+            String pureJSON = jsonWithoutBackslashes.substring(2, jsonWithoutBackslashes.length() - 1);
             System.out.println("JSON puro: " + pureJSON);
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> body = mapper.readValue(pureJSON, new TypeReference<Map<String, Object>>() {
-            });
+            String[] parts = pureJSON.split(",");
+            HashMap<String, Object> map = new HashMap<>();
+            for (String part : parts) {
+                String[] keyValue = part.split(":");
+                map.put(keyValue[0].replace("\"", ""),(String) keyValue[1].replace("\"", ""));
+            }
+            map.replace("precio", Double.parseDouble((String) map.get("precio")));
+            System.out.println("Mapa: " + map);
+
+            if(!map.containsKey("imagen")){
+                map.put("imagen", converter.procesar(DEFAULT_IMAGE));
+            }
+            Map<String, Object> body = map;
             // Obtener los valores del JSON
             String nombre = (String) body.get("nombre");
             String vendorName = (String) body.get("vendedor");
