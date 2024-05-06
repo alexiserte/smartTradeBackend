@@ -28,6 +28,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         private Date fecha_publicacion;
         private boolean validado;
         private int huella_ecologica;
+        private int stock;
 
         public ProductoAntiguo(Producto p,String imagen) {
             this.nombre = p.getNombre();
@@ -37,6 +38,7 @@ public class ProductoDAO implements DAOInterface<Object> {
             this.fecha_publicacion = p.getFecha_publicacion();
             this.validado = p.getValidado();
             this.huella_ecologica = p.getHuella_ecologica();
+            this.stock = p.getStock();
         }
 
         public String getNombre() {
@@ -63,9 +65,10 @@ public class ProductoDAO implements DAOInterface<Object> {
             return validado;
         }
 
-        public int getHuella_ecologica() {
-            return huella_ecologica;
-        }
+        public int getHuella_ecologica() { return huella_ecologica; }
+
+        public int getStock(){return stock;}
+
     }
     private JdbcTemplate database;
 

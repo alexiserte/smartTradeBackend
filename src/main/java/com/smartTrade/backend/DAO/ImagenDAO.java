@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.smartTrade.backend.Factory.ConverterFactory;
 import com.smartTrade.backend.Utils.*;
 
+
 @Repository
 public class ImagenDAO implements DAOInterface<String>{
     

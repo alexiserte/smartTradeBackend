@@ -1,6 +1,8 @@
 package com.smartTrade.backend.DAO;
 import java.util.List;
 
+import com.smartTrade.backend.Mappers.ProductoListaDeseosMapper;
+import com.smartTrade.backend.Models.ProductoListaDeseos;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +20,10 @@ public class ListaDeDeseosDAO implements DAOInterface<Object>{
         String compradorName = (String) args[0];
         int id_comprador = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, compradorName);
         database.update("INSERT INTO Lista_De_Deseos(id_comprador) VALUES (?)",id_comprador);
+    }
+
+    public List<ProductoListaDeseos> getListaDeseosFromUser(String nickname){
+        return database.query("SELECT id_lista_de_deseos,id_producto, id_vendedor FROM Productos_Lista_Deseos WHERE id_lista_de_deseos IN(SELECT id FROM Lista_De_Deseos WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?))", new ProductoListaDeseosMapper(), nickname);
     }
 
     public void insertarProducto(String userNickname,String productName,String vendorName){
