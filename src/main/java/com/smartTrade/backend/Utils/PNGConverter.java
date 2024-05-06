@@ -52,17 +52,19 @@ public class PNGConverter extends Converter<BufferedImage>{
     }
 
 
-    public String convertToBase64(BufferedImage image){
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "png", bos);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getLocalizedMessage());
+    public String convertToBase64(BufferedImage image) {
+        if (image == null) {
+            throw new IllegalArgumentException("La imagen proporcionada es nula");
         }
-        byte[] resizedImageBytes = bos.toByteArray();
-        String resizedBase64Image = "data:image/png;base64," + Base64.getEncoder().encodeToString(resizedImageBytes);
 
-        return resizedBase64Image;
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", bos);
+            byte[] resizedImageBytes = bos.toByteArray();
+            return "data:image/png;base64," + Base64.getEncoder().encodeToString(resizedImageBytes);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al convertir la imagen a Base64: " + e.getMessage());
+        }
     }
 
 
