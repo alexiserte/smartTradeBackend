@@ -1,7 +1,12 @@
 package com.smartTrade.backend.Controllers;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +36,25 @@ public class ProductoController {
 
     @PostMapping("/producto/")
     public ResponseEntity<?> insertarProducto(@RequestBody(required = true) Object body) {
-        return fechada.insertarProducto((String) body);
+        if (body instanceof String) {
+            // If the body is a String, directly pass it to insertarProducto method
+            return fechada.insertarProducto((String) body);
+        } else if (body instanceof LinkedHashMap) {
+            // If the body is a LinkedHashMap, assume it's a JSON object
+            // Convert it to JSON string
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonString = objectMapper.writeValueAsString(body);
+                // Now jsonString contains the LinkedHashMap in JSON format
+                return fechada.insertarProducto(jsonString);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace(); // Handle the exception as needed
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing JSON");
+            }
+        } else {
+            // Handle unsupported body type here
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unsupported body type");
+        }
     }
 
 
