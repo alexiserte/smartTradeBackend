@@ -22,7 +22,7 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
 
     public void create(Object ...args) {
         String compradorName = (String) args[0];
-        int id_comprador = database.queryForObject("SELECT id_usuario FROM Usuario WHERE nickname = ?", Integer.class, compradorName);
+        int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, compradorName);
         database.update("INSERT INTO Carrito_Compra(id_comprador) VALUES (?)",id_comprador);
     }
 
