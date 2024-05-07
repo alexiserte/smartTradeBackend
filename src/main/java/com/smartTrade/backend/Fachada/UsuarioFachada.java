@@ -32,7 +32,13 @@ public class UsuarioFachada extends Fachada{
             body.put(key, value);
         }
         String userType = (String) body.get("userType");
-        System.out.println(pureJSON);
+
+        for(String key : body.keySet()){
+            System.out.println("---------------------------");
+            System.out.println(key + " : " + body.get(key));
+            System.out.println("---------------------------");
+
+        }
         switch (userType){
             case "vendedor":
                 VendedorFachada vendedorFachada = new VendedorFachada();
