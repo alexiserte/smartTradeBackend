@@ -32,6 +32,7 @@ public class UsuarioFachada extends Fachada{
             body.put(key, value);
         }
         String userType = (String) body.get("userType");
+        System.out.println(pureJSON);
         switch (userType){
             case "vendedor":
                 VendedorFachada vendedorFachada = new VendedorFachada();
