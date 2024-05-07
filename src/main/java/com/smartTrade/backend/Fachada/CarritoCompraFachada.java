@@ -125,10 +125,10 @@ public class CarritoCompraFachada extends Fachada{
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
             } else {
                 switch (action.toLowerCase()) {
-                    case "+":
+                    case "aumentar":
                         carritoCompraDAO.aumentarCantidad(productName, vendorName, nickname);
                         return ResponseEntity.ok("Cantidad aumentada");
-                    case "-":
+                    case "disminuidar":
                         carritoCompraDAO.disminuirCantidad(productName, vendorName, nickname);
                         return ResponseEntity.ok("Cantidad disminuida");
                     default:
