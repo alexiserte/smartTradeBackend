@@ -20,6 +20,7 @@ public class UsuarioFachada extends Fachada{
     @SuppressWarnings("unused") 
     public ResponseEntity<?> register(String map) {
         HashMap<String, Object> body = new HashMap<>();
+        System.out.println(map);
 
         String jsonWithoutBackslashes = map.replace("\\", "");
         String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");
