@@ -132,13 +132,14 @@ public class CarritoCompraFachada extends Fachada{
                         carritoCompraDAO.disminuirCantidad(productName, vendorName, nickname);
                         return ResponseEntity.ok("Cantidad disminuida");
                     default:
-                        return ResponseEntity.badRequest().body("Acción no válida");
+                        return ResponseEntity.badRequest().body("Acción no válida: " + action);
                 }
             }
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
         }
     }
+
 
 
 
