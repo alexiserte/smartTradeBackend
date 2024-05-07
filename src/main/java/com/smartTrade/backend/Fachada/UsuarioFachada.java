@@ -18,7 +18,7 @@ public class UsuarioFachada extends Fachada{
     
 
     @SuppressWarnings("unused") 
-    public ResponseEntity<?> register(String map, String userType) {
+    public ResponseEntity<?> register(String map) {
         HashMap<String, Object> body = new HashMap<>();
 
         String jsonWithoutBackslashes = map.replace("\\", "");
@@ -30,6 +30,7 @@ public class UsuarioFachada extends Fachada{
             String value = keyValue[1].replace("\"", "").trim();
             body.put(key, value);
         }
+        String userType = (String) body.get("userType");
         switch (userType){
             case "vendedor":
                 VendedorFachada vendedorFachada = new VendedorFachada();
