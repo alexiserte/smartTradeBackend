@@ -60,7 +60,7 @@ public class VendedorFachada extends Fachada{
     @SuppressWarnings("unused")
     public ResponseEntity<?> registerVendedor(HashMap<String, ?> body) {
         String nickname = body.get("nickname").toString();
-        String password = body.get("user_password").toString();
+        String password = body.get("password").toString();
         String correo = body.get("correo").toString();
         String direccion = body.get("direccion").toString();
         try{

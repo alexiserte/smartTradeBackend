@@ -10,6 +10,7 @@ import com.smartTrade.backend.Models.Comprador;
 import com.smartTrade.backend.Models.User_Types;
 import com.smartTrade.backend.Models.Vendedor;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 @Component
@@ -17,7 +18,18 @@ public class UsuarioFachada extends Fachada{
     
 
     @SuppressWarnings("unused") 
-    public ResponseEntity<?> register(HashMap<String, ?> body, String userType) {
+    public ResponseEntity<?> register(String map, String userType) {
+        HashMap<String, Object> body = new HashMap<>();
+
+        String jsonWithoutBackslashes = map.replace("\\", "");
+        String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");
+        String[] parts = pureJSON.split(",");
+        for (String part : parts) {
+            String[] keyValue = part.split(":");
+            String key = keyValue[0].replace("\"", "").trim();
+            String value = keyValue[1].replace("\"", "").trim();
+            body.put(key, value);
+        }
         switch (userType){
             case "vendedor":
                 VendedorFachada vendedorFachada = new VendedorFachada();

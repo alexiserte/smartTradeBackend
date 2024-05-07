@@ -22,8 +22,8 @@ public class UsuarioController {
 
     @PostMapping("/user/")
     public ResponseEntity<?> register(@RequestParam(value = "userType", required = true) String userType,
-                                    @RequestBody(required = true) HashMap<String,?> body){
-        return null;
+                                    @RequestBody(required = true) String body){
+        return fechada.register(body, userType);
     }
    
 }
