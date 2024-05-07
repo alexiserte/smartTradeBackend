@@ -23,7 +23,6 @@ public class UsuarioController {
 
     @PostMapping("/user/")
     public ResponseEntity<?> register(@RequestBody(required = true) String body){
-        System.out.println(body);
         return fechada.register(body);
     }
    
