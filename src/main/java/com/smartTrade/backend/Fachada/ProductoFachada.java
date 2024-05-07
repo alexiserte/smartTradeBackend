@@ -56,7 +56,6 @@ public class ProductoFachada extends Fachada {
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
 
-        Gson gson = new Gson();
         try {
             String jsonWithoutBackslashes = peticionMap.replace("\\", "");
             String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");

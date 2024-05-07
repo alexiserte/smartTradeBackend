@@ -119,25 +119,27 @@ public class CarritoCompraFachada extends Fachada{
     }
 
 
-    public ResponseEntity<?> modificarCantidad(String nickname, String productName, String vendorName, String action){
+    public ResponseEntity<String> modificarCantidad(String nickname, String productName, String vendorName, String action) {
         try {
-            if (!carritoCompraDAO.productInCarrito(productName, vendorName,nickname)) {
-                return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+            if (!carritoCompraDAO.productInCarrito(productName, vendorName, nickname)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
             } else {
-                if (action.equalsIgnoreCase("+")) {
-                    carritoCompraDAO.aumentarCantidad(productName, vendorName, nickname);
-                    return new ResponseEntity<>("Cantidad aumentada", HttpStatus.OK);
-                } else if (action.equalsIgnoreCase("-")) {
-                    carritoCompraDAO.disminuirCantidad(productName, vendorName, nickname);
-                    return new ResponseEntity<>("Cantidad disminuida", HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>("Acción no válida", HttpStatus.BAD_REQUEST);
+                switch (action.toLowerCase()) {
+                    case "+":
+                        carritoCompraDAO.aumentarCantidad(productName, vendorName, nickname);
+                        return ResponseEntity.ok("Cantidad aumentada");
+                    case "-":
+                        carritoCompraDAO.disminuirCantidad(productName, vendorName, nickname);
+                        return ResponseEntity.ok("Cantidad disminuida");
+                    default:
+                        return ResponseEntity.badRequest().body("Acción no válida");
                 }
             }
-        }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
         }
     }
+
 
 
     public ResponseEntity<?> insertarProducto(String productName, String vendorName, String userNickname){
