@@ -36,15 +36,8 @@ public class ProductoController {
 
 
     @PostMapping("/producto/")
-    public ResponseEntity<?> insertarProducto(@RequestBody(required = true) Object body) throws JsonProcessingException {
-        try {
-            String bodyString = (String) body;
-            return fachada.insertarProducto(bodyString);
-        } catch (Exception e) {
-            LinkedHashMap<String, String> response = new LinkedHashMap<>();
-            ObjectMapper objectMapper = new ObjectMapper();
-            return fachada.insertarProducto(objectMapper.writeValueAsString(response));
-        }
+    public ResponseEntity<?> insertarProducto(@RequestBody(required = true) String body) throws JsonProcessingException {
+       return fachada.insertarProducto(body);
     }
 
 
