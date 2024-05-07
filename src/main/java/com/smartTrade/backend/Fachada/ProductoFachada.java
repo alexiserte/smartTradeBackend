@@ -102,7 +102,6 @@ public class ProductoFachada extends Fachada {
 
 
 
-
     public ResponseEntity<?> deleteProductFromOneVendor(String productName, String vendorName) {
         try {
             productoDAO.deleteProduct(productName, vendorName);
