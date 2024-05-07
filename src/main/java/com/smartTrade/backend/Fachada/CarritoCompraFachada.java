@@ -128,7 +128,7 @@ public class CarritoCompraFachada extends Fachada{
                     case "aumentar":
                         carritoCompraDAO.aumentarCantidad(productName, vendorName, nickname);
                         return ResponseEntity.ok("Cantidad aumentada");
-                    case "disminuidar":
+                    case "disminuir":
                         carritoCompraDAO.disminuirCantidad(productName, vendorName, nickname);
                         return ResponseEntity.ok("Cantidad disminuida");
                     default:
