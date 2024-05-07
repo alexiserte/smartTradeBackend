@@ -40,7 +40,7 @@ public class CompradorFachada extends Fachada {
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity<?> register(HashMap<String, Object> body) {
+    public ResponseEntity<?> register(HashMap<String, ?> body) {
         String nickname = (String) body.get("nickname");
         String password = (String) body.get("password");
         String correo = (String) body.get("correo");
