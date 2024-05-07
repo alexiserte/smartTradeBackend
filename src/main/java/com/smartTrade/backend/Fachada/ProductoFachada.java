@@ -399,6 +399,12 @@ public class ProductoFachada extends Fachada {
                 }
             }
 
+
+            public ResponseEntity<?> getStockFromOneVendor(String productName,String vendorName){
+                int stock =  productoDAO.getStockFromOneProduct(productName,vendorName);
+                return new ResponseEntity<>(stock,HttpStatus.OK);
+            }
+
         }
 
 

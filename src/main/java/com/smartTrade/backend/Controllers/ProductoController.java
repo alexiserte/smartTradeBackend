@@ -109,6 +109,10 @@ public class ProductoController {
         return fachada.productAllNames();
     }
 
-    
+    @GetMapping("/producto/stock/")
+    public ResponseEntity<?> getstock(@RequestParam(name = "productName", required = true) String productName,
+                                      @RequestParam(name = "vendorName", required = true) String vendorName){
+        return fachada.getStockFromOneVendor(productName,vendorName);
+    }
 
 }

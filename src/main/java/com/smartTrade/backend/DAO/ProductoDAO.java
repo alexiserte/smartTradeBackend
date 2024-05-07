@@ -417,4 +417,10 @@ public class ProductoDAO implements DAOInterface<Object> {
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
         return getPrecioProducto(id_vendedor, id_producto);
     }
+
+    public int getStockFromOneProduct(String productName,String vendorName){
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
+        int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
+        return database.queryForObject("SELECT stock_vendedor FROM Vendedores_Producto WHERE id_producto = ? AND id_vendedor = ?", Integer.class,id_producto,id_vendedor);
+    }
 }
