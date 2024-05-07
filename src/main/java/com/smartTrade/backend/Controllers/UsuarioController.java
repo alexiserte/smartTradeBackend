@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.smartTrade.backend.Fachada.UsuarioFachada;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 public class UsuarioController {
@@ -22,6 +23,7 @@ public class UsuarioController {
 
     @PostMapping("/user/")
     public ResponseEntity<?> register(@RequestBody(required = true) String body){
+        System.out.println(body);
         return fechada.register(body);
     }
    
