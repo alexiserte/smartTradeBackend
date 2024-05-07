@@ -49,7 +49,7 @@ public class CompradorFachada extends Fachada {
             Comprador comprador = compradorDAO.readOne(nickname);
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
         } catch (EmptyResultDataAccessException e) {
-
+            System.out.println(":)");
             compradorDAO.create(nickname, password, correo, direccion);
             return new ResponseEntity<>("Comprador creado correctamente", HttpStatus.CREATED);
         } catch (Exception e) {
