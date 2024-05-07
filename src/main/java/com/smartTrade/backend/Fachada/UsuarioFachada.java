@@ -1,5 +1,6 @@
 package com.smartTrade.backend.Fachada;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,15 @@ import java.util.HashMap;
 @Component
 public class UsuarioFachada extends Fachada{
     
+
+    @Autowired
+    CompradorFachada compradorFachada;
+
+    @Autowired
+    VendedorFachada vendedorFachada;
+
+    @Autowired
+    AdministradorFachada administradorFachada;
 
     @SuppressWarnings("unused") 
     public ResponseEntity<?> register(String map) {
@@ -41,13 +51,13 @@ public class UsuarioFachada extends Fachada{
         }
         switch (userType){
             case "vendedor":
-                VendedorFachada vendedorFachada = new VendedorFachada();
+
                  return vendedorFachada.registerVendedor(body);
             case "comprador":
-                CompradorFachada compradorFachada = new CompradorFachada();
+
             return compradorFachada.register(body);
             case "administrador":
-                AdministradorFachada administradorFachada = new AdministradorFachada();
+
                 return administradorFachada.registerAdministrador(body);
             default:
                 return new ResponseEntity<>("Tipo de usuario no válido", HttpStatus.BAD_REQUEST);
