@@ -20,7 +20,7 @@ public class Logger {
     private enum Level{INFO, ERROR, WARNING, DEBUG, TRACE,SYSTEM,REQUEST,RESPONSE}
     private Logger(){
         try {
-            writer = new PrintWriter(new FileWriter("smartTradeLog.txt", true));
+            writer = new PrintWriter(new FileWriter("smartTrade.log", true));
         } catch (IOException e) {
             e.printStackTrace();
         }
