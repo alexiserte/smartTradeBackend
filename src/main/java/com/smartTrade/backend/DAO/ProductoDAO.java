@@ -88,10 +88,11 @@ public class ProductoDAO implements DAOInterface<Object> {
         double precio = (double) args[3];
         String descripcion = (String) args[4];
         String imagen = (String) args[5];
+
         ConverterFactory factory = new ConverterFactory();
-        PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
-        // String imagenResized = converter.procesar(imagen);
-        String imagenResized = imagen;
+        PNGConverter converter = (PNGConverter) factory.createConversor(Converter.getFileFormatFromBase64(imagen));
+        String imagenResized = converter.procesar(imagen);
+
         Date fechaActual = new Date(System.currentTimeMillis());
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         Random random = new Random();
@@ -118,7 +119,7 @@ public class ProductoDAO implements DAOInterface<Object> {
             boolean imagenExists;
             try {
                 database.queryForObject("SELECT COUNT(*) FROM Imagen WHERE imagen = ?",
-                        Integer.class, imagen);
+                        Integer.class, imagenResized);
                 imagenExists = true;
             } catch (EmptyResultDataAccessException e1) {
                 imagenExists = false;
@@ -126,11 +127,11 @@ public class ProductoDAO implements DAOInterface<Object> {
 
             if (imagenExists) {
                try{
-                     id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagen);
+                     id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagenResized);
                }
                 catch(EmptyResultDataAccessException e2){
-                     database.update("INSERT INTO Imagen(imagen) VALUES(?)", imagen);
-                     id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagen);
+                     database.update("INSERT INTO Imagen(imagen) VALUES(?)", imagenResized);
+                     id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagenResized);
                 }
             }
             System.out.println(characteristicName);

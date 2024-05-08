@@ -1,18 +1,17 @@
 package com.smartTrade.backend.Factory;
 import com.smartTrade.backend.Utils.*;
 public class ConverterFactory {
-    
     public Object createConversor(String type){
         switch(type){
-            case "JPEG":
+            case ".png":
                 return new JPEGConverter();
-            case "PNG":
+            case ".jpeg":
                 return new PNGConverter();
-            case "MP3":
+            case ".mp3":
                 return new MP3Converter();
+            /*  RESTO DE FORMATOS   */
             default:
                 return null;
         }
     }
-    
 }
