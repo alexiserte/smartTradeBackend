@@ -1,7 +1,11 @@
 package com.smartTrade.backend.Controllers;
 
 import com.smartTrade.backend.Fachada.AdministradorFachada;
+import com.smartTrade.backend.Logger.Logger;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,33 +15,47 @@ import java.util.HashMap;
 @RestController
 public class AdminController {
 
+    Logger logger = Logger.getInstance();
+
     @Autowired
     AdministradorFachada fechada;
 
     @GetMapping("/admin/categorias")
-    public ResponseEntity<?> mostrarCategorias() {
-        return fechada.mostrarCategorias();
+    public ResponseEntity<?> mostrarCategorias(HttpServletRequest request) {
+        ResponseEntity<?> res = fechada.mostrarCategorias();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI(), res.toString());
+        return res;
     }
     
     
     @GetMapping("/admin/categorias/principales")
-    public ResponseEntity<?> mostrarCategoriasPrincipales() {
-        return fechada.mostrarCategoriasPrincipales();
+    public ResponseEntity<?> mostrarCategoriasPrincipales(HttpServletRequest request) {
+        ResponseEntity<?> res = fechada.mostrarCategoriasPrincipales();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI(), res.toString());
+        return res;
     }
     
 
     @GetMapping("/admin/database")
-    public ResponseEntity<?> mostrarBasesDeDatos() {return fechada.mostrarBasesDeDatos();}
+    public ResponseEntity<?> mostrarBasesDeDatos(HttpServletRequest request) {
+        ResponseEntity<?> res =  fechada.mostrarBasesDeDatos();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI(), res.toString());
+        return res;
+    }
 
     @GetMapping("/admin/compradores")
-    public ResponseEntity<?> mostrarUsuarios() {
-        return fechada.mostrarUsuarios();
+    public ResponseEntity<?> mostrarUsuarios(HttpServletRequest request) {
+        ResponseEntity<?> res =  fechada.mostrarUsuarios();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI(), res.toString());
+        return res;
     }
     
 
     @GetMapping("/admin/vendedores")
-    public ResponseEntity<?> mostrarVendedores() {
-        return fechada.mostrarVendedores();
+    public ResponseEntity<?> mostrarVendedores(HttpServletRequest request) {
+        ResponseEntity<?> res =  fechada.mostrarVendedores();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI(), res.toString());
+        return res;
     }
 
 
