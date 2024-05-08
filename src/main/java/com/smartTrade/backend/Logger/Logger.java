@@ -66,7 +66,7 @@ public class Logger {
         writer.flush();
     }
 
-    public void logTrace(String trace){
+    private void logTrace(String trace){
         String cabecera = createHeader(Level.TRACE);
         String message = "%s %s";
         writer.println(String.format(message,cabecera, trace));
