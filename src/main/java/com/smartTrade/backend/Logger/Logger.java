@@ -12,11 +12,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.Random;
 
 public class Logger {
 
     private static Logger logger;
     private PrintWriter writer;
+    private static Random random = new Random();
     private enum Level{INFO, ERROR, WARNING, DEBUG, TRACE,SYSTEM,REQUEST,RESPONSE}
     private Logger(){
         try {
@@ -34,18 +36,20 @@ public class Logger {
     }
 
     public void log(String message){
-        String cabecera = createHeader(Level.INFO);
+        int id = generateID();
+        String cabecera = createHeader(Level.INFO, id);
         String messagePrint = "%s %s";
         writer.println(String.format(messagePrint, cabecera, message));
         writer.flush();
     }
 
     public void logError(Exception e){
-        String cabecera = createHeader(Level.ERROR);
+        int id = generateID();
+        String cabecera = createHeader(Level.ERROR, id);
         String message = "%s %s: %s";
         writer.println(String.format(message, cabecera, e.getClass().getSimpleName(), e.getLocalizedMessage()));
         String trace = "%s %s";
-        cabecera = createHeader(Level.TRACE);
+        cabecera = createHeader(Level.TRACE, id);
         for (StackTraceElement element : e.getStackTrace()) {
             writer.println(String.format(trace, cabecera, element.toString()));
         }
@@ -53,61 +57,69 @@ public class Logger {
     }
 
     public void logWarning(String warning){
-        String cabecera = createHeader(Level.WARNING);
+        int id = generateID();
+        String cabecera = createHeader(Level.WARNING, id);
         String message = "%s %s";
         writer.println(String.format(message,cabecera, warning));
         writer.flush();
     }
 
     public void logDebug(String debug){
-        String cabecera = createHeader(Level.DEBUG);
+        int id = generateID();
+        String cabecera = createHeader(Level.DEBUG, id);
         String message = "%s %s";
         writer.println(String.format(message,cabecera, debug));
         writer.flush();
     }
 
-    private void logTrace(String trace){
-        String cabecera = createHeader(Level.TRACE);
+    private void logTrace(String trace, int id){
+        String cabecera = createHeader(Level.TRACE,id);
         String message = "%s %s";
         writer.println(String.format(message,cabecera, trace));
         writer.flush();
     }
 
 public void logSystem(String system){
-        String cabecera = createHeader(Level.SYSTEM);
+        int id = generateID();
+        String cabecera = createHeader(Level.SYSTEM,id);
         String message = "%s %s";
         writer.println(String.format(message,cabecera, system));
         writer.flush();
     }
 
-    private void logRequest(HttpMethod method, String request){
-        String cabecera = createHeader(Level.REQUEST);
+    private void logRequest(HttpMethod method, String request,int id){
+        String cabecera = createHeader(Level.REQUEST,id);
         String message = "%s %s %s";
         writer.println(String.format(message,cabecera, method, request));
         writer.flush();
     }
 
-    private void logResponse(String response){
-        String cabecera = createHeader(Level.RESPONSE);
+    private void logResponse(String response,int id){
+        String cabecera = createHeader(Level.RESPONSE,id);
         String message = "%s %s";
         writer.println(String.format(message,cabecera, response));
         writer.flush();
     }
 
     public void logRequestAndResponse(HttpMethod method, String request, String response){
-        logRequest(method, request);
-        logResponse(response);
+        int id = generateID();
+        logRequest(method, request,id);
+        logResponse(response,id);
     }
 
 
 
 
-    private static String createHeader(Level level){
-        String template = "[%s %s %s | %s]";
+    private static String createHeader(Level level, int id){
+        String template = "[%s %s %s | %d | %s]";
         DateTimeFormatter timeFormatter = new DateTimeFormatterBuilder()
                 .appendPattern("HH:mm") // Formato de 24 horas
                 .toFormatter();
-        return String.format(template, level.toString(), LocalDate.now(), LocalTime.now().format(timeFormatter), "smartTrade");
+        return String.format(template, level.toString(), LocalDate.now(), LocalTime.now().format(timeFormatter),id, "smartTrade");
+    }
+
+    private static int generateID(){
+        return random.nextInt(10000);
     }
 
     public void close(){
