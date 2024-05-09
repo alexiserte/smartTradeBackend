@@ -154,6 +154,18 @@ public class AdminController {
         logger.logRequestAndResponse(HttpMethod.DELETE, request.getRequestURI(), res.toString());
         return res;
     }
+
+    @GetMapping("/admin/log/")
+    public ResponseEntity<?> getLogs(HttpServletRequest request, @RequestParam(value = "id", required = false) Integer id){
+        if(id == null){
+            ResponseEntity<?> res = fechada.getLog(null);
+            logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI(), res.toString());
+            return res;
+        }
+        ResponseEntity<?> res = fechada.getLog(id);
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI(), res.toString());
+        return res;
+    }
     
 }
 
