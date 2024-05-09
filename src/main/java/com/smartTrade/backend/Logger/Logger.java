@@ -127,11 +127,6 @@ public void logSystem(String system){
     }
 
 
-    public static void main(String[] args) {
-        Logger logger = Logger.getInstance();
-        logger.logRequest(HttpMethod.GET, "/admin/categorias");
-    }
-
 }
 
 
