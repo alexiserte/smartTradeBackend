@@ -297,7 +297,7 @@ public class AdministradorFachada extends Fachada {
             if(id != null){
                 return new ResponseEntity<>(Logger.getLog(id),HttpStatus.OK);
             }
-            return new ResponseEntity<>(systemDAO.readAll(),HttpStatus.OK);
+            return new ResponseEntity<>(Logger.getFullLog(),HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>("Error al obtener los logs: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
