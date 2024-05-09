@@ -142,7 +142,7 @@ public void logSystem(String system){
         StringBuilder res = new StringBuilder();
         for (String line : lines) {
             if(line.contains(" | " + id + " | ")){
-                res.append(line);
+                res.append(line + "\n");
             }
         }
         return res.toString();
