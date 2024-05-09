@@ -65,7 +65,7 @@ public class AdminController {
         ResponseEntity<?> res;
         if(oldMode) {res = fechada.mostrarProductos(true);}
         else {res = fechada.mostrarProductos(false);}
-        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI(), res.toString());
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
 
