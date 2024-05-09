@@ -139,14 +139,13 @@ public void logSystem(String system){
     public static String getLog(int id){
         String log = getFullLog();
         String[] lines = log.split("\n");
-        String res = "";
+        StringBuilder res = new StringBuilder();
         for (String line : lines) {
             if(line.contains(" | " + id + " | ")){
-                res = res + "\n" + line;
-                break;
+                res.append(line);
             }
         }
-        return res;
+        return res.toString();
 
     }
 
