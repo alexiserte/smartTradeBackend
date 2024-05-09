@@ -126,6 +126,29 @@ public void logSystem(String system){
         writer.close();
     }
 
+    public static String getFullLog(){
+        String log = "";
+        try {
+            log = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("smartTrade.log")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return log;
+    }
+
+    public static String getLog(int id){
+        String log = getFullLog();
+        String[] lines = log.split("\n");
+        String res = "";
+        for (String line : lines) {
+            if(line.contains(" | " + id + " | ")){
+                res += line;
+                break;
+            }
+        }
+        return res;
+
+    }
 
 }
 
