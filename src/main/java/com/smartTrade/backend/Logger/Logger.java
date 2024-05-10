@@ -19,7 +19,7 @@ public class Logger {
     private static Logger logger;
     private PrintWriter writer;
     private static Random random = new Random();
-    private enum Level{INFO, ERROR, WARNING, DEBUG, TRACE,SYSTEM,REQUEST,RESPONSE}
+    private enum Level{INFO, ERROR, WARNING, DEBUG, TRACE,SYSTEM,REQUEST,RESPONSE, TEST}
     private Logger(){
         try {
             writer = new PrintWriter(new FileWriter("smartTrade.log", true));
@@ -107,6 +107,14 @@ public void logSystem(String system){
         logResponse(response,id);
     }
 
+
+    public void logTestResult(String test, boolean result){
+        int id = generateID();
+        String cabecera = createHeader(Level.TEST, id);
+        String message = "%s TEST %s";
+        writer.println(String.format(message,cabecera, test + " " + (result ? "PASSED" : "FAILED")));
+        writer.flush();
+    }
 
 
 

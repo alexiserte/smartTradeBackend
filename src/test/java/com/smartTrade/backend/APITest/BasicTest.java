@@ -17,33 +17,48 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class BasicTest {
 
-    private smartTradeConexion conexion = new smartTradeConexion();
-    private ObjectMapper mapper = new ObjectMapper();
-    private Logger logger = Logger.getInstance();
+    private final smartTradeConexion conexion = new smartTradeConexion();
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final Logger logger = Logger.getInstance();
 
     @Test
-    public void serverIsRunning(){
-        logger.logDebug("Testeando si el servidor está en funcionamiento");
-        HttpResponse<String> response = conexion.get("/health");
-        assertEquals(200, response.statusCode());
-        assertEquals("Servidor en funcionamiento", response.body());
+    public void serverIsRunning() {
+        try {
+            HttpResponse<String> response = conexion.get("/health");
+            assertEquals(200, response.statusCode());
+            assertEquals("Servidor en funcionamiento", response.body());
+            logger.logTestResult("serverIsRunning", true);
+        } catch (AssertionError error) {
+            logger.logTestResult("serverIsRunning", false);
+            throw error;
+        } catch (Exception e1) {
+            logger.logError(e1);
+        }
     }
 
     @Test
     public void welcomeMessage() {
-        logger.logDebug("Testeando si el mensaje de bienvenida es correcto");
-        HttpResponse<String> response = conexion.get("/");
-        assertEquals(200, response.statusCode());
-        assertEquals("¡Bienvenido a smartTrade!", response.body());
+        try {
+            HttpResponse<String> response = conexion.get("/");
+            assertEquals(200, response.statusCode());
+            assertEquals("¡Bienvenido a smartTrade!", response.body());
+            logger.logTestResult("welcomeMessage", true);
+        } catch (AssertionError error) {
+            logger.logTestResult("welcomeMessage", false);
+            throw error;
+        } catch (Exception e1) {
+            logger.logError(e1);
+        }
     }
 
     @Test
-    public void teamMembers(){
-        logger.logDebug("Testeando si los miembros del equipo son correctos");
-        HttpResponse<String> response = conexion.get("/five-guys");
-        assertEquals(200, response.statusCode());
+    public void teamMembers() {
         try {
-            List<MiembroEquipo> miembros = mapper.readValue(response.body(), new TypeReference<List<MiembroEquipo>>() {});
+            HttpResponse<String> response = conexion.get("/five-guys");
+            assertEquals(200, response.statusCode());
+
+            List<MiembroEquipo> miembros = mapper.readValue(response.body(), new TypeReference<List<MiembroEquipo>>() {
+            });
             assertEquals(5, miembros.size());
             assertEquals("Alejandro", miembros.get(0).getNombre());
             assertEquals("Iserte", miembros.get(0).getApellido());
@@ -55,9 +70,15 @@ public class BasicTest {
             assertEquals("Martí", miembros.get(3).getApellido());
             assertEquals("Jennifer", miembros.get(4).getNombre());
             assertEquals("López", miembros.get(4).getApellido());
+            logger.logTestResult("teamMembers", true);
+        } catch (AssertionError e) {
+            logger.logTestResult("teamMembers", false);
+            throw new RuntimeException(e);
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+
     }
 
 }
