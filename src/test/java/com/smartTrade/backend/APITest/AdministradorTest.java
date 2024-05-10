@@ -59,4 +59,23 @@ public class AdministradorTest {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    void mostrarBasesDeDatos() {
+        HttpResponse<String> response = conexion.get("/admin/database");
+        try {
+            List<String> databases = mapper.readValue(response.body(), new TypeReference<List<String>>() {
+            });
+            System.out.println(response.body());
+            assertEquals(200, response.statusCode());
+            assertNotEquals(0, databases.size());
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        } catch (AssertionError error) {
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            throw error;
+        } catch (JsonProcessingException e) {
+            logger.logError(e);
+            throw new RuntimeException(e);
+        }
+    }
 }

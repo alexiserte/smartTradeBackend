@@ -336,6 +336,7 @@ public class ProductoFachada extends Fachada {
                     this.imagen = producto.getImagen();
                 }
 
+
                 public ProductoDAO.ProductoAntiguo getProducto() {
                     return producto;
                 }
