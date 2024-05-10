@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.smartTrade.backend.Mappers.ProductMapper;
 import com.smartTrade.backend.Models.*;
+import com.smartTrade.backend.Utils.DateMethods;
 
 @Repository
 public class Carrito_CompraDAO implements DAOInterface<Object>{
@@ -100,38 +101,63 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
     }
 
     public double aplicarDescuento(String userNickname,String discountCode){
+        try{
+            validarDescuento(discountCode,userNickname);
+        }catch (IllegalArgumentException e){
+            throw new IllegalArgumentException(e.getMessage());
+        }
         double total = getTotalPrice(userNickname);
-        double descuento;
-        int usos;
+        double descuento = getDiscount(discountCode);
+
+        int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
+        int id_codigo = database.queryForObject("SELECT id FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
+        database.update("INSERT INTO Codigos_Usados(id_codigo,id_comprador) VALUES(?,?)",id_codigo,id_comprador);
+        return total - (total * descuento);
+    }
+
+    public double getDiscount(String codigo){
+            if(!existsDiscountCode(codigo)) throw new IllegalArgumentException("El código de descuento ingresado no es válido");
+            return database.queryForObject("SELECT descuento FROM Codigo_Descuento WHERE codigo = ?", Double.class, codigo);
+    }
+
+    private boolean existsDiscountCode(String discountCode){
         try {
-            descuento = database.queryForObject("SELECT descuento FROM Codigo_Descuento WHERE codigo = ?", Double.class, discountCode);
-            usos = database.queryForObject("SELECT usos FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
+            database.queryForObject("SELECT codigo FROM Codigo_Descuento WHERE codigo = ?", String.class, discountCode);
         }catch(EmptyResultDataAccessException e){
             throw new IllegalArgumentException("El código de descuento ingresado no es válido");
         }
+        return true;
+    }
+
+    private boolean usesLeftForDiscount(String discountCode, String userNickname){
+        int usos = database.queryForObject("SELECT usos FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
+
+        int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
+        int id_codigo = database.queryForObject("SELECT id FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
+        int veces_usados = database.queryForObject("SELECT COUNT(*) FROM Codigos_Usados WHERE id_codigo = ? AND id_comprador = ?", Integer.class, id_codigo,id_comprador);
+
+        if(veces_usados >= usos){
+            throw new IllegalArgumentException("El código de descuento ha alcanzado su límite de usos");
+        }
+        return true;
+    }
+
+    private boolean discountCodeWithinPeriod(String discountCode){
         Date fecha_inicio = database.queryForObject("SELECT fecha_validez_inicio FROM Codigo_Descuento WHERE codigo = ?", java.sql.Date.class, discountCode);
         Date fecha_final = database.queryForObject("SELECT fecha_validez_final FROM Codigo_Descuento WHERE codigo = ?", java.sql.Date.class, discountCode);
 
-        Date fecha_actual = new Date(System.currentTimeMillis());
+        return DateMethods.checkIfTodayIsWithinPeriod(fecha_inicio,fecha_final);
+    }
 
-        if(fecha_actual.before(fecha_inicio)){
-            throw new IllegalArgumentException("El código de descuento aún no es válido");
+    private boolean validarDescuento(String discountCode, String userNickname){
+        try {
+            existsDiscountCode(discountCode);
+            usesLeftForDiscount(discountCode,userNickname);
+            discountCodeWithinPeriod(discountCode);
+        }catch(IllegalArgumentException e){
+            throw new IllegalArgumentException(e.getMessage());
         }
-        else if(fecha_actual.after(fecha_final)){
-            throw new IllegalArgumentException("El código de descuento ha expirado");
-        }
-        else{
-            int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
-            int id_codigo = database.queryForObject("SELECT id FROM Codigo_Descuento WHERE codigo = ?", Integer.class, discountCode);
-            int veces_usados = database.queryForObject("SELECT COUNT(*) FROM Codigos_Usados WHERE id_codigo = ? AND id_comprador = ?", Integer.class, id_codigo,id_comprador);
-            if(veces_usados >= usos){
-                throw new IllegalArgumentException("El código de descuento ha alcanzado su límite de usos");
-            }
-            else{
-                database.update("INSERT INTO Codigos_Usados(id_codigo,id_comprador) VALUES(?,?)",id_codigo,id_comprador);
-                return total - (total * descuento);
-            }
-        }
+        return true;
     }
 
     public void vaciarCarrito(String userNickname){
@@ -142,14 +168,6 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
     public int productosInCarrito(String userNickname){
         int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
         return database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ?",Integer.class,id_carrito);
-    }
-
-    public double getDiscount(String codigo){
-        try {
-            return database.queryForObject("SELECT descuento FROM Codigo_Descuento WHERE codigo = ?", Double.class, codigo);
-        }catch(EmptyResultDataAccessException e){
-            throw new IllegalArgumentException("El código de descuento ingresado no es válido");
-        }
     }
     public void delete(Object ...args) {;}
     public void update(Object ...args) {;}

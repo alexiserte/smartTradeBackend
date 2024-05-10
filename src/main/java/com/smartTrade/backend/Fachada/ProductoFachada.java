@@ -1,26 +1,17 @@
 package com.smartTrade.backend.Fachada;
 
-import java.util.*;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import com.smartTrade.backend.DAO.ProductoDAO;
+import com.smartTrade.backend.Factory.ConverterFactory;
+import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Models.Vendedor;
-import org.apache.tomcat.util.json.JSONParser;
-import com.google.gson.Gson;
+import com.smartTrade.backend.Utils.PNGConverter;
+import com.smartTrade.backend.Utils.StringComparison;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.smartTrade.backend.Factory.ConverterFactory;
-import com.smartTrade.backend.Models.Producto;
-import com.smartTrade.backend.Utils.*;
+import java.util.*;
 
 @Component
 public class ProductoFachada extends Fachada {
@@ -67,11 +58,11 @@ public class ProductoFachada extends Fachada {
 
 
             for (String part : partsFinal) {
-                String[] keyValue = part.replace("\"","").split(":");
-                if(keyValue[0].contains("imagen")) {
-                    map.put(keyValue[0].replaceAll("\\s",""), (keyValue[1] + ":" + keyValue[2]).replaceAll("^\\\\s+",""));
-                }else {
-                    map.put(keyValue[0].replaceAll("\\s",""), keyValue[1].replaceAll("^\\\\s+",""));
+                String[] keyValue = part.replace("\"", "").split(":");
+                if (keyValue[0].contains("imagen")) {
+                    map.put(keyValue[0].replaceAll("\\s", ""), (keyValue[1] + ":" + keyValue[2]).replaceAll("^\\\\s+", ""));
+                } else {
+                    map.put(keyValue[0].replaceAll("\\s", ""), keyValue[1].replaceAll("^\\\\s+", ""));
                 }
 
 
@@ -94,11 +85,6 @@ public class ProductoFachada extends Fachada {
             return new ResponseEntity<>("Error al insertar el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-
-
-
 
 
     public ResponseEntity<?> deleteProductFromOneVendor(String productName, String vendorName) {
@@ -141,7 +127,7 @@ public class ProductoFachada extends Fachada {
     }
 
     public ResponseEntity<?> updateProductFromOneVendor(String productName, String vendorName,
-            HashMap<String, ?> atributos) {
+                                                        HashMap<String, ?> atributos) {
         try {
             productoDAO.updateProductFromOneVendor(productName, vendorName, atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
@@ -156,57 +142,57 @@ public class ProductoFachada extends Fachada {
     @SuppressWarnings("unused")
     public ResponseEntity<?> getProduct(String productName, boolean image) {
         try {
-            
-                List<Object> resultado = productoDAO.readOne(productName);
 
-                class Resultado {
-                    Producto producto;
-                    HashMap<String, String> smartTag;
-                    String categoria;
-                    Map<String, Double> vendedores;
-                    String imagen;
+            List<Object> resultado = productoDAO.readOne(productName);
 
-                    public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria,
-                            Map<String, Double> vendedores, String imagen) {
-                        this.producto = producto;
-                        this.smartTag = smartTag;
-                        this.categoria = categoria;
-                        this.vendedores = vendedores;
-                        this.imagen = imagen;
-                    }
+            class Resultado {
+                Producto producto;
+                HashMap<String, String> smartTag;
+                String categoria;
+                Map<String, Double> vendedores;
+                String imagen;
 
-                    public Producto getProducto() {
-                        return producto;
-                    }
-
-                    public HashMap<String, String> getSmartTag() {
-                        return smartTag;
-                    }
-
-                    public String getCategoria() {
-                        return categoria;
-                    }
-
-                    public Map<String, Double> getVendedores() {
-                        return vendedores;
-                    }
-
-                    public String getImagen() {
-                        return imagen;
-                    }
+                public Resultado(Producto producto, HashMap<String, String> smartTag, String categoria,
+                                 Map<String, Double> vendedores, String imagen) {
+                    this.producto = producto;
+                    this.smartTag = smartTag;
+                    this.categoria = categoria;
+                    this.vendedores = vendedores;
+                    this.imagen = imagen;
                 }
 
-                String imagen = "";
-                if (image) {
-                    imagen = productoDAO.getImageFromOneProduct(productName);
+                public Producto getProducto() {
+                    return producto;
                 }
 
+                public HashMap<String, String> getSmartTag() {
+                    return smartTag;
+                }
 
-                @SuppressWarnings("unchecked")
-                Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),
-                        (String) resultado.get(2), (Map<String, Double>) resultado.get(3),imagen);
-                return ResponseEntity.ok(r);
-            
+                public String getCategoria() {
+                    return categoria;
+                }
+
+                public Map<String, Double> getVendedores() {
+                    return vendedores;
+                }
+
+                public String getImagen() {
+                    return imagen;
+                }
+            }
+
+            String imagen = "";
+            if (image) {
+                imagen = productoDAO.getImageFromOneProduct(productName);
+            }
+
+
+            @SuppressWarnings("unchecked")
+            Resultado r = new Resultado((Producto) resultado.get(0), (HashMap<String, String>) resultado.get(1),
+                    (String) resultado.get(2), (Map<String, Double>) resultado.get(3), imagen);
+            return ResponseEntity.ok(r);
+
 
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
@@ -239,46 +225,46 @@ public class ProductoFachada extends Fachada {
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity<?> getEstadisticas(String productName){
-            try{
-                try{
-                    Producto producto = productoDAO.readOneProduct(productName);
-                    TreeMap<String,Object> mapaCaracteristicas = precioDAO.getStats(producto.getNombre());
+    public ResponseEntity<?> getEstadisticas(String productName) {
+        try {
+            try {
+                Producto producto = productoDAO.readOneProduct(productName);
+                TreeMap<String, Object> mapaCaracteristicas = precioDAO.getStats(producto.getNombre());
 
-                    class ProductoEstadisticas{
-                        String producto;
-                        java.util.TreeMap<String,?> estadisticas;
+                class ProductoEstadisticas {
+                    String producto;
+                    java.util.TreeMap<String, ?> estadisticas;
 
-                        public ProductoEstadisticas(String producto,java.util.TreeMap<String,?> estadisticas){
-                            this.producto = producto;
-                            this.estadisticas = estadisticas;
-                        }
-
-                        public String getProducto(){
-                            return producto;
-                        }
-
-
-                        public java.util.TreeMap<String,?> getEstadisticas(){
-                            return estadisticas;
-                        }
+                    public ProductoEstadisticas(String producto, java.util.TreeMap<String, ?> estadisticas) {
+                        this.producto = producto;
+                        this.estadisticas = estadisticas;
                     }
 
-                    ProductoEstadisticas pe = new ProductoEstadisticas(producto.getNombre(), mapaCaracteristicas);
-                    return new ResponseEntity<>(pe,HttpStatus.OK);
-                }catch(EmptyResultDataAccessException e){
-                    return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
-                }catch(Exception e){
-                    return new ResponseEntity<>("| Error al obtener el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }catch(EmptyResultDataAccessException e){
-                return new ResponseEntity<>("Vendedor no econtrado", HttpStatus.NOT_FOUND);
-            }catch(Exception e){
-                return new ResponseEntity<>("|| Error al obtener el vendedor: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+                    public String getProducto() {
+                        return producto;
+                    }
 
-    public ResponseEntity<?> qr(String name) {
+
+                    public java.util.TreeMap<String, ?> getEstadisticas() {
+                        return estadisticas;
+                    }
+                }
+
+                ProductoEstadisticas pe = new ProductoEstadisticas(producto.getNombre(), mapaCaracteristicas);
+                return new ResponseEntity<>(pe, HttpStatus.OK);
+            } catch (EmptyResultDataAccessException e) {
+                return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+            } catch (Exception e) {
+                return new ResponseEntity<>("| Error al obtener el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Vendedor no econtrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("|| Error al obtener el vendedor: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<?> generateQRForOneProduct(String name) {
         System.out.println("Generando QR para el producto: " + name);
         return new ResponseEntity<>(smartTagDAO.createSmartTag(name), HttpStatus.OK);
     }
@@ -292,20 +278,20 @@ public class ProductoFachada extends Fachada {
         try {
             Vendedor vendedor = vendedorDAO.readOne(vendorName);
             List<Producto> productos = productoDAO.getProductsBySeller(vendedor.getNickname());
-            class Producto_Precio{
+            class Producto_Precio {
                 private Producto producto;
                 private double precio;
 
-                public Producto_Precio(Producto producto, double precio){
+                public Producto_Precio(Producto producto, double precio) {
                     this.producto = producto;
                     this.precio = precio;
                 }
 
-                public Producto getProducto(){
+                public Producto getProducto() {
                     return producto;
                 }
 
-                public double getPrecio(){
+                public double getPrecio() {
                     return precio;
                 }
             }
@@ -377,34 +363,36 @@ public class ProductoFachada extends Fachada {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al obtener el producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }}
-            public ResponseEntity<?> getImagen (String productName){
-                try {
-                    String imagen = productoDAO.getImageFromOneProduct(productName);
-                    return new ResponseEntity<>(imagen, HttpStatus.OK);
-                } catch (EmptyResultDataAccessException e) {
-                    return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
-                } catch (Exception e) {
-                    return new ResponseEntity<>("Error al obtener la imagen del producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-                }
-            }
-
-            public ResponseEntity<?> productAllNames(){
-                try{
-                    List<String> nombres = productoDAO.readAllNames();
-                    return new ResponseEntity<>(nombres, HttpStatus.OK);
-                }catch(Exception e){
-                    return new ResponseEntity<>("Error al obtener los nombres de los productos: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
-
-
-            public ResponseEntity<?> getStockFromOneVendor(String productName,String vendorName){
-                int stock =  productoDAO.getStockFromOneProduct(productName,vendorName);
-                return new ResponseEntity<>(stock,HttpStatus.OK);
-            }
+    public ResponseEntity<?> getImagen(String productName) {
+        try {
+            String imagen = productoDAO.getImageFromOneProduct(productName);
+            return new ResponseEntity<>(imagen, HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener la imagen del producto: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
+    }
+
+    public ResponseEntity<?> productAllNames() {
+        try {
+            List<String> nombres = productoDAO.readAllNames();
+            return new ResponseEntity<>(nombres, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener los nombres de los productos: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    public ResponseEntity<?> getStockFromOneVendor(String productName, String vendorName) {
+        int stock = productoDAO.getStockFromOneProduct(productName, vendorName);
+        return new ResponseEntity<>(stock, HttpStatus.OK);
+    }
+
+}
 
 

@@ -97,6 +97,11 @@ public class PrecioDAO implements DAOInterface<Object>{
         return precioAnterior > precioActual;
     }
 
+
+    private String getDato(){
+        return null;
+    }
+
     public void create(Object ...args) {;}
     public void delete(Object ...args) {;}
     public void update(Object ...args) {;}
