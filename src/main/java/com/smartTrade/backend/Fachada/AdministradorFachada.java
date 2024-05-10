@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.smartTrade.backend.DAO.ProductoDAO;
+import com.smartTrade.backend.Logger.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -287,6 +288,18 @@ public class AdministradorFachada extends Fachada {
             return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
         }catch(Exception e){
             return new ResponseEntity<>("Error al eliminar el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    public ResponseEntity<?> getLog(Integer id){
+        try{
+            if(id != null){
+                return new ResponseEntity<>(Logger.getLog(id),HttpStatus.OK);
+            }
+            return new ResponseEntity<>(Logger.getFullLog(),HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener los logs: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
