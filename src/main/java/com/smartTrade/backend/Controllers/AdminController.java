@@ -81,7 +81,7 @@ public class AdminController {
     @GetMapping("/admin/categoria/existen_subcategorias/")
     public ResponseEntity<?> existenSubcategorias(@RequestParam(value = "name", required = true) String name, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.existenSubcategorias(name);
-        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString() res.toString());
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(),res.toString());
         return res;
     }
     

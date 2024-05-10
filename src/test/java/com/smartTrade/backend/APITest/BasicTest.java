@@ -1,14 +1,12 @@
-package com.smartTrade.backend.BasicTest;
+package com.smartTrade.backend.APITest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smartTrade.backend.Controllers.BasicController;
 import com.smartTrade.backend.Logger.Logger;
 import com.smartTrade.backend.Models.MiembroEquipo;
 import com.smartTrade.backend.smartTradeConexion;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.net.http.HttpResponse;
