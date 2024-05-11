@@ -1,4 +1,4 @@
-package com.smartTrade.backend.APITest;
+package com.smartTrade.backend.ControllerMethods;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

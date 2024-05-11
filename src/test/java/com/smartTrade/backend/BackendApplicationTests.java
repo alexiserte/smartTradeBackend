@@ -1,6 +1,6 @@
 package com.smartTrade.backend;
 
-import com.smartTrade.backend.APITest.BasicTest;
+import com.smartTrade.backend.ControllerMethods.BasicTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
