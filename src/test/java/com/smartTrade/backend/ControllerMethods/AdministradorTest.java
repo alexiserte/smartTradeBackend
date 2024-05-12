@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.GsonBuilder;
 import com.smartTrade.backend.Logger.Logger;
 import com.smartTrade.backend.Models.Categoria;
 import com.smartTrade.backend.Models.Comprador;
@@ -11,6 +12,7 @@ import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Utils.ReflectionMethods;
 import com.smartTrade.backend.smartTradeConexion;
 import org.junit.jupiter.api.Test;
+import com.smartTrade.backend.Utils.JSONMethods;
 
 import java.net.http.HttpResponse;
 import java.util.HashMap;
@@ -29,9 +31,10 @@ public class AdministradorTest {
     void mostrarCategorias() {
         try {
             HttpResponse<String> response = conexion.get("/admin/categorias");
-            List<Categoria> categorias = mapper.readValue(response.body(), new TypeReference<List<Categoria>>() {
-            });
-            System.out.println(response.body());
+            List<Categoria> categorias = mapper.readValue(response.body(), new TypeReference<>() {});
+
+            List<HashMap> result = mapper.readValue(response.body(), new TypeReference<>() {});
+            System.out.println(JSONMethods.getPrettyJSON(result));
             assertEquals(200, response.statusCode());
             assertNotEquals(0, categorias.size());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
@@ -47,9 +50,9 @@ public class AdministradorTest {
     void mostrarCategoriasPrincipales() {
         HttpResponse<String> response = conexion.get("/admin/categorias/principales");
         try {
-            List<Categoria> categorias = mapper.readValue(response.body(), new TypeReference<List<Categoria>>() {
+            List<Categoria> categorias = mapper.readValue(response.body(), new TypeReference<>() {
             });
-            System.out.println(response.body());
+            System.out.println(JSONMethods.getPrettyJSON(categorias));
             assertEquals(200, response.statusCode());
             for (Categoria c : categorias) {
                 assertEquals(c.getCategoria_principal(), 0);
@@ -70,7 +73,7 @@ public class AdministradorTest {
         try {
             List<String> databases = mapper.readValue(response.body(), new TypeReference<List<String>>() {
             });
-            System.out.println(response.body());
+            System.out.println(JSONMethods.getPrettyJSON(databases));
             assertEquals(200, response.statusCode());
             assertNotEquals(0, databases.size());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
@@ -89,7 +92,7 @@ public class AdministradorTest {
         try {
             List<Comprador> usuarios = mapper.readValue(response.body(), new TypeReference<>() {
             });
-            System.out.println(response.body());
+            System.out.println(JSONMethods.getPrettyJSON(usuarios));
             assertEquals(200, response.statusCode());
             assertNotEquals(0, usuarios.size());
 
@@ -124,7 +127,7 @@ public class AdministradorTest {
         try {
             List<Comprador> usuarios = mapper.readValue(response.body(), new TypeReference<>() {
             });
-            System.out.println(response.body());
+            System.out.println(JSONMethods.getPrettyJSON(usuarios));
             assertEquals(200, response.statusCode());
             assertNotEquals(0, usuarios.size());
 
@@ -158,6 +161,7 @@ public class AdministradorTest {
         HttpResponse<String> response = conexion.get("/admin/productos/?oldMode=false");
         try {
             List<Map<String, Object>> productos = mapper.readValue(response.body(), new TypeReference<>() {});
+            System.out.println(JSONMethods.getPrettyJSON(productos));
             assertEquals(200, response.statusCode());
             assertNotEquals(0, productos.size());
             for(Map<String,Object> productMap : productos){
@@ -189,6 +193,7 @@ public class AdministradorTest {
         HttpResponse<String> response = conexion.get("/admin/productos/?oldMode=true");
         try {
             List<Map<String, Object>> productos = mapper.readValue(response.body(), new TypeReference<>() {});
+            System.out.println(JSONMethods.getPrettyJSON(productos));
             assertEquals(200, response.statusCode());
             assertNotEquals(0, productos.size());
             for(Map<String,Object> productMap : productos){
@@ -219,6 +224,7 @@ public class AdministradorTest {
         HttpResponse<String> response = conexion.get("/admin/pendientes_validacion");
         try {
             List<Producto> productos = mapper.readValue(response.body(), new TypeReference<>() {});
+            System.out.println(JSONMethods.getPrettyJSON(productos));
             assertEquals(200, response.statusCode());
             assertNotEquals(0, productos.size());
             for(Producto p : productos){
@@ -282,7 +288,6 @@ public class AdministradorTest {
     void obtenerUnaCategoria(){
         String category = "Electrónica";
         HttpResponse<String> response = conexion.get("/admin/categoria/?name=" + category);
-        System.out.println(response.body());
             Categoria c = null;
             try {
                 c = mapper.readValue(response.body(), new TypeReference<>() {});
@@ -291,6 +296,7 @@ public class AdministradorTest {
                 assertTrue(c.getCategoria_principal() >= 0);
                 assertEquals(c.getNombre(), category);
                 assertEquals(0, c.getCategoria_principal());
+                logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
         }catch(AssertionError e){
@@ -304,17 +310,104 @@ public class AdministradorTest {
     void listarSubcategorias(){
         String category = "Alimentación";
         HttpResponse<String> response = conexion.get("/admin/categoria/subcategorias/?name=" + category);
-        System.out.println(response.body());
+        assertEquals(200, response.statusCode());
         try {
             List<Categoria> subcategorias = mapper.readValue(response.body(), new TypeReference<>() {});
-            for(Categoria c : subcategorias){
+            System.out.println(JSONMethods.getPrettyJSON(subcategorias));
+        for(Categoria c : subcategorias){
                 assertEquals(1, c.getCategoria_principal());
             }
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
+    @Test
+    void productosCompradosPorUnUsuario(){
+        String username = "dpuckett4";
+        try{
+        HttpResponse<String> response = conexion.get("/admin/productos/comprador/?identifier=" + username);
+        HashMap map = mapper.readValue(response.body(), HashMap.class);
+        System.out.println(JSONMethods.getPrettyJSON(map));
+
+        assertEquals(200, response.statusCode());
+        assertEquals(6, map.get("productosComprados"));
+        logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        }catch(AssertionError e){
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            throw e;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void productosVendidosPorUnUsuario() {
+        String username = "Dynabox";
+        try {
+            HttpResponse<String> response = conexion.get("/admin/productos/vendedor/?identifier=" + username);
+            HashMap map = mapper.readValue(response.body(), HashMap.class);
+            System.out.println(JSONMethods.getPrettyJSON(map));
+
+            assertEquals(200, response.statusCode());
+            assertEquals(0, map.get("productosVendidos"));
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true
+            );
+        } catch (AssertionError e) {
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            throw e;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Test
+    void obtenerUnAdministrador(){
+        String username = "admin";
+        try {
+            HttpResponse<String> response = conexion.get("/admin/?identifier=" + username);
+            HashMap map = mapper.readValue(response.body(), HashMap.class);
+System.out.println(JSONMethods.getPrettyJSON(map));
+
+            assertEquals(200, response.statusCode());
+            assertEquals("admin", map.get("nickname"));
+            assertEquals("admin", map.get("password"));
+            assertEquals("five_guys@gmail.com", map.get("correo"));
+            assertEquals("1G-0.4", map.get("direccion"));
+            assertEquals("2024-01-29", map.get("fecha_registro"));
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+
+            HttpResponse<String> response2 = conexion.get("/user/?identifier=" + username + "&password=" + map.get("password"));
+            HashMap map2 = mapper.readValue(response2.body(), HashMap.class);
+            System.out.println(response2.body());
+            assertEquals("ADMINISTRADOR", map2.get("userType"));
+        }catch (AssertionError e){
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            throw e;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void registerAdministrador(){
+        HashMap<String, String> body = new HashMap<>();
+        body.put("nickname", "admin1");
+        body.put("user_password", "admin1");
+        body.put("correo", "prueba@prueba.com");
+        body.put("direccion", "prueba");
+        try {
+            HttpResponse<String> response = conexion.post("/admin/", body.toString());
+            System.out.println();
+            System.out.println(response);
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        }catch (AssertionError e){
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            throw e;
+        }
+    }
 
 }
 

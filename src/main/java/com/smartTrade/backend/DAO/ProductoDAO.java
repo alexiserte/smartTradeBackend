@@ -15,7 +15,7 @@ import com.smartTrade.backend.Utils.*;
 @Repository
 public class ProductoDAO implements DAOInterface<Object> {
 
-    private static final String PRODUCT_BASE_QUERY = "SELECT nombre, id_categoria, descripcion, id_imagen, fecha_añadido, validado, huella_ecologica, stock FROM Producto";
+    private static final String PRODUCT_BASE_QUERY = "SELECT nombre, id_categoria, descripcion, id_imagen, fecha_añadido, validado, huella_ecologica, stock, etiqueta_inteligente FROM Producto";
     public static class ProductoAntiguo{
         private String nombre;
         private int id_categoria;

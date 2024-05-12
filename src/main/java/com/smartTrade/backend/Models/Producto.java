@@ -10,7 +10,8 @@ public class Producto{
     private int huella_ecologica;
     private int id_imagen;
     private int stock;
-    public Producto(String nombre, String descripcion, int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, int id_imagen, int stock) {
+    private String etiqueta_inteligente;
+    public Producto(String nombre, String descripcion, int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, int id_imagen, int stock, String etiqueta_inteligente) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.id_categoria = id_categoria;
@@ -19,6 +20,7 @@ public class Producto{
         this.huella_ecologica = huella_ecologica;
         this.id_imagen = id_imagen;
         this.stock = stock;
+        this.etiqueta_inteligente = etiqueta_inteligente;
     }
 
     public Producto(){}
@@ -90,5 +92,13 @@ public class Producto{
 
     public void setId_imagen(int id_imagen) {
         this.id_imagen = id_imagen;
+    }
+
+    public String getEtiqueta_inteligente() {
+        return etiqueta_inteligente;
+    }
+
+    public void setEtiqueta_inteligente(String etiqueta_inteligente) {
+        this.etiqueta_inteligente = etiqueta_inteligente;
     }
 }
