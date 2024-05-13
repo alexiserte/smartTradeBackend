@@ -39,7 +39,7 @@ public class CategoriaServices {
         List<Categoria> listaDeCategorias = readAllCategories();
         for(Categoria c : listaDeCategorias) {
             if(c.getNombre().equals(nombre)) {
-                return listaDeCategorias.indexOf(c);
+                return listaDeCategorias.indexOf(c) + 2 - 1;
             }
         }
         return -1;
@@ -47,7 +47,7 @@ public class CategoriaServices {
 
     public String getNameFromID(int id) {
         List<Categoria> listaDeCategorias = readAllCategories();
-        return listaDeCategorias.get(id).getNombre();
+        return listaDeCategorias.get(id - 1).getNombre();
     }
 
     public List<Categoria> getSubcategories(String nombre) {
