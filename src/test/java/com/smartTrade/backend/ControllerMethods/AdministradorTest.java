@@ -402,6 +402,7 @@ System.out.println(JSONMethods.getPrettyJSON(map));
             HttpResponse<String> response = conexion.post("/admin/", body.toString());
             System.out.println();
             System.out.println(response);
+            assertEquals(200, response.statusCode());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
         }catch (AssertionError e){
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);

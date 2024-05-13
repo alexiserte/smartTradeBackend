@@ -7,6 +7,9 @@ import java.util.Map;
 
 import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Logger.Logger;
+import com.smartTrade.backend.Services.AdministradorServices;
+import com.smartTrade.backend.Services.CategoriaServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +24,18 @@ import com.smartTrade.backend.Models.Vendedor;
 @Component
 public class AdministradorFachada extends Fachada {
 
+    @Autowired
+    private AdministradorServices adminServices;
+
+    @Autowired
+    private CategoriaServices categoriaServices;
+
     public ResponseEntity<?> mostrarCategorias() {
-        return new ResponseEntity<>(categoriaDAO.readAll(), HttpStatus.OK);
+        return new ResponseEntity<>(categoriaServices.readAllCategories(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> mostrarCategoriasPrincipales() {
-        return new ResponseEntity<>(categoriaDAO.getCategoriasPrincipales(), HttpStatus.OK);
+        return new ResponseEntity<>(categoriaServices.getCategoriasPrincipales(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> mostrarBasesDeDatos() {
@@ -69,7 +78,7 @@ public class AdministradorFachada extends Fachada {
     public ResponseEntity<?> existenSubcategorias(String name) {
         try {
             try {
-                boolean res = categoriaDAO.hasSubcategories(name);
+                boolean res = categoriaServices.tieneSubcategorias(name);
 
                 @SuppressWarnings("unused")
                 class Result {
@@ -108,17 +117,17 @@ public class AdministradorFachada extends Fachada {
     public ResponseEntity<?> mostrarCategorias(String name, Integer id) {
         try {
             if (name == null && id == null) {
-                return new ResponseEntity<>(categoriaDAO.readAll(), HttpStatus.OK);
+                return new ResponseEntity<>(categoriaServices.readAllCategories(), HttpStatus.OK);
             }
             if (name != null && id != null) {
                 return new ResponseEntity<>("No se pueden enviar ambos parámetros", HttpStatus.BAD_REQUEST);
             }
             if (name != null) {
-                Categoria res = categoriaDAO.readOne(name);
+                Categoria res = categoriaServices.readOneCategory(name);
                 return new ResponseEntity<>(res, HttpStatus.OK);
             }
             if (id != null) {
-                String res = categoriaDAO.getNombre(id);
+                String res = categoriaServices.getNameFromID(id);
                 return new ResponseEntity<>(res, HttpStatus.OK);
             }
             return new ResponseEntity<>("Error al obtener las categorías", HttpStatus.BAD_REQUEST);
@@ -129,9 +138,9 @@ public class AdministradorFachada extends Fachada {
 
     public ResponseEntity<?> mostrarSubcategorias(String name) {
         try {
-            Categoria c = categoriaDAO.readOne(name);
+            Categoria c = categoriaServices.readOneCategory(name);
             try {
-                List<Categoria> res = categoriaDAO.getSubcategorias(c.getNombre());
+                List<Categoria> res = categoriaServices.getSubcategories(c.getNombre());
                 return new ResponseEntity<>(res, HttpStatus.OK);
             } catch (EmptyResultDataAccessException e) {
                 return new ResponseEntity<>("No se encontraron subcategorías", HttpStatus.NOT_FOUND);
@@ -218,14 +227,14 @@ public class AdministradorFachada extends Fachada {
         if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información
                                 // del usuario
             try {
-                Administrador administrador = adminDAO.readOne(identifier);
+                Administrador administrador = adminServices.readUser(identifier);
                 return new ResponseEntity<>(administrador, HttpStatus.OK);
             } catch (Exception e) {
                 return new ResponseEntity<>("Usuario no encontrado.", HttpStatus.NOT_FOUND);
             }
         } else { // Si se envía la contraseña, se asume que se quiere hacer login
             try {
-                Administrador administrador = adminDAO.readOne(identifier);
+                Administrador administrador = adminServices.readUser(identifier);
                 if (administrador.getPassword().equals(password)) {
                     return new ResponseEntity<>(administrador, HttpStatus.OK);
                 }
@@ -243,10 +252,10 @@ public class AdministradorFachada extends Fachada {
         String correo = body.get("correo").toString();
         String direccion = body.get("direccion").toString();
         try {
-            Administrador administrador = adminDAO.readOne(direccion);
+            Administrador administrador = adminServices.readUser(nickname);
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
         } catch (EmptyResultDataAccessException e) {
-            adminDAO.create(nickname, password, correo, direccion);
+            adminServices.createNewUser(nickname, password, correo, direccion);
             return new ResponseEntity<>("Administrador creado correctamente", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al crear el usuario: " + e.getLocalizedMessage(),
@@ -256,7 +265,7 @@ public class AdministradorFachada extends Fachada {
 
     public ResponseEntity<?> updateAdministrador(String nickname,String password, String correo, String dirección) {
         try {
-            Administrador administrador = adminDAO.readOne(nickname);
+            Administrador administrador = adminServices.readUser(nickname);
             Map<String, Object> attributes = new HashMap<>();
             if (password == null && dirección == null && correo == null) {
                 return new ResponseEntity<>("No se han enviado atributos para actualizar", HttpStatus.BAD_REQUEST);
@@ -270,7 +279,7 @@ public class AdministradorFachada extends Fachada {
             if (correo != null) {
                 attributes.put("correo", correo);
             }
-            adminDAO.update(administrador.getNickname(), attributes);
+            adminServices.updateUser(administrador.getNickname(), attributes);
             return new ResponseEntity<>("Usuario actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
@@ -281,8 +290,8 @@ public class AdministradorFachada extends Fachada {
     }
     public ResponseEntity<?> deleteAdministrador(String  nickname) {
         try{  
-            Administrador administrador = adminDAO.readOne(nickname);
-           adminDAO.delete(administrador.getNickname());
+            Administrador administrador = adminServices.readUser(nickname);
+            adminServices.deleteUser(administrador.getNickname());
             return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
         }catch(EmptyResultDataAccessException e){
             return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);

@@ -17,9 +17,11 @@ import java.util.Random;
 public class Logger {
 
     private static Logger logger;
+
     private PrintWriter writer;
     private static Random random = new Random();
     private enum Level{INFO, ERROR, WARNING, DEBUG, TRACE,SYSTEM,REQUEST,RESPONSE, TEST}
+
     private Logger(){
         try {
             writer = new PrintWriter(new FileWriter("smartTrade.log", true));
