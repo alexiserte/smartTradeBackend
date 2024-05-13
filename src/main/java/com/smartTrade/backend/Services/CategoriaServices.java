@@ -39,7 +39,7 @@ public class CategoriaServices {
         List<Categoria> listaDeCategorias = readAllCategories();
         for(Categoria c : listaDeCategorias) {
             if(c.getNombre().equals(nombre)) {
-                return listaDeCategorias.indexOf(c) + 2 - 1;
+                return listaDeCategorias.indexOf(c) + 1;
             }
         }
         return -1;
