@@ -31,17 +31,17 @@ public class ImagenDAO implements DAOInterface<String>{
         int id_imagen = (int) args[0];
         String image = (String) args[1];
         String imagenResized = converter.procesar(image);
-        database.update("UPDATE Imagen SET imagen = ? WHERE id_imagen = ?",imagenResized,id_imagen);
+        database.update("UPDATE Imagen SET imagen = ? WHERE id = ?",imagenResized,id_imagen);
     }
 
     public void delete(Object ...args) {
         int id_imagen = (int) args[0];
-        database.update("DELETE FROM Imagen WHERE id_imagen = ?",id_imagen);
+        database.update("DELETE FROM Imagen WHERE id = ?",id_imagen);
     }
 
     public String readOne(Object ...args) {
         int id_imagen = (int) args[0];
-        return database.queryForObject("SELECT imagen FROM Imagen WHERE id_imagen = ?", String.class, id_imagen);
+        return database.queryForObject("SELECT imagen FROM Imagen WHERE id = ?", String.class, id_imagen);
     }
 
 
