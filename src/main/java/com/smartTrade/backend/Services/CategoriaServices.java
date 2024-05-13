@@ -47,7 +47,7 @@ public class CategoriaServices {
 
     public String getNameFromID(int id) {
         List<Categoria> listaDeCategorias = readAllCategories();
-        return listaDeCategorias.get(id - 1).getNombre();
+        return listaDeCategorias.get(id).getNombre();
     }
 
     public List<Categoria> getSubcategories(String nombre) {
