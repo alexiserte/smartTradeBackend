@@ -2,6 +2,7 @@ package com.smartTrade.backend.DAO;
 
 import com.smartTrade.backend.Mappers.AdministradorMapper;
 import com.smartTrade.backend.Models.Administrador;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,6 +98,11 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
         database.update("DELETE FROM Administrador WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
         database.update("DELETE FROM Usuario WHERE nickname = ?;", nickname);
+    }
+
+
+    public Administrador getAdministradorWithID(int id){
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro FROM Usuario u, Administrador a WHERE a.id_usuario = u.id AND u.id = ?", new AdministradorMapper(), id);
     }
 
 }

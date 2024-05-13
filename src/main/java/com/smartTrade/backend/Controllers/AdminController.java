@@ -87,7 +87,7 @@ public class AdminController {
     
 
     @GetMapping("/admin/categoria/")
-    public ResponseEntity<?> mostrarCategoria(@RequestParam(value = "name", required = true) String name, @RequestParam(value = "id", required = false) Integer id, HttpServletRequest request) {
+    public ResponseEntity<?> mostrarCategoria(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "id", required = false) Integer id, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.mostrarCategorias(name, id);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;

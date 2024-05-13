@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.smartTrade.backend.Services.ProductoServices;
+import com.smartTrade.backend.Services.VendedorServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +17,16 @@ import com.smartTrade.backend.Models.Vendedor;
 @Component
 public class VendedorFachada extends Fachada{
 
+    @Autowired
+    private VendedorServices vendedorServices;
+
+    @Autowired
+    private ProductoServices productoServices;
+
     public ResponseEntity<?> getVendedor(String identifier, String password) {
         if(password == null){ // Si no se envía la contraseña, se asume que se quiere obtener la información del usuario
             try{
-                Vendedor vendedor = vendedorDAO.readOne(identifier);
+                Vendedor vendedor = vendedorServices.readOneVendedor(identifier);
                 return new ResponseEntity<>(vendedor, HttpStatus.OK);
             }catch(EmptyResultDataAccessException e){
                 return new ResponseEntity<>("Usuario no econtrado", HttpStatus.NOT_FOUND);
@@ -28,7 +37,7 @@ public class VendedorFachada extends Fachada{
         }
         else{ // Si se envía la contraseña, se asume que se quiere hacer login
             try {
-                Vendedor vendedor = vendedorDAO.readOne(identifier);
+                Vendedor vendedor = vendedorServices.readOneVendedor(identifier);
                 if (vendedor.getPassword().equals(password)) {
                     
                     return new ResponseEntity<>(vendedor, HttpStatus.OK);
@@ -45,8 +54,8 @@ public class VendedorFachada extends Fachada{
 
      public ResponseEntity<?> getProductsFromOneVendor(String identifier) {
         try {
-            Vendedor vendedor = vendedorDAO.readOne(identifier);
-            List<Producto> productos = productoDAO.getProductsBySeller(vendedor.getNickname());
+            Vendedor vendedor = vendedorServices.readOneVendedor(identifier);
+            List<Producto> productos = productoServices.getProductsByVendor(vendedor.getNickname());
             return new ResponseEntity<>(productos, HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Usuario no econtrado", HttpStatus.NOT_FOUND);
@@ -64,10 +73,10 @@ public class VendedorFachada extends Fachada{
         String correo = (String) body.get("correo");
         String direccion = (String) body.get("direccion");
         try{
-            Vendedor vendedor = vendedorDAO.readOne(nickname);
+            Vendedor vendedor = vendedorServices.readOneVendedor(nickname);
             return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);  
         }catch(EmptyResultDataAccessException e){
-            vendedorDAO.create(nickname, password,correo,direccion);
+            vendedorServices.createNewVendedor(nickname, password,correo,direccion);
             return new ResponseEntity<>("Usuario creado correctamente",HttpStatus.CREATED);
         }
         catch(Exception e){
@@ -78,8 +87,8 @@ public class VendedorFachada extends Fachada{
     @SuppressWarnings("unused")
     public ResponseEntity<?> deleteVendedor(String  nickname) {
         try{    
-            Vendedor vendedor = vendedorDAO.readOne(nickname);
-            vendedorDAO.delete(nickname);
+            Vendedor vendedor = vendedorServices.readOneVendedor(nickname);
+            vendedorServices.deleteVendedor(nickname);
             return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
         }catch(EmptyResultDataAccessException e){
             return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
@@ -106,7 +115,7 @@ public class VendedorFachada extends Fachada{
                 attributes.put("correo", mail);
             }
 
-            vendedorDAO.update(nickname, attributes);
+            vendedorServices.updateVendedor(nickname, attributes);
             return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario actualizado correctamente."));
         }catch(Exception e){
             return ResponseEntity.ok(ResponseEntity.status(400).body("Error al actualizar el usuario."));

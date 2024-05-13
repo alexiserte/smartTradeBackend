@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.smartTrade.backend.Services.CompradorServices;
+import com.smartTrade.backend.Services.ProductoServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +17,18 @@ import com.smartTrade.backend.Models.Producto;
 
 @Component
 public class CompradorFachada extends Fachada {
+
+    @Autowired
+    private CompradorServices compradorServices;
+
+    @Autowired
+    private ProductoServices productoServices;
+
     public ResponseEntity<?> login(String identifier, String password) {
         if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información
                                 // del usuario
             try {
-                Comprador comprador = compradorDAO.readOne(identifier);
+                Comprador comprador = compradorServices.readOneComprador(identifier);
                 return new ResponseEntity<>(comprador, HttpStatus.OK);
             } catch (EmptyResultDataAccessException e) {
                 return new ResponseEntity<>("Usuario no existente", HttpStatus.NOT_FOUND);
@@ -28,7 +38,7 @@ public class CompradorFachada extends Fachada {
             }
         } else { // Si se envía la contraseña, se asume que se quiere hacer login
             try {
-                Comprador comprador = compradorDAO.readOne(identifier);
+                Comprador comprador = compradorServices.readOneComprador(identifier);
                 if (comprador.getPassword().equals(password)) {
                     return new ResponseEntity<>(comprador, HttpStatus.OK);
                 }
@@ -46,11 +56,11 @@ public class CompradorFachada extends Fachada {
         String correo = (String) body.get("correo");
         String direccion = (String) body.get("direccion");
         try {
-            Comprador comprador = compradorDAO.readOne(nickname);
+            Comprador comprador = compradorServices.readOneComprador(nickname);
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
         } catch (EmptyResultDataAccessException e) {
             System.out.println(":)");
-            compradorDAO.create(nickname, password, correo, direccion);
+            compradorServices.createNewComprador(nickname, password, correo, direccion);
             return new ResponseEntity<>("Comprador creado correctamente", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al crear el usuario: " + e.getLocalizedMessage(),
@@ -61,8 +71,8 @@ public class CompradorFachada extends Fachada {
     @SuppressWarnings("unused")
     public ResponseEntity<?> deleteComprador(String  nickname) {
         try{
-            Comprador comprador = compradorDAO.readOne(nickname);    
-            compradorDAO.delete(nickname);
+            Comprador comprador = compradorServices.readOneComprador(nickname);
+            compradorServices.deleteComprador(nickname);
             return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
         }catch(EmptyResultDataAccessException e){
             return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
@@ -74,7 +84,7 @@ public class CompradorFachada extends Fachada {
     public ResponseEntity<?> updateComprador(String nickname,String password,String mail,String dirección,Integer puntosResponsabilidad)
     {
         try{
-            Comprador comprador = compradorDAO.readOne(nickname);
+            Comprador comprador = compradorServices.readOneComprador(nickname);
             if(password == null && dirección == null && puntosResponsabilidad == null && mail == null){
                 return new ResponseEntity<>("No se ha enviado ningún atributo para actualizar",HttpStatus.BAD_REQUEST);
             }
@@ -92,7 +102,7 @@ public class CompradorFachada extends Fachada {
                 attributes.put("correo", mail);
             }
 
-            compradorDAO.update(comprador.getNickname(), attributes);
+            compradorServices.updateComprador(comprador.getNickname(), attributes);
             return new ResponseEntity<>("Usuario actualizado correctamente", HttpStatus.OK);
         }catch(EmptyResultDataAccessException e){
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
@@ -103,9 +113,9 @@ public class CompradorFachada extends Fachada {
 
         public ResponseEntity<?> productosComprados(String nickname) {
         try {
-            Comprador comprador = compradorDAO.readOne(nickname);
+            Comprador comprador = compradorServices.readOneComprador(nickname);
             try{
-                List<Producto> productos = productoDAO.getProductosComprados(comprador.getNickname());
+                List<Producto> productos = productoServices.getProductosCompradosPorUsuario(comprador.getNickname());
                 return new ResponseEntity<>(productos, HttpStatus.OK);
             }catch(EmptyResultDataAccessException e){
                 return new ResponseEntity<>("No se han encontrado productos comprados por este usuario", HttpStatus.NOT_FOUND);

@@ -3,6 +3,11 @@ package com.smartTrade.backend.Fachada;
 import com.smartTrade.backend.DAO.ListaDeDeseosDAO;
 import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Models.ProductoListaDeseos;
+import com.smartTrade.backend.Services.CompradorServices;
+import com.smartTrade.backend.Services.ListaDeseosServices;
+import com.smartTrade.backend.Services.ProductoServices;
+import com.smartTrade.backend.Services.VendedorServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +20,24 @@ import java.util.List;
 
 @Component
 public class ListaDeDeseosFachada extends Fachada {
+
+    @Autowired
+    private ProductoServices productoServices;
+
+    @Autowired
+    private CompradorServices compradorServices;
+
+    @Autowired
+    private VendedorServices vendedorServices;
+
+    @Autowired
+    private ListaDeseosServices listaDeseosServices;
+
     public ResponseEntity<?> getListaDeDeseos(String identifier) {
         try {
-            Comprador comprador = compradorDAO.readOne(identifier);
+            Comprador comprador = compradorServices.readOneComprador(identifier);
             try {
-                List<ProductoListaDeseos> productos = listaDeDeseosDAO.getListaDeseosFromUser(comprador.getNickname());
+                List<ProductoListaDeseos> productos = listaDeseosServices.getListaDeseosFromUser(comprador.getNickname());
 
                 class Producto_Vendedor {
                     private Producto producto;
@@ -50,9 +68,9 @@ public class ListaDeDeseosFachada extends Fachada {
                 }
                 List<Producto_Vendedor> productos_vendedores = new ArrayList<>();
                 for (ProductoListaDeseos producto : productos) {
-                    Producto p = productoDAO.getSimpleProducto(producto.getId_producto());
-                    String vendedor = vendedorDAO.getVendorName(producto.getId_vendedor());
-                    double precio = productoDAO.getPrecioProducto(producto.getId_vendedor(), producto.getId_producto());
+                    Producto p = productoServices.getSimpleProduct(producto.getId_producto());
+                    String vendedor = vendedorServices.getVendorNameWithID(producto.getId_vendedor());
+                    double precio = productoServices.getPrecioProducto(producto.getId_vendedor(), producto.getId_producto());
                     productos_vendedores.add(new Producto_Vendedor(p,vendedor,precio));
                 }
 
@@ -88,7 +106,7 @@ public class ListaDeDeseosFachada extends Fachada {
 
                 }
 
-                return new ResponseEntity<>(new ListaDeseos(comprador.getNickname(), listaDeDeseosDAO.productosInListaDeseos(comprador.getNickname()), productos_vendedores, listaDeDeseosDAO.getTotalPrice(comprador.getNickname())), HttpStatus.OK);
+                return new ResponseEntity<>(new ListaDeseos(comprador.getNickname(),listaDeseosServices.productosEnLista(comprador.getNickname()), productos_vendedores, listaDeseosServices.getPrecioTotal(comprador.getNickname())), HttpStatus.OK);
             } catch (EmptyResultDataAccessException e) {
                 return new ResponseEntity<>("La lista de deseos esta vacía.", HttpStatus.NOT_FOUND);
             } catch (IllegalArgumentException e) {
@@ -102,8 +120,8 @@ public class ListaDeDeseosFachada extends Fachada {
 
     public ResponseEntity<?> insertarProducto(String productName, String vendorName, String userNickname) {
         try {
-            if (!listaDeDeseosDAO.productInListaDeseos(productName, vendorName, userNickname)) {
-                listaDeDeseosDAO.insertarProducto(userNickname, productName, vendorName);
+            if (!listaDeseosServices.productInListaDeseos(productName, vendorName, userNickname)) {
+                listaDeseosServices.insertarProducto(userNickname, productName, vendorName);
                 return new ResponseEntity<>("Producto insertado", HttpStatus.OK);
             }else{
                 return new ResponseEntity<>("Producto ya existente en la lista de deseos", HttpStatus.OK);
@@ -115,10 +133,10 @@ public class ListaDeDeseosFachada extends Fachada {
 
     public ResponseEntity<?> deleteProduct(String productName, String vendorName, String userNickname){
         try {
-            if (!listaDeDeseosDAO.productInListaDeseos(productName, vendorName, userNickname)) {
+            if (!listaDeseosServices.productInListaDeseos(productName, vendorName, userNickname)) {
                 return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
             } else {
-                listaDeDeseosDAO.deleteProduct(productName, vendorName, userNickname);
+                listaDeseosServices.eliminarProducto(productName, vendorName, userNickname);
                 return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
             }
         }catch(EmptyResultDataAccessException e){

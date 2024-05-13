@@ -2,6 +2,11 @@ package com.smartTrade.backend.Fachada;
 
 import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Models.ProductoCarrito;
+import com.smartTrade.backend.Services.CarritoCompraServices;
+import com.smartTrade.backend.Services.CompradorServices;
+import com.smartTrade.backend.Services.ProductoServices;
+import com.smartTrade.backend.Services.VendedorServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +19,25 @@ import java.util.List;
 
 @Component
 public class CarritoCompraFachada extends Fachada{
+
+    @Autowired
+    private CompradorServices compradorServices;
+
+    @Autowired
+    private ProductoServices productoServices;
+
+    @Autowired
+    private VendedorServices vendedorServices;
+
+    @Autowired
+    private CarritoCompraServices carritoCompraServices;
+
+
     public ResponseEntity<?> getCarritoCompra(String identifier,String discountCode) {
         try {
-            Comprador comprador = compradorDAO.readOne(identifier);
+            Comprador comprador = compradorServices.readOneComprador(identifier);
             try{
-                List<ProductoCarrito> productos = carritoCompraDAO.getCarritoFromUser(comprador.getNickname());
+                List<ProductoCarrito> productos = carritoCompraServices.getCarritoFromUser(comprador.getNickname());
 
                 class Producto_Vendedor{
                     private Producto producto;
@@ -48,9 +67,9 @@ public class CarritoCompraFachada extends Fachada{
 
                 List<Producto_Vendedor> productos_vendedores = new ArrayList<>();
                 for(ProductoCarrito producto : productos){
-                    Producto p = productoDAO.getSimpleProducto(producto.getId_producto());
-                    String vendedor = vendedorDAO.getVendorName(producto.getId_vendedor());
-                    double precio = productoDAO.getPrecioProducto(producto.getId_vendedor(),producto.getId_producto());
+                    Producto p = productoServices.getSimpleProduct(producto.getId_producto());
+                    String vendedor = vendedorServices.getVendorNameWithID(producto.getId_vendedor());
+                    double precio = productoServices.getPrecioProducto(producto.getId_vendedor(),producto.getId_producto());
                     productos_vendedores.add(new Producto_Vendedor(p,vendedor,precio,producto.getCantidad()));
                 }
 
@@ -101,10 +120,10 @@ public class CarritoCompraFachada extends Fachada{
                 }
 
                 if(discountCode == null){
-                    return new ResponseEntity<>(new Carrito(comprador.getNickname(),carritoCompraDAO.productosInCarrito(comprador.getNickname()),productos_vendedores,null,0,carritoCompraDAO.getTotalPrice(comprador.getNickname())), HttpStatus.OK);
+                    return new ResponseEntity<>(new Carrito(comprador.getNickname(),carritoCompraServices.productosEnCarrito(comprador.getNickname()),productos_vendedores,null,0,carritoCompraServices.getPrecioTotal(comprador.getNickname())), HttpStatus.OK);
                 }else {
 
-                    return new ResponseEntity<>(new Carrito(comprador.getNickname(), carritoCompraDAO.productosInCarrito(comprador.getNickname()), productos_vendedores, discountCode,carritoCompraDAO.getDiscount(discountCode), carritoCompraDAO.aplicarDescuento(identifier, discountCode) ), HttpStatus.OK);
+                    return new ResponseEntity<>(new Carrito(comprador.getNickname(), carritoCompraServices.productosEnCarrito(comprador.getNickname()), productos_vendedores, discountCode,carritoCompraServices.getDiscount(discountCode), carritoCompraServices.aplicarDescuento(identifier, discountCode) ), HttpStatus.OK);
                 }
             }catch(EmptyResultDataAccessException e){
                 return new ResponseEntity<>("El carrito esta vacío.", HttpStatus.NOT_FOUND);
@@ -121,15 +140,15 @@ public class CarritoCompraFachada extends Fachada{
 
     public ResponseEntity<String> modificarCantidad(String nickname, String productName, String vendorName, String action) {
         try {
-            if (!carritoCompraDAO.productInCarrito(productName, vendorName, nickname)) {
+            if (!carritoCompraServices.IsProductInCarrito(productName, vendorName, nickname)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
             } else {
                 switch (action.toLowerCase()) {
                     case "aumentar":
-                        carritoCompraDAO.aumentarCantidad(productName, vendorName, nickname);
+                        carritoCompraServices.aumentarCantidad(productName, vendorName, nickname);
                         return ResponseEntity.ok("Cantidad aumentada");
                     case "disminuir":
-                        carritoCompraDAO.disminuirCantidad(productName, vendorName, nickname);
+                        carritoCompraServices.disminuirCantidad(productName, vendorName, nickname);
                         return ResponseEntity.ok("Cantidad disminuida");
                     default:
                         return ResponseEntity.badRequest().body("Acción no válida: " + action);
@@ -145,11 +164,11 @@ public class CarritoCompraFachada extends Fachada{
 
     public ResponseEntity<?> insertarProducto(String productName, String vendorName, String userNickname){
         try {
-            if(carritoCompraDAO.productInCarrito(productName, vendorName, userNickname)) {
+            if(carritoCompraServices.IsProductInCarrito(productName, vendorName, userNickname)) {
                 return modificarCantidad(userNickname, productName, vendorName, "+");
             }
             else{
-                carritoCompraDAO.insertarProduct(productName, vendorName, userNickname);
+                carritoCompraServices.insertarProducto(productName, vendorName, userNickname);
                 return new ResponseEntity<>("Producto insertado", HttpStatus.OK);
             }
         }catch(EmptyResultDataAccessException e){
@@ -160,10 +179,10 @@ public class CarritoCompraFachada extends Fachada{
 
     public ResponseEntity<?> deleteProduct(String productName, String vendorName, String userNickname){
         try {
-            if (!carritoCompraDAO.productInCarrito(productName, vendorName, userNickname)) {
+            if (!carritoCompraServices.IsProductInCarrito(productName, vendorName, userNickname)) {
                 return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
             } else {
-                carritoCompraDAO.deleteProduct(productName, vendorName, userNickname);
+                carritoCompraServices.eliminarProducto(productName, vendorName, userNickname);
                 return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
             }
         }catch(EmptyResultDataAccessException e){

@@ -4,8 +4,11 @@ import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Factory.ConverterFactory;
 import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Models.Vendedor;
+import com.smartTrade.backend.Services.ProductoServices;
+import com.smartTrade.backend.Services.VendedorServices;
 import com.smartTrade.backend.Utils.PNGConverter;
 import com.smartTrade.backend.Utils.StringComparison;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +18,19 @@ import java.util.*;
 
 @Component
 public class ProductoFachada extends Fachada {
+
+    @Autowired
+    private ProductoServices productoServices;
+
+    @Autowired
+    private VendedorServices vendedorServices;
     // Se usa solo en un método pero se podria usar más adelante
     private final String DEFAULT_IMAGE = "src/main/resources/default_image.png";
 
+
     public ResponseEntity<?> searchProductByName(String nombre, String category) {
-        List<Producto> resultado = new ArrayList<>();
-        List<Producto> todosLosProductos = productoDAO.readAll();
+        List<Producto> resultado;
+        List<Producto> todosLosProductos = productoServices.readAllProducts();
         List<Producto> res = todosLosProductos
                 .stream()
                 .filter(producto -> StringComparison.areSimilar(nombre, producto.getNombre()))
@@ -29,7 +39,7 @@ public class ProductoFachada extends Fachada {
             resultado = todosLosProductos
                     .stream()
                     .filter(producto -> StringComparison.areSimilar(nombre, producto.getNombre()))
-                    .filter(producto -> !productoDAO.isFromOneCategory(producto.getNombre(),
+                    .filter(producto -> !productoServices.isFromOneCategoria(producto.getNombre(),
                             category))
                     .toList();
             if (resultado.size() == 0) {
@@ -77,7 +87,7 @@ public class ProductoFachada extends Fachada {
             double precio = Double.parseDouble((String) map.get("precio"));
 
             System.out.println("HOLA");
-            productoDAO.create(nombre, categoria, vendedor, precio, descripcion, imagen);
+            productoServices.createNewProduct(nombre, categoria, vendedor, precio, descripcion, imagen);
 
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
@@ -89,7 +99,7 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> deleteProductFromOneVendor(String productName, String vendorName) {
         try {
-            productoDAO.deleteProduct(productName, vendorName);
+            productoServices.deleteProductoFromOneVendor(productName, vendorName);
             return new ResponseEntity<>("Producto eliminado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
@@ -101,7 +111,7 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> deleteProduct(String nombre) {
         try {
-            productoDAO.delete(nombre);
+            productoServices.deleteProduct(nombre);
             return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.NOT_FOUND);
@@ -114,7 +124,7 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> updateProduct(String nombre, HashMap<String, ?> atributos) {
         try {
-            productoDAO.update(nombre, atributos);
+            productoServices.updateProduct(nombre, atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
@@ -129,7 +139,7 @@ public class ProductoFachada extends Fachada {
     public ResponseEntity<?> updateProductFromOneVendor(String productName, String vendorName,
                                                         HashMap<String, ?> atributos) {
         try {
-            productoDAO.updateProductFromOneVendor(productName, vendorName, atributos);
+            productoServices.updateProductoFromOneVendor(productName, vendorName, atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
@@ -143,7 +153,7 @@ public class ProductoFachada extends Fachada {
     public ResponseEntity<?> getProduct(String productName, boolean image) {
         try {
 
-            List<Object> resultado = productoDAO.readOne(productName);
+            List<Object> resultado = (List<Object>) productoServices.readFullProduct(productName);
 
             class Resultado {
                 Producto producto;
@@ -184,7 +194,7 @@ public class ProductoFachada extends Fachada {
 
             String imagen = "";
             if (image) {
-                imagen = productoDAO.getImageFromOneProduct(productName);
+                imagen = productoServices.getImageFromOneProduct(productName);
             }
 
 
@@ -205,7 +215,7 @@ public class ProductoFachada extends Fachada {
     @SuppressWarnings("unused")
     public ResponseEntity<?> validarProducto(String nombre, String vendorName) {
         try {
-            Producto producto = productoDAO.readOneProduct(nombre);
+            Producto producto = productoServices.readOneProduct(nombre);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -214,7 +224,7 @@ public class ProductoFachada extends Fachada {
         }
 
         try {
-            productoDAO.validate(nombre);
+            productoServices.validarProducto(nombre);
             return new ResponseEntity<>("Producto validado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("El producto ya ha sido validado", HttpStatus.CONFLICT);
@@ -228,8 +238,8 @@ public class ProductoFachada extends Fachada {
     public ResponseEntity<?> getEstadisticas(String productName) {
         try {
             try {
-                Producto producto = productoDAO.readOneProduct(productName);
-                TreeMap<String, Object> mapaCaracteristicas = precioDAO.getStats(producto.getNombre());
+                Producto producto = productoServices.readOneProduct(productName);
+                TreeMap<String, Object> mapaCaracteristicas = (TreeMap<String, Object>) productoServices.getStats(producto.getNombre());
 
                 class ProductoEstadisticas {
                     String producto;
@@ -266,18 +276,14 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> generateQRForOneProduct(String name) {
         System.out.println("Generando QR para el producto: " + name);
-        return new ResponseEntity<>(smartTagDAO.createSmartTag(name), HttpStatus.OK);
+        return new ResponseEntity<>(productoServices.crearSmartTag(name), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> qr_update() {
-        productoDAO.updateSmartTag();
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
     public ResponseEntity<?> getProductsFromOneVendor(String vendorName) {
         try {
-            Vendedor vendedor = vendedorDAO.readOne(vendorName);
-            List<Producto> productos = productoDAO.getProductsBySeller(vendedor.getNickname());
+            Vendedor vendedor = vendedorServices.readOneVendedor(vendorName);
+            List<Producto> productos = productoServices.getProductsByVendor(vendedor.getNickname());
             class Producto_Precio {
                 private Producto producto;
                 private double precio;
@@ -297,7 +303,7 @@ public class ProductoFachada extends Fachada {
             }
             List<Producto_Precio> productosConPrecio = new ArrayList<>();
             for (Producto producto : productos) {
-                double precio = productoDAO.getPrecioProducto(vendorName, producto.getNombre());
+                double precio = productoServices.getPrecioProducto(vendorName, producto.getNombre());
                 productosConPrecio.add(new Producto_Precio(producto, precio));
             }
             return new ResponseEntity<>(productosConPrecio, HttpStatus.OK);
@@ -312,9 +318,9 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> getOldProduct(String productName) {
         try {
-            ProductoDAO.ProductoAntiguo producto = productoDAO.readOneProductAntiguo(productName);
+            ProductoDAO.ProductoAntiguo producto = productoServices.readOneProductOld(productName);
 
-            List<Object> resultado = productoDAO.readOne(productName);
+            List<Object> resultado = (List<Object>) productoServices.readFullProduct(productName);
             Producto productNewVersion = (Producto) resultado.get(0);
             HashMap<String, String> smartTag = (HashMap<String, String>) resultado.get(1);
             String categoria = (String) resultado.get(2);
@@ -369,7 +375,7 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> getImagen(String productName) {
         try {
-            String imagen = productoDAO.getImageFromOneProduct(productName);
+            String imagen = productoServices.getImageFromOneProduct(productName);
             return new ResponseEntity<>(imagen, HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
@@ -381,7 +387,7 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> productAllNames() {
         try {
-            List<String> nombres = productoDAO.readAllNames();
+            List<String> nombres = productoServices.readAllProductsNames();
             return new ResponseEntity<>(nombres, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al obtener los nombres de los productos: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -390,9 +396,10 @@ public class ProductoFachada extends Fachada {
 
 
     public ResponseEntity<?> getStockFromOneVendor(String productName, String vendorName) {
-        int stock = productoDAO.getStockFromOneProduct(productName, vendorName);
+        int stock = productoServices.getStockFromOneProductAndOneVendor(productName, vendorName);
         return new ResponseEntity<>(stock, HttpStatus.OK);
     }
+
 
 }
 

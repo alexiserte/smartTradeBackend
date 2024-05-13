@@ -1,5 +1,9 @@
 package com.smartTrade.backend.Fachada;
 
+import com.smartTrade.backend.Services.AdministradorServices;
+import com.smartTrade.backend.Services.CompradorServices;
+import com.smartTrade.backend.Services.UsuarioServices;
+import com.smartTrade.backend.Services.VendedorServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,18 @@ public class UsuarioFachada extends Fachada{
 
     @Autowired
     AdministradorFachada administradorFachada;
+
+    @Autowired
+    private UsuarioServices usuarioServices;
+
+    @Autowired
+    private AdministradorServices administradorServices;
+
+    @Autowired
+    private CompradorServices compradorServices;
+
+    @Autowired
+    private VendedorServices vendedorServices;
 
     @SuppressWarnings("unused") 
     public ResponseEntity<?> register(String map) {
@@ -69,7 +85,7 @@ public class UsuarioFachada extends Fachada{
     @SuppressWarnings("unused") 
     public ResponseEntity<?> login(String identiFier,String password) {
         try {
-            User_Types userType = usuarioDAO.whatTypeIs(identiFier);
+            User_Types userType = usuarioServices.whatTypeIs(identiFier);
 
             class Response<T> {
                 private T user;
@@ -91,7 +107,7 @@ public class UsuarioFachada extends Fachada{
 
             switch (userType) {
                 case ADMINISTRADOR:
-                    Administrador administrador = adminDAO.readOne(identiFier);
+                    Administrador administrador = administradorServices.readUser(identiFier);
                     if (administrador.getPassword().equals(password)) {
                         Response<Administrador> response = new Response<>(administrador, User_Types.ADMINISTRADOR);
                         return ResponseEntity.ok(response);
@@ -99,7 +115,7 @@ public class UsuarioFachada extends Fachada{
                         return new ResponseEntity<>("Contraseña incorrecta", HttpStatus.UNAUTHORIZED);
                     }
                 case VENDEDOR:
-                    Vendedor vendedor = vendedorDAO.readOne(identiFier);
+                    Vendedor vendedor = vendedorServices.readOneVendedor(identiFier);
                     if (vendedor.getPassword().equals(password)) {
                         Response<Vendedor> response = new Response<>(vendedor, User_Types.VENDEDOR);
                         return ResponseEntity.ok(response);
@@ -107,7 +123,7 @@ public class UsuarioFachada extends Fachada{
                         return new ResponseEntity<>("Contraseña incorrecta", HttpStatus.UNAUTHORIZED);
                     }
                 case COMPRADOR:
-                    Comprador comprador = compradorDAO.readOne(identiFier);
+                    Comprador comprador = compradorServices.readOneComprador(identiFier);
                     if (comprador.getPassword().equals(password)) {
                         Response<Comprador> response = new Response<>(comprador, User_Types.COMPRADOR);
                         return ResponseEntity.ok(response);

@@ -35,4 +35,8 @@ public class AdministradorServices {
         return administradorDAO.readAll();
     }
 
+    public Administrador getAdministradorWithID(int id) {
+        return administradorDAO.getAdministradorWithID(id);
+    }
+
 }

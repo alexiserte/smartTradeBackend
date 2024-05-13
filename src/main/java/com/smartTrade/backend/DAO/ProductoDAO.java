@@ -247,6 +247,11 @@ public class ProductoDAO implements DAOInterface<Object> {
                     iterator.remove();
                 }
             }
+            else if (key.equals("etiqueta_inteligente")) {
+                if (((String) atributos.get(key)).equals(product.getEtiqueta_inteligente())) {
+                    iterator.remove();
+                }
+            }
 
         }
 
@@ -277,24 +282,25 @@ public class ProductoDAO implements DAOInterface<Object> {
         database.update("DELETE FROM Historico_Precios WHERE id_producto = ?", id_producto);
     }
 
-    public List<Producto> getProductsByCategory(String categoryName) {
-        return database.query(
-                PRODUCT_BASE_QUERY + " WHERE id_categoria = ANY(SELECT id FROM Categoria WHERE nombre = ?)",
-                new ProductMapper(), categoryName);
+    public Map<Integer,Producto> getProductsID() {
+        List<Producto> productos = database.query(PRODUCT_BASE_QUERY, new ProductMapper());
+        Map<Integer,Producto> res = new HashMap<>();
+        for (Producto producto : productos) {
+            int id = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, producto.getNombre());
+            res.put(id,producto);
+        }
+        return res;
     }
+
+    public Producto getProductByID(int id) {
+        return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE id = ?", new ProductMapper(), id);
+    }
+
 
     public List<Producto> getProductsBySeller(String vendorName) {
         return database.query(
                 PRODUCT_BASE_QUERY + " WHERE id IN(SELECT id_producto FROM Vendedores_Producto WHERE id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ?))",
                 new ProductMapper(), vendorName);
-    }
-
-    public boolean isFromOneCategory(String productName, String categoryName) {
-
-        return database.queryForObject(
-                "SELECT COUNT(*) FROM Producto WHERE nombre = ? AND id_categoria IN(SELECT id FROM Categoria WHERE nombre = ?)",
-                Integer.class, productName, categoryName) == 0;
-
     }
 
     public void validate(String nombre) throws EmptyResultDataAccessException {
@@ -310,18 +316,6 @@ public class ProductoDAO implements DAOInterface<Object> {
                     nombre);
             database.update("UPDATE Producto SET validado = true WHERE nombre = ?", nombre);
 
-        }
-    }
-
-    public List<Producto> getProductosPendientesDeValidacion() throws Exception {
-        List<Producto> productos = database.query(
-               PRODUCT_BASE_QUERY + " WHERE validado = false",
-                new ProductMapper());
-        int productosSize = database.queryForObject("SELECT COUNT(*) FROM Pendientes_Validacion", Integer.class);
-        if (productosSize == productos.size()) {
-            return productos;
-        } else {
-            throw new Exception();
         }
     }
 
@@ -347,7 +341,7 @@ public class ProductoDAO implements DAOInterface<Object> {
                 id_vendedor);
     }
 
-    public void updateProductFromOneVendor(String nombre, String vendorName, HashMap<String, ?> atributos) {
+    public void updateProductFromOneVendor(String nombre, String vendorName, Map atributos) {
         List<String> keys = new ArrayList<>(atributos.keySet());
         if (keys.get(keys.indexOf("precio")) == "precio") {
             int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class,
@@ -364,33 +358,6 @@ public class ProductoDAO implements DAOInterface<Object> {
                     precio, id_producto, id_vendedor);
         }
     }
-
-    public String getImageFromOneProduct(String productName) {
-        int id_imagen = database.queryForObject("SELECT id_imagen FROM Producto WHERE nombre = ?", Integer.class,
-                productName);
-        return database.queryForObject("SELECT imagen FROM Imagen WHERE id = ?", String.class, id_imagen);
-    }
-
-    public HashMap<Producto, String> getImagenesFromProductos(List<Producto> productList) {
-        HashMap<Producto, String> res = new HashMap<>();
-        for (Producto producto : productList) {
-            int id_imagen = database.queryForObject("SELECT id_imagen FROM Producto WHERE nombre = ?", Integer.class,
-                    producto.getNombre());
-            String imagen = database.queryForObject("SELECT imagen FROM Imagen WHERE id = ?", String.class, id_imagen);
-            res.put(producto, imagen);
-        }
-        return res;
-    }
-
-
-    public void updateSmartTag(){
-        List<Integer> productos = database.queryForList("SELECT id FROM Producto", Integer.class);
-        for (Integer producto : productos) {
-            String smartTag = SmartTagDAO.createSmartTag(database.queryForObject("SELECT nombre FROM Producto WHERE id = ?", String.class, producto));
-            database.update("UPDATE Producto SET etiqueta_inteligente = ? WHERE id = ?", smartTag, producto);
-        }
-    }
-
 
     public Producto getSimpleProducto(int id_product) {
         return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE id = ?",
@@ -412,4 +379,6 @@ public class ProductoDAO implements DAOInterface<Object> {
         int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
         return database.queryForObject("SELECT stock_vendedor FROM Vendedores_Producto WHERE id_producto = ? AND id_vendedor = ?", Integer.class,id_producto,id_vendedor);
     }
+
+
 }

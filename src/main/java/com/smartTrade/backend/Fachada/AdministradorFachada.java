@@ -7,8 +7,7 @@ import java.util.Map;
 
 import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Logger.Logger;
-import com.smartTrade.backend.Services.AdministradorServices;
-import com.smartTrade.backend.Services.CategoriaServices;
+import com.smartTrade.backend.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -30,6 +29,21 @@ public class AdministradorFachada extends Fachada {
     @Autowired
     private CategoriaServices categoriaServices;
 
+    @Autowired
+    private ProductoServices productoServices;
+
+    @Autowired
+    private CompradorServices compradorServices;
+
+    @Autowired
+    private VendedorServices vendedorServices;
+
+    @Autowired
+    private AdministradorServices administradorServices;
+
+    @Autowired
+    private SystemServices systemServices;
+
     public ResponseEntity<?> mostrarCategorias() {
         return new ResponseEntity<>(categoriaServices.readAllCategories(), HttpStatus.OK);
     }
@@ -39,24 +53,24 @@ public class AdministradorFachada extends Fachada {
     }
 
     public ResponseEntity<?> mostrarBasesDeDatos() {
-        return new ResponseEntity<>(systemDAO.readAll(), HttpStatus.OK);
+        return new ResponseEntity<>(systemServices.getAllTables(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> mostrarUsuarios() {
-        return new ResponseEntity<>(compradorDAO.readAll(), HttpStatus.OK);
+        return new ResponseEntity<>(compradorServices.readAllCompradores(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> mostrarVendedores() {
-        return new ResponseEntity<>(vendedorDAO.readAll(), HttpStatus.OK);
+        return new ResponseEntity<>(vendedorServices.readAllVendedores(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> mostrarProductos(boolean oldMode) {
-        if(oldMode) return new ResponseEntity<>(productoDAO.readAll(), HttpStatus.OK);
+        if(oldMode) return new ResponseEntity<>(productoServices.readAllProducts(), HttpStatus.OK);
         else{
-            List<Producto> listaDeProductos = productoDAO.readAll();
+            List<Producto> listaDeProductos = productoServices.readAllProducts();
             List<ProductoDAO.ProductoAntiguo> listaDeProductosAntiguos = new ArrayList<>();
             for(Producto p : listaDeProductos){
-                String imagen = productoDAO.getImageFromOneProduct(p.getNombre());
+                String imagen = productoServices.getImageFromOneProduct(p.getNombre());
                 ProductoDAO.ProductoAntiguo productoAntiguo = new ProductoDAO.ProductoAntiguo(p,imagen);
                 listaDeProductosAntiguos.add(productoAntiguo);
             }
@@ -66,7 +80,7 @@ public class AdministradorFachada extends Fachada {
 
     public ResponseEntity<?> mostrarProductosPendientesDeValidacion() {
         try {
-            List<Producto> res = productoDAO.getProductosPendientesDeValidacion();
+            List<Producto> res = productoServices.readProductosPendientesDeValidacion();
             return new ResponseEntity<>(res, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al obtener los productos pendientes de validación",
@@ -157,8 +171,8 @@ public class AdministradorFachada extends Fachada {
     @SuppressWarnings("unused")
     public ResponseEntity<?> productsBoughtByUser(String identifier) {
         try {
-            Comprador c = compradorDAO.readOne(identifier);
-            int result = compradorDAO.productosCompradosPorUnUsuario(identifier);
+            Comprador c = compradorServices.readOneComprador(identifier);
+            int result = compradorServices.cantidadDeProductosComprados(identifier);
 
             class Return {
                 private String identifier;
@@ -192,8 +206,8 @@ public class AdministradorFachada extends Fachada {
     @SuppressWarnings("unused")
     public ResponseEntity<?> productsSoldByOneVendor(String identifier) {
         try {
-            Vendedor v = vendedorDAO.readOne(identifier);
-            int result = vendedorDAO.productosVendidosPorUnVendedor(identifier);
+            Vendedor v = vendedorServices.readOneVendedor(identifier);
+            int result = vendedorServices.cantidadDeProductosVendidos(identifier);
 
             class Return {
                 private String identifier;
