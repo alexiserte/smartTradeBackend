@@ -277,15 +277,6 @@ public class ProductoDAO implements DAOInterface<Object> {
         database.update("DELETE FROM Historico_Precios WHERE id_producto = ?", id_producto);
     }
 
-    public Map<Integer,Producto> getProductsID() {
-        List<Producto> productos = database.query(PRODUCT_BASE_QUERY, new ProductMapper());
-        Map<Integer,Producto> res = new HashMap<>();
-        for (Producto producto : productos) {
-            int id = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, producto.getNombre());
-            res.put(id,producto);
-        }
-        return res;
-    }
 
     public Producto getProductByID(int id) {
         return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE id = ?", new ProductMapper(), id);
@@ -348,10 +339,6 @@ public class ProductoDAO implements DAOInterface<Object> {
         }
     }
 
-    public Producto getSimpleProducto(int id_product) {
-        return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE id = ?",
-                new ProductMapper(), id_product);
-    }
 
     public int getStockFromOneProduct(String productName,String vendorName){
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
