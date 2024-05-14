@@ -1,5 +1,6 @@
 package com.smartTrade.backend.Fachada;
 
+import com.smartTrade.backend.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -7,52 +8,36 @@ import com.smartTrade.backend.DAO.*;
 
 @Component
 public class Fachada {
-    
-    @Autowired
-    public CategoriaDAO categoriaDAO;
 
     @Autowired
-    public AdministradorDAO adminDAO;
+    private ProductoServices productoServices;
 
     @Autowired
-    public CompradorDAO compradorDAO;
+    private CarritoCompraServices carritoCompraServices;
 
     @Autowired
-    public VendedorDAO vendedorDAO;
+    private CaracteristicaServices caracteristicaServices;
 
     @Autowired
-    public ProductoDAO productoDAO;
+    private AdministradorServices administradorServices;
 
     @Autowired
-    public CaracteristicaDAO caracteristicaDAO;
+    private CategoriaServices categoriaServices;
 
     @Autowired
-    public Carrito_CompraDAO carritoCompraDAO;
+    private CompradorServices compradorServices;
 
     @Autowired
-    public GuardarMasTardeDAO guardarMasTardeDAO;
+    private ListaDeseosServices listaDeseosServices;
 
     @Autowired
-    public ImagenDAO imagenDAO;
+    private SystemServices systemServices;
 
     @Autowired
-    public ListaDeDeseosDAO listaDeDeseosDAO;
+    private UsuarioServices usuarioServices;
 
     @Autowired
-    public PrecioDAO precioDAO;
-
-    @Autowired
-    public UsuarioDAO usuarioDAO;
-
-    @Autowired
-    public Caracteristica_ProductoDAO caracteristicaProductoDAO;
-
-    @Autowired
-    public SmartTagDAO smartTagDAO;
-
-    @Autowired
-    public SystemDAO systemDAO;
-    //A ver si asi se arregla
+    private VendedorServices vendedorServices;
 
 
     
