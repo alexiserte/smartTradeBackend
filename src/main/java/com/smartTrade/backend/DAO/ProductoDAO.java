@@ -201,11 +201,6 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
 
-    public List<String> readAllNames() {
-        return database.queryForList("SELECT nombre FROM Producto", String.class);
-    }
-
-
     @SuppressWarnings("unchecked")
     public void update(Object... args) {
         String nombre = (String) args[0];
@@ -297,12 +292,6 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
 
-    public List<Producto> getProductsBySeller(String vendorName) {
-        return database.query(
-                PRODUCT_BASE_QUERY + " WHERE id IN(SELECT id_producto FROM Vendedores_Producto WHERE id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ?))",
-                new ProductMapper(), vendorName);
-    }
-
     public void validate(String nombre) throws EmptyResultDataAccessException {
         int exists = database.queryForObject(
                 "SELECT COUNT(*) FROM Pendientes_Validacion WHERE id_producto IN(SELECT id FROM Producto WHERE nombre = ?",
@@ -362,16 +351,6 @@ public class ProductoDAO implements DAOInterface<Object> {
     public Producto getSimpleProducto(int id_product) {
         return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE id = ?",
                 new ProductMapper(), id_product);
-    }
-
-    public double getPrecioProducto(int id_vendedor, int id_producto) {
-        return database.queryForObject("SELECT precio FROM Vendedores_Producto WHERE id_vendedor = ? AND id_producto = ?", Double.class, id_vendedor, id_producto);
-    }
-
-    public double getPrecioProducto(String vendorName, String productName) {
-        int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
-        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
-        return getPrecioProducto(id_vendedor, id_producto);
     }
 
     public int getStockFromOneProduct(String productName,String vendorName){
