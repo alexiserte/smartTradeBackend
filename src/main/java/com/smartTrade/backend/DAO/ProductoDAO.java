@@ -201,11 +201,6 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
 
-    public List<String> readAllNames() {
-        return database.queryForList("SELECT nombre FROM Producto", String.class);
-    }
-
-
     @SuppressWarnings("unchecked")
     public void update(Object... args) {
         String nombre = (String) args[0];
@@ -282,26 +277,11 @@ public class ProductoDAO implements DAOInterface<Object> {
         database.update("DELETE FROM Historico_Precios WHERE id_producto = ?", id_producto);
     }
 
-    public Map<Integer,Producto> getProductsID() {
-        List<Producto> productos = database.query(PRODUCT_BASE_QUERY, new ProductMapper());
-        Map<Integer,Producto> res = new HashMap<>();
-        for (Producto producto : productos) {
-            int id = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, producto.getNombre());
-            res.put(id,producto);
-        }
-        return res;
-    }
 
     public Producto getProductByID(int id) {
         return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE id = ?", new ProductMapper(), id);
     }
 
-
-    public List<Producto> getProductsBySeller(String vendorName) {
-        return database.query(
-                PRODUCT_BASE_QUERY + " WHERE id IN(SELECT id_producto FROM Vendedores_Producto WHERE id_vendedor IN(SELECT id FROM Usuario WHERE nickname = ?))",
-                new ProductMapper(), vendorName);
-    }
 
     public void validate(String nombre) throws EmptyResultDataAccessException {
         int exists = database.queryForObject(
@@ -359,20 +339,6 @@ public class ProductoDAO implements DAOInterface<Object> {
         }
     }
 
-    public Producto getSimpleProducto(int id_product) {
-        return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE id = ?",
-                new ProductMapper(), id_product);
-    }
-
-    public double getPrecioProducto(int id_vendedor, int id_producto) {
-        return database.queryForObject("SELECT precio FROM Vendedores_Producto WHERE id_vendedor = ? AND id_producto = ?", Double.class, id_vendedor, id_producto);
-    }
-
-    public double getPrecioProducto(String vendorName, String productName) {
-        int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
-        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
-        return getPrecioProducto(id_vendedor, id_producto);
-    }
 
     public int getStockFromOneProduct(String productName,String vendorName){
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);

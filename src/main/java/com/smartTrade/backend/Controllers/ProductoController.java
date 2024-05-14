@@ -74,17 +74,6 @@ public class ProductoController {
         logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
-
-    @PutMapping("/producto/{name}/vendedor/{vendor}")
-    public ResponseEntity<?> updateProductFromOneVendor(@PathVariable(name = "name", required = true) String productName,
-            @PathVariable(name = "vendor", required = true) String vendorName,
-            @RequestBody(required = true) HashMap<String, ?> atributos, HttpServletRequest request) {
-        ResponseEntity<?> res = fachada.updateProductFromOneVendor(productName, vendorName, atributos);
-        logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
-        return res;
-    }
-
 
     @GetMapping("/producto/")
     public ResponseEntity<?> getProduct(@RequestParam(name = "name", required = true) String productName,
