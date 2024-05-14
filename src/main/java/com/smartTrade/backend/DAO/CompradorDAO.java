@@ -136,9 +136,9 @@ public class CompradorDAO implements DAOInterface<Comprador>{
 
         database.update("DELETE FROM Carrito_Compra WHERE id_comprador IN(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
-        database.update("DELETE FROM Guardar_Mas_Tarde WHERE id IN(SELECT id FROM Usuario WHERE nickname = ?);",
+        database.update("DELETE FROM Guardar_Mas_Tarde WHERE id_comprador IN(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
-        database.update("DELETE FROM Lista_De_Deseos WHERE id IN(SELECT id FROM Usuario WHERE nickname = ?);",
+        database.update("DELETE FROM Lista_De_Deseos WHERE id_comprador IN(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
         database.update("DELETE FROM Comprador WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
