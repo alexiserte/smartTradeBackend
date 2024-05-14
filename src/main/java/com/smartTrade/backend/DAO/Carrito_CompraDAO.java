@@ -169,7 +169,10 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
         int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
         return database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ?",Integer.class,id_carrito);
     }
-    public void delete(Object ...args) {;}
+    public void delete(Object ...args) {
+        String nickname = (String) args[0];
+        database.update("DELETE FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", nickname);
+    }
     public void update(Object ...args) {;}
     public Object readOne(Object ...args) {return null;}
     public List<Object> readAll() {return null;}

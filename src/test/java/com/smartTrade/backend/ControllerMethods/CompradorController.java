@@ -22,7 +22,7 @@ public class CompradorController {
 
     @Test
     void getComprador() {
-        String nickname = "CSPrint1";
+        String nickname = "CompradorDePrueba";
         String password = "password";
         try {
             HttpResponse<String> response = conexion.get("/comprador/?identifier=" + nickname + "&password=" + password);
@@ -42,9 +42,8 @@ public class CompradorController {
 
             assert responseBody.get("password").equals("password");
             assert responseBody.get("nickname").equals(nickname);
-            assert responseBody.get("correo").equals("csprint1@pswdds.com");
-            assert responseBody.get("direccion").equals("1G");
-            assert responseBody.get("fecha_registro").equals("2024-04-10");
+            assert responseBody.get("correo").equals("comprador@pswdds.com");
+            assert responseBody.get("direccion").equals("1G - 1E");
 
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
         }catch(AssertionError e){
@@ -71,6 +70,46 @@ public class CompradorController {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             throw e;
         }
+    }
+
+    @Test
+    void deleteComprador() {
+        String nickname = "CompradorDePrueba";
+        try {
+            HttpResponse<String> response = conexion.delete("/comprador/?nickname=" + nickname);
+            System.out.println(response.body());
+            assertEquals(200, response.statusCode());
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        }catch (AssertionError e){
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            throw e;
+        }
+    }
+
+    @Test
+    void updateComprador() {
+        String password = "password";
+        String correo = "psw@dds.com";
+
+        HashMap body = new HashMap();
+        try {
+            HttpResponse<String> response = conexion.put("/comprador/?nickname=CompradorDePrueba&password=" + password + "&correo=" + correo,JSONMethods.getPrettyJSON(body));
+            System.out.println(response.body());
+            assertEquals(200, response.statusCode());
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        }catch (AssertionError e) {
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            throw e;
+        }
+
+    }
+
+    @Test
+    void fullCompradorTest() {
+        registerComprador();
+        getComprador();
+        updateComprador();
+        deleteComprador();
     }
 
 
