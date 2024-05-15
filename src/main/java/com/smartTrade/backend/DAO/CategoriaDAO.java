@@ -65,4 +65,20 @@ public class CategoriaDAO implements DAOInterface<Categoria>{
     public List<Categoria> readAll() {
         return database.query("SELECT nombre, categoria_principal FROM Categoria ORDER BY id", new CategoriaMapper());
     }
+
+    public int getIDFromName(String nombre){
+        try{
+            return database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class, nombre);
+        }catch(EmptyResultDataAccessException e){
+            return -1;
+        }
+    }
+
+    public String getNameFromID(int id){
+        try{
+            return database.queryForObject("SELECT nombre FROM Categoria WHERE id = ?", String.class, id);
+        }catch(EmptyResultDataAccessException e){
+            return null;
+        }
+    }
 }

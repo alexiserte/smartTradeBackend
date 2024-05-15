@@ -3,22 +3,25 @@ package com.smartTrade.backend.ControllerMethods;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartTrade.backend.Logger.Logger;
+import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Utils.JSONMethods;
 import com.smartTrade.backend.Utils.ReflectionMethods;
 import com.smartTrade.backend.smartTradeConexion;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.Assert;
 
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CompradorController {
+public class CompradorTest {
 
     private Logger logger = Logger.getInstance();
     private final ObjectMapper mapper = new ObjectMapper();
     private final smartTradeConexion conexion = new smartTradeConexion();
+
 
     @Test
     void getComprador() {
@@ -105,11 +108,112 @@ public class CompradorController {
     }
 
     @Test
-    void fullCompradorTest() {
+    void cantidadDeProductosComprados(){
+        String nicknameCaseOne = "alex1serte";
+        String nicknameCaseTwo = "dpuckett4";
+        try {
+            /*  TEST PARA EL CASO alex1serte    */
+            HttpResponse<String> response = conexion.get("/comprador/productos_comprados/?nickname=" + nicknameCaseOne);
+            System.out.println(JSONMethods.getPrettyJSON(response.body()));
+            String result = response.body();
+            assert response.statusCode() == 404;
+            assertEquals("No se han encontrado productos comprados por este usuario",result);
+
+            /*  TEST PARA EL CASO dpuckett4    */
+            response = conexion.get("/comprador/productos_comprados/?nickname=" + nicknameCaseTwo);
+
+
+            assert response.statusCode() == 200;
+            //assert lista.size() == 1;
+
+
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        }catch(AssertionError e){
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void getCarritoCompra() {
+        String identifier = "alex1serte";
+        String discountCode = "PRIMAVERA50";
+        try {
+            HttpResponse<String> response = conexion.get("/comprador/carrito-compra/?identifier=" + identifier);
+
+            HashMap responseBody = mapper.readValue(response.body(), HashMap.class);
+            List productos = (List) responseBody.get("productos");
+            int numProductos = (int) responseBody.get("numeroProductos");
+
+            System.out.println(JSONMethods.getPrettyJSON(response.body()));
+
+            assert response.statusCode() == 200;
+            assert numProductos == 3;
+            assert productos.size() == 3;
+
+
+
+            HttpResponse<String> response2 = conexion.get("/comprador/carrito-compra/?identifier=" + identifier + "&discountCode=" + discountCode);
+
+            HashMap responseBody2 = mapper.readValue(response2.body(), HashMap.class);
+            List productos2 = (List) responseBody2.get("productos");
+            int numProductos2 = (int) responseBody2.get("numeroProductos");
+
+            System.out.println(JSONMethods.getPrettyJSON(response2.body()));
+
+            assert response2.statusCode() == 200;
+            assert numProductos2 == 3;
+            assert productos2.size() == 3;
+
+
+            double precio1 = (double) responseBody.get("total");
+            double precio2 = (double) responseBody2.get("total");
+
+            assert precio1 != precio2;
+            assert precio2 == precio1 * 0.5;
+
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        } catch (AssertionError e) {
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void getListaDeseos() {
+        String identifier = "TestComprador";
+        try {
+            HttpResponse<String> response = conexion.get("/comprador/lista-deseos/?identifier=" + identifier);
+            System.out.println(JSONMethods.getPrettyJSON(response.body()));
+            assert response.statusCode() == 200;
+
+            HttpResponse<String> response2 = conexion.get("/comprador/lista-deseos/?identifier=SergioMG");
+            System.out.println(JSONMethods.getPrettyJSON(response2.body()));
+            assert response2.statusCode() == 200;
+            HashMap responseBody = mapper.readValue(response2.body(), HashMap.class);
+            int productos = (int) responseBody.get("numeroProductos");
+            assert productos == 1;
+
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        } catch (AssertionError e) {
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void fullCompradorTest() {
         registerComprador();
         getComprador();
         updateComprador();
         deleteComprador();
+        cantidadDeProductosComprados();
     }
 
 

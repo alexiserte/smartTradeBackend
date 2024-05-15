@@ -1,5 +1,6 @@
 package com.smartTrade.backend.DAO;
 
+import com.smartTrade.backend.Models.Vendedor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -67,15 +68,20 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     }
     private JdbcTemplate database;
-
     @Autowired
-    VendedorDAO VendedorDAO;
+    VendedorDAO vendedorDAO;
 
     @Autowired
     Caracteristica_ProductoDAO CaracteristicaDAO;
 
     @Autowired
+    CategoriaDAO categoriaDAO;
+
+    @Autowired
     SmartTagDAO SmartTagDAO;
+
+    @Autowired
+    ImagenDAO imagenDAO;
 
     public ProductoDAO(JdbcTemplate database) {
         this.database = database;
@@ -93,8 +99,6 @@ public class ProductoDAO implements DAOInterface<Object> {
         PNGConverter converter = (PNGConverter) factory.createConversor(Converter.getFileFormatFromBase64(imagen));
         String imagenResized = converter.procesar(imagen);
 
-        Date fechaActual = new Date(System.currentTimeMillis());
-        java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         Random random = new Random();
         int huella_ecologica = random.nextInt(0, 6);
         String smartTag = SmartTagDAO.createSmartTag(nombre);
@@ -102,77 +106,70 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         try {
             database.queryForObject(PRODUCT_BASE_QUERY + " WHERE nombre = ?", new ProductMapper(), nombre);
-            int id_vendedor = database.queryForObject(
-                    "SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
-                    Integer.class, vendorName);
-            int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class,
-                    nombre);
-            database.update("INSERT INTO Vendedores_Producto(id_vendedor,id_producto,precio) VALUES(?,?,?)",
-                    id_vendedor, id_producto, precio);
-            database.update(
-                    "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)",
-                    id_producto, precio, fechaSQL, id_vendedor);
-
+            addNewVendorToAnExistingProduct(nombre,vendorName,precio);
         } catch (EmptyResultDataAccessException e) {
-            int id_imagen;
-
-            try {
-                id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagenResized);
-            } catch (EmptyResultDataAccessException exception) {
-                database.update("INSERT INTO Imagen(imagen) VALUES(?)", imagenResized);
-                id_imagen = database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, imagenResized);
-            }
-
-            int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?", Integer.class,
-                    characteristicName);
-            int id_vendedor = database.queryForObject(
-                    "SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
-                    Integer.class, vendorName);
-            database.update(
-                    "INSERT INTO Producto(nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica,etiqueta_inteligente) VALUES (?, ?,?,?,?,?,?,?);",
-                    nombre, id_categoria, descripcion, id_imagen, fechaSQL, false, huella_ecologica,smartTag);
-            database.update("INSERT INTO Pendientes_Validacion(id_producto) SELECT id FROM Producto WHERE nombre = ?;",
-                    nombre);
-            int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class,
-                    nombre);
-            database.update(
-                    "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)",
-                    id_producto, precio, fechaSQL, id_vendedor);
-            database.update("INSERT INTO Vendedores_Producto(id_vendedor,id_producto,precio) VALUES(?,?,?)",
-                    id_vendedor, id_producto, precio);
+            createNewProduct(nombre, descripcion, precio, vendorName, characteristicName, imagenResized, huella_ecologica,smartTag);
         }
     }
+
+    /* Inicio Refactoring Extract Method  */
+
+    private void addNewVendorToAnExistingProduct(String name,String vendorName, double price){
+        java.sql.Date fechaSQL = DateMethods.getTodayDate();
+
+        int id_vendedor = vendedorDAO.getVendorID(vendorName);
+        int id_producto = getIDFromName(name);
+
+        database.update("INSERT INTO Vendedores_Producto(id_vendedor,id_producto,precio) VALUES(?,?,?)", id_vendedor, id_producto, price);
+        database.update("INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)", id_producto, price, fechaSQL, id_vendedor);
+    }
+
+    private void createNewProduct(String nombre, String descripcion, double precio, String vendorName, String categoryName, String imagenResized, int huella_ecologica, String smartTag){
+        java.sql.Date fechaSQL = DateMethods.getTodayDate();
+
+        int id_imagen = imagenDAO.getID(imagenResized);
+        if (id_imagen == -1) {
+            imagenDAO.create(imagenResized);
+            id_imagen = imagenDAO.getID(imagenResized);
+        }
+
+        int id_categoria = categoriaDAO.getIDFromName(categoryName);
+        int id_vendedor = vendedorDAO.getVendorID(vendorName);
+
+        database.update("INSERT INTO Producto(nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica,etiqueta_inteligente) VALUES (?, ?,?,?,?,?,?,?);", nombre, id_categoria, descripcion, id_imagen, fechaSQL, false, huella_ecologica,smartTag);
+        database.update("INSERT INTO Pendientes_Validacion(id_producto) SELECT id FROM Producto WHERE nombre = ?;", nombre);
+
+        int id_producto = getIDFromName(nombre);
+
+        database.update("INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)", id_producto, precio, fechaSQL, id_vendedor);
+        database.update("INSERT INTO Vendedores_Producto(id_vendedor,id_producto,precio) VALUES(?,?,?)", id_vendedor, id_producto, precio);
+    }
+
+    /* Fin Refactoring Extract Method  */
 
     public List<Object> readOne(Object... args) {
         String productName = (String) args[0];
 
         List<Object> res = new ArrayList<>();
-        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class,
-                productName);
 
-        Producto producto = database.queryForObject(
-                PRODUCT_BASE_QUERY + " WHERE id = ?",
-                new ProductMapper(), id_producto);
-
+        int id_producto = getIDFromName(productName);
+        Producto producto = getProductByID(id_producto);
+        String categoria = categoriaDAO.getNameFromID(producto.getId_categoria());
         HashMap<String, String> caracteristicas = CaracteristicaDAO.getSmartTag(productName);
-        res.add(0, producto);
 
+        res.add(0, producto);
         res.add(1, caracteristicas);
-        String categoria = database.queryForObject(
-                "SELECT nombre FROM Categoria WHERE id IN(SELECT id_categoria FROM Producto WHERE nombre = ?)",
-                String.class, productName);
         res.add(2, categoria);
 
-        List<Integer> vendedoresID = database.queryForList(
-                "SELECT id_vendedor FROM Vendedores_Producto WHERE id_producto = ? ORDER BY id", Integer.class,
-                id_producto);
+        List<Integer> vendedoresID = database.queryForList("SELECT id_vendedor FROM Vendedores_Producto WHERE id_producto = ? ORDER BY id", Integer.class, id_producto);
+
         List<String> vendedores = new ArrayList<>();
-        for (int i = 0; i < vendedoresID.size(); i++) {
-            vendedores.add(database.queryForObject("SELECT nickname FROM Usuario WHERE id = ?", String.class,
-                    vendedoresID.get(i)));
+        for (Integer integer : vendedoresID) {
+            Vendedor vendedor = vendedorDAO.getVendedorWithID(integer);
+            vendedores.add(vendedor.getNickname());
         }
-        List<Double> precios = database.queryForList(
-                "SELECT precio FROM Vendedores_Producto WHERE id_producto = ? ORDER BY id", Double.class, id_producto);
+
+        List<Double> precios = database.queryForList("SELECT precio FROM Vendedores_Producto WHERE id_producto = ? ORDER BY id", Double.class, id_producto);
 
         Map<String, Double> mapaDeVendedores = new HashMap<>();
         for (int i = 0; i < vendedores.size(); i++) {
@@ -185,14 +182,13 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
     public Producto readOneProduct(String productName) {
-        return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE nombre = ?",
-                new ProductMapper(), productName);
+        return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE nombre = ?", new ProductMapper(), productName);
     }
 
     public ProductoAntiguo readOneProductAntiguo(String productName) {
         int id_imagen = database.queryForObject("SELECT id_imagen FROM Producto WHERE nombre = ?", Integer.class,
                 productName);
-        String imagen = database.queryForObject("SELECT imagen FROM Imagen WHERE id = ?", String.class, id_imagen);
+        String imagen = imagenDAO.readOne(id_imagen);
         return new ProductoAntiguo(readOneProduct(productName), imagen);
     }
 
@@ -205,8 +201,9 @@ public class ProductoDAO implements DAOInterface<Object> {
     public void update(Object... args) {
         String nombre = (String) args[0];
         HashMap<String, ?> atributos = (HashMap<String, ?>) args[1];
+
         List<String> keys = new ArrayList<>(atributos.keySet());
-        Producto product = database.queryForObject(PRODUCT_BASE_QUERY + " WHERE nombre = ?", new ProductMapper(), nombre);
+        Producto product = readOneProduct(nombre);
 
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
             String key = iterator.next();
@@ -272,7 +269,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public void delete(Object... args) {
         String nombre = (String) args[0];
-        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, nombre);
+        int id_producto = getIDFromName(nombre);
         database.update("DELETE FROM Producto WHERE nombre = ?", nombre);
         database.update("DELETE FROM Historico_Precios WHERE id_producto = ?", id_producto);
     }
@@ -280,6 +277,10 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public Producto getProductByID(int id) {
         return database.queryForObject(PRODUCT_BASE_QUERY + " WHERE id = ?", new ProductMapper(), id);
+    }
+
+    public int getIDFromName(String name) {
+        return database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, name);
     }
 
 
@@ -310,11 +311,8 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
     public void deleteProduct(String productName, String vendorName) {
-        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class,
-                productName);
-        int id_vendedor = database.queryForObject(
-                "SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
-                Integer.class, vendorName);
+        int id_producto = getIDFromName(productName);
+        int id_vendedor = vendedorDAO.getVendorID(vendorName);
         database.update("DELETE FROM Historico_Precios WHERE id_producto = ? AND id_vendedor = ?", id_producto,
                 id_vendedor);
         database.update("DELETE FROM Vendedores_Producto WHERE id_producto = ? AND id_vendedor = ?", id_producto,
@@ -323,14 +321,11 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public void updateProductFromOneVendor(String nombre, String vendorName, Map atributos) {
         List<String> keys = new ArrayList<>(atributos.keySet());
-        if (keys.get(keys.indexOf("precio")) == "precio") {
-            int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class,
-                    nombre);
-            int id_vendedor = database.queryForObject(
-                    "SELECT id_usuario FROM Vendedor WHERE id_usa vuario IN(SELECT id FROM Usuario WHERE nickname = ?)",
-                    Integer.class, vendorName);
+        if (Objects.equals(keys.get(keys.indexOf("precio")), "precio")) {
+            int id_producto = getIDFromName(nombre);
+            int id_vendedor = vendedorDAO.getVendorID(vendorName);
             double precio = (double) atributos.get("precio");
-            java.sql.Date fechaActual = new java.sql.Date(System.currentTimeMillis());
+            java.sql.Date fechaActual = DateMethods.getTodayDate();
             database.update(
                     "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)",
                     id_producto, precio, fechaActual, id_vendedor);
@@ -341,8 +336,8 @@ public class ProductoDAO implements DAOInterface<Object> {
 
 
     public int getStockFromOneProduct(String productName,String vendorName){
-        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
-        int id_vendedor = database.queryForObject("SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, vendorName);
+        int id_producto = getIDFromName(productName);
+        int id_vendedor = vendedorDAO.getVendorID(vendorName);
         return database.queryForObject("SELECT stock_vendedor FROM Vendedores_Producto WHERE id_producto = ? AND id_vendedor = ?", Integer.class,id_producto,id_vendedor);
     }
 

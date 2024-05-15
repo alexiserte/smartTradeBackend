@@ -25,7 +25,7 @@ public class ProductoFachada extends Fachada {
     @Autowired
     private VendedorServices vendedorServices;
     // Se usa solo en un método pero se podria usar más adelante
-    private final String DEFAULT_IMAGE = "src/main/resources/default_image.png";
+    public static final String DEFAULT_IMAGE = "src/main/resources/default_image.png";
 
 
     public ResponseEntity<?> searchProductByName(String nombre, String category) {
