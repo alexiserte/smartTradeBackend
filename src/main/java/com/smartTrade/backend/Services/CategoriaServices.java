@@ -16,19 +16,19 @@ public class CategoriaServices {
     private CategoriaDAO categoriaDAO;
 
     public void createNewCategory(String nombre, String categoria_principal) {
-        categoriaDAO.create(nombre, categoria_principal);
+        categoriaDAO.create(Map.of("nombre",nombre,"categoria_principal",categoria_principal));
     }
 
     public void deleteCategory(String nombre) {
-        categoriaDAO.delete(nombre);
+        categoriaDAO.delete(Map.of("nombre",nombre));
     }
 
     public void updateCategory(String nombre, Map atributos) {
-        categoriaDAO.update(nombre, atributos);
+        categoriaDAO.update(Map.of("nombre",nombre,"atributos",atributos));
     }
 
     public Categoria readOneCategory(String nombre) {
-        return categoriaDAO.readOne(nombre);
+        return categoriaDAO.readOne(Map.of("nombre",nombre));
     }
 
     public List<Categoria> readAllCategories() {

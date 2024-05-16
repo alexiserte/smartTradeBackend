@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.smartTrade.backend.DAO.Carrito_CompraDAO;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CarritoCompraServices {
@@ -14,8 +15,8 @@ public class CarritoCompraServices {
     @Autowired
     private Carrito_CompraDAO carritoCompraDAO;
 
-    public void createNewCarritoCompra(String nombre, String producto, String vendedor, int cantidad, double precio) {
-        carritoCompraDAO.create(nombre, producto, vendedor, cantidad, precio);
+    public void createNewCarritoCompra(String nombre) {
+        carritoCompraDAO.create(Map.of("compradorName",nombre));
     }
 
     public List<ProductoCarrito> getCarritoFromUser(String nombre) {
@@ -67,6 +68,6 @@ public class CarritoCompraServices {
     }
 
     public void deleteUserCarrito(String userName) {
-        carritoCompraDAO.delete(userName);
+        carritoCompraDAO.delete(Map.of("nickname",userName));
     }
 }

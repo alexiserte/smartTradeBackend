@@ -15,19 +15,19 @@ public class VendedorServices {
     private VendedorDAO vendedorDAO;
 
     public void createNewVendedor(String nombre, String password, String correo, String direccion){
-        vendedorDAO.create(nombre, password, correo, direccion);
+        vendedorDAO.create(Map.of("nickname",nombre,"password",password,"correo",correo,"direccion",direccion));
     }
 
     public void updateVendedor(String nickname, Map atributos){
-        vendedorDAO.update(nickname, atributos);
+        vendedorDAO.update(Map.of("nickname",nickname,"atributos",atributos));
     }
 
     public void deleteVendedor(String nickname){
-        vendedorDAO.delete(nickname);
+        vendedorDAO.delete(Map.of("nickname",nickname));
     }
 
     public Vendedor readOneVendedor(String nickname){
-        return vendedorDAO.readOne(nickname);
+        return vendedorDAO.readOne(Map.of("identifier",nickname));
     }
 
     public List<Vendedor> readAllVendedores(){

@@ -16,15 +16,15 @@ public class CompradorServices {
     private CompradorDAO compradorDAO;
 
     public void createNewComprador(String nombre, String password, String correo, String direccion){
-        compradorDAO.create(nombre, password, correo, direccion);
+        compradorDAO.create(Map.of("nickname",nombre,"password",password,"correo",correo,"direccion",direccion));
     }
 
     public void updateComprador(String nickname, Map atributos){
-        compradorDAO.update(nickname, atributos);
+        compradorDAO.update(Map.of("nickname",nickname,"atributos",atributos));
     }
 
     public Comprador readOneComprador(String nickname){
-        return compradorDAO.readOne(nickname);
+        return compradorDAO.readOne(Map.of("identifier",nickname));
     }
 
     public List<Comprador> readAllCompradores(){
@@ -32,7 +32,7 @@ public class CompradorServices {
     }
 
     public void deleteComprador(String nickname){
-        compradorDAO.delete(nickname);
+        compradorDAO.delete(Map.of("nickname",nickname));
     }
 
     public int cantidadDeProductosComprados(String nickname){

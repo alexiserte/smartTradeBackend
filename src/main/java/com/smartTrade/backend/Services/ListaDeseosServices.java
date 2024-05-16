@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ListaDeseosServices {
@@ -14,7 +15,7 @@ public class ListaDeseosServices {
     private ListaDeDeseosDAO listaDeDeseosDAO;
 
     public void createNewListaDeseos(String nombre) {
-        listaDeDeseosDAO.create(nombre);
+        listaDeDeseosDAO.create(Map.of("compradorName",nombre));
     }
 
     public List<ProductoListaDeseos> getListaDeseosFromUser(String nombre) {

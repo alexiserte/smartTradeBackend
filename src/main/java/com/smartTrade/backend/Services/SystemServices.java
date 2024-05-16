@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SystemServices {
@@ -14,7 +15,7 @@ public class SystemServices {
 
 
     public String getTableAttributes(String tableName) {
-        return systemDAO.readOne(tableName);
+        return systemDAO.readOne(Map.of("tableName",tableName));
     }
 
     public List<String> getAllTables() {
