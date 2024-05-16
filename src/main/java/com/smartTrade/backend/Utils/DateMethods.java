@@ -21,4 +21,9 @@ public class DateMethods {
 
         return true;
     }
+
+    public static Date getTodayDate(){
+        java.util.Date fechaActual = new java.util.Date(System.currentTimeMillis());
+        return new Date(fechaActual.getTime());
+    }
 }

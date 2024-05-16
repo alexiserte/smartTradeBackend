@@ -117,6 +117,10 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
         return database.queryForObject("SELECT nickname FROM Usuario WHERE id = ?", String.class, id_vendedor);
     }
 
+    public int getVendorID(String nickname) {
+        return database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, nickname);
+    }
+
     public Vendedor getVendedorWithID(int id_vendedor) {
         return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id AND u.id = ?", new VendedorMapper(), id_vendedor);
     }

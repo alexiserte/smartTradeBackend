@@ -369,8 +369,7 @@ public class AdministradorTest {
         try {
             HttpResponse<String> response = conexion.get("/admin/?identifier=" + username);
             HashMap map = mapper.readValue(response.body(), HashMap.class);
-System.out.println(JSONMethods.getPrettyJSON(map));
-
+            System.out.println(JSONMethods.getPrettyJSON(map));
             assertEquals(200, response.statusCode());
             assertEquals("admin", map.get("nickname"));
             assertEquals("admin", map.get("password"));
@@ -399,10 +398,9 @@ System.out.println(JSONMethods.getPrettyJSON(map));
         body.put("correo", "prueba@prueba.com");
         body.put("direccion", "prueba");
         try {
-            HttpResponse<String> response = conexion.post("/admin/", body.toString());
-            System.out.println();
-            System.out.println(response);
-            assertEquals(200, response.statusCode());
+            HttpResponse<String> response = conexion.post("/admin/", JSONMethods.getPrettyJSON(body));
+            System.out.println(JSONMethods.getPrettyJSON(body));
+            assertEquals(201, response.statusCode());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
         }catch (AssertionError e){
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
@@ -410,6 +408,72 @@ System.out.println(JSONMethods.getPrettyJSON(map));
         }
     }
 
+    @Test
+    void actualizarAdministrador() {
+        HashMap<String, String> body = new HashMap<>();
+        try {
+            HttpResponse<String> response = conexion.put("/admin/?nickname=admin1&direction=Nuevadireccion", JSONMethods.getPrettyJSON(body));
+            System.out.println(JSONMethods.getPrettyJSON(body));
+            assertEquals(200, response.statusCode());
+            HttpResponse<String> response2 = conexion.get("/admin/?identifier=admin1");
+            HashMap map = mapper.readValue(response2.body(), HashMap.class);
+            System.out.println(JSONMethods.getPrettyJSON(map));
+            assertEquals("Nuevadireccion", map.get("direccion"));
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        } catch (AssertionError e) {
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            throw e;
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void deleteAdministrador(){
+        try {
+            HttpResponse<String> response = conexion.delete("/admin/?nickname=admin1");
+            assertEquals(200, response.statusCode());
+            HttpResponse<String> response2 = conexion.get("/admin/?identifier=admin1");
+            System.out.println(response2.statusCode());
+            assertEquals(404, response2.statusCode());
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
+        }catch (AssertionError e){
+            logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
+            throw e;
+        }
+    }
+
+
+    @Test
+    void casoDePruebaCompleto(){
+         registerAdministrador();
+         actualizarAdministrador();
+         deleteAdministrador();
+    }
+
+
+    @Test
+    public void AdminAllTest(){
+        mostrarCategorias();
+        mostrarCategoriasPrincipales();
+        mostrarBasesDeDatos();
+        mostrarCompradores();
+        mostrarVendedores();
+        mostrarProductosAntiguos();
+        mostrarProductosNuevos();
+        mostrarProductosPendientesDeValidacion();
+        existenSubcategorias();
+        obtenerUnaCategoria();
+        listarSubcategorias();
+        productosCompradosPorUnUsuario();
+        productosVendidosPorUnUsuario();
+        obtenerUnAdministrador();
+        registerAdministrador();
+        actualizarAdministrador();
+        deleteAdministrador();
+    }
 }
 
 

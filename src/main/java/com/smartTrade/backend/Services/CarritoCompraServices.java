@@ -65,4 +65,8 @@ public class CarritoCompraServices {
     public int productosEnCarrito(String userName) {
         return carritoCompraDAO.productosInCarrito(userName);
     }
+
+    public void deleteUserCarrito(String userName) {
+        carritoCompraDAO.delete(userName);
+    }
 }
