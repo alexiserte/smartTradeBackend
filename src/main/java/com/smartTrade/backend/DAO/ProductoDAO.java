@@ -87,13 +87,13 @@ public class ProductoDAO implements DAOInterface<Object> {
         this.database = database;
     }
 
-    public void create(Object... args) {
-        String nombre = (String) args[0];
-        String characteristicName = (String) args[1];
-        String vendorName = (String) args[2];
-        double precio = (double) args[3];
-        String descripcion = (String) args[4];
-        String imagen = (String) args[5];
+    public void create(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String characteristicName = (String) args.get("characteristicName");
+        String vendorName = (String) args.get("vendorName");
+        double precio = (double) args.get("precio");
+        String descripcion = (String) args.get("descripcion");
+        String imagen = (String) args.get("imagen");
 
         ConverterFactory factory = new ConverterFactory();
         PNGConverter converter = (PNGConverter) factory.createConversor(Converter.getFileFormatFromBase64(imagen));
@@ -129,7 +129,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         int id_imagen = imagenDAO.getID(imagenResized);
         if (id_imagen == -1) {
-            imagenDAO.create(imagenResized);
+            imagenDAO.create(Map.of("imagen",imagenResized));
             id_imagen = imagenDAO.getID(imagenResized);
         }
 
@@ -147,8 +147,8 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     /* Fin Refactoring Extract Method  */
 
-    public List<Object> readOne(Object... args) {
-        String productName = (String) args[0];
+    public List<Object> readOne(Map<String,?> args) {
+        String productName = (String) args.get("productName");
 
         List<Object> res = new ArrayList<>();
 
@@ -188,7 +188,7 @@ public class ProductoDAO implements DAOInterface<Object> {
     public ProductoAntiguo readOneProductAntiguo(String productName) {
         int id_imagen = database.queryForObject("SELECT id_imagen FROM Producto WHERE nombre = ?", Integer.class,
                 productName);
-        String imagen = imagenDAO.readOne(id_imagen);
+        String imagen = imagenDAO.readOne(Map.of("id_imagen",id_imagen));
         return new ProductoAntiguo(readOneProduct(productName), imagen);
     }
 
@@ -198,9 +198,9 @@ public class ProductoDAO implements DAOInterface<Object> {
 
 
     @SuppressWarnings("unchecked")
-    public void update(Object... args) {
-        String nombre = (String) args[0];
-        HashMap<String, ?> atributos = (HashMap<String, ?>) args[1];
+    public void update(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        HashMap<String, ?> atributos = (HashMap<String, ?>) args.get("atributos");
 
         List<String> keys = new ArrayList<>(atributos.keySet());
         Producto product = readOneProduct(nombre);
@@ -267,8 +267,8 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     }
 
-    public void delete(Object... args) {
-        String nombre = (String) args[0];
+    public void delete(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
         int id_producto = getIDFromName(nombre);
         database.update("DELETE FROM Producto WHERE nombre = ?", nombre);
         database.update("DELETE FROM Historico_Precios WHERE id_producto = ?", id_producto);

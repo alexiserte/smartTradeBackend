@@ -3,6 +3,7 @@ package com.smartTrade.backend.DAO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,21 +21,21 @@ public class CategoriaDAO implements DAOInterface<Categoria>{
         this.database = database;
     }
 
-    public void create(Object... args) {
-        String nombre = (String) args[0];
-        String categoria_principal = (String) args[1];
+    public void create(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String categoria_principal = (String) args.get("categoria_principal");
         database.update("INSERT INTO Categoria(nombre, categoria_principal) VALUES (?, ?);", nombre, categoria_principal);
     }
 
-    public void delete(Object... args) {
-        String nombre = (String) args[0];
+    public void delete(Map<String,?> args){
+        String nombre = (String) args.get("nombre");
         database.update("DELETE FROM Categoria WHERE nombre = ?;", nombre);
     }
 
     @SuppressWarnings("unchecked")
-    public void update(Object... args) {
-        String nombre = (String) args[0];
-        HashMap<String, Object> atributos = (HashMap<String, Object>) args[1];
+    public void update(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        HashMap<String, Object> atributos = (HashMap<String, Object>) args.get("atributos");
         List<String> keys = new ArrayList<>(atributos.keySet());
         for (String key : keys) {
             Object valor = atributos.get(key);
@@ -57,8 +58,8 @@ public class CategoriaDAO implements DAOInterface<Categoria>{
         }    
     }
 
-    public Categoria readOne(Object... args) {
-        String nombre = (String) args[0];
+    public Categoria readOne(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
         return database.queryForObject("SELECT nombre, categoria_principal FROM Categoria WHERE nombre = ?", new CategoriaMapper(), nombre);
     }
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.smartTrade.backend.Mappers.CaracteristicaMapper;
 import com.smartTrade.backend.Models.Caracteristica;
@@ -23,21 +24,21 @@ public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica>{
     @Autowired
     CaracteristicaDAO caracteristicaDAO;
 
-    public void create(Object ...args) {
-        String nombre = (String) args[0];
-        String productName = (String) args[1];
-        String vendorName = (String) args[2];
-        String valor = (String) args[3];
-        String characteristicName = (String) args[4];
+    public void create(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String productName = (String) args.get("productName");
+        String vendorName = (String) args.get("vendorName");
+        String valor = (String) args.get("valor");
+        String characteristicName = (String) args.get("characteristicName");
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = (SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?));", Integer.class, productName, vendorName);
         int id_categoria = database.queryForObject("SELECT id FROM Categoria WHERE nombre = ?;", Integer.class, characteristicName);
         database.update("INSERT INTO Caracteristica(nombre, id_producto, valor, id_categoria) VALUES (?, ?, ?, ?);", nombre, id_producto, valor, id_categoria);
     }
 
-    public Caracteristica readOne(Object ...args) {
-        String nombre = (String) args[0];
-        String productName = (String) args[1];
-        String vendorName = (String) args[2];
+    public Caracteristica readOne(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String productName = (String) args.get("productName");
+        String vendorName = (String) args.get("vendorName");
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = (SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?));", Integer.class, productName, vendorName);
         return database.queryForObject("SELECT nombre, valor, id_categoria, id_producto FROM Caracteristica WHERE nombre = ? AND id_producto = ?", new CaracteristicaMapper(), nombre, id_producto);
     }
@@ -47,11 +48,11 @@ public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica>{
     }
 
     @SuppressWarnings("unchecked")
-    public void update(Object ...args) {
-        String nombre = (String) args[0];
-        String productName = (String) args[1];
-        String vendorName = (String) args[2];
-        HashMap<String, Object> atributos = (HashMap<String, Object>) args[3];
+    public void update(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String productName = (String) args.get("productName");
+        String vendorName = (String) args.get("vendorName");
+        HashMap<String, Object> atributos = (HashMap<String, Object>) args.get("atributos");
         List<String> keys = new ArrayList<>(atributos.keySet());
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = (SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?));", Integer.class, productName, vendorName);
         for (String key : keys) {
@@ -66,10 +67,10 @@ public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica>{
         }
     }
 
-    public void delete(Object ...args) {
-        String nombre = (String) args[0];
-        String productName = (String) args[1];
-        String vendorName = (String) args[2];
+    public void delete(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String productName = (String) args.get("productName");
+        String vendorName = (String) args.get("vendorName");
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = (SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?));", Integer.class, productName, vendorName);
         database.update("DELETE FROM Caracteristica WHERE nombre = ? AND id_producto = ?;", nombre, id_producto);
     }

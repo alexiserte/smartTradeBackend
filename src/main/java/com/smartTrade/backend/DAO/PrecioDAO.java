@@ -6,6 +6,7 @@ import com.smartTrade.backend.Utils.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 @Repository
@@ -102,9 +103,9 @@ public class PrecioDAO implements DAOInterface<Object>{
         return null;
     }
 
-    public void create(Object ...args) {;}
-    public void delete(Object ...args) {;}
-    public void update(Object ...args) {;}
-    public Object readOne(Object ...args) {return null;}
+    public void create(Map<String,?> args) {;}
+    public void delete(Map<String,?> args) {;}
+    public void update(Map<String,?> args) {;}
+    public Object readOne(Map<String,?> args) {return null;}
     public List<Object> readAll() {return null;}
 }

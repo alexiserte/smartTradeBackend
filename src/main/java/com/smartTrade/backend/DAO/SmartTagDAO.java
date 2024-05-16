@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class SmartTagDAO implements DAOInterface<Object> {
@@ -16,18 +17,18 @@ public class SmartTagDAO implements DAOInterface<Object> {
         this.database = database;
     }
     @Override
-    public void create(Object ...args) {}
+    public void create(Map<String,?> args) {}
 
     @Override
-    public Object readOne(Object ...args) {
+    public Object readOne(Map<String,?> args) {
         return null;
     }
 
     @Override
-    public void update(Object ...args) {}
+    public void update(Map<String,?> args) {}
 
     @Override
-    public void delete(Object ...args) {}
+    public void delete(Map<String,?> args) {}
 
     @Override
     public List<Object> readAll() {return null;}

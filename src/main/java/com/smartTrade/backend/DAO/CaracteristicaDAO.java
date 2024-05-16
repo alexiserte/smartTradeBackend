@@ -20,16 +20,16 @@ public class CaracteristicaDAO implements DAOInterface<Categoria_Caracteristica>
         this.database = database;
     }
 
-    public void create(Object ...args) {
-        String nombre = (String) args[0];
-        String characteristicName = (String) args[1];
+    public void create(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String characteristicName = (String) args.get("characteristicName");
         int id_categoria = database.queryForObject(GET_ID_CATEGORIA, Integer.class, characteristicName);
         database.update("INSERT INTO Caracteristicas_Categoria(nombre, id_categoria) VALUES (?, ?);", nombre, id_categoria);
     }
 
-    public Categoria_Caracteristica readOne(Object ...args) {
-        String nombre = (String) args[0];
-        String characteristicName = (String) args[1];
+    public Categoria_Caracteristica readOne(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String characteristicName = (String) args.get("characteristicName");
         int id_categoria = database.queryForObject(GET_ID_CATEGORIA, Integer.class, characteristicName);
         return database.queryForObject("SELECT nombre, id_categoria FROM Caracteristicas_Categoria WHERE nombre = ? AND id_categoria = ?", new Categoria_CaracteristicaMapper(), nombre, id_categoria);
     }
@@ -39,10 +39,10 @@ public class CaracteristicaDAO implements DAOInterface<Categoria_Caracteristica>
     }
 
     @SuppressWarnings("unchecked")
-    public void update(Object ...args) {
-        String nombre = (String) args[0];
-        String characteristicName = (String) args[1];
-        Map<String, Object> atributos = (HashMap<String, Object>) args[2];
+    public void update(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String characteristicName = (String) args.get("characteristicName");
+        Map<String, Object> atributos = (HashMap<String, Object>) args.get("atributos");
         List<String> keys = new ArrayList<>(atributos.keySet());
         for (String key : keys) {
             int id_categoria = database.queryForObject(GET_ID_CATEGORIA, Integer.class, characteristicName);
@@ -57,9 +57,9 @@ public class CaracteristicaDAO implements DAOInterface<Categoria_Caracteristica>
         }
     }
 
-    public void delete(Object ...args) {
-        String nombre = (String) args[0];
-        String characteristicName = (String) args[1];
+    public void delete(Map<String,?> args) {
+        String nombre = (String) args.get("nombre");
+        String characteristicName = (String) args.get("characteristicName");
         int id_categoria = database.queryForObject(GET_ID_CATEGORIA, Integer.class, characteristicName);
         database.update("DELETE FROM Caracteristicas_Categoria WHERE nombre = ? AND id_categoria = ?;", nombre, id_categoria);
     }

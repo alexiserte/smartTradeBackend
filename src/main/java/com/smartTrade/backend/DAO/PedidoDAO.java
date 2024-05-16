@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PedidoDAO implements DAOInterface<Pedido>{
 
@@ -22,9 +23,9 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
     @SuppressWarnings("unchecked")
     @Override
-    public void create(Object... args) {
-        int id_comprador = (int) args[0];
-        List<Producto> productos = (List<Producto>) args[1];
+    public void create(Map<String,?> args) {
+        int id_comprador = (int) args.get("id_comprador");
+        List<Producto> productos = (List<Producto>) args.get("productos");
         database.update("INSERT INTO Pedido (id_comprador, estado) VALUES (?,?)", id_comprador);
         int id_pedido = database.queryForObject("SELECT MAX(id) FROM Pedido", Integer.class);
         List<Integer> id_productos = new ArrayList<>();
@@ -36,8 +37,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     }
 
     @Override
-    public Pedido readOne(Object... args) {
-        int id_pedido = (int) args[0];
+    public Pedido readOne(Map<String,?> args) {
+        int id_pedido = (int) args.get("id_pedido");
         List<Producto> productos = database.query("SELECT nombre,descripcion, id_categoria,fecha_añadido, validado, huella_ecologica, id_imagen, stock FROM producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ?)", new ProductMapper(), id_pedido);
         return database.queryForObject("SELECT * FROM pedido WHERE id = ?", new PedidoMapper(productos), id_pedido);
     }
@@ -47,19 +48,21 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         List<Pedido> resultado = new ArrayList<>();
         List<Integer> idPedidos = database.queryForList("SELECT id FROM Pedido",Integer.class);
         for(int id : idPedidos){
-            resultado.add(readOne(id));
+            resultado.add(readOne(Map.of("id_pedido",id)));
         }
         return resultado;
     }
 
     @Override
-    public void update(Object... args) {
+    public void update(Map<String,?> args) {
+
+        /*  ESTO SUPONGO DEBERÁ IR IMPLEMENTADO CON EL PATRÓN ESTADO    */
         System.out.println("No se puede actualizar un pedido");
     }
 
     @Override
-    public void delete(Object... args) {
-        int id_pedido = (int) args[0];
+    public void delete(Map<String,?> args) {
+        int id_pedido = (int)args.get("id_pedido");
         database.update("DELETE FROM Detalle_Pedido WHERE id_pedido = ?", id_pedido);
         database.update("DELETE FROM Pedido WHERE id = ?", id_pedido);
     }

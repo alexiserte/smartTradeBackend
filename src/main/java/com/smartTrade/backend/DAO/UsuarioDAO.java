@@ -1,6 +1,7 @@
 package com.smartTrade.backend.DAO;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,10 +18,10 @@ public class UsuarioDAO implements DAOInterface<Usuario>{
     }
 
 
-    public void create(Object ...args){}
-    public void update(Object ...args){}
-    public void delete(Object ...args){}
-    public Usuario readOne(Object ...args){return null;}
+    public void create(Map<String,?> args){}
+    public void update(Map<String,?> args){}
+    public void delete(Map<String,?> args){}
+    public Usuario readOne(Map<String,?> args){return null;}
     public List<Usuario> readAll(){return null;}
 
     public int getID(String identifier){

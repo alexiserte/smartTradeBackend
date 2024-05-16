@@ -1,5 +1,6 @@
 package com.smartTrade.backend.DAO;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -21,26 +22,26 @@ public class ImagenDAO implements DAOInterface<String>{
     PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
     
 
-    public void create(Object ...args) {
-        String image = (String) args[0];
+    public void create(Map<String,?> args) {
+        String image = (String) args.get("imagen");
         String imagenResized = converter.procesar(image);
         database.update("INSERT INTO Imagen(imagen) VALUES (?)",imagenResized);
     }
 
-    public void update(Object ...args) {
-        int id_imagen = (int) args[0];
-        String image = (String) args[1];
+    public void update(Map<String,?> args) {
+        int id_imagen = (int) args.get("id_imagen");
+        String image = (String) args.get("imagen");
         String imagenResized = converter.procesar(image);
         database.update("UPDATE Imagen SET imagen = ? WHERE id = ?",imagenResized,id_imagen);
     }
 
-    public void delete(Object ...args) {
-        int id_imagen = (int) args[0];
+    public void delete(Map<String,?> args) {
+        int id_imagen = (int) args.get("id_imagen");
         database.update("DELETE FROM Imagen WHERE id = ?",id_imagen);
     }
 
-    public String readOne(Object ...args) {
-        int id_imagen = (int) args[0];
+    public String readOne(Map<String,?> args) {
+        int id_imagen = (int) args.get("id_imagen");
         return database.queryForObject("SELECT imagen FROM Imagen WHERE id = ?", String.class, id_imagen);
     }
 

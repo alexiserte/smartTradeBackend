@@ -3,13 +3,14 @@ package com.smartTrade.backend.DAO;
 import com.smartTrade.backend.Mappers.VendedorMapper;
 import com.smartTrade.backend.Models.Vendedor;
 
+import com.smartTrade.backend.Utils.DateMethods;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.ArrayList;
 
@@ -24,22 +25,21 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
     }
 
     @Transactional
-    public void create(Object ...args) {
-        String nickname = (String) args[0];
-        String password = (String) args[1];
-        String correo = (String) args[2];
-        String direccion = (String) args[3];
-        
-        Date fechaActual = new Date(System.currentTimeMillis());
-        java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
+    public void create(Map<String,?> args) {
+        String nickname = (String) args.get("nickname");
+        String password = (String) args.get("password");
+        String correo = (String) args.get("correo");
+        String direccion = (String) args.get("direccion");
+
+        Date fechaSQL = DateMethods.getTodayDate();
 
         database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?);", nickname, correo, password, direccion, fechaSQL);
         database.update("INSERT INTO Vendedor(id_usuario) SELECT id FROM Usuario WHERE nickname = ?;", nickname);
 
     }
 
-    public Vendedor readOne(Object ...args) {
-        String identifier = (String) args[0];
+    public Vendedor readOne(Map<String,?> args) {
+        String identifier = (String) args.get("identifier");
         return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new VendedorMapper(), identifier, identifier);
     }
 
@@ -48,11 +48,11 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
     }
 
     @SuppressWarnings("unchecked")
-    public void update(Object ...args) {
-        String nickname = (String) args[0];
-        Map<String, Object> atributos = (Map<String, Object>) args[1];
+    public void update(Map<String,?> args) {
+        String nickname = (String) args.get("nickname");
+        Map<String, Object> atributos = (Map<String, Object>) args.get("atributos");
         List<String> keys = new ArrayList<>(atributos.keySet());
-        Vendedor compradorObject = readOne(nickname);
+        Vendedor compradorObject = readOne(Map.of("identifier",nickname));
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
             String key = iterator.next();
             if (key.equals("nickname")) {
@@ -92,8 +92,8 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
         }
     }
 
-    public void delete(Object ...args) {
-        String nickname = (String) args[0];
+    public void delete(Map<String,?> args) {
+        String nickname = (String) args.get("nickname");
         database.update("DELETE FROM Vendedor WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
         database.update("DELETE FROM Usuario WHERE nickname = ?;", nickname);

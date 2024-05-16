@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class SystemDAO implements DAOInterface<String>{
@@ -15,13 +16,13 @@ public class SystemDAO implements DAOInterface<String>{
     }
 
     @Override
-    public void create(Object... args) {
+    public void create(Map<String,?> args) {
 
     }
 
     @Override
-    public String readOne(Object... args) {
-        String tableName = (String) args[0];
+    public String readOne(Map<String,?> args) {
+        String tableName = (String) args.get("tableName");
         StringBuilder result = new StringBuilder();
         String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?";
         String databaseName = "FiveGuysDatabase";
@@ -58,11 +59,11 @@ public class SystemDAO implements DAOInterface<String>{
     }
 
     @Override
-    public void update(Object... args) { /* no implementado */}
+    public void update(Map<String,?> args){ /* no implementado */}
 
     @Override
-    public void delete(Object... args) {
-        String tableName = (String) args[0];
+    public void delete(Map<String,?> args) {
+        String tableName = (String) args.get("tableName");
         String sql = "DROP TABLE " + tableName;
     }
 }

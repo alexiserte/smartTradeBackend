@@ -1,6 +1,7 @@
 package com.smartTrade.backend.DAO;
 import java.util.List;
 import java.sql.Date;
+import java.util.Map;
 
 import com.smartTrade.backend.Mappers.ProductoCarritoCompraMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,8 +22,8 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
     }
     
 
-    public void create(Object ...args) {
-        String compradorName = (String) args[0];
+    public void create(Map<String,?> args) {
+        String compradorName = (String) args.get("compradorName");
         int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, compradorName);
         database.update("INSERT INTO Carrito_Compra(id_comprador) VALUES (?)",id_comprador);
     }
@@ -169,12 +170,12 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
         int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
         return database.queryForObject("SELECT COUNT(*) FROM Productos_Carrito WHERE id_carrito = ?",Integer.class,id_carrito);
     }
-    public void delete(Object ...args) {
-        String nickname = (String) args[0];
+    public void delete(Map<String,?> args) {
+        String nickname = (String) args.get("nickname");
         database.update("DELETE FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", nickname);
     }
-    public void update(Object ...args) {;}
-    public Object readOne(Object ...args) {return null;}
+    public void update(Map<String,?> args) {;}
+    public Object readOne(Map<String,?> args) {return null;}
     public List<Object> readAll() {return null;}
     
 

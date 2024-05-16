@@ -1,5 +1,6 @@
 package com.smartTrade.backend.DAO;
 import java.util.List;
+import java.util.Map;
 
 
 import com.smartTrade.backend.Mappers.ProductoListaDeseosMapper;
@@ -18,8 +19,8 @@ public class ListaDeDeseosDAO implements DAOInterface<Object>{
     }
     
 
-    public void create(Object ...args) {
-        String compradorName = (String) args[0];
+    public void create(Map<String,?> args) {
+        String compradorName = (String) args.get("compradorName");
         int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, compradorName);
         database.update("INSERT INTO Lista_De_Deseos(id_comprador) VALUES (?)",id_comprador);
     }
@@ -88,9 +89,9 @@ public class ListaDeDeseosDAO implements DAOInterface<Object>{
 
 
 
-    public void delete(Object ...args) {;}
-    public void update(Object ...args) {;}
-    public Object readOne(Object ...args) {return null;}
+    public void delete(Map<String,?> args) {;}
+    public void update(Map<String,?> args) {;}
+    public Object readOne(Map<String,?> args) {return null;}
     public List<Object> readAll() {return null;}
     
 
