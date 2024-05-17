@@ -12,7 +12,9 @@ public class ConverterFactory {
                 return new JPEGConverter();
             case ".mp3":
                 return new MP3Converter();
+
             /*  RESTO DE FORMATOS   */
+
             default:
                 return null;
         }
