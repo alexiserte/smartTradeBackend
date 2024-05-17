@@ -22,4 +22,13 @@ public enum EstadosPedido{
     public String getDescripcionEstado() {
         return descripcionEstado;
     }
+
+    public static EstadosPedido getEstado(String nombreEstado){
+        for(EstadosPedido e : EstadosPedido.values()){
+            if(e.getNombreEstado().equals(nombreEstado)){
+                return e;
+            }
+        }
+        return null;
+    }
 }
