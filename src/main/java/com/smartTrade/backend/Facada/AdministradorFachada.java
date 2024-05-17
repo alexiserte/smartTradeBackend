@@ -44,6 +44,9 @@ public class AdministradorFachada extends Fachada {
     @Autowired
     private SystemServices systemServices;
 
+    @Autowired
+    private PedidoServices pedidoServices;
+
     public ResponseEntity<?> mostrarCategorias() {
         return new ResponseEntity<>(categoriaServices.readAllCategories(), HttpStatus.OK);
     }
@@ -76,6 +79,10 @@ public class AdministradorFachada extends Fachada {
             }
             return new ResponseEntity<>(listaDeProductosAntiguos, HttpStatus.OK);
         }
+    }
+
+    public ResponseEntity<?> mostrarTodosLosPedidos() {
+        return new ResponseEntity<>(pedidoServices.readAllPedidos(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> mostrarProductosPendientesDeValidacion() {

@@ -4,79 +4,98 @@ import com.smartTrade.backend.Mappers.PedidoMapper;
 import com.smartTrade.backend.Mappers.ProductMapper;
 import com.smartTrade.backend.Models.Pedido;
 import com.smartTrade.backend.Models.Producto;
+import com.smartTrade.backend.Models.Vendedor;
+import com.smartTrade.backend.State.EstadosPedido;
+import com.smartTrade.backend.Utils.DateMethods;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PedidoDAO implements DAOInterface<Pedido>{
 
+    @Autowired
+    UsuarioDAO usuarioDAO;
+
+    @Autowired
+    ProductoDAO productoDAO;
 
     private JdbcTemplate database;
-
-    private List<String> estados = List.of("Esperando confirmación","Procesando","Enviado","En reparto","Recibido");
-
     public PedidoDAO (JdbcTemplate database) {
         this.database = database;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void create(Map<String,?> args) {
-        int id_comprador = (int) args.get("id_comprador");
-        List<Producto> productos = (List<Producto>) args.get("productos");
-        database.update("INSERT INTO Pedido (id_comprador, estado) VALUES (?,?)", id_comprador);
-        int id_pedido = database.queryForObject("SELECT MAX(id) FROM Pedido", Integer.class);
-        List<Integer> id_productos = new ArrayList<>();
-        /*
-        *   ESTO HAY QUE ACABARLO
-        *
-        *
-        */
-    }
+    public void create(Map<String, ?> args) {
+        String nickname = (String) args.get("nickname");
+        Map<Pair<Producto, String>,Integer> productos = (Map<Pair<Producto, String>,Integer>) args.get("productos");
 
-    @Override
-    public Pedido readOne(Map<String,?> args) {
-        int id_pedido = (int) args.get("id_pedido");
-        List<Producto> productos = database.query("SELECT nombre,descripcion, id_categoria,fecha_añadido, validado, huella_ecologica, id_imagen, stock FROM producto WHERE id IN(SELECT id_producto FROM Detalle_Pedido WHERE id_pedido = ?)", new ProductMapper(), id_pedido);
-        return database.queryForObject("SELECT * FROM pedido WHERE id = ?", new PedidoMapper(productos), id_pedido);
-    }
+        int id_comprador = usuarioDAO.getID(nickname);
+        Date todayDate = DateMethods.getTodayDate();
+        final String FIRST_ESTADO = EstadosPedido.PROCESANDO.getNombreEstado();
 
-    @Override
-    public List<? extends Pedido> readAll() {
-        List<Pedido> resultado = new ArrayList<>();
-        List<Integer> idPedidos = database.queryForList("SELECT id FROM Pedido",Integer.class);
-        for(int id : idPedidos){
-            resultado.add(readOne(Map.of("id_pedido",id)));
-        }
-        return resultado;
-    }
+        database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado) VALUES(?,?,?)",id_comprador,todayDate,FIRST_ESTADO);
 
-    @Override
-    public void update(Map<String,?> args) {
+        int id_pedido = database.queryForObject("SELECT * FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)",Integer.class);
 
-        /*  ESTO SUPONGO DEBERÁ IR IMPLEMENTADO CON EL PATRÓN ESTADO    */
-        System.out.println("No se puede actualizar un pedido");
-    }
+        for(Pair<Producto, String> parejaProductoVendedor : productos.keySet()){
+            Producto p = parejaProductoVendedor.getFirst();
+            String vendedor = parejaProductoVendedor.getSecond();
+            int cantidad = productos.get(p);
+            int id_producto = productoDAO.getIDFromName(p.getNombre());
+            int id_vendedor = usuarioDAO.getID(vendedor);
 
-    @Override
-    public void delete(Map<String,?> args) {
-        int id_pedido = (int)args.get("id_pedido");
-        database.update("DELETE FROM Detalle_Pedido WHERE id_pedido = ?", id_pedido);
-        database.update("DELETE FROM Pedido WHERE id = ?", id_pedido);
-    }
+            database.update("INSERT INTO Producto_Pedido(id_pedido,id_producto,id_vendedor,cantidad) VALUES(?,?,?,?)",id_pedido,id_producto,id_vendedor,cantidad);
 
-
-
-    public void siguienteEtapaPedido(int id_pedido){
-        String estadoActual = database.queryForObject("SELECT estado FROM Pedido WHERE id = ?", String.class, id_pedido);
-        int index = estados.indexOf(estadoActual);
-        if(index == estados.size()-1){
-            System.out.println("El pedido ya ha sido entregado");
-        }
-        else{
-            database.update("UPDATE Pedido SET estado = ? WHERE id = ?", estados.get(index+1), id_pedido);
         }
     }
-}
+
+    @Override
+    public Pedido readOne(Map<String, ?> args) {
+        int id = (int) args.get("id");
+        List<Pair<Integer, Integer>> productos = database.query(
+                "SELECT id_producto, cantidad FROM Producto_Pedido WHERE id_pedido = ?",
+                new Object[]{id},
+                (rs, rowNum) -> Pair.of(rs.getInt("id_producto"), rs.getInt("cantidad"))
+        );
+
+        Map<Producto, Integer> productosMap = new HashMap<>();
+
+        for (Pair<Integer, Integer> pareja : productos) {
+            int id_producto = pareja.getFirst();
+            Producto p = productoDAO.getProductByID(id_producto);
+            productosMap.put(p, pareja.getSecond());
+        }
+
+        Pedido pedido = database.queryForObject(
+                "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
+
+        return pedido;
+    }
+
+    @Override
+    public List<Pedido> readAll() {
+        List<Integer> ids = database.queryForList("SELECT id FROM Pedido", Integer.class);
+        List<Pedido> pedidos = new ArrayList<>();
+        for(Integer id : ids){
+            Pedido p = readOne(Map.of("id",id));
+            pedidos.add(p);
+        }
+        return pedidos;
+    }
+
+    @Override
+    public void update(Map<String, ?> args) {
+    }
+
+    @Override
+    public void delete(Map<String, ?> args) {
+
+    }
+    }
+

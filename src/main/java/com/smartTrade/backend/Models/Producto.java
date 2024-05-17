@@ -1,5 +1,7 @@
 package com.smartTrade.backend.Models;
 
+import org.springframework.data.util.Pair;
+
 public class Producto{
 
     private String nombre;

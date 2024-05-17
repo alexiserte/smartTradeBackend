@@ -57,6 +57,13 @@ public class AdminController {
         return res;
     }
 
+    @GetMapping("/admin/pedidos")
+    public ResponseEntity<?> mostrarPedidos(HttpServletRequest request) {
+        ResponseEntity<?> res =  fechada.mostrarTodosLosPedidos();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
 
     @GetMapping("/admin/productos/")
     public ResponseEntity<?> mostrarProductos(HttpServletRequest request, @RequestParam(value = "oldMode", required = false) boolean oldMode){
