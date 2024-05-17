@@ -85,8 +85,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             int id_producto = pareja.getFirst();
             Producto p = productoDAO.getProductByID(id_producto);
             int cantidad = pareja.getSecond();
-            int id_vendedor = database.queryForObject("SELECT id_vendedor FROM Producto_Pedido WHERE id_pedido = ? AND id_producto = ?", Integer.class, id, id_producto);
-            Date fecha_entrega = database.queryForObject("SELECT fecha_entrega FROM Producto_Pedido WHERE id_pedido = ? AND id_producto = ?", Date.class, id, id_producto);
+            int id_vendedor = database.queryForObject("SELECT id_vendedor FROM Detalle_Pedido WHERE id_pedido = ? AND id_producto = ?", Integer.class, id, id_producto);
+            Date fecha_entrega = database.queryForObject("SELECT fecha_entrega FROM Detalle_Pedido WHERE id_pedido = ? AND id_producto = ?", Date.class, id, id_producto);
             String vendorNickname = vendedorDAO.getVendorName(id_vendedor);
             productosMap.add(new Pedido.ItemPedido(p, cantidad, vendorNickname, fecha_entrega));
         }
