@@ -10,12 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import com.smartTrade.backend.Models.Pedido;
 
 
 public class PedidoMapper implements RowMapper<Pedido> {
 
-    private Map<Producto,Integer> productos;
-    public PedidoMapper( Map<Producto,Integer> productos){
+    private List<Pedido.ItemPedido> productos;
+    public PedidoMapper( List<Pedido.ItemPedido> productos){
         this.productos = productos;
     }
     

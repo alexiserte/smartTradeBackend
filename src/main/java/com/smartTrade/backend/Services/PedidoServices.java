@@ -16,8 +16,8 @@ public class PedidoServices {
     @Autowired
     PedidoDAO pedidoDAO;
 
-    public void createNewPedido(String nickname, Map<Pair<Producto, String>, Integer> productos) {
-        pedidoDAO.create(Map.of("nickname", nickname, "productos", productos));
+    public void createNewPedido(String nickname, Map<Pair<Producto, String>, Integer> productos,double precio_total){
+        pedidoDAO.create(Map.of("nickname", nickname, "productos", productos, "precio_total", precio_total));
     }
 
     public Pedido readOnePedido(int id) {

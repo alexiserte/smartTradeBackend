@@ -8,14 +8,40 @@ import java.sql.Date;
 import java.util.Map;
 
 public class Pedido{
+     public static class ItemPedido{
+        private Producto producto;
+        private int cantidad;
+
+        public ItemPedido(Producto producto, int cantidad) {
+            this.producto = producto;
+            this.cantidad = cantidad;
+        }
+
+        public Producto getProducto() {
+            return producto;
+        }
+
+        public void setProducto(Producto producto) {
+            this.producto = producto;
+        }
+
+        public int getCantidad() {
+            return cantidad;
+        }
+
+        public void setCantidad(int cantidad) {
+            this.cantidad = cantidad;
+        }
+
+    }
     private int id;
     private int id_comprador;
-    private Map<Producto,Integer> productos;
+    private List<ItemPedido> productos;
     private EstadosPedido estado;
     private Date fecha_realizacion;
     private double precio_total;
 
-    public Pedido(int id,int id_comprador, Map<Producto,Integer> productos, Date fecha_realizacion,double precio_total){
+    public Pedido(int id,int id_comprador, List<ItemPedido> productos, Date fecha_realizacion,double precio_total){
         this.id = id;
         this.id_comprador = id_comprador;
         this.productos = productos;
@@ -42,11 +68,11 @@ public class Pedido{
         this.id_comprador = id_comprador;
     }
 
-    public Map<Producto,Integer> getProductos() {
+    public List<ItemPedido> getProductos() {
         return productos;
     }
 
-    public void setProductos(Map<Producto,Integer> productos) {
+    public void setProductos(List<ItemPedido> productos) {
         this.productos = productos;
     }
 

@@ -35,13 +35,14 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     @Override
     public void create(Map<String, ?> args) {
         String nickname = (String) args.get("nickname");
+        double precio_total = (double) args.get("precio_total");
         Map<Pair<Producto, String>,Integer> productos = (Map<Pair<Producto, String>,Integer>) args.get("productos");
 
         int id_comprador = usuarioDAO.getID(nickname);
         Date todayDate = DateMethods.getTodayDate();
         final String FIRST_ESTADO = EstadosPedido.PROCESANDO.getNombreEstado();
 
-        database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado) VALUES(?,?,?)",id_comprador,todayDate,FIRST_ESTADO);
+        database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado,precio_total) VALUES(?,?,?)",id_comprador,todayDate,FIRST_ESTADO,precio_total);
 
         int id_pedido = database.queryForObject("SELECT * FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)",Integer.class);
 
@@ -66,12 +67,13 @@ public class PedidoDAO implements DAOInterface<Pedido>{
                 (rs, rowNum) -> Pair.of(rs.getInt("id_producto"), rs.getInt("cantidad"))
         );
 
-        Map<Producto, Integer> productosMap = new HashMap<>();
+        List<Pedido.ItemPedido> productosMap = new ArrayList<>();
 
         for (Pair<Integer, Integer> pareja : productos) {
             int id_producto = pareja.getFirst();
             Producto p = productoDAO.getProductByID(id_producto);
-            productosMap.put(p, pareja.getSecond());
+            int cantidad = pareja.getSecond();
+            productosMap.add(new Pedido.ItemPedido(p, cantidad));
         }
 
         Pedido pedido = database.queryForObject(
