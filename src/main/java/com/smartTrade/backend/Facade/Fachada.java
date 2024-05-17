@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Facada;
+package com.smartTrade.backend.Facade;
 
 import com.smartTrade.backend.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;

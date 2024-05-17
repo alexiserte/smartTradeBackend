@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.smartTrade.backend.Facada.UsuarioFachada;
+import com.smartTrade.backend.Facade.UsuarioFachada;
 
 @RestController
 public class UsuarioController {
