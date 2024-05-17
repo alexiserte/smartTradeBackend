@@ -5,7 +5,9 @@ import com.smartTrade.backend.DAO.CountryDAOAndServices;
 import com.smartTrade.backend.DAO.SystemDAO;
 import com.smartTrade.backend.Utils.CountriesMethods;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CountriesServices {
 
     @Autowired
