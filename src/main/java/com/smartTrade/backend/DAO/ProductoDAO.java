@@ -321,9 +321,10 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     public void updateProductFromOneVendor(String nombre, String vendorName, Map atributos) {
         List<String> keys = new ArrayList<>(atributos.keySet());
+        int id_producto = getIDFromName(nombre);
+        int id_vendedor = vendedorDAO.getVendorID(vendorName);
         if (Objects.equals(keys.get(keys.indexOf("precio")), "precio")) {
-            int id_producto = getIDFromName(nombre);
-            int id_vendedor = vendedorDAO.getVendorID(vendorName);
+
             double precio = (double) atributos.get("precio");
             java.sql.Date fechaActual = DateMethods.getTodayDate();
             database.update(
@@ -331,6 +332,11 @@ public class ProductoDAO implements DAOInterface<Object> {
                     id_producto, precio, fechaActual, id_vendedor);
             database.update("UPDATE Vendedores_Producto SET precio = ? WHERE id_producto = ? AND id_vendedor = ?",
                     precio, id_producto, id_vendedor);
+        }
+        else if(keys.contains("stock")){
+            int stock = (int) atributos.get("stock");
+            database.update("UPDATE Vendedores_Producto SET stock_vendedor = ? WHERE id_producto = ? AND id_vendedor = ?",
+                    stock, id_producto, id_vendedor);
         }
     }
 
