@@ -204,6 +204,11 @@ public class ProductoDAO implements DAOInterface<Object> {
         String nombre = (String) args.get("nombre");
         HashMap<String, ?> atributos = (HashMap<String, ?>) args.get("atributos");
 
+        if(atributos.keySet().contains("precio") || atributos.keySet().contains("stock")){
+            updateProductFromOneVendor(nombre,(String) args.get("vendorName"),atributos);
+            return;
+        }
+
         List<String> keys = new ArrayList<>(atributos.keySet());
         Producto product = readOneProduct(nombre);
 

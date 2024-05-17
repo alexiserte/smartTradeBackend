@@ -329,7 +329,39 @@ public class CountriesMethods {
         return Pair.of(Double.parseDouble(lat), Double.parseDouble(lon));
     }
 
+
+    public static String getRandomCity(){
+        List<String> listaDePaises = getCountriesListInAlphabetical();
+        int random = (int) (Math.random() * listaDePaises.size());
+        String pais = listaDePaises.get(random);
+        List<String> listaDeCiudades = getCitiesByCountry(pais, null);
+        random = (int) (Math.random() * listaDeCiudades.size());
+        return listaDeCiudades.get(random);
+    }
+
+    public static String getRandomCity(String country){
+        List<String> listaDeCiudades = getCitiesByCountry(country, null);
+        int random = (int) (Math.random() * listaDeCiudades.size());
+        return listaDeCiudades.get(random);
+    }
+
+    public static Pair<String,String> getRandomCityAndCountry(){
+        List<String> listaDePaises = getCountriesListInAlphabetical();
+        int random = (int) (Math.random() * listaDePaises.size());
+        String pais = listaDePaises.get(random);
+        List<String> listaDeCiudades = getCitiesByCountry(pais, null);
+        random = (int) (Math.random() * listaDeCiudades.size());
+        return Pair.of(listaDeCiudades.get(random), pais);
+    }
+
     private static boolean isSpanish(String country){
         return getCountriesAndCodesSpanish().containsKey(country);
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(String.format("¿Está %s dentro de la lista de ciudades? %s","Xirivella",getCitiesByCountry("Spain", 5).contains("Xirivella")));
+        System.out.println(String.format("¿Está %s dentro de la lista de ciudades? %s","Alaquàs",getCitiesByCountry("Spain", 5).contains("Alaquàs")));
+
     }
 }

@@ -169,6 +169,12 @@ public class AdminController {
         ResponseEntity<?> res = fechada.getLog(id);
         return res;
     }
-    
+
+    @GetMapping("/_")
+    public ResponseEntity<?> insertCityAndCountry(HttpServletRequest request){
+        ResponseEntity<?> res = fechada.insertCountryAndCityWhereMissing();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
 }
 

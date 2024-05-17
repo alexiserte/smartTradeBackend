@@ -332,4 +332,13 @@ public class AdministradorFachada extends Fachada {
             return new ResponseEntity<>("Error al obtener los logs: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public ResponseEntity<?> insertCountryAndCityWhereMissing(){
+        try{
+            systemServices.insertCountryAndCityWhereMissing();
+            return new ResponseEntity<>("País y ciudad insertados correctamente",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al insertar país y ciudad: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
