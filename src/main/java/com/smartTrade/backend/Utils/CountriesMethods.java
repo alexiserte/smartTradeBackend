@@ -20,7 +20,19 @@ public class CountriesMethods {
     private static final double RADIUS_OF_EARTH_KM = 6371;
 
 
-    public static List<String> getCitiesByCountry(String countryCode) {
+    public static List<String> getCitiesByCountry(String countryName, Integer cantidad) {
+        List<String> countriesInSpanish = new ArrayList<>(getCountriesAndCodesSpanish().keySet());
+        List<String> countriesInEnglish = new ArrayList<>(getCountriesAndCodesEnglish().keySet());
+
+        String countryCode = "";
+        if(countriesInEnglish.contains(countryName)) {
+            countryCode = getCountriesAndCodesEnglish().get(countryName).getFirst();
+        } else if(isSpanish(countryName)) {
+            countryCode = getCountriesAndCodesSpanish().get(countryName).getFirst();
+        } else {
+            throw new RuntimeException("Country not found");
+        }
+
         String apiUrl = String.format("http://api.geonames.org/searchJSON?country=%s&featureClass=P&maxRows=1000&username=%s", countryCode, GEONAMES_USERNAME);
         String response = makeARequest(apiUrl);
         ObjectMapper mapper = new ObjectMapper();
@@ -50,8 +62,14 @@ public class CountriesMethods {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if(cantidad == null){
+            return cityNames;
+        }else if(cantidad > cityNames.size()){
+            return cityNames;
+        }else{
+            return cityNames.subList(0, cantidad);
+        }
 
-        return cityNames;
     }
 
 
@@ -67,6 +85,44 @@ public class CountriesMethods {
             countries.put(countryName, codesPair);
         }
         return countries;
+    }
+
+
+    public static String getCapitalCity(String country1){
+        Map<String, Pair<String, String>> countriesInSpanish = getCountriesAndCodesSpanish();
+        Pair<String, String> country1Codes;
+        if(isSpanish(country1)){
+            country1Codes = countriesInSpanish.get(country1);
+        }
+        else{
+            Map<String, Pair<String, String>> countriesInEnglish = getCountriesAndCodesEnglish();
+            country1Codes = countriesInEnglish.get(country1);
+        }
+
+
+        String country1NameInEnglish;
+        if(isSpanish(country1)){
+            country1NameInEnglish = new Locale("", country1Codes.getFirst()).getDisplayCountry(Locale.ENGLISH);
+        }else{
+            country1NameInEnglish = country1;
+        }
+
+        String apiUrl = "https://restcountries.com/v3.1/name/" + StringComparison.quitarAcentos(country1NameInEnglish.replaceAll(" ", "%20")) + "?fields=capital";
+        String response = makeARequest(apiUrl);
+
+        List responseData;
+        String capitalCity;
+
+        try{
+            responseData = new ObjectMapper().readValue(response, List.class);
+            List cities = (List) ((Map) responseData.get(0)).get("capital");
+            capitalCity = (String) cities.get(0);
+            return capitalCity;
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Map<String, Pair<String, String>> getCountriesAndCodesEnglish() {
@@ -185,16 +241,30 @@ public class CountriesMethods {
 
 
 
-    private static boolean hasBorderWith(String country1, String country2) {
+    public static boolean hasBorderWith(String country1, String country2) {
         Map<String, Pair<String, String>> countriesInSpanish = getCountriesAndCodesSpanish();
-        Pair<String, String> country1Codes = countriesInSpanish.get(country1);
-        Pair<String, String> country2Codes = countriesInSpanish.get(country2);
+        Pair<String, String> country1Codes;
+        Pair<String, String> country2Codes;
+        if(countriesInSpanish.containsKey(country1)){
+            country1Codes = countriesInSpanish.get(country1);
+            country2Codes = countriesInSpanish.get(country2);
+            }
+        else{
+            Map<String, Pair<String, String>> countriesInEnglish = getCountriesAndCodesEnglish();
+            country1Codes = countriesInEnglish.get(country1);
+            country2Codes = countriesInEnglish.get(country2);
+        }
 
-        String country1NameInEnglish = new Locale("", country1Codes.getFirst()).getDisplayCountry(Locale.ENGLISH);
+
+        String country1NameInEnglish;
+        if(isSpanish(country1)){
+            country1NameInEnglish = new Locale("", country1Codes.getFirst()).getDisplayCountry(Locale.ENGLISH);
+        }else{
+            country1NameInEnglish = country1;
+        }
 
         String apiUrl = "https://restcountries.com/v3.1/name/" + StringComparison.quitarAcentos(country1NameInEnglish.replaceAll(" ", "%20")) + "?fields=borders";
         String response = makeARequest(apiUrl);
-        System.out.println(response);
 
         List<HashMap<String,Object>> countryData;
         List<String> countryBorders;
@@ -257,5 +327,9 @@ public class CountriesMethods {
         }
 
         return Pair.of(Double.parseDouble(lat), Double.parseDouble(lon));
+    }
+
+    private static boolean isSpanish(String country){
+        return getCountriesAndCodesSpanish().containsKey(country);
     }
 }

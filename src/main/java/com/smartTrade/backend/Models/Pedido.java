@@ -1,5 +1,6 @@
 package com.smartTrade.backend.Models;
 
+import com.smartTrade.backend.State.EstadosPedido;
 import java.util.List;
 import java.sql.Date;
 
@@ -7,14 +8,14 @@ public class Pedido{
     private int id;
     private int id_comprador;
     private List<Producto> productos;
-    private String estado;
+    private EstadosPedido estado;
     private Date fecha_realizacion;
 
-    public Pedido(int id,int id_comprador, List<Producto> productos, String estado, Date fecha_realizacion){
+    public Pedido(int id,int id_comprador, List<Producto> productos, Date fecha_realizacion){
         this.id = id;
         this.id_comprador = id_comprador;
         this.productos = productos;
-        this.estado = estado;
+        this.estado = EstadosPedido.PROCESANDO;
         this.fecha_realizacion = fecha_realizacion;
     }
 
@@ -45,11 +46,11 @@ public class Pedido{
         this.productos = productos;
     }
 
-    public String getEstado() {
+    public EstadosPedido getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadosPedido estado) {
         this.estado = estado;
     }
 
