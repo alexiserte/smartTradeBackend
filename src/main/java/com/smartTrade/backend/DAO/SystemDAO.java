@@ -74,7 +74,7 @@ public class SystemDAO implements DAOInterface<String>{
         List<Integer> ids = database.queryForList("SELECT id FROM Usuario", Integer.class);
         for (int id : ids) {
             Pair<String,String> countryAndCity = CountriesMethods.getRandomCityAndCountry();
-            database.update("UPDATE Usuario SET pais = ?, ciudad = ? WHERE id = ? AND ciudad IS NULL OR pais IS NULL", countryAndCity.getSecond(), countryAndCity.getFirst(), id);
+            database.update("UPDATE Usuario SET pais = ?, ciudad = ? WHERE id = ? AND (ciudad IS NULL OR pais IS NULL)", countryAndCity.getSecond(), countryAndCity.getFirst(), id);
 
         }
     }
