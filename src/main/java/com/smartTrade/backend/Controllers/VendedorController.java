@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.smartTrade.backend.Fachada.VendedorFachada;
+import com.smartTrade.backend.Facada.VendedorFachada;
 
 import java.util.HashMap;
 

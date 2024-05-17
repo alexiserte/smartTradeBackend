@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Fachada;
+package com.smartTrade.backend.Facada;
 
 import com.smartTrade.backend.Services.AdministradorServices;
 import com.smartTrade.backend.Services.CompradorServices;
