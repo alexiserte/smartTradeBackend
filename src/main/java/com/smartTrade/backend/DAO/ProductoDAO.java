@@ -1,6 +1,8 @@
 package com.smartTrade.backend.DAO;
 
 import com.smartTrade.backend.Models.Vendedor;
+import com.smartTrade.backend.Template.Converter;
+import com.smartTrade.backend.Template.PNGConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

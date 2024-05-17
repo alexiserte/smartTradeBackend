@@ -2,8 +2,7 @@ package com.smartTrade.backend;
 
 import com.smartTrade.backend.Fachada.ProductoFachada;
 import com.smartTrade.backend.Factory.ConverterFactory;
-import com.smartTrade.backend.Utils.Converter;
-import com.smartTrade.backend.Utils.PNGConverter;
+import com.smartTrade.backend.Template.PNGConverter;
 import com.smartTrade.backend.Utils.ReflectionMethods;
 import org.junit.jupiter.api.Test;
 

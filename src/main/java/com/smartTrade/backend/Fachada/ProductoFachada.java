@@ -6,7 +6,7 @@ import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Models.Vendedor;
 import com.smartTrade.backend.Services.ProductoServices;
 import com.smartTrade.backend.Services.VendedorServices;
-import com.smartTrade.backend.Utils.PNGConverter;
+import com.smartTrade.backend.Template.PNGConverter;
 import com.smartTrade.backend.Utils.StringComparison;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
