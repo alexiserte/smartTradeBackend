@@ -71,13 +71,18 @@ public class SystemDAO implements DAOInterface<String>{
     }
 
     public void insertCountryAndCityWhereMissing(){
-        List<Integer> ids = database.queryForList("SELECT id FROM Usuario", Integer.class);
-        for (int id : ids) {
-            Pair<String,String> countryAndCity = CountriesMethods.getRandomCityAndCountry();
-            database.update("UPDATE Usuario SET pais = ?, ciudad = ? WHERE id = ? AND (ciudad IS NULL OR pais IS NULL)", countryAndCity.getSecond(), countryAndCity.getFirst(), id);
+        // Obtener los IDs de los usuarios que tienen país o ciudad nulos
+        List<Integer> ids = database.queryForList("SELECT id FROM Usuario WHERE pais IS NULL OR ciudad IS NULL", Integer.class);
 
+        for (int id : ids) {
+            // Obtener un país y ciudad aleatorios
+            Pair<String, String> countryAndCity = CountriesMethods.getRandomCityAndCountry();
+
+            // Actualizar el usuario con el país y ciudad obtenidos
+            database.update("UPDATE Usuario SET pais = ?, ciudad = ? WHERE id = ?", countryAndCity.getSecond(), countryAndCity.getFirst(), id);
         }
     }
+
 
 
 
