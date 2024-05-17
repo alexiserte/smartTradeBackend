@@ -52,9 +52,7 @@ public class SystemServices {
         return CountriesMethods.calculateDistanceBetweenCities(city1,country1,city2,country2);
     }
 
-    public void insertCountryAndCityWhereMissing(){
-        systemDAO.insertCountryAndCityWhereMissing();
-    }
+
 
 
 

@@ -11,10 +11,14 @@ public class Pedido{
      public static class ItemPedido{
         private Producto producto;
         private int cantidad;
+        private String vendedor;
+        private Date fecha_entrega;
 
-        public ItemPedido(Producto producto, int cantidad) {
+        public ItemPedido(Producto producto, int cantidad, String vendedor, Date fecha_entrega) {
             this.producto = producto;
             this.cantidad = cantidad;
+            this.vendedor = vendedor;
+            this.fecha_entrega = fecha_entrega;
         }
 
         public Producto getProducto() {
@@ -31,6 +35,22 @@ public class Pedido{
 
         public void setCantidad(int cantidad) {
             this.cantidad = cantidad;
+        }
+
+        public String getVendedor() {
+            return vendedor;
+        }
+
+        public void setVendedor(String vendedor) {
+            this.vendedor = vendedor;
+        }
+
+        public Date getFecha_entrega() {
+            return fecha_entrega;
+        }
+
+        public void setFecha_entrega(Date fecha_entrega) {
+            this.fecha_entrega = fecha_entrega;
         }
 
     }

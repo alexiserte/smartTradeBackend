@@ -335,7 +335,7 @@ public class AdministradorFachada extends Fachada {
 
     public ResponseEntity<?> insertCountryAndCityWhereMissing(){
         try{
-            systemServices.insertCountryAndCityWhereMissing();
+            countriesServices.insertCountryAndCityWhereMissing();
             return new ResponseEntity<>("País y ciudad insertados correctamente",HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>("Error al insertar país y ciudad: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);

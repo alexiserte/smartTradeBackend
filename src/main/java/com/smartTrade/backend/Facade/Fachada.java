@@ -8,34 +8,37 @@ import org.springframework.stereotype.Component;
 public class Fachada {
 
     @Autowired
-    private ProductoServices productoServices;
+    public ProductoServices productoServices;
 
     @Autowired
-    private CarritoCompraServices carritoCompraServices;
+    public CarritoCompraServices carritoCompraServices;
 
     @Autowired
-    private CaracteristicaServices caracteristicaServices;
+    public CaracteristicaServices caracteristicaServices;
 
     @Autowired
-    private AdministradorServices administradorServices;
+    public AdministradorServices administradorServices;
 
     @Autowired
-    private CategoriaServices categoriaServices;
+    public CategoriaServices categoriaServices;
 
     @Autowired
-    private CompradorServices compradorServices;
+    public CompradorServices compradorServices;
 
     @Autowired
-    private ListaDeseosServices listaDeseosServices;
+    public ListaDeseosServices listaDeseosServices;
 
     @Autowired
-    private SystemServices systemServices;
+    public SystemServices systemServices;
 
     @Autowired
-    private UsuarioServices usuarioServices;
+    public UsuarioServices usuarioServices;
 
     @Autowired
-    private VendedorServices vendedorServices;
+    public VendedorServices vendedorServices;
+
+    @Autowired
+    public CountriesServices countriesServices;
 
 
     

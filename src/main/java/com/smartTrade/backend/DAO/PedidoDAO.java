@@ -5,7 +5,9 @@ import com.smartTrade.backend.Mappers.ProductMapper;
 import com.smartTrade.backend.Models.Pedido;
 import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Models.Vendedor;
+import com.smartTrade.backend.Services.CountriesServices;
 import com.smartTrade.backend.State.EstadosPedido;
+import com.smartTrade.backend.Utils.CountriesMethods;
 import com.smartTrade.backend.Utils.DateMethods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -26,6 +28,12 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
     @Autowired
     ProductoDAO productoDAO;
+
+    @Autowired
+    VendedorDAO vendedorDAO;
+
+    @Autowired
+    CountryDAOAndServices countryDAO;
 
     private JdbcTemplate database;
     public PedidoDAO (JdbcTemplate database) {
@@ -53,7 +61,11 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             int id_producto = productoDAO.getIDFromName(p.getNombre());
             int id_vendedor = usuarioDAO.getID(vendedor);
 
-            database.update("INSERT INTO Producto_Pedido(id_pedido,id_producto,id_vendedor,cantidad) VALUES(?,?,?,?)",id_pedido,id_producto,id_vendedor,cantidad);
+            String vendorNickname = vendedorDAO.getVendorName(id_vendedor);
+
+            Date fecha_entrega = calculateTimeOfDelivery(vendorNickname, nickname);
+
+            database.update("INSERT INTO Detalle_Pedido(id_pedido,id_producto,id_vendedor,cantidad,fecha_llegada) VALUES(?,?,?,?,?)",id_pedido,id_producto,id_vendedor,cantidad,fecha_entrega);
 
         }
     }
@@ -73,7 +85,10 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             int id_producto = pareja.getFirst();
             Producto p = productoDAO.getProductByID(id_producto);
             int cantidad = pareja.getSecond();
-            productosMap.add(new Pedido.ItemPedido(p, cantidad));
+            int id_vendedor = database.queryForObject("SELECT id_vendedor FROM Producto_Pedido WHERE id_pedido = ? AND id_producto = ?", Integer.class, id, id_producto);
+            Date fecha_entrega = database.queryForObject("SELECT fecha_entrega FROM Producto_Pedido WHERE id_pedido = ? AND id_producto = ?", Date.class, id, id_producto);
+            String vendorNickname = vendedorDAO.getVendorName(id_vendedor);
+            productosMap.add(new Pedido.ItemPedido(p, cantidad, vendorNickname, fecha_entrega));
         }
 
         Pedido pedido = database.queryForObject(
@@ -101,5 +116,31 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     public void delete(Map<String, ?> args) {
 
     }
+
+
+    private Date calculateTimeOfDelivery(String vendorNickname, String userNickname){
+        String userCountry = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, userNickname);
+        String vendorCountry = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, vendorNickname);
+
+        if(userCountry.equals(vendorCountry)) {
+            return DateMethods.getFutureDate(1);
+        }
+        else if(CountriesMethods.hasBorderWith(userCountry, vendorCountry)){
+            return DateMethods.getFutureDate(2);
+        }
+        else{
+            double distance = countryDAO.getDistanceFromVendorToUser(vendorNickname, userNickname);
+            if(distance < 1000){
+                return DateMethods.getFutureDate(7);
+            }
+            else if(distance < 5000){
+                return DateMethods.getFutureDate(14);
+            }
+            else{
+                return DateMethods.getFutureDate(28);
+            }
+        }
+
     }
+}
 

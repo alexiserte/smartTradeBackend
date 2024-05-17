@@ -23,7 +23,27 @@ public class DateMethods {
     }
 
     public static Date getTodayDate(){
-        java.util.Date fechaActual = new java.util.Date(System.currentTimeMillis());
+        Date fechaActual = DateMethods.getTodayDate();
         return new Date(fechaActual.getTime());
+    }
+
+    public static Date getTomorrowDate(){
+        Date fechaActual = DateMethods.getTodayDate();
+        return new Date(fechaActual.getTime() + 86400000);
+    }
+
+    public static Date getYesterdayDate(){
+        Date fechaActual = DateMethods.getTodayDate();
+        return new Date(fechaActual.getTime() - 86400000);
+    }
+
+    public static Date getFutureDate(int days){
+        Date fechaActual = DateMethods.getTodayDate();
+        return new Date(fechaActual.getTime() + days*86400000);
+    }
+
+    public static Date getPastDate(int days){
+        Date fechaActual = DateMethods.getTodayDate();
+        return new Date(fechaActual.getTime() - days*86400000);
     }
 }
