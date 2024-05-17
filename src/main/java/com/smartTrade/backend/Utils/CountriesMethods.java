@@ -97,6 +97,21 @@ public class CountriesMethods {
         return countries;
     }
 
+    public static List<String> getCountriesListInAlphabeticalWithEmojis() {
+        List<String> countries = new ArrayList<>();
+        String[] locales = Locale.getISOCountries();
+
+        for (String countryCode : locales) {
+            Locale obj = new Locale.Builder().setLanguage("EN").setRegion(countryCode).build();
+            String countryName = obj.getDisplayCountry();
+            String flagEmoji = getFlagEmoji(countryCode);
+            countries.add(countryName + " " + flagEmoji);
+        }
+
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
+
+        return countries;
+    }
 
     public static String getRandomCountry(){
         List<String> listaDePaises = getCountriesListInAlphabetical();
@@ -195,6 +210,12 @@ public class CountriesMethods {
 
     }
 
+    private static String getFlagEmoji(String countryCode) {
+        int firstChar = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
+        int secondChar = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+        return new String(Character.toChars(firstChar)) + new String(Character.toChars(secondChar));
+    }
+
     private static String makeARequest(String urlBase){
         URL url;
         try {
@@ -236,12 +257,5 @@ public class CountriesMethods {
         }
 
         return Pair.of(Double.parseDouble(lat), Double.parseDouble(lon));
-    }
-
-    public static void main(String[] args) {
-        String distanceCountries = String.format("La distancia entre España y Rusia es de %.2f km", calculateDistanceBetweenCountries("España", "Rusia"));
-        System.out.println(distanceCountries);
-        String distanceCities = String.format("La distancia entre Katmandú y Nicosia es de %.2f km", calculateDistanceBetweenCities("Katmandú", "Nepal", "Nicosia", "Chipre"));
-        System.out.println(distanceCities);
     }
 }
