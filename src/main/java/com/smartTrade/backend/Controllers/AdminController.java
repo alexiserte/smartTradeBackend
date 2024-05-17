@@ -1,12 +1,10 @@
 package com.smartTrade.backend.Controllers;
 
-import com.smartTrade.backend.Fachada.AdministradorFachada;
+import com.smartTrade.backend.Facade.AdministradorFachada;
 import com.smartTrade.backend.Logger.Logger;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Fachada;
+package com.smartTrade.backend.Facade;
 
 import com.smartTrade.backend.Services.AdministradorServices;
 import com.smartTrade.backend.Services.CompradorServices;
@@ -15,7 +15,6 @@ import com.smartTrade.backend.Models.Comprador;
 import com.smartTrade.backend.Models.User_Types;
 import com.smartTrade.backend.Models.Vendedor;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 @Component

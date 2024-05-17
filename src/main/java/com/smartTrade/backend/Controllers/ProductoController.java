@@ -1,15 +1,11 @@
 package com.smartTrade.backend.Controllers;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartTrade.backend.Logger.Logger;
 import jakarta.servlet.http.HttpServletRequest;
-import net.sf.jsqlparser.expression.TryCastExpression;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.web.config.OffsetScrollPositionHandlerMethodArgumentResolverCustomizer;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.smartTrade.backend.Fachada.ProductoFachada;
+import com.smartTrade.backend.Facade.ProductoFachada;
 
 @RestController
 public class ProductoController {

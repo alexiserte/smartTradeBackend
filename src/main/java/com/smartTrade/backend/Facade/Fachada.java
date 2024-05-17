@@ -1,10 +1,8 @@
-package com.smartTrade.backend.Fachada;
+package com.smartTrade.backend.Facade;
 
 import com.smartTrade.backend.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.smartTrade.backend.DAO.*;
 
 @Component
 public class Fachada {

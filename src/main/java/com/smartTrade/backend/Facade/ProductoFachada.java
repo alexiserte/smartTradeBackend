@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Fachada;
+package com.smartTrade.backend.Facade;
 
 import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Factory.ConverterFactory;

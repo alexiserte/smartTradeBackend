@@ -7,10 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.smartTrade.backend.Fachada.UsuarioFachada;
-
-import java.util.HashMap;
-import java.util.Optional;
+import com.smartTrade.backend.Facade.UsuarioFachada;
 
 @RestController
 public class UsuarioController {

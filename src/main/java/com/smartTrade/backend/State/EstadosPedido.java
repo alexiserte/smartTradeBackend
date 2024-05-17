@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Estado;
+package com.smartTrade.backend.State;
 
 public enum EstadosPedido{
     ESPERANDO_CONFIRMACION("Esperando confirmación", "El pedido está pendiente de confirmación."),
