@@ -1,6 +1,6 @@
 package com.smartTrade.backend.Controllers;
 
-import com.smartTrade.backend.Facade.AdministradorFachada;
+import com.smartTrade.backend.Fachada.AdministradorFachada;
 import com.smartTrade.backend.Logger.Logger;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

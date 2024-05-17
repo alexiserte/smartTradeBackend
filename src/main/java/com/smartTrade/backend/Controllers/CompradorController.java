@@ -2,8 +2,8 @@ package com.smartTrade.backend.Controllers;
 
 import java.util.HashMap;
 
-import com.smartTrade.backend.Facade.CarritoCompraFachada;
-import com.smartTrade.backend.Facade.ListaDeDeseosFachada;
+import com.smartTrade.backend.Fachada.CarritoCompraFachada;
+import com.smartTrade.backend.Fachada.ListaDeDeseosFachada;
 import com.smartTrade.backend.Logger.Logger;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.smartTrade.backend.Facade.CompradorFachada;;
+import com.smartTrade.backend.Fachada.CompradorFachada;;
 
 @RestController
 public class CompradorController {

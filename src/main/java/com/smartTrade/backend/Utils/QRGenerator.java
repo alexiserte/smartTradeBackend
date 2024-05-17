@@ -12,6 +12,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.smartTrade.backend.Factory.ConverterFactory;
+import com.smartTrade.backend.Template.PNGConverter;
 
 public class QRGenerator
 {

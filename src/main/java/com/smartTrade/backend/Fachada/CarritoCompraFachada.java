@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Facade;
+package com.smartTrade.backend.Fachada;
 
 import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Models.ProductoCarrito;

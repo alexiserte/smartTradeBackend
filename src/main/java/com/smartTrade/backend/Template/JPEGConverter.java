@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Utils;
+package com.smartTrade.backend.Template;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -11,8 +11,9 @@ import java.io.IOException;
 import java.util.Base64;
 import javax.imageio.ImageIO;
 
-public class PNGConverter extends Converter<BufferedImage> {
+public class JPEGConverter extends Converter<BufferedImage> {
 
+    @Override
     public BufferedImage convertToFile(String base64Image) {
         try {
             String[] parts = base64Image.split(",");
@@ -21,23 +22,29 @@ public class PNGConverter extends Converter<BufferedImage> {
                 return null;
             }
             byte[] imageBytes = Base64.getDecoder().decode(parts[1]);
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
-            return ImageIO.read(bis);
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes)) {
+                return ImageIO.read(bis);
+            }
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Error al decodificar la imagen base64: " + e.getMessage());
             return null;
         }
     }
 
+    @Override
     public String transformFileAndConvertToBase64(BufferedImage image) {
-        if (image == null || image.getWidth() == 512 && image.getHeight() == 512) {
-            return null;
+        if (image == null) {
+            throw new IllegalArgumentException("La imagen proporcionada es nula.");
         }
 
         int targetWidth = 512;
         int targetHeight = 512;
 
-        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        if (image.getWidth() == targetWidth && image.getHeight() == targetHeight) {
+            return convertToBase64(image);
+        }
+
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(image.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH), 0, 0, targetWidth, targetHeight, null);
         g.dispose();
@@ -45,33 +52,42 @@ public class PNGConverter extends Converter<BufferedImage> {
         return convertToBase64(resizedImage);
     }
 
+    @Override
     public String convertToBase64(BufferedImage image) {
         if (image == null) {
-            throw new IllegalArgumentException("La imagen proporcionada es nula");
+            throw new IllegalArgumentException("La imagen proporcionada es nula.");
         }
 
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", bos);
-            byte[] resizedImageBytes = bos.toByteArray();
-            return "data:image/png;base64," + Base64.getEncoder().encodeToString(resizedImageBytes);
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            ImageIO.write(image, "jpeg", bos);
+            byte[] imageBytes = bos.toByteArray();
+            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(imageBytes);
         } catch (IOException e) {
-            throw new RuntimeException("Error al convertir la imagen a Base64: " + e.getMessage());
+            throw new RuntimeException("Error al convertir la imagen a Base64: " + e.getMessage(), e);
         }
     }
 
-    // Este método solo se usa para convertir los códigos QR a PNG. ¡ NO SE DEBE DE USAR PARA EL RESTO DE PRODUCTOS!
+    public void convertStringToFile(String data, String path) {
+        BufferedImage image = convertToFile(data);
+        if (image == null) {
+            return;
+        }
+        try {
+            ImageIO.write(image, "jpeg", new File(path));
+        } catch (IOException e) {
+            System.err.println("Error al escribir la imagen en el archivo: " + e.getMessage());
+        }
+    }
+
     public String convertFileToBase64(String filePath) {
         try {
-            // Leer el archivo de la ruta especificada
             File file = new File(filePath);
-            FileInputStream fileInputStream = new FileInputStream(file);
             byte[] fileBytes = new byte[(int) file.length()];
-            fileInputStream.read(fileBytes);
-            fileInputStream.close();
+            try (FileInputStream fileInputStream = new FileInputStream(file)) {
+                fileInputStream.read(fileBytes);
+            }
 
-            // Convertir los bytes a base64
-            return "data:image/png;base64," + Base64.getEncoder().encodeToString(fileBytes);
+            return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(fileBytes);
         } catch (IOException e) {
             System.err.println("Error al leer el archivo o convertirlo a base64: " + e.getMessage());
             return null;

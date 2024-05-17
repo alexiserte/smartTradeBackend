@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Facade;
+package com.smartTrade.backend.Fachada;
 
 import java.util.HashMap;
 import java.util.List;

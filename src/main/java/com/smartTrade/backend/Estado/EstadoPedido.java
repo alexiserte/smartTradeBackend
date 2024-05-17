@@ -1,4 +1,4 @@
-package com.smartTrade.backend.State;
+package com.smartTrade.backend.Estado;
 
 import com.smartTrade.backend.Models.Pedido;
 

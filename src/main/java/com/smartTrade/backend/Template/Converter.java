@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Utils;
+package com.smartTrade.backend.Template;
 
 
 public abstract class Converter<T>{
