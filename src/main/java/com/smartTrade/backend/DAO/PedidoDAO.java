@@ -61,7 +61,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     public Pedido readOne(Map<String, ?> args) {
         int id = (int) args.get("id");
         List<Pair<Integer, Integer>> productos = database.query(
-                "SELECT id_producto, cantidad FROM Producto_Pedido WHERE id_pedido = ?",
+                "SELECT id_producto, cantidad FROM Detalle_Pedido WHERE id_pedido = ?",
                 new Object[]{id},
                 (rs, rowNum) -> Pair.of(rs.getInt("id_producto"), rs.getInt("cantidad"))
         );
