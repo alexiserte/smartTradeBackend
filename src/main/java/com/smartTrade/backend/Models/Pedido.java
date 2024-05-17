@@ -46,15 +46,6 @@ public class Pedido{
         return productos;
     }
 
-    public String getProductosString(){
-        String res = "";
-        for(Producto p : productos.keySet()){
-            res += p.getNombre() + " x" + productos.get(p) + "\n";
-        }
-
-        return res;
-    }
-
     public void setProductos(Map<Producto,Integer> productos) {
         this.productos = productos;
     }
