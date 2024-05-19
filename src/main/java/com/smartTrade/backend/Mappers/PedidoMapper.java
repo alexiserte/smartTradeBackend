@@ -26,7 +26,7 @@ public class PedidoMapper implements RowMapper<Pedido> {
         pedido.setId(rs.getInt("id"));
         pedido.setId_comprador(rs.getInt("id_comprador"));
         pedido.setProductos(productos);
-        pedido.setEstado(EstadosPedido.getEstado(rs.getString("estado")));
+        pedido.setEstadoActual(EstadosPedido.getEstado(rs.getString("estado")));
         pedido.setFecha_realizacion(rs.getDate("fecha_realizacion"));
         pedido.setPrecio_total(rs.getDouble("precio_total"));
         return pedido;
