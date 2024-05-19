@@ -30,6 +30,7 @@ public class PedidoMapper implements RowMapper<Pedido> {
         pedido.setEstado(pedido.getEstadoActual());
         pedido.setFecha_realizacion(rs.getDate("fecha_realizacion"));
         pedido.setPrecio_total(rs.getDouble("precio_total"));
+        pedido.setFecha_entrega(rs.getDate("fecha_entrega"));
         return pedido;
     }
 }

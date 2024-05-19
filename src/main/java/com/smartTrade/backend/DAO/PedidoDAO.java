@@ -35,6 +35,9 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     @Autowired
     CountryDAOAndServices countryDAO;
 
+    @Autowired
+    CompradorDAO compradorDAO;
+
     private static JdbcTemplate database;
     public PedidoDAO (JdbcTemplate database) {
         this.database = database;
@@ -51,9 +54,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         final String FIRST_ESTADO = EstadosPedido.PROCESANDO.getNombreEstado();
 
         database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado,precio_total) VALUES(?,?,?)",id_comprador,todayDate,FIRST_ESTADO,precio_total);
-
         int id_pedido = database.queryForObject("SELECT * FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)",Integer.class);
-
+        List<Date> fechas_entrega = new ArrayList<>();
         for(Pair<Producto, String> parejaProductoVendedor : productos.keySet()){
             Producto p = parejaProductoVendedor.getFirst();
             String vendedor = parejaProductoVendedor.getSecond();
@@ -64,10 +66,12 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             String vendorNickname = vendedorDAO.getVendorName(id_vendedor);
 
             Date fecha_entrega = calculateTimeOfDelivery(vendorNickname, nickname);
-
-            database.update("INSERT INTO Detalle_Pedido(id_pedido,id_producto,id_vendedor,cantidad,fecha_llegada) VALUES(?,?,?,?,?)",id_pedido,id_producto,id_vendedor,cantidad,fecha_entrega);
-
+            fechas_entrega.add(fecha_entrega);
+            database.update("INSERT INTO Detalle_Pedido(id_pedido,id_producto,id_vendedor,cantidad) VALUES(?,?,?,?)",id_pedido,id_producto,id_vendedor,cantidad);
         }
+
+        Date latestDate = DateMethods.getLatestDateFromList(fechas_entrega);
+        database.update("UPDATE Pedido SET fecha_entrega = ? WHERE id = ?",latestDate,id_pedido);
     }
 
     @Override
@@ -86,9 +90,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             Producto p = productoDAO.getProductByID(id_producto);
             int cantidad = pareja.getSecond();
             int id_vendedor = database.queryForObject("SELECT id_vendedor FROM Detalle_Pedido WHERE id_pedido = ? AND id_producto = ?", Integer.class, id, id_producto);
-            Date fecha_entrega = database.queryForObject("SELECT fecha_llegada FROM Detalle_Pedido WHERE id_pedido = ? AND id_producto = ?", Date.class, id, id_producto);
             String vendorNickname = vendedorDAO.getVendorName(id_vendedor);
-            productosMap.add(new Pedido.ItemPedido(p, cantidad, vendorNickname, fecha_entrega));
+            productosMap.add(new Pedido.ItemPedido(p, cantidad, vendorNickname));
         }
 
         Pedido pedido = database.queryForObject(
@@ -142,6 +145,5 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         }
 
     }
-
 }
 

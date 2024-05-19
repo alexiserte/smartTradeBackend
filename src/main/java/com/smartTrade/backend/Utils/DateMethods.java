@@ -2,6 +2,7 @@ package com.smartTrade.backend.Utils;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 
 public class DateMethods {
 
@@ -45,5 +46,24 @@ public class DateMethods {
     public static Date getPastDate(int days){
         Date fechaActual = DateMethods.getTodayDate();
         return new Date(fechaActual.getTime() - days*86400000);
+    }
+
+    public static boolean isBefore(Date fecha1, Date fecha2){
+        return fecha1.before(fecha2);
+    }
+
+    public static boolean isAfter(Date fecha1, Date fecha2){
+        return fecha1.after(fecha2);
+    }
+
+
+    public static Date getLatestDateFromList(List<Date> dates){
+        Date latestDate = dates.get(0);
+        for(Date d : dates){
+            if(d.after(latestDate)){
+                latestDate = d;
+            }
+        }
+        return latestDate;
     }
 }
