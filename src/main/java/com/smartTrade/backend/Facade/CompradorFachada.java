@@ -1,10 +1,12 @@
-package com.smartTrade.backend.Fachada;
+package com.smartTrade.backend.Facade;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.smartTrade.backend.Models.Pedido;
 import com.smartTrade.backend.Services.CompradorServices;
+import com.smartTrade.backend.Services.PedidoServices;
 import com.smartTrade.backend.Services.ProductoServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -23,6 +25,9 @@ public class CompradorFachada extends Fachada {
 
     @Autowired
     private ProductoServices productoServices;
+
+    @Autowired
+    private PedidoServices pedidoServices;
 
     public ResponseEntity<?> login(String identifier, String password) {
         if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información
@@ -127,6 +132,24 @@ public class CompradorFachada extends Fachada {
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al obtener los productos comprados: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<?> pedidosRealizadosPorUnUsuario(String nickname) {
+        try {
+            Comprador comprador = compradorServices.readOneComprador(nickname);
+            try {
+                List<Pedido> pedidos = pedidoServices.readPedidosFromUser(comprador.getNickname());
+                return new ResponseEntity<>(pedidos, HttpStatus.OK);
+            } catch (EmptyResultDataAccessException e) {
+                return new ResponseEntity<>("No se han encontrado pedidos realizados por este usuario", HttpStatus.NOT_FOUND);
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error al obtener los pedidos realizados: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener los pedidos realizados: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

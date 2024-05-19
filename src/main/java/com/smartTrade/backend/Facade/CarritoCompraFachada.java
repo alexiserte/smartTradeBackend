@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Fachada;
+package com.smartTrade.backend.Facade;
 
 import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Models.ProductoCarrito;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import com.smartTrade.backend.Models.Comprador;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Component

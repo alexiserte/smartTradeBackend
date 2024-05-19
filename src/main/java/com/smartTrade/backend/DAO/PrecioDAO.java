@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.smartTrade.backend.Utils.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -38,6 +39,7 @@ public class PrecioDAO implements DAOInterface<Object>{
                 LocalDate.class, productName);
         LocalDate fechaActual = fechas.get(fechas.size() - 1);
 
+        List<TreeMap<String,Object>> listaDeMapaDeVendedores = new ArrayList<>();
         for (int j = 0; j < vendedores.size(); j++) {
             List<Double> preciosFromOneProduct = database.queryForList(
                     "SELECT precio FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?) ORDER BY id",
@@ -80,9 +82,10 @@ public class PrecioDAO implements DAOInterface<Object>{
             preciosVendedor.put("Precio promedio", Math.round(preciomedio * 100.0) / 100.0);
             preciosVendedor.put("Número de cambios", preciosFromOneProduct.size());
 
-            stats.put("Vendedor " + (j + 1), preciosVendedor);
-        }
+            listaDeMapaDeVendedores.add(preciosVendedor);
 
+        }
+        stats.put("Vendedores", listaDeMapaDeVendedores);
         // Estadísticas generales
         stats.put("Precio máximo general", preciomaximo);
         stats.put("Precio mínimo general", preciominimo);

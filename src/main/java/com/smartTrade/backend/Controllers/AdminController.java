@@ -1,12 +1,10 @@
 package com.smartTrade.backend.Controllers;
 
-import com.smartTrade.backend.Fachada.AdministradorFachada;
+import com.smartTrade.backend.Facade.AdministradorFachada;
 import com.smartTrade.backend.Logger.Logger;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +53,13 @@ public class AdminController {
     @GetMapping("/admin/vendedores")
     public ResponseEntity<?> mostrarVendedores(HttpServletRequest request) {
         ResponseEntity<?> res =  fechada.mostrarVendedores();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+    @GetMapping("/admin/pedidos")
+    public ResponseEntity<?> mostrarPedidos(HttpServletRequest request) {
+        ResponseEntity<?> res =  fechada.mostrarTodosLosPedidos();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
@@ -164,6 +169,12 @@ public class AdminController {
         ResponseEntity<?> res = fechada.getLog(id);
         return res;
     }
-    
+
+    @GetMapping("/_")
+    public ResponseEntity<?> insertCityAndCountry(HttpServletRequest request){
+        ResponseEntity<?> res = fechada.insertCountryAndCityWhereMissing();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
 }
 

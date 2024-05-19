@@ -44,7 +44,7 @@ public class Carrito_CompraDAO implements DAOInterface<Object>{
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_carrito = database.queryForObject("SELECT id FROM Carrito_Compra WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?)", Integer.class, userNickname);
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
-        database.update("INSERT INTO Productos_Carrito(id_carrito,id_producto,id_vendedor,cantidad) VALUES(?,?,?,?)",id_carrito,id_producto,id_vendedor);
+        database.update("INSERT INTO Productos_Carrito(id_carrito,id_producto,id_vendedor) VALUES(?,?,?)",id_carrito,id_producto,id_vendedor);
     }
 
     

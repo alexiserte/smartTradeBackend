@@ -1,4 +1,4 @@
-package com.smartTrade.backend.Fachada;
+package com.smartTrade.backend.Facade;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +44,9 @@ public class AdministradorFachada extends Fachada {
     @Autowired
     private SystemServices systemServices;
 
+    @Autowired
+    private PedidoServices pedidoServices;
+
     public ResponseEntity<?> mostrarCategorias() {
         return new ResponseEntity<>(categoriaServices.readAllCategories(), HttpStatus.OK);
     }
@@ -76,6 +79,10 @@ public class AdministradorFachada extends Fachada {
             }
             return new ResponseEntity<>(listaDeProductosAntiguos, HttpStatus.OK);
         }
+    }
+
+    public ResponseEntity<?> mostrarTodosLosPedidos() {
+        return new ResponseEntity<>(pedidoServices.readAllPedidos(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> mostrarProductosPendientesDeValidacion() {
@@ -323,6 +330,15 @@ public class AdministradorFachada extends Fachada {
             return new ResponseEntity<>(Logger.getFullLog(),HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>("Error al obtener los logs: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<?> insertCountryAndCityWhereMissing(){
+        try{
+            countriesServices.insertCountryAndCityWhereMissing();
+            return new ResponseEntity<>("País y ciudad insertados correctamente",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al insertar país y ciudad: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
