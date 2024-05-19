@@ -1,8 +1,6 @@
 package com.smartTrade.backend.Models;
 
-import com.smartTrade.backend.State.EsperandoConfirmacion;
-import com.smartTrade.backend.State.EstadoPedido;
-import com.smartTrade.backend.State.EstadosPedido;
+import com.smartTrade.backend.State.*;
 import org.springframework.data.util.Pair;
 
 import java.util.HashMap;
@@ -99,6 +97,31 @@ public class Pedido{
 
     public void setEstado(EstadoPedido estado) {this.estado = estado;}
 
+    public void setEstado(EstadosPedido estado) {
+        switch (estado){
+            case ESPERANDO_CONFIRMACION:
+                this.estado = new EsperandoConfirmacion();
+                break;
+            case PROCESANDO:
+                this.estado = new Procesando();
+                break;
+            case ENVIADO:
+                this.estado = new Enviado();
+                break;
+            case ENTREGADO:
+                this.estado = new Entregado();
+                break;
+            case CANCELADO:
+                this.estado = new Cancelado();
+                break;
+            case EN_REPARTO:
+                this.estado = new EnReparto();
+                break;
+            default:
+                this.estado = null;
+        }
+    }
+
     public EstadoPedido getEstado() {return estado;}
 
     public Date getFecha_realizacion() {return fecha_realizacion;}
@@ -123,22 +146,4 @@ public class Pedido{
 
     public String printPedidoState() {return estado.printPedidoState(this);}
 
-
-    public static void main(String[] args) {
-        Pedido pedido = new Pedido();
-        System.out.println(pedido.printPedidoState());
-        pedido.siguienteEstado();
-        System.out.println(pedido.printPedidoState());
-        pedido.siguienteEstado();
-        System.out.println(pedido.printPedidoState());
-        pedido.siguienteEstado();
-        System.out.println(pedido.printPedidoState());
-        pedido.siguienteEstado();
-        System.out.println(pedido.printPedidoState());
-        pedido.siguienteEstado();
-        System.out.println(pedido.printPedidoState());
-        pedido.siguienteEstado();
-        System.out.println(pedido.printPedidoState());
-
-    }
 }

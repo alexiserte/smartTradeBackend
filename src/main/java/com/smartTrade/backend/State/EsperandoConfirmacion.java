@@ -3,7 +3,9 @@ package com.smartTrade.backend.State;
 import com.mysql.cj.log.Log;
 import com.smartTrade.backend.Logger.Logger;
 import com.smartTrade.backend.Models.Pedido;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -33,13 +35,4 @@ public class EsperandoConfirmacion implements EstadoPedido{
     };
     public void procesar(Pedido pedido){};
 
-
-
-    public static void main(String[] args) {
-        Pedido pedido = new Pedido();
-        EstadoPedido estado = new EsperandoConfirmacion();
-        System.out.println(estado.printPedidoState(pedido));
-        estado.siguienteEstado(pedido);
-        System.out.println(estado.printPedidoState(pedido));
-    }
 }

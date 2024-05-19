@@ -35,7 +35,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     @Autowired
     CountryDAOAndServices countryDAO;
 
-    private JdbcTemplate database;
+    private static JdbcTemplate database;
     public PedidoDAO (JdbcTemplate database) {
         this.database = database;
     }
@@ -142,5 +142,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         }
 
     }
+
 }
 
