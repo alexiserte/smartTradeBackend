@@ -173,7 +173,6 @@ public class AdminController {
 
     @GetMapping("/_")
     public ResponseEntity<?> insertCityAndCountry(HttpServletRequest request){
-        fechada.updateActualPedidos();
         ResponseEntity<?> res = fechada.insertCountryAndCityWhereMissing();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
