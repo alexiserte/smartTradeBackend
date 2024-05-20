@@ -205,6 +205,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         LocalDate fecha_actual = DateMethods.getTodayDate().toLocalDate();
         LocalDate fecha_llegada = pedido.getFecha_entrega().toLocalDate();
 
+        System.out.println("--------------------");
         System.out.println("Fecha actual: " + fecha_actual);
         System.out.println("Fecha creacion: " + fecha_creacion);
         System.out.println("Fecha llegada: " + fecha_llegada);
