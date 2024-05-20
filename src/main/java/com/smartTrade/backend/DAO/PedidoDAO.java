@@ -209,7 +209,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         System.out.println("Fecha creacion: " + fecha_creacion);
         System.out.println("Fecha llegada: " + fecha_llegada);
 
-        // Condiciones evaluadas en el orden correcto
         if (fecha_actual.isAfter(fecha_llegada)) {
             return EstadosPedido.ENTREGADO;
         }
@@ -229,9 +228,9 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             return EstadosPedido.EN_REPARTO;
         }
 
-        // Estado por defecto si no se cumplen otras condiciones
         return EstadosPedido.ENVIADO;
     }
+
 
 
 
