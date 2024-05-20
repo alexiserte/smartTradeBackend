@@ -215,13 +215,14 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             return EstadosPedido.ENTREGADO;
         } else if (daysLeftToDelivery == 1) {
             return EstadosPedido.EN_REPARTO;
-        } else if (daysLeftToDelivery == 2 && totalDeliveryTime - daysLeftToDelivery > 2) {
-            return EstadosPedido.ENVIADO;
         } else if (ChronoUnit.DAYS.between(fecha_realizacion, today) == 1) {
             return EstadosPedido.PROCESANDO;
+        } else if (ChronoUnit.DAYS.between(fecha_realizacion, today) == 2) {
+            return EstadosPedido.ENVIADO;
         }
         return EstadosPedido.ESPERANDO_CONFIRMACION;
     }
+
 
 
 }
