@@ -208,20 +208,21 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
         LocalDate today = LocalDate.now();
 
-        long totalDeliveryTime = ChronoUnit.DAYS.between(fecha_realizacion, fecha_entrega);
+        long daysSinceCreation = ChronoUnit.DAYS.between(fecha_realizacion, today);
         long daysLeftToDelivery = ChronoUnit.DAYS.between(today, fecha_entrega);
 
         if (daysLeftToDelivery <= 0) {
             return EstadosPedido.ENTREGADO;
         } else if (daysLeftToDelivery == 1) {
             return EstadosPedido.EN_REPARTO;
-        } else if (ChronoUnit.DAYS.between(fecha_realizacion, today) == 1) {
+        } else if (daysSinceCreation == 2) {
+            return EstadosPedido.ENVIADO;
+        } else if (daysSinceCreation == 1) {
             return EstadosPedido.PROCESANDO;
-        } else if (ChronoUnit.DAYS.between(fecha_realizacion, today) == 0) {
-            return EstadosPedido.ESPERANDO_CONFIRMACION;
         }
-        return EstadosPedido.ENVIADO;
+        return EstadosPedido.ESPERANDO_CONFIRMACION;
     }
+
 
 
 
