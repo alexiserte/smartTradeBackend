@@ -206,7 +206,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         LocalDate fecha_realizacion = pedido.getFecha_realizacion().toLocalDate();
         LocalDate fecha_entrega = pedido.getFecha_entrega().toLocalDate();
 
-        LocalDate today = LocalDate.now();
+        LocalDate today = DateMethods.getTodayDate().toLocalDate();
 
         long daysSinceCreation = ChronoUnit.DAYS.between(fecha_realizacion, today);
         long daysLeftToDelivery = ChronoUnit.DAYS.between(today, fecha_entrega);
@@ -222,6 +222,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         }
         return EstadosPedido.ESPERANDO_CONFIRMACION;
     }
+
 
 
 
