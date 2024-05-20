@@ -318,7 +318,7 @@ public class CountriesMethods {
     }
 
 
-    private static Pair<Double, Double> getCityCoordinates(String city, String country) {
+    public static Pair<Double, Double> getCityCoordinates(String city, String country) {
         String apiUrl = "https://nominatim.openstreetmap.org/search?format=json&q=" + city + "," + country;
         String response = makeARequest(apiUrl);
         ObjectMapper mapper = new ObjectMapper();

@@ -29,6 +29,15 @@ public class CountryDAOAndServices {
         }
     }
 
+    public static Pair<String,String> getRandCountryAndCity(){
+        return CountriesMethods.getRandomCityAndCountry();
+    }
+
+    public static Pair<Double,Double> getRandomCityCoordinates(){
+        Pair<String,String> cityAndCountry = getRandCountryAndCity();
+        return CountriesMethods.getCityCoordinates(cityAndCountry.getFirst(), cityAndCountry.getSecond());
+    }
+
 
     public Pair<String,String> getCountryAndCityFromUser(String nickname){
         String ciudad = database.queryForObject("SELECT ciudad FROM Usuario WHERE nickname = ?", String.class, nickname);
