@@ -217,10 +217,10 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             return EstadosPedido.EN_REPARTO;
         } else if (ChronoUnit.DAYS.between(fecha_realizacion, today) == 1) {
             return EstadosPedido.PROCESANDO;
-        } else if (ChronoUnit.DAYS.between(fecha_realizacion, today) == 2) {
-            return EstadosPedido.ENVIADO;
+        } else if (ChronoUnit.DAYS.between(fecha_realizacion, today) == 0) {
+            return EstadosPedido.ESPERANDO_CONFIRMACION;
         }
-        return EstadosPedido.ESPERANDO_CONFIRMACION;
+        return EstadosPedido.ENVIADO;
     }
 
 
