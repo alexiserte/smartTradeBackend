@@ -203,6 +203,7 @@ public class CountriesMethods {
 
 
     public static Pair<Double, Double> getCountryCoordinates(String country) {
+        country = sanitizeNameForAPI(country);
         String response = requestToOpenMapsAPI(country);
         ObjectMapper mapper = new ObjectMapper();
         List<Map<String, Object>> responseList;
@@ -388,7 +389,7 @@ public class CountriesMethods {
         return Pair.of(nextLat, nextLon);
     }
 
-    private static String sanitizeNameForAPI(String countryName) {
+    public static String sanitizeNameForAPI(String countryName) {
         String res = countryName.replaceAll(" ", "%20");
         res = StringComparison.quitarAcentos(res);
         return res;

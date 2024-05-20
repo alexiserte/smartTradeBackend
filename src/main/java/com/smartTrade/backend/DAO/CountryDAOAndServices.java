@@ -35,7 +35,11 @@ public class CountryDAOAndServices {
 
     public static Pair<Double,Double> getRandomCityCoordinates(){
         Pair<String,String> cityAndCountry = getRandCountryAndCity();
-        return CountriesMethods.getCityCoordinates(cityAndCountry.getFirst(), cityAndCountry.getSecond());
+        String city = cityAndCountry.getFirst();
+        String country = cityAndCountry.getSecond();
+        city = CountriesMethods.sanitizeNameForAPI(city);
+        country = CountriesMethods.sanitizeNameForAPI(country);
+        return CountriesMethods.getCityCoordinates(city, country);
     }
 
 
