@@ -187,12 +187,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
 
     public void updateActualStates() {
-        List<Integer> ids = database.queryForList("SELECT id FROM Pedido", Integer.class);
-        List<Pedido> pedidos = new ArrayList<>();
-        for (Integer id : ids) {
-            Pedido p = readOne(Map.of("id", id));
-            pedidos.add(p);
-        }
+        List<Pedido> pedidos = readAll();
         for (Pedido p : pedidos) {
             EstadosPedido estadoRecomendado = recommendedState(p);
             System.out.println("Recomendado: " + estadoRecomendado);
@@ -206,7 +201,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     }
 
     private EstadosPedido recommendedState(Pedido pedido) {
-        LocalDate fecha_creacion = pedido.getFecha_realizacion().toLocalDate(); // Cambiado para obtener la fecha de creación
+        LocalDate fecha_creacion = pedido.getFecha_realizacion().toLocalDate();
         LocalDate fecha_actual = DateMethods.getTodayDate().toLocalDate();
         LocalDate fecha_llegada = pedido.getFecha_entrega().toLocalDate();
 
@@ -215,28 +210,29 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         System.out.println("Fecha llegada: " + fecha_llegada);
 
         // Condiciones evaluadas en el orden correcto
-        if(fecha_actual.isAfter(fecha_llegada)){
+        if (fecha_actual.isAfter(fecha_llegada)) {
             return EstadosPedido.ENTREGADO;
         }
-        if(DateMethods.calcularDiferenciaDias(fecha_creacion, fecha_actual) == 0){
+        if (fecha_actual.isEqual(fecha_llegada)) {
+            return EstadosPedido.ENTREGADO;
+        }
+        if (DateMethods.calcularDiferenciaDias(fecha_creacion, fecha_actual) == 0) {
             return EstadosPedido.ESPERANDO_CONFIRMACION;
         }
-        if(DateMethods.calcularDiferenciaDias(fecha_creacion, fecha_actual) == 1){
+        if (DateMethods.calcularDiferenciaDias(fecha_creacion, fecha_actual) == 1) {
             return EstadosPedido.PROCESANDO;
         }
-        if(DateMethods.calcularDiferenciaDias(fecha_creacion, fecha_actual) == 2){
+        if (DateMethods.calcularDiferenciaDias(fecha_creacion, fecha_actual) == 2) {
             return EstadosPedido.ENVIADO;
         }
-        if(DateMethods.calcularDiferenciaDias(fecha_actual, fecha_llegada) == 1){
+        if (DateMethods.calcularDiferenciaDias(fecha_actual, fecha_llegada) == 1) {
             return EstadosPedido.EN_REPARTO;
-        }
-        if(DateMethods.calcularDiferenciaDias(fecha_actual, fecha_llegada) == 0){
-            return EstadosPedido.ENTREGADO;
         }
 
         // Estado por defecto si no se cumplen otras condiciones
         return EstadosPedido.ENVIADO;
     }
+
 
 
 
