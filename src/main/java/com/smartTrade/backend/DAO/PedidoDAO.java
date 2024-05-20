@@ -209,7 +209,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
         if (daysLeftToDelivery <= 0) {
             return EstadosPedido.ENTREGADO;
-        } else if (totalDeliveryTime - daysLeftToDelivery <= 1) {
+        } else if (daysLeftToDelivery == 1) {
             return EstadosPedido.EN_REPARTO;
         } else if (daysLeftToDelivery > 2 && totalDeliveryTime - daysLeftToDelivery > 1) {
             return EstadosPedido.ENVIADO;
