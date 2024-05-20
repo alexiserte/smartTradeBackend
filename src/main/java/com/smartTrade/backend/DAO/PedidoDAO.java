@@ -214,6 +214,9 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         System.out.println("Fecha creacion: " + fecha_creacion);
         System.out.println("Fecha llegada: " + fecha_llegada);
 
+        if(fecha_actual.isAfter(fecha_llegada)){
+            return EstadosPedido.ENTREGADO;
+        }
         if(DateMethods.calcularDiferenciaDias(fecha_creacion,fecha_actual) == 0){
             return EstadosPedido.ESPERANDO_CONFIRMACION;
         }
@@ -225,9 +228,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         }
         if(DateMethods.calcularDiferenciaDias(fecha_actual,fecha_llegada) == 1){
             return EstadosPedido.EN_REPARTO;
-        }
-        if(fecha_actual.isAfter(fecha_llegada)){
-            return EstadosPedido.ENTREGADO;
         }
         return EstadosPedido.ENVIADO;
     }
