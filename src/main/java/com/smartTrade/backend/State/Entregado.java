@@ -18,8 +18,7 @@ public class Entregado implements EstadoPedido{
         }
 
         public void estadoAnterior(Pedido pedido) {
-            pedido.setEstadoActual(EstadosPedido.EN_REPARTO);
-            pedido.setEstado(new EnReparto());
+            pedido.setEstado(EstadosPedido.EN_REPARTO);
         }
 
         public void procesar(Pedido pedido) {

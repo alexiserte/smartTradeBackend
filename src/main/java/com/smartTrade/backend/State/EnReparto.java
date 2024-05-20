@@ -11,14 +11,12 @@ public class EnReparto implements EstadoPedido{
     }
     @Override
     public void siguienteEstado(Pedido pedido) {
-        pedido.setEstadoActual(EstadosPedido.ENTREGADO);
-        pedido.setEstado(new Entregado());
+        pedido.setEstado(EstadosPedido.ENTREGADO);
     }
 
     @Override
     public void estadoAnterior(Pedido pedido) {
-        pedido.setEstadoActual(EstadosPedido.ENVIADO);
-        pedido.setEstado(new Enviado());
+        pedido.setEstado(EstadosPedido.ENVIADO);
     }
 
     @Override
@@ -28,8 +26,7 @@ public class EnReparto implements EstadoPedido{
 
     @Override
     public void cancelar(Pedido pedido) {
-        pedido.setEstadoActual(EstadosPedido.CANCELADO);
-        pedido.setEstado(new Cancelado());
+        pedido.setEstado(EstadosPedido.CANCELADO);
     }
 
     @Override

@@ -89,9 +89,15 @@ public class Pedido{
 
     public EstadosPedido getEstadoActual() {return this.estadoActual;}
 
-    public void setEstadoActual(EstadosPedido estado) {this.estadoActual = estado;}
 
-    public void setEstado(EstadoPedido estado) {this.estado = estado;}
+    public void setEstado(EstadoPedido estado) {
+        this.estado = estado;
+        for(EstadosPedido e : EstadosPedido.values()){
+            if(e.getNombreEstado().equals(estado.getClass().getSimpleName())){
+                this.estadoActual = e;
+            }
+        }
+    }
 
     public void setEstado(EstadosPedido estado) {
         switch (estado){
@@ -116,6 +122,8 @@ public class Pedido{
             default:
                 this.estado = null;
         }
+
+        this.estadoActual = estado;
     }
 
 

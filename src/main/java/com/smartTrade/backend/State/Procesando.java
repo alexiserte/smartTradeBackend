@@ -17,14 +17,12 @@ public class Procesando implements EstadoPedido{
 
     @Override 
     public void siguienteEstado(Pedido pedido) {
-        pedido.setEstadoActual(EstadosPedido.ENVIADO);
-        pedido.setEstado(new Enviado());
+        pedido.setEstado(EstadosPedido.ENVIADO);
     }
 
     @Override
     public void estadoAnterior(Pedido pedido) {
-        pedido.setEstadoActual(EstadosPedido.ESPERANDO_CONFIRMACION);
-        pedido.setEstado(new EsperandoConfirmacion());
+        pedido.setEstado(EstadosPedido.ESPERANDO_CONFIRMACION);
     }
 
 
@@ -37,8 +35,7 @@ public class Procesando implements EstadoPedido{
 
     @Override
     public void cancelar(Pedido pedido) {
-        pedido.setEstadoActual(EstadosPedido.CANCELADO);
-        pedido.setEstado(new Cancelado());
+        pedido.setEstado(EstadosPedido.CANCELADO);
     }
 
     @Override
