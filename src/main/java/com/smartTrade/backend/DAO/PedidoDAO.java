@@ -175,6 +175,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         else if(estado == EstadosPedido.ENTREGADO){
             return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),3);
         }
+        System.out.println("CITY: " + location.getFirst() + " COUNTRY: " + location.getSecond());
+
         return null;
     }
 }
