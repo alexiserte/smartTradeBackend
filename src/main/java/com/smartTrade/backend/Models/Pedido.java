@@ -87,7 +87,7 @@ public class Pedido{
 
     public void setProductos(List<ItemPedido> productos) {this.productos = productos;}
 
-    public EstadosPedido getEstadoActual() {return estadoActual;}
+    public EstadosPedido getEstadoActual() {return this.estadoActual;}
 
     public void setEstadoActual(EstadosPedido estado) {this.estadoActual = estado;}
 
