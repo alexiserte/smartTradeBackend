@@ -20,13 +20,11 @@ public class EsperandoConfirmacion implements EstadoPedido{
     }
 
     public void siguienteEstado(Pedido pedido) {
-        pedido.setEstadoActual(EstadosPedido.PROCESANDO);
-        pedido.setEstado(new Procesando());
+        pedido.setEstado(EstadosPedido.PROCESANDO);
     }
 
     public void cancelar(Pedido pedido){
-        pedido.setEstadoActual(EstadosPedido.CANCELADO);
-        pedido.setEstado(new Cancelado());
+        pedido.setEstado(EstadosPedido.CANCELADO);
     }
 
     public String printPedidoState(Pedido pedido){
@@ -35,8 +33,9 @@ public class EsperandoConfirmacion implements EstadoPedido{
         return message;
     }
     public void estadoAnterior(Pedido pedido){
-        pedido.setEstadoActual(EstadosPedido.ESPERANDO_CONFIRMACION);
-        pedido.setEstado(new EsperandoConfirmacion());
+        /*
+        *   No se puede volver al estado anterior
+        * */
     };
     public void procesar(Pedido pedido){};
 
