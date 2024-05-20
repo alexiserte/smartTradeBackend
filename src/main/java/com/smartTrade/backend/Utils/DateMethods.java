@@ -7,6 +7,7 @@ import java.util.List;
 public class DateMethods {
 
     public static long calcularDiferenciaDias(LocalDate fecha1, LocalDate fecha2) {
+        System.out.println(java.time.temporal.ChronoUnit.DAYS.between(fecha1, fecha2));
         return java.time.temporal.ChronoUnit.DAYS.between(fecha1, fecha2);
     }
 
