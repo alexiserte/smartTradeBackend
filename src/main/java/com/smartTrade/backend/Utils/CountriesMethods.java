@@ -125,6 +125,16 @@ public class CountriesMethods {
         }
     }
 
+    public static Pair<Double, Double> getPointBetweenCities(String city1, String country1, String city2, String country2, int steps) {
+        country1 = sanitizeNameForAPI(country1);
+        country2 = sanitizeNameForAPI(country2);
+        city1 = sanitizeNameForAPI(city1);
+        city2 = sanitizeNameForAPI(city2);
+        Pair<Double, Double> coordinates1 = getCityCoordinates(city1, country1);
+        Pair<Double, Double> coordinates2 = getCityCoordinates(city2, country2);
+        return getPointBetweenLocations(coordinates1, coordinates2, steps);
+    }
+
     public static Map<String, Pair<String, String>> getCountriesAndCodesEnglish() {
         String[] locales = Locale.getISOCountries();
         Map<String, Pair<String, String>> countries = new TreeMap<>();
@@ -182,10 +192,10 @@ public class CountriesMethods {
     }
 
     public static double calculateDistanceBetweenCities(String city1, String country1, String city2, String country2){
-        city1 = StringComparison.quitarAcentos(city1.replaceAll(" ", "%20"));
-        city2 = StringComparison.quitarAcentos(city2.replaceAll(" ", "%20"));
-        country1 = StringComparison.quitarAcentos(country1.replaceAll(" ", "%20"));
-        country2 = StringComparison.quitarAcentos(country2.replaceAll(" ", "%20"));
+        city1 = sanitizeNameForAPI(city1);
+        city2 = sanitizeNameForAPI(city2);
+        country1 = sanitizeNameForAPI(country1);
+        country2 = sanitizeNameForAPI(country2);
         Pair<Double, Double> city1Coordinates = getCityCoordinates(city1, country1);
         Pair<Double, Double> city2Coordinates = getCityCoordinates(city2, country2);
         return calculateDistance(city1Coordinates, city2Coordinates);
@@ -359,9 +369,33 @@ public class CountriesMethods {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println(String.format("¿Está %s dentro de la lista de ciudades? %s","Xirivella",getCitiesByCountry("Spain", 5).contains("Xirivella")));
-        System.out.println(String.format("¿Está %s dentro de la lista de ciudades? %s","Alaquàs",getCitiesByCountry("Spain", 5).contains("Alaquàs")));
+    private static Pair<Double, Double> getPointBetweenLocations(Pair<Double, Double> coordinates1, Pair<Double, Double> coordinates2, int steps) {
+        if (steps <= 0) {
+            return coordinates1;
+        }
+        else if (steps >= 3) {
+            return coordinates2;
+        }
 
+        Pair<Double, Double> nextPoint = getNextPoint(coordinates1, coordinates2);
+
+        return getPointBetweenLocations(nextPoint, coordinates2, steps - 1);
+    }
+
+    private static Pair<Double, Double> getNextPoint(Pair<Double, Double> coordinates1, Pair<Double, Double> coordinates2) {
+        double nextLat = coordinates1.getFirst() + (coordinates2.getFirst() - coordinates1.getFirst()) / 2;
+        double nextLon = coordinates1.getSecond() + (coordinates2.getSecond() - coordinates1.getSecond()) / 2;
+        return Pair.of(nextLat, nextLon);
+    }
+
+    private static String sanitizeNameForAPI(String countryName) {
+        String res = countryName.replaceAll(" ", "%20");
+        res = StringComparison.quitarAcentos(res);
+        return res;
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(getPointBetweenCities("Xirivella","España","Oslo","Norway", 0));
     }
 }

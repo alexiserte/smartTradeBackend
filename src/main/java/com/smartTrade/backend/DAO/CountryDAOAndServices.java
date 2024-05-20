@@ -30,6 +30,11 @@ public class CountryDAOAndServices {
     }
 
 
+    public Pair<String,String> getCountryAndCityFromUser(String nickname){
+        return database.queryForObject("SELECT ciudad, pais FROM Usuario WHERE nickname = ?", Pair.class, nickname);
+    }
+
+
     public double getDistanceFromVendorToUser(String vendorNickname, String userNickname) {
         Pair<String, String> vendorLocation = database.queryForObject("SELECT ciudad, pais FROM Usuario WHERE nickname = ?", Pair.class, vendorNickname);
         Pair<String, String> userLocation = database.queryForObject("SELECT ciudad, pais FROM Usuario WHERE nickname = ?", Pair.class, userNickname);

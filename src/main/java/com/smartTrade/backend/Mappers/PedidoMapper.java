@@ -4,6 +4,7 @@ package com.smartTrade.backend.Mappers;
 import com.smartTrade.backend.Models.Pedido;
 import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.State.EstadosPedido;
+import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -16,7 +17,7 @@ import com.smartTrade.backend.Models.Pedido;
 public class PedidoMapper implements RowMapper<Pedido> {
 
     private List<Pedido.ItemPedido> productos;
-    public PedidoMapper( List<Pedido.ItemPedido> productos){
+    public PedidoMapper(List<Pedido.ItemPedido> productos){
         this.productos = productos;
     }
     

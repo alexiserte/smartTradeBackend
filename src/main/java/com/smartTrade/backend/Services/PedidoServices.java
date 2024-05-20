@@ -1,9 +1,10 @@
 package com.smartTrade.backend.Services;
 
-import com.smartTrade.backend.DAO.PedidoDAO;
-import com.smartTrade.backend.DAO.UsuarioDAO;
+import com.smartTrade.backend.DAO.*;
 import com.smartTrade.backend.Models.Pedido;
 import com.smartTrade.backend.Models.Producto;
+import com.smartTrade.backend.State.EstadosPedido;
+import com.smartTrade.backend.Utils.CountriesMethods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,15 @@ public class PedidoServices {
 
     @Autowired
     UsuarioDAO usuarioDAO;
+
+    @Autowired
+    CountryDAOAndServices countryDAO;
+
+    @Autowired
+    CompradorDAO compradorDAO;
+
+    @Autowired
+    VendedorDAO vendedorDAO;
 
     public void createNewPedido(String nickname, Map<Pair<Producto, String>, Integer> productos,double precio_total){
         pedidoDAO.create(Map.of("nickname", nickname, "productos", productos, "precio_total", precio_total));
@@ -39,4 +49,5 @@ public class PedidoServices {
         pedidos.removeIf(pedido -> pedido.getId_comprador() != id_comprador);
         return pedidos;
     }
+
 }

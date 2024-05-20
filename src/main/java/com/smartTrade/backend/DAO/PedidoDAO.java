@@ -38,6 +38,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     @Autowired
     CompradorDAO compradorDAO;
 
+
     private static JdbcTemplate database;
     public PedidoDAO (JdbcTemplate database) {
         this.database = database;
@@ -94,9 +95,12 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             productosMap.add(new Pedido.ItemPedido(p, cantidad, vendorNickname));
         }
 
+
         Pedido pedido = database.queryForObject(
                 "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
 
+        Pair<Double,Double> location = localizePedido(pedido);
+        pedido.setLocation(location);
         return pedido;
     }
 
@@ -144,6 +148,26 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             }
         }
 
+    }
+
+    private Pair<Double,Double> localizePedido(Pedido pedido){
+        EstadosPedido estado = pedido.getEstadoActual();
+        Pair<String,String> location = countryDAO.getCountryAndCityFromUser(compradorDAO.getCompradorWithID(pedido.getId_comprador()).getNickname());
+        Pair<String,String> locationVendor = countryDAO.getCountryAndCityFromUser(pedido.getProductos().get(0).getVendedor());
+
+        if(estado == EstadosPedido.ESPERANDO_CONFIRMACION || estado == EstadosPedido.PROCESANDO){
+            return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),0);
+        }
+        else if(estado == EstadosPedido.ENVIADO){
+            return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),1);
+        }
+        else if(estado == EstadosPedido.EN_REPARTO){
+            return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),2);
+        }
+        else if(estado == EstadosPedido.ENTREGADO){
+            return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),3);
+        }
+        return null;
     }
 }
 

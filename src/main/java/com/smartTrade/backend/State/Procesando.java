@@ -7,6 +7,7 @@ import com.smartTrade.backend.Models.Pedido;
 public class Procesando implements EstadoPedido{
 
     private Logger logger = Logger.getInstance();
+
     @Override 
     public void siguienteEstado(Pedido pedido) {
         pedido.setEstadoActual(EstadosPedido.ENVIADO);

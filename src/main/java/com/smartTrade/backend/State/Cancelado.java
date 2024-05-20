@@ -32,16 +32,6 @@ public class Cancelado implements EstadoPedido{
         * */
     };
 
-    public EstadosPedido getEstado(Pedido pedido){
-        return EstadosPedido.CANCELADO;
-    };
-
-    public void setEstado(Pedido pedido, EstadosPedido estado){
-        /*
-        *   No se puede cambiar el estado de un pedido cancelado.
-        * */
-    };
-
     public void procesar(Pedido pedido){
         /*
         *   No se puede procesar un pedido cancelado.
