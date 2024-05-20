@@ -214,7 +214,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         System.out.println("Dias desde la generacion del pedido: " + diasDesdeLaGeneracionDelPedido);
         System.out.println("Dias desde la llegada del pedido: " + diasDesdeLaLlegadaDelPedido);
 
-        if (fecha_actual.isAfter(fecha_llegada)) {
+        if (diasDesdeLaLlegadaDelPedido < 0) {
             return EstadosPedido.ENTREGADO;
         }
         if (fecha_actual.isEqual(fecha_llegada)) {
