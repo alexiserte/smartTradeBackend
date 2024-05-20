@@ -39,11 +39,8 @@ public class CountryDAOAndServices {
         String country = cityAndCountry.getSecond();
         city = CountriesMethods.sanitizeNameForAPI(city);
         country = CountriesMethods.sanitizeNameForAPI(country);
-        try {
-            return CountriesMethods.getCityCoordinates(city, country);
-        }catch (RuntimeException e){
-            return getRandomCityCoordinates();
-        }
+        System.out.println(city + " " + country);
+        return CountriesMethods.getCityCoordinates(city, country);
     }
 
 
