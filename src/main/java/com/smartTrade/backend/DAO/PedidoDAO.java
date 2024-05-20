@@ -10,6 +10,7 @@ import com.smartTrade.backend.State.EstadosPedido;
 import com.smartTrade.backend.Utils.CountriesMethods;
 import com.smartTrade.backend.Utils.DateMethods;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -224,6 +225,9 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         }
         if(DateMethods.calcularDiferenciaDias(fecha_actual,fecha_llegada) == 1){
             return EstadosPedido.EN_REPARTO;
+        }
+        if(fecha_actual.isAfter(fecha_llegada)){
+            return EstadosPedido.ENTREGADO;
         }
         return EstadosPedido.ENVIADO;
     }
