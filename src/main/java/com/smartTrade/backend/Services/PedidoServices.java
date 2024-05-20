@@ -51,7 +51,7 @@ public class PedidoServices {
     }
 
     public void updatePedidos(){
-        pedidoDAO.updatePedidos();
+        pedidoDAO.updateActualStates();
     }
 
     public void updateActualPedidos(){

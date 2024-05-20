@@ -183,71 +183,43 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     }
 
 
-    public void updateActualStates(){
+    public void updateActualStates() {
         List<Integer> ids = database.queryForList("SELECT id FROM Pedido", Integer.class);
         List<Pedido> pedidos = new ArrayList<>();
-        for(Integer id : ids){
-            Pedido p = readOne(Map.of("id",id));
+        for (Integer id : ids) {
+            Pedido p = readOne(Map.of("id", id));
             pedidos.add(p);
         }
-        for(Pedido p : pedidos){
-            long totalDeliveryTime = DateMethods.calcularDiferenciaDias(p.getFecha_realizacion().toLocalDate(),p.getFecha_entrega().toLocalDate());
-            Date today = DateMethods.getTodayDate();
-            long daysLeftToDelivery = DateMethods.calcularDiferenciaDias(today.toLocalDate(),p.getFecha_entrega().toLocalDate());
-            if(p.getEstadoActual() == EstadosPedido.CANCELADO){continue;}
-            if(daysLeftToDelivery <= 0){
-                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.ENTREGADO));
-            }
-            else if(totalDeliveryTime - daysLeftToDelivery == 1){
-                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.EN_REPARTO));
-            }
-            else if(totalDeliveryTime == daysLeftToDelivery + 2){
-                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.ENVIADO));
-            }
-            else if(totalDeliveryTime == daysLeftToDelivery + 1){
-                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.PROCESANDO));
-            }
-            else if(totalDeliveryTime == daysLeftToDelivery){
-                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.ESPERANDO_CONFIRMACION));
-            }
-        }
-    }
-
-    public void updatePedidos(){
-        List<Pedido> pedidos = readAll();
-        for(Pedido p : pedidos){
-            EstadosPedido estado = recommendedState(p);
+        for (Pedido p : pedidos) {
+            EstadosPedido estadoRecomendado = recommendedState(p);
             EstadosPedido estadoActual = p.getEstadoActual();
-            if(estado != estadoActual) {
-                updatePedidoState(Map.of("id", p.getId(), "estado", estado));
+            if (estadoRecomendado != estadoActual) {
+                updatePedidoState(Map.of("id", p.getId(), "estado", estadoRecomendado));
                 p.siguienteEstado();
             }
         }
     }
 
-    private EstadosPedido recommendedState(Pedido pedido){
+    private EstadosPedido recommendedState(Pedido pedido) {
         Date fecha_realizacion = pedido.getFecha_realizacion();
         Date fecha_entrega = pedido.getFecha_entrega();
 
-        long totalDeliveryTime = DateMethods.calcularDiferenciaDias(fecha_realizacion.toLocalDate(),fecha_entrega.toLocalDate());
-        long daysLeftToDelivery = DateMethods.calcularDiferenciaDias(DateMethods.getTodayDate().toLocalDate(),fecha_entrega.toLocalDate());
+        long totalDeliveryTime = DateMethods.calcularDiferenciaDias(fecha_realizacion.toLocalDate(), fecha_entrega.toLocalDate());
+        long daysLeftToDelivery = DateMethods.calcularDiferenciaDias(DateMethods.getTodayDate().toLocalDate(), fecha_entrega.toLocalDate());
 
-        if(daysLeftToDelivery <= 0){
+        if (daysLeftToDelivery <= 0) {
             return EstadosPedido.ENTREGADO;
-        }
-        else if(totalDeliveryTime - daysLeftToDelivery == 1 && daysLeftToDelivery > 0){
+        } else if (totalDeliveryTime - daysLeftToDelivery == 1 && daysLeftToDelivery > 0) {
             return EstadosPedido.EN_REPARTO;
-        }
-        else if(totalDeliveryTime == daysLeftToDelivery + 2  && totalDeliveryTime - daysLeftToDelivery > 1){
+        } else if (totalDeliveryTime == daysLeftToDelivery + 2 && totalDeliveryTime - daysLeftToDelivery > 1) {
             return EstadosPedido.ENVIADO;
-        }
-        else if(totalDeliveryTime == daysLeftToDelivery + 1 && totalDeliveryTime < daysLeftToDelivery + 2 ){
+        } else if (totalDeliveryTime == daysLeftToDelivery + 1 && totalDeliveryTime < daysLeftToDelivery + 2) {
             return EstadosPedido.PROCESANDO;
-        }
-        else if(totalDeliveryTime == daysLeftToDelivery){
+        } else if (totalDeliveryTime == daysLeftToDelivery) {
             return EstadosPedido.ESPERANDO_CONFIRMACION;
         }
         return EstadosPedido.CANCELADO;
     }
+
 }
 
