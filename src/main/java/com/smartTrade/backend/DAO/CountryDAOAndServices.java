@@ -31,7 +31,9 @@ public class CountryDAOAndServices {
 
 
     public Pair<String,String> getCountryAndCityFromUser(String nickname){
-        return database.queryForObject("SELECT ciudad, pais FROM Usuario WHERE nickname = ?", Pair.class, nickname);
+        String ciudad = database.queryForObject("SELECT ciudad FROM Usuario WHERE nickname = ?", String.class, nickname);
+        String pais = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, nickname);
+        return Pair.of(ciudad, pais);
     }
 
 
