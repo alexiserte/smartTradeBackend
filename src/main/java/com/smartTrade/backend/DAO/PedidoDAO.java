@@ -194,7 +194,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             System.out.println("Actual: " + p.getEstadoActual());
             updatePedidoState(Map.of("id", p.getId(), "estado", estadoRecomendado));
             p.setEstado(estadoRecomendado);
-            p.setEstadoActual(estadoRecomendado);
             System.out.println("Actual: " + p.getEstadoActual());
         }
     }
