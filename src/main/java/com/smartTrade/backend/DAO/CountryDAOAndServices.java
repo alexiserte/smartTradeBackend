@@ -29,16 +29,8 @@ public class CountryDAOAndServices {
         }
     }
 
-    public static Pair<String,String> getRandCountryAndCity(){
-        return CountriesMethods.getRandomCityAndCountry();
-    }
-
-    public static Pair<Double,Double> getRandomCityCoordinates(){
-        Pair<String,String> cityAndCountry = getRandCountryAndCity();
-        String city = cityAndCountry.getFirst();
-        String country = cityAndCountry.getSecond();
-        System.out.println(city + " " + country);
-        return CountriesMethods.getCityCoordinates(city, country);
+    public static Pair<Double,Double> getDefaultCoordinates(){
+        return Pair.of(39.48254552490556, -0.3467672635500624);
     }
 
 

@@ -152,7 +152,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
     private Pair<Double,Double> localizePedido(Pedido pedido){
         if(pedido.getProductos().size() == 0){
-            return countryDAO.getRandomCityCoordinates();
+            return countryDAO.getDefaultCoordinates();
         }
         EstadosPedido estado = pedido.getEstadoActual();
         String vendorNickname = pedido.getProductos().get(0).getVendedor();
