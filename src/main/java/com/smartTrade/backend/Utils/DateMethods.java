@@ -24,8 +24,7 @@ public class DateMethods {
     }
 
     public static Date getTodayDate(){
-        Date fechaActual = DateMethods.getTodayDate();
-        return new Date(fechaActual.getTime());
+        return new Date(System.currentTimeMillis());
     }
 
     public static Date getTomorrowDate(){

@@ -192,7 +192,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         }
         for(Pedido p : pedidos){
             long totalDeliveryTime = DateMethods.calcularDiferenciaDias(p.getFecha_realizacion().toLocalDate(),p.getFecha_entrega().toLocalDate());
-            long daysLeftToDelivery = DateMethods.calcularDiferenciaDias(DateMethods.getTodayDate().toLocalDate(),p.getFecha_entrega().toLocalDate());
+            Date today = DateMethods.getTodayDate();
+            long daysLeftToDelivery = DateMethods.calcularDiferenciaDias(today.toLocalDate(),p.getFecha_entrega().toLocalDate());
             if(p.getEstadoActual() == EstadosPedido.CANCELADO){continue;}
             if(daysLeftToDelivery <= 0){
                 updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.ENTREGADO));
