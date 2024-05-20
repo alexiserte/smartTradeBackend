@@ -38,8 +38,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     @Autowired
     CompradorDAO compradorDAO;
 
-    @Autowired
-    PedidoDAO pedidoDAO;
 
     private static JdbcTemplate database;
     public PedidoDAO (JdbcTemplate database) {
