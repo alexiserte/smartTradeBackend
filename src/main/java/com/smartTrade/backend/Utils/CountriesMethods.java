@@ -320,6 +320,8 @@ public class CountriesMethods {
 
 
     public static Pair<Double, Double> getCityCoordinates(String city, String country) {
+        city = sanitizeNameForAPI(city);
+        country = sanitizeNameForAPI(country);
         String apiUrl = "https://nominatim.openstreetmap.org/search?format=json&q=" + city + "," + country;
         String response = makeARequest(apiUrl);
         ObjectMapper mapper = new ObjectMapper();
@@ -389,7 +391,7 @@ public class CountriesMethods {
         return Pair.of(nextLat, nextLon);
     }
 
-    public static String sanitizeNameForAPI(String countryName) {
+    private static String sanitizeNameForAPI(String countryName) {
         String res = countryName.replaceAll(" ", "%20");
         res = StringComparison.quitarAcentos(res);
         return res;

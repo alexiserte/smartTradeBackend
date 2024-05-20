@@ -37,8 +37,6 @@ public class CountryDAOAndServices {
         Pair<String,String> cityAndCountry = getRandCountryAndCity();
         String city = cityAndCountry.getFirst();
         String country = cityAndCountry.getSecond();
-        city = CountriesMethods.sanitizeNameForAPI(city);
-        country = CountriesMethods.sanitizeNameForAPI(country);
         System.out.println(city + " " + country);
         return CountriesMethods.getCityCoordinates(city, country);
     }
