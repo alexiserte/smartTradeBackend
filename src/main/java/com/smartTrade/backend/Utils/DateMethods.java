@@ -8,7 +8,13 @@ public class DateMethods {
 
     public static long calcularDiferenciaDias(LocalDate fecha1, LocalDate fecha2) {
         System.out.println(java.time.temporal.ChronoUnit.DAYS.between(fecha1, fecha2));
-        return java.time.temporal.ChronoUnit.DAYS.between(fecha1, fecha2);
+        System.out.println("@@@" + fecha1 + "@@@");
+        System.out.println("@@@" + fecha2 + "@@@");
+        String fecha1String = fecha1.toString().trim();
+        String fecha2String = fecha2.toString().trim();
+        LocalDate fecha1LocalDate = LocalDate.parse(fecha1String);
+        LocalDate fecha2LocalDate = LocalDate.parse(fecha2String);
+        return java.time.temporal.ChronoUnit.DAYS.between(fecha1LocalDate, fecha2LocalDate);
     }
 
     public static boolean checkIfTodayIsWithinPeriod(Date fecha_inicio, Date fecha_final) throws IllegalArgumentException{
