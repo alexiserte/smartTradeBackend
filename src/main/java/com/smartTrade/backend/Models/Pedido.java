@@ -132,7 +132,12 @@ public class Pedido{
 
     public void setFecha_entrega(Date fecha_entrega) {this.fecha_entrega = fecha_entrega;}
 
-    public Pair<Double, Double> getLocation() {return location;}
+    public HashMap<String,Double> getLocation() {
+        HashMap<String,Double> location = new HashMap<>();
+        location.put("latitud", this.location.getFirst());
+        location.put("longitud", this.location.getSecond());
+        return location;
+    }
 
     public void setLocation(Pair<Double, Double> location) {
         this.location = location;
