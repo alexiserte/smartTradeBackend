@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 public class EsperandoConfirmacion implements EstadoPedido{
+
     private Logger logger = Logger.getInstance();
     private static final EstadosPedido estado = EstadosPedido.ESPERANDO_CONFIRMACION;
 

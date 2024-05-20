@@ -118,7 +118,7 @@ public class Pedido{
         }
     }
 
-    public EstadoPedido getEstado() {return estado;}
+    // public EstadoPedido getEstado() {return estado;}
 
     public Date getFecha_realizacion() {return fecha_realizacion;}
 
