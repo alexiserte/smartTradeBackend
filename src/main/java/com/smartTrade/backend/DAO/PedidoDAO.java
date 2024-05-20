@@ -160,8 +160,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         Pair<String,String> location = countryDAO.getCountryAndCityFromUser(userNickname);
         Pair<String,String> locationVendor = countryDAO.getCountryAndCityFromUser(vendorNickname);
 
-        System.out.println("CITY: " + location.getFirst() + " COUNTRY: " + location.getSecond());
-        System.out.println("CITY: " + locationVendor.getFirst() + " COUNTRY: " + locationVendor.getSecond());
 
         if(estado == EstadosPedido.ESPERANDO_CONFIRMACION || estado == EstadosPedido.PROCESANDO){
             return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),0);
@@ -175,7 +173,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         else if(estado == EstadosPedido.ENTREGADO){
             return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),3);
         }
-        System.out.println("CITY: " + location.getFirst() + " COUNTRY: " + location.getSecond());
 
         return null;
     }
