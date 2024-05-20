@@ -205,24 +205,27 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     }
 
     private EstadosPedido recommendedState(Pedido pedido) {
-        LocalDate fecha_realizacion = pedido.getFecha_realizacion().toLocalDate();
-        LocalDate fecha_entrega = pedido.getFecha_entrega().toLocalDate();
+        LocalDate fecha_creacion = pedido.getFecha_entrega().toLocalDate();
+        LocalDate fecha_actual = DateMethods.getTodayDate().toLocalDate();
+        LocalDate fecha_llegada = pedido.getFecha_entrega().toLocalDate();
 
-        LocalDate today = DateMethods.getTodayDate().toLocalDate();
+        System.out.println("Fecha actual: " + fecha_actual);
+        System.out.println("Fecha creacion: " + fecha_creacion);
+        System.out.println("Fecha llegada: " + fecha_llegada);
 
-        long daysSinceCreation = ChronoUnit.DAYS.between(fecha_realizacion, today);
-        long daysLeftToDelivery = ChronoUnit.DAYS.between(today, fecha_entrega);
-
-        if (daysLeftToDelivery <= 0) {
-            return EstadosPedido.ENTREGADO;
-        } else if (daysLeftToDelivery == 1) {
-            return EstadosPedido.EN_REPARTO;
-        } else if (daysSinceCreation == 2) {
-            return EstadosPedido.ENVIADO;
-        } else if (daysSinceCreation == 1) {
+        if(DateMethods.calcularDiferenciaDias(fecha_creacion,fecha_actual) == 0){
+            return EstadosPedido.ESPERANDO_CONFIRMACION;
+        }
+        if(DateMethods.calcularDiferenciaDias(fecha_creacion,fecha_actual) == 1){
             return EstadosPedido.PROCESANDO;
         }
-        return EstadosPedido.ESPERANDO_CONFIRMACION;
+        if(DateMethods.calcularDiferenciaDias(fecha_actual,fecha_llegada) == 0){
+            return EstadosPedido.ENTREGADO;
+        }
+        if(DateMethods.calcularDiferenciaDias(fecha_actual,fecha_llegada) == 1){
+            return EstadosPedido.EN_REPARTO;
+        }
+        return EstadosPedido.ENVIADO;
     }
 
 
