@@ -209,16 +209,14 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
         if (daysLeftToDelivery <= 0) {
             return EstadosPedido.ENTREGADO;
-        } else if (totalDeliveryTime - daysLeftToDelivery == 1 && daysLeftToDelivery > 0) {
+        } else if (totalDeliveryTime - daysLeftToDelivery <= 1) {
             return EstadosPedido.EN_REPARTO;
-        } else if (totalDeliveryTime == daysLeftToDelivery + 2 && totalDeliveryTime - daysLeftToDelivery > 1) {
+        } else if (daysLeftToDelivery > 2 && totalDeliveryTime - daysLeftToDelivery > 1) {
             return EstadosPedido.ENVIADO;
-        } else if (totalDeliveryTime == daysLeftToDelivery + 1 && totalDeliveryTime < daysLeftToDelivery + 2) {
+        } else if (totalDeliveryTime - daysLeftToDelivery == 1) {
             return EstadosPedido.PROCESANDO;
-        } else if (totalDeliveryTime == daysLeftToDelivery) {
-            return EstadosPedido.ESPERANDO_CONFIRMACION;
         }
-        return EstadosPedido.CANCELADO;
+        return EstadosPedido.ESPERANDO_CONFIRMACION;
     }
 
 }
