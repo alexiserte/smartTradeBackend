@@ -59,6 +59,7 @@ public class AdminController {
 
     @GetMapping("/admin/pedidos")
     public ResponseEntity<?> mostrarPedidos(HttpServletRequest request) {
+        fechada.updatePedidos();
         ResponseEntity<?> res =  fechada.mostrarTodosLosPedidos();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
@@ -172,6 +173,7 @@ public class AdminController {
 
     @GetMapping("/_")
     public ResponseEntity<?> insertCityAndCountry(HttpServletRequest request){
+        fechada.updateActualPedidos();
         ResponseEntity<?> res = fechada.insertCountryAndCityWhereMissing();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;

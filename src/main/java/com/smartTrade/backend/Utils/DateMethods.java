@@ -66,4 +66,10 @@ public class DateMethods {
         }
         return latestDate;
     }
+
+
+    public static long getDaysToATime(Date fecha){
+        Date fechaActual = DateMethods.getTodayDate();
+        return DateMethods.calcularDiferenciaDias(fechaActual.toLocalDate(),fecha.toLocalDate());
+    }
 }

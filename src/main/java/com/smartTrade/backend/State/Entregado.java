@@ -4,6 +4,13 @@ import com.smartTrade.backend.Models.Pedido;
 
 public class Entregado implements EstadoPedido{
 
+
+        public void confirmar(Pedido pedido) {
+            /*
+             *  No se puede confirmar un pedido entregado.
+             * */
+        }
+
         /**
          *  No se puede pasar a un estado siguiente si ya se encuentra en el último estado.
          * */

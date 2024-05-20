@@ -7,6 +7,12 @@ public class Cancelado implements EstadoPedido{
 
     private Logger logger = Logger.getInstance();
 
+    public void confirmar(Pedido pedido){
+        /*
+        *   No se puede confirmar un pedido cancelado.
+        * */
+    }
+
     public void siguienteEstado(Pedido pedido) {
         /*
         *   No se puede pasar a otro estado.

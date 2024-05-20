@@ -50,4 +50,11 @@ public class PedidoServices {
         return pedidos;
     }
 
+    public void updatePedidos(){
+        pedidoDAO.updatePedidos();
+    }
+
+    public void updateActualPedidos(){
+        pedidoDAO.updateActualStates();
+    }
 }

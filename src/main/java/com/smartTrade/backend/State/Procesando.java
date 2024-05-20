@@ -8,6 +8,13 @@ public class Procesando implements EstadoPedido{
 
     private Logger logger = Logger.getInstance();
 
+
+    public void confirmar(Pedido pedido) {
+        /*
+         *  No se puede confirmar un pedido en proceso.
+         * */
+    }
+
     @Override 
     public void siguienteEstado(Pedido pedido) {
         pedido.setEstadoActual(EstadosPedido.ENVIADO);

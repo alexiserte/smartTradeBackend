@@ -341,4 +341,23 @@ public class AdministradorFachada extends Fachada {
             return new ResponseEntity<>("Error al insertar país y ciudad: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    public ResponseEntity<?> updatePedidos(){
+        try{
+            pedidoServices.updatePedidos();
+            return new ResponseEntity<>("Pedidos actualizados correctamente",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al actualizar los pedidos: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<?> updateActualPedidos(){
+        try{
+            pedidoServices.updateActualPedidos();
+            return new ResponseEntity<>("Pedidos actualizados correctamente",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al actualizar los pedidos: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

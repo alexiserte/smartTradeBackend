@@ -15,6 +15,10 @@ public class EsperandoConfirmacion implements EstadoPedido{
     private static final EstadosPedido estado = EstadosPedido.ESPERANDO_CONFIRMACION;
 
 
+    public void confirmar(Pedido pedido) {
+        siguienteEstado(pedido);
+    }
+
     public void siguienteEstado(Pedido pedido) {
         pedido.setEstadoActual(EstadosPedido.PROCESANDO);
         pedido.setEstado(new Procesando());

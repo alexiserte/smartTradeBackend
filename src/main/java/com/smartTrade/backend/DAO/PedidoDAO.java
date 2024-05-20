@@ -38,6 +38,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     @Autowired
     CompradorDAO compradorDAO;
 
+    @Autowired
+    PedidoDAO pedidoDAO;
 
     private static JdbcTemplate database;
     public PedidoDAO (JdbcTemplate database) {
@@ -124,6 +126,11 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
     }
 
+    private void updatePedidoState(Map<String, ?> args){
+        int id = (int) args.get("id");
+        EstadosPedido estado = (EstadosPedido) args.get("estado");
+        database.update("UPDATE Pedido SET estado = ? WHERE id = ?",estado.getNombreEstado(),id);
+    }
 
     private Date calculateTimeOfDelivery(String vendorNickname, String userNickname){
         String userCountry = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, userNickname);
@@ -175,6 +182,73 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         }
 
         return null;
+    }
+
+
+    public void updateActualStates(){
+        List<Integer> ids = database.queryForList("SELECT id FROM Pedido", Integer.class);
+        List<Pedido> pedidos = new ArrayList<>();
+        for(Integer id : ids){
+            Pedido p = readOne(Map.of("id",id));
+            pedidos.add(p);
+        }
+        for(Pedido p : pedidos){
+            long totalDeliveryTime = DateMethods.calcularDiferenciaDias(p.getFecha_realizacion().toLocalDate(),p.getFecha_entrega().toLocalDate());
+            long daysLeftToDelivery = DateMethods.calcularDiferenciaDias(DateMethods.getTodayDate().toLocalDate(),p.getFecha_entrega().toLocalDate());
+            if(p.getEstadoActual() == EstadosPedido.CANCELADO){continue;}
+            if(daysLeftToDelivery <= 0){
+                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.ENTREGADO));
+            }
+            else if(totalDeliveryTime - daysLeftToDelivery == 1){
+                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.EN_REPARTO));
+            }
+            else if(totalDeliveryTime == daysLeftToDelivery + 2){
+                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.ENVIADO));
+            }
+            else if(totalDeliveryTime == daysLeftToDelivery + 1){
+                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.PROCESANDO));
+            }
+            else if(totalDeliveryTime == daysLeftToDelivery){
+                updatePedidoState(Map.of("id",p.getId(),"estado",EstadosPedido.ESPERANDO_CONFIRMACION));
+            }
+        }
+    }
+
+    public void updatePedidos(){
+        List<Pedido> pedidos = readAll();
+        for(Pedido p : pedidos){
+            EstadosPedido estado = recommendedState(p);
+            EstadosPedido estadoActual = p.getEstadoActual();
+            if(estado != estadoActual) {
+                updatePedidoState(Map.of("id", p.getId(), "estado", estado));
+                p.siguienteEstado();
+            }
+        }
+    }
+
+    private EstadosPedido recommendedState(Pedido pedido){
+        Date fecha_realizacion = pedido.getFecha_realizacion();
+        Date fecha_entrega = pedido.getFecha_entrega();
+
+        long totalDeliveryTime = DateMethods.calcularDiferenciaDias(fecha_realizacion.toLocalDate(),fecha_entrega.toLocalDate());
+        long daysLeftToDelivery = DateMethods.calcularDiferenciaDias(DateMethods.getTodayDate().toLocalDate(),fecha_entrega.toLocalDate());
+
+        if(daysLeftToDelivery <= 0){
+            return EstadosPedido.ENTREGADO;
+        }
+        else if(totalDeliveryTime - daysLeftToDelivery == 1 && daysLeftToDelivery > 0){
+            return EstadosPedido.EN_REPARTO;
+        }
+        else if(totalDeliveryTime == daysLeftToDelivery + 2  && totalDeliveryTime - daysLeftToDelivery > 1){
+            return EstadosPedido.ENVIADO;
+        }
+        else if(totalDeliveryTime == daysLeftToDelivery + 1 && totalDeliveryTime < daysLeftToDelivery + 2 ){
+            return EstadosPedido.PROCESANDO;
+        }
+        else if(totalDeliveryTime == daysLeftToDelivery){
+            return EstadosPedido.ESPERANDO_CONFIRMACION;
+        }
+        return EstadosPedido.CANCELADO;
     }
 }
 

@@ -56,7 +56,6 @@ public class Pedido{
     private double precio_total;
     private EstadoPedido estado;
     private Date fecha_entrega;
-    private boolean confirmado;
     private Pair<Double,Double> location;
 
     public Pedido(int id,int id_comprador, List<ItemPedido> productos, Date fecha_realizacion,double precio_total, Date fecha_entrega, Pair<Double,Double> location){
@@ -68,7 +67,6 @@ public class Pedido{
         this.fecha_realizacion = fecha_realizacion;
         this.precio_total = precio_total;
         this.fecha_entrega = fecha_entrega;
-        this.confirmado = false;
         this.location = location;
     }
 
@@ -146,15 +144,6 @@ public class Pedido{
         this.location = location;
     }
 
-    public boolean getConfirmado() {return confirmado;}
-
-    public void setConfirmado(boolean confirmado) {
-        if(this.estadoActual == EstadosPedido.ESPERANDO_CONFIRMACION) {
-            this.confirmado = confirmado;
-            this.siguienteEstado();
-        }
-    }
-
 
     // Implementacion del patron Estado
 
@@ -167,5 +156,7 @@ public class Pedido{
     public void cancelar() {estado.cancelar(this);}
 
     public String printPedidoState() {return estado.printPedidoState(this);}
+
+    public void confirmar() {estado.confirmar(this);}
 
 }

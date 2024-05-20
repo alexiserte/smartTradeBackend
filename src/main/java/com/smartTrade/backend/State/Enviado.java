@@ -3,6 +3,13 @@ package com.smartTrade.backend.State;
 import com.smartTrade.backend.Models.Pedido;
 
 public class Enviado implements EstadoPedido{
+
+    public void confirmar(Pedido pedido) {
+        /*
+         *  No se puede confirmar un pedido enviado.
+         * */
+    }
+
     @Override
     public void siguienteEstado(Pedido pedido) {
         pedido.setEstadoActual(EstadosPedido.EN_REPARTO);

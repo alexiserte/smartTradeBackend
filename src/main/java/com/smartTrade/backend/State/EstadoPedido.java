@@ -9,4 +9,5 @@ public interface EstadoPedido {
     void procesar(Pedido pedido);
     void cancelar(Pedido pedido);
     String printPedidoState(Pedido pedido);
+    void confirmar(Pedido pedido);
 }
