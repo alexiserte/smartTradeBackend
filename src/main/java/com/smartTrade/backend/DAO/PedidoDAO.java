@@ -15,6 +15,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -201,23 +203,26 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     }
 
     private EstadosPedido recommendedState(Pedido pedido) {
-        Date fecha_realizacion = pedido.getFecha_realizacion();
-        Date fecha_entrega = pedido.getFecha_entrega();
+        LocalDate fecha_realizacion = pedido.getFecha_realizacion().toLocalDate();
+        LocalDate fecha_entrega = pedido.getFecha_entrega().toLocalDate();
 
-        long totalDeliveryTime = DateMethods.calcularDiferenciaDias(fecha_realizacion.toLocalDate(), fecha_entrega.toLocalDate());
-        long daysLeftToDelivery = DateMethods.calcularDiferenciaDias(DateMethods.getTodayDate().toLocalDate(), fecha_entrega.toLocalDate());
+        LocalDate today = LocalDate.now();
+
+        long totalDeliveryTime = ChronoUnit.DAYS.between(fecha_realizacion, fecha_entrega);
+        long daysLeftToDelivery = ChronoUnit.DAYS.between(today, fecha_entrega);
 
         if (daysLeftToDelivery <= 0) {
             return EstadosPedido.ENTREGADO;
         } else if (daysLeftToDelivery == 1) {
             return EstadosPedido.EN_REPARTO;
-        } else if (daysLeftToDelivery > 2 && totalDeliveryTime - daysLeftToDelivery > 1) {
+        } else if (daysLeftToDelivery == 2 && totalDeliveryTime > 2) {
             return EstadosPedido.ENVIADO;
-        } else if (totalDeliveryTime - daysLeftToDelivery == 1) {
+        } else if (ChronoUnit.DAYS.between(fecha_realizacion, today) == 1) {
             return EstadosPedido.PROCESANDO;
         }
         return EstadosPedido.ESPERANDO_CONFIRMACION;
     }
+
 
 }
 
