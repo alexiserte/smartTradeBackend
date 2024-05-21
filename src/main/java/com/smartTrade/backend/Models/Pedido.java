@@ -123,7 +123,6 @@ public class Pedido{
                 this.estado = null;
         }
 
-        this.estadoActual = estado;
     }
 
 
