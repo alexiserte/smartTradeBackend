@@ -99,6 +99,16 @@ public class Pedido{
         }
     }
 
+
+    public EstadosPedido getEstadoActual(String estado){
+        for(EstadosPedido e : EstadosPedido.values()){
+            if(e.getNombreEstado().equals(estado)){
+                return e;
+            }
+        }
+        return null;
+    }
+
     public void setEstado(EstadosPedido estado) {
         switch (estado){
             case ESPERANDO_CONFIRMACION:
