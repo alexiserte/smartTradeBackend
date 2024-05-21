@@ -192,8 +192,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         for (Pedido p : pedidos) {
             System.out.println("Pedido: " + p.getId());
             System.out.println("Estado actual: " + p.getEstadoActual());
-            EstadosPedido estado = updateState(p);
-            System.out.println("Nuevo estado: " + estado);
         }
 
         System.out.println("Actualizados");
