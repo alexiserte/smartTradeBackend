@@ -217,21 +217,20 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         if (fecha_actual.isEqual(fecha_llegada) || fecha_actual.isAfter(fecha_llegada)) {
             return EstadosPedido.ENTREGADO;
         }
-        if (diasDesdeLaGeneracionDelPedido == 0) {
+        else if (diasDesdeLaGeneracionDelPedido == 0) {
             System.out.println("porque estan entrando todos aqui");
             return EstadosPedido.ESPERANDO_CONFIRMACION;
         }
-        if (diasDesdeLaGeneracionDelPedido == 1) {
+        else if (diasDesdeLaGeneracionDelPedido == 1) {
             return EstadosPedido.PROCESANDO;
         }
-        if (diasDesdeLaGeneracionDelPedido == 2) {
+        else if (diasDesdeLaGeneracionDelPedido == 2) {
             return EstadosPedido.ENVIADO;
         }
-        if (diasHastaLaLlegadaDelPedido == 1) {
+        else if (diasHastaLaLlegadaDelPedido == 1) {
             return EstadosPedido.EN_REPARTO;
         }
-
-        return EstadosPedido.ENVIADO;
+        else return EstadosPedido.ENVIADO;
     }
 
 
