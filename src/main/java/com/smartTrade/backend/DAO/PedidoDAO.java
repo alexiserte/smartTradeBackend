@@ -189,18 +189,13 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     public void updateActualStates() {
         List<Pedido> pedidos = readAll();
         for (Pedido p : pedidos) {
-            EstadosPedido estadoRecomendado = recommendedState(p);
-            System.out.println("Recomendado: " + estadoRecomendado);
-            System.out.println("Actual: " + p.getEstadoActual());
-            updatePedidoState(Map.of("id", p.getId(), "estado", estadoRecomendado));
-            p.setEstado(estadoRecomendado);
-            System.out.println("Actual: " + p.getEstadoActual());
+            updateState(p);
         }
 
         System.out.println("Actualizados");
     }
 
-    private EstadosPedido recommendedState(Pedido pedido) {
+    private EstadosPedido updateState(Pedido pedido) {
         LocalDate fecha_creacion = pedido.getFecha_realizacion().toLocalDate();
         LocalDate fecha_actual = DateMethods.getTodayDate().toLocalDate();
         LocalDate fecha_llegada = pedido.getFecha_entrega().toLocalDate();
@@ -217,22 +212,35 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         System.out.println("Dias desde la llegada del pedido: " + diasHastaLaLlegadaDelPedido);
 
         if (fecha_actual.isEqual(fecha_llegada) || fecha_actual.isAfter(fecha_llegada)) {
+            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.ENTREGADO));
+            pedido.setEstado(EstadosPedido.ENTREGADO);
             return EstadosPedido.ENTREGADO;
         }
         else if (diasDesdeLaGeneracionDelPedido == 0) {
-            System.out.println("porque estan entrando todos aqui");
+            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.ESPERANDO_CONFIRMACION));
+            pedido.setEstado(EstadosPedido.ESPERANDO_CONFIRMACION);
             return EstadosPedido.ESPERANDO_CONFIRMACION;
         }
         else if (diasDesdeLaGeneracionDelPedido == 1) {
+            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.PROCESANDO));
+            pedido.setEstado(EstadosPedido.PROCESANDO);
             return EstadosPedido.PROCESANDO;
         }
         else if (diasDesdeLaGeneracionDelPedido == 2) {
+            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.ENVIADO));
+            pedido.setEstado(EstadosPedido.ENVIADO);
             return EstadosPedido.ENVIADO;
         }
         else if (diasHastaLaLlegadaDelPedido == 1) {
+            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.EN_REPARTO));
+            pedido.setEstado(EstadosPedido.EN_REPARTO);
             return EstadosPedido.EN_REPARTO;
         }
-        else return EstadosPedido.ENVIADO;
+        else {
+            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.ENTREGADO));
+            pedido.setEstado(EstadosPedido.ENTREGADO);
+            return EstadosPedido.ENVIADO;
+        }
     }
 
 
