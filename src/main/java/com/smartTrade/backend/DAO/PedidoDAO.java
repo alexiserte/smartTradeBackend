@@ -190,7 +190,10 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         List<Pedido> pedidos = readAll();
         System.out.println(pedidos);
         for (Pedido p : pedidos) {
-            updateState(p);
+            System.out.println("Pedido: " + p.getId());
+            System.out.println("Estado actual: " + p.getEstadoActual());
+            EstadosPedido estado = updateState(p);
+            System.out.println("Nuevo estado: " + estado);
         }
 
         System.out.println("Actualizados");
