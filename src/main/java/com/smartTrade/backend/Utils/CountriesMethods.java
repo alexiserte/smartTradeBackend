@@ -399,6 +399,6 @@ public class CountriesMethods {
 
 
     public static void main(String[] args) {
-        System.out.println(getPointBetweenCities("Xirivella","España","Oslo","Norway", 0));
+        System.out.println(getPointBetweenCities("Xirivella","España","Gandía","España", 1));
     }
 }

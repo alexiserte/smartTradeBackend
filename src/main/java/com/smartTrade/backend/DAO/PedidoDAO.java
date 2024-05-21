@@ -209,15 +209,12 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         System.out.println("Fecha llegada: " + fecha_llegada);
 
         long diasDesdeLaGeneracionDelPedido = DateMethods.calcularDiferenciaDias(fecha_creacion, fecha_actual);
-        long diasDesdeLaLlegadaDelPedido = DateMethods.calcularDiferenciaDias(fecha_actual, fecha_llegada);
+        long diasHastaLaLlegadaDelPedido = DateMethods.calcularDiferenciaDias(fecha_actual, fecha_llegada);
 
         System.out.println("Dias desde la generacion del pedido: " + diasDesdeLaGeneracionDelPedido);
-        System.out.println("Dias desde la llegada del pedido: " + diasDesdeLaLlegadaDelPedido);
+        System.out.println("Dias desde la llegada del pedido: " + diasHastaLaLlegadaDelPedido);
 
-        if (diasDesdeLaLlegadaDelPedido < 0) {
-            return EstadosPedido.ENTREGADO;
-        }
-        if (fecha_actual.isEqual(fecha_llegada)) {
+        if (fecha_actual.isEqual(fecha_llegada) || fecha_actual.isAfter(fecha_llegada)) {
             return EstadosPedido.ENTREGADO;
         }
         if (diasDesdeLaGeneracionDelPedido == 0) {
@@ -229,7 +226,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         if (diasDesdeLaGeneracionDelPedido == 2) {
             return EstadosPedido.ENVIADO;
         }
-        if (diasDesdeLaGeneracionDelPedido == 1) {
+        if (diasHastaLaLlegadaDelPedido == 1) {
             return EstadosPedido.EN_REPARTO;
         }
 
