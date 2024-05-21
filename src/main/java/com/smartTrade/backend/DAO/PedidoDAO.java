@@ -201,16 +201,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         LocalDate fecha_actual = DateMethods.getTodayDate().toLocalDate();
         LocalDate fecha_llegada = pedido.getFecha_entrega().toLocalDate();
 
-        System.out.println("--------------------");
-        System.out.println("Fecha actual: " + fecha_actual);
-        System.out.println("Fecha creacion: " + fecha_creacion);
-        System.out.println("Fecha llegada: " + fecha_llegada);
-
         long diasDesdeLaGeneracionDelPedido = DateMethods.calcularDiferenciaDias(fecha_creacion, fecha_actual);
         long diasHastaLaLlegadaDelPedido = DateMethods.calcularDiferenciaDias(fecha_actual, fecha_llegada);
-
-        System.out.println("Dias desde la generacion del pedido: " + diasDesdeLaGeneracionDelPedido);
-        System.out.println("Dias desde la llegada del pedido: " + diasHastaLaLlegadaDelPedido);
 
         if (fecha_actual.isEqual(fecha_llegada) || fecha_actual.isAfter(fecha_llegada)) {
             updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.ENTREGADO));
