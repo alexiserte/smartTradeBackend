@@ -113,27 +113,32 @@ public class Pedido{
         switch (estado){
             case ESPERANDO_CONFIRMACION:
                 this.estado = new EsperandoConfirmacion();
+                this.estadoActual = EstadosPedido.ESPERANDO_CONFIRMACION;
                 break;
             case PROCESANDO:
                 this.estado = new Procesando();
+                this.estadoActual = EstadosPedido.PROCESANDO;
                 break;
             case ENVIADO:
                 this.estado = new Enviado();
+                this.estadoActual = EstadosPedido.ENVIADO;
                 break;
             case ENTREGADO:
                 this.estado = new Entregado();
+                this.estadoActual = EstadosPedido.ENTREGADO;
                 break;
             case CANCELADO:
                 this.estado = new Cancelado();
+                this.estadoActual = EstadosPedido.CANCELADO;
                 break;
             case EN_REPARTO:
                 this.estado = new EnReparto();
+                this.estadoActual = EstadosPedido.EN_REPARTO;
                 break;
             default:
-                this.estado = null;
+                this.estado = new Cancelado();
+                this.estadoActual = EstadosPedido.CANCELADO;
         }
-
-        this.estadoActual = estado;
 
     }
 
