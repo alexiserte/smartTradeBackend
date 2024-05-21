@@ -218,6 +218,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             return EstadosPedido.ENTREGADO;
         }
         if (diasDesdeLaGeneracionDelPedido == 0) {
+            System.out.println("porque estan entrando todos aqui");
             return EstadosPedido.ESPERANDO_CONFIRMACION;
         }
         if (diasDesdeLaGeneracionDelPedido == 1) {
