@@ -127,12 +127,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
     }
 
-    private void updatePedidoState(Map<String, ?> args){
-        int id = (int) args.get("id");
-        EstadosPedido estado = (EstadosPedido) args.get("estado");
-        database.update("UPDATE Pedido SET estado = ? WHERE id = ?",estado.getNombreEstado(),id);
-    }
-
     private Date calculateTimeOfDelivery(String vendorNickname, String userNickname){
         String userCountry = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, userNickname);
         String vendorCountry = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, vendorNickname);
@@ -185,6 +179,9 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         return null;
     }
 
+    private void updatePedidoState(int id, EstadosPedido estado) {
+        database.update("UPDATE Pedido SET estado = ? WHERE id = ?", estado.getNombreEstado(), id);
+    }
 
     public void updateActualStates() {
         List<Pedido> pedidos = readAll();
@@ -192,49 +189,36 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         for (Pedido p : pedidos) {
             updateState(p);
         }
-
         System.out.println("Actualizados");
     }
 
     private void updateState(Pedido pedido) {
-        LocalDate fecha_creacion = pedido.getFecha_realizacion().toLocalDate();
-        LocalDate fecha_actual = DateMethods.getTodayDate().toLocalDate();
-        LocalDate fecha_llegada = pedido.getFecha_entrega().toLocalDate();
+        LocalDate fechaCreacion = pedido.getFecha_realizacion().toLocalDate();
+        LocalDate fechaActual = DateMethods.getTodayDate().toLocalDate();
+        LocalDate fechaLlegada = pedido.getFecha_entrega().toLocalDate();
 
-        long diasDesdeLaGeneracionDelPedido = DateMethods.calcularDiferenciaDias(fecha_creacion, fecha_actual);
-        long diasHastaLaLlegadaDelPedido = DateMethods.calcularDiferenciaDias(fecha_actual, fecha_llegada);
+        long diasDesdeCreacion = DateMethods.calcularDiferenciaDias(fechaCreacion, fechaActual);
+        long diasHastaLlegada = DateMethods.calcularDiferenciaDias(fechaActual, fechaLlegada);
 
-        if (fecha_actual.isEqual(fecha_llegada) || fecha_actual.isAfter(fecha_llegada)) {
-            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.ENTREGADO));
-            pedido.setEstado(EstadosPedido.ENTREGADO);
+        EstadosPedido nuevoEstado;
+
+        if (fechaActual.isEqual(fechaLlegada) || fechaActual.isAfter(fechaLlegada)) {
+            nuevoEstado = EstadosPedido.ENTREGADO;
+        } else if (diasDesdeCreacion == 0) {
+            nuevoEstado = EstadosPedido.ESPERANDO_CONFIRMACION;
+        } else if (diasDesdeCreacion == 1) {
+            nuevoEstado = EstadosPedido.PROCESANDO;
+        } else if (diasDesdeCreacion == 2) {
+            nuevoEstado = EstadosPedido.ENVIADO;
+        } else if (diasHastaLlegada == 1) {
+            nuevoEstado = EstadosPedido.EN_REPARTO;
+        } else {
+            nuevoEstado = EstadosPedido.ENTREGADO;
         }
-        else if (diasDesdeLaGeneracionDelPedido == 0) {
-            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.ESPERANDO_CONFIRMACION));
-            pedido.setEstado(EstadosPedido.ESPERANDO_CONFIRMACION);
-        }
-        else if (diasDesdeLaGeneracionDelPedido == 1) {
-            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.PROCESANDO));
-            pedido.setEstado(EstadosPedido.PROCESANDO);
-        }
-        else if (diasDesdeLaGeneracionDelPedido == 2) {
-            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.ENVIADO));
-            pedido.setEstado(EstadosPedido.ENVIADO);
-        }
-        else if (diasHastaLaLlegadaDelPedido == 1) {
-            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.EN_REPARTO));
-            pedido.setEstado(EstadosPedido.EN_REPARTO);
-        }
-        else {
-            updatePedidoState(Map.of("id", pedido.getId(), "estado", EstadosPedido.ENTREGADO));
-            pedido.setEstado(EstadosPedido.ENTREGADO);
-        }
+
+        updatePedidoState(pedido.getId(), nuevoEstado);
+        pedido.setEstado(nuevoEstado);
     }
-
-
-
-
-
-
 
 
 }

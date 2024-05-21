@@ -103,7 +103,6 @@ public class Pedido{
     public EstadosPedido getEstadoActual(String estado){
         for(EstadosPedido e : EstadosPedido.values()){
             if(e.getNombreEstado().equals(estado)){
-                System.out.println(e);
                 return e;
             }
         }
