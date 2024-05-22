@@ -14,8 +14,6 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
     
     private JdbcTemplate database;
 
-    @Autowired
-    UsuarioDAO usuarioDAO;
 
     public GuardarMasTardeDAO(JdbcTemplate database) {
         this.database = database;
@@ -55,7 +53,7 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
     public void update(Map<String,?> args) {;}
     public Object readOne(Map<String,?> args) {
         String compradorName = (String) args.get("compradorName");
-        int id_comprador = usuarioDAO.getID(compradorName);
+        int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, compradorName);
         int id_guardar_mas_tarde = database.queryForObject("SELECT id_guardar_mas_tarde FROM Guardar_Mas_Tarde WHERE id_comprador = ?", Integer.class, id_comprador);
 
         List<Integer> id_productos = database.queryForList("SELECT id_producto FROM Productos_Guardar_Mas_Tarde WHERE id_guardar_mas_tarde = ?", Integer.class, id_guardar_mas_tarde);
