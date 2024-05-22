@@ -5,7 +5,7 @@ public enum EstadosPedido{
     PROCESANDO("Procesando", "El pedido está siendo procesado."),
     ENVIADO("Enviado", "El pedido ha sido enviado."),
     EN_REPARTO("En reparto", "El pedido está en proceso de entrega."),
-    ENTREGADO("Entregado", "El pedido ha sido entregado."),
+    ENTREGADO("Recibido", "El pedido ha sido entregado."),
     CANCELADO("Cancelado", "El pedido ha sido cancelado.");
 
     private final String nombreEstado;
