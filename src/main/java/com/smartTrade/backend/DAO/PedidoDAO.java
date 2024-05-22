@@ -102,6 +102,11 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         Pedido pedido = database.queryForObject(
                 "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
 
+        updateOnePedido(pedido);
+
+        pedido = database.queryForObject(
+                "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
+
         Pair<Double,Double> location = localizePedido(pedido);
         pedido.setLocation(location);
         updateOnePedido(pedido);
@@ -114,7 +119,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         List<Pedido> pedidos = new ArrayList<>();
         for(Integer id : ids){
             Pedido p = readOne(Map.of("id",id));
-            updateOnePedido(p);
             pedidos.add(p);
         }
         return pedidos;
