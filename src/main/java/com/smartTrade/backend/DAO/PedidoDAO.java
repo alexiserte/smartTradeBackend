@@ -107,6 +107,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
         EstadosPedido estado = updateState(fecha_creacion.toLocalDate(), fecha_entrega.toLocalDate());
 
+        System.out.println("Estado: " + estado.getNombreEstado());
+
         database.update("UPDATE Pedido SET estado = ? WHERE id = ?", estado.getNombreEstado(), id);
 
         pedido = database.queryForObject(
