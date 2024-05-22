@@ -217,7 +217,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         }
 
         updatePedidoState(pedido.getId(), nuevoEstado);
-        pedido.setEstado(nuevoEstado);
     }
 
 
