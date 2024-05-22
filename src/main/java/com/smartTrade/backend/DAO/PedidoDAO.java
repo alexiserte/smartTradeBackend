@@ -102,14 +102,18 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         Pedido pedido = database.queryForObject(
                 "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
 
-        updateOnePedido(pedido);
+        Date fecha_entrega = database.queryForObject("SELECT fecha_entrega FROM Pedido WHERE id = ?", Date.class, id);
+        Date fecha_creacion = database.queryForObject("SELECT fecha_realizacion FROM Pedido WHERE id = ?", Date.class, id);
+
+        EstadosPedido estado = updateState(fecha_creacion.toLocalDate(), fecha_entrega.toLocalDate());
+
+        database.update("UPDATE Pedido SET estado = ? WHERE id = ?", estado.getNombreEstado(), id);
 
         pedido = database.queryForObject(
                 "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
 
         Pair<Double,Double> location = localizePedido(pedido);
         pedido.setLocation(location);
-        updateOnePedido(pedido);
         return pedido;
     }
 
@@ -189,25 +193,16 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         database.update("UPDATE Pedido SET estado = ? WHERE id = ?", estado.getNombreEstado(), id);
     }
 
-    public void updateActualStates() {
-        List<Pedido> pedidos = readAll();
-        for (Pedido p : pedidos) {
-            updateState(p);
-        }
-        System.out.println("Actualizados");
-    }
 
-    private void updateState(Pedido pedido) {
-        LocalDate fechaCreacion = pedido.getFecha_realizacion().toLocalDate();
-        LocalDate fechaActual = DateMethods.getTodayDate().toLocalDate();
-        LocalDate fechaLlegada = pedido.getFecha_entrega().toLocalDate();
+    private EstadosPedido updateState(LocalDate fecha_creacion, LocalDate fecha_entrega) {
+        LocalDate today = LocalDate.now();
 
-        long diasDesdeCreacion = DateMethods.calcularDiferenciaDias(fechaCreacion, fechaActual);
-        long diasHastaLlegada = DateMethods.calcularDiferenciaDias(fechaActual, fechaLlegada);
+        long diasDesdeCreacion = DateMethods.calcularDiferenciaDias(fecha_creacion, today);
+        long diasHastaLlegada = DateMethods.calcularDiferenciaDias(today, fecha_entrega);
 
         EstadosPedido nuevoEstado;
 
-        if (fechaActual.isEqual(fechaLlegada) || fechaActual.isAfter(fechaLlegada)) {
+        if (today.isEqual(fecha_entrega) || today.isAfter(fecha_entrega)) {
             nuevoEstado = EstadosPedido.ENTREGADO;
         } else if (diasDesdeCreacion == 0) {
             nuevoEstado = EstadosPedido.ESPERANDO_CONFIRMACION;
@@ -221,13 +216,9 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             nuevoEstado = EstadosPedido.ENTREGADO;
         }
 
-        updatePedidoState(pedido.getId(), nuevoEstado);
+        return nuevoEstado;
     }
 
-
-    private void updateOnePedido(Pedido p){
-        updateState(p);
-    }
 
 }
 
