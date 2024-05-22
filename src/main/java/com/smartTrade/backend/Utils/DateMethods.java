@@ -2,14 +2,31 @@ package com.smartTrade.backend.Utils;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class DateMethods {
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     public static long calcularDiferenciaDias(LocalDate fecha1, LocalDate fecha2) {
-        LocalDate fecha1LocalDate = LocalDate.parse(fecha1.toString().trim());
-        LocalDate fecha2LocalDate = LocalDate.parse(fecha2.toString().trim());
-        return java.time.temporal.ChronoUnit.DAYS.between(fecha1LocalDate, fecha2LocalDate);
+        try {
+            // Verificar que las fechas están en el formato correcto
+            String fecha1Str = fecha1.format(DATE_FORMATTER);
+            String fecha2Str = fecha2.format(DATE_FORMATTER);
+
+            // Parsear las fechas de nuevo para asegurarse que están en el formato correcto
+            LocalDate fecha1LocalDate = LocalDate.parse(fecha1Str, DATE_FORMATTER);
+            LocalDate fecha2LocalDate = LocalDate.parse(fecha2Str, DATE_FORMATTER);
+
+            // Calcular la diferencia de días
+            return ChronoUnit.DAYS.between(fecha1LocalDate, fecha2LocalDate);
+        } catch (DateTimeParseException e) {
+            // Manejar la excepción si las fechas no están en el formato correcto
+            throw new IllegalArgumentException("Las fechas deben estar en el formato YYYY-MM-DD", e);
+        }
     }
 
     public static boolean checkIfTodayIsWithinPeriod(Date fecha_inicio, Date fecha_final) throws IllegalArgumentException{
