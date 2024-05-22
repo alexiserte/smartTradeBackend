@@ -59,7 +59,6 @@ public class AdminController {
 
     @GetMapping("/admin/pedidos")
     public ResponseEntity<?> mostrarPedidos(HttpServletRequest request) {
-        fechada.updatePedidos();
         ResponseEntity<?> res =  fechada.mostrarTodosLosPedidos();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
