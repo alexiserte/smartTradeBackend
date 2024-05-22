@@ -213,7 +213,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         } else if (diasHastaLlegada == 1) {
             return EstadosPedido.EN_REPARTO;
         } else {
-            return EstadosPedido.CANCELADO;
+            return EstadosPedido.EN_REPARTO;
         }
     }
 
