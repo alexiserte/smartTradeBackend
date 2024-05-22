@@ -80,7 +80,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
     @Override
     public Pedido readOne(Map<String, ?> args) {
-        updateActualStates();
         int id = (int) args.get("id");
         List<Pair<Integer, Integer>> productos = database.query(
                 "SELECT id_producto, cantidad FROM Detalle_Pedido WHERE id_pedido = ?",
@@ -105,16 +104,17 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
         Pair<Double,Double> location = localizePedido(pedido);
         pedido.setLocation(location);
+        updateOnePedido(pedido);
         return pedido;
     }
 
     @Override
     public List<Pedido> readAll() {
-        updateActualStates();
         List<Integer> ids = database.queryForList("SELECT id FROM Pedido", Integer.class);
         List<Pedido> pedidos = new ArrayList<>();
         for(Integer id : ids){
             Pedido p = readOne(Map.of("id",id));
+            updateOnePedido(p);
             pedidos.add(p);
         }
         return pedidos;
@@ -221,6 +221,10 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         updatePedidoState(pedido.getId(), nuevoEstado);
     }
 
+
+    private void updateOnePedido(Pedido p){
+        updateState(p);
+    }
 
 }
 
