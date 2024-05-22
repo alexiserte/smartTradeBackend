@@ -102,7 +102,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         Pedido pedido = database.queryForObject(
                 "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
 
-        Date fecha_entrega = database.queryForObject("SELECT fecha_entrega FROM Pedido WHERE id = ?", Date.class, id);
+        Date fecha_entrega = database.queryForObject("SELECT fecha_llegada FROM Pedido WHERE id = ?", Date.class, id);
         Date fecha_creacion = database.queryForObject("SELECT fecha_realizacion FROM Pedido WHERE id = ?", Date.class, id);
 
         EstadosPedido estado = updateState(fecha_creacion.toLocalDate(), fecha_entrega.toLocalDate());
