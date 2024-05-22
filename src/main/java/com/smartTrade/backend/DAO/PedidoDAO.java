@@ -187,6 +187,9 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         else if(estado == EstadosPedido.ENTREGADO){
             return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),3);
         }
+        else if(estado == EstadosPedido.CANCELADO){
+            return Pair.of(null,null);
+        }
 
         return null;
     }
@@ -208,12 +211,12 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             return EstadosPedido.ESPERANDO_CONFIRMACION;
         } else if (diasDesdeCreacion == 1l) {
             return EstadosPedido.PROCESANDO;
-        } else if (diasDesdeCreacion == 2l) {
+        } else if (diasDesdeCreacion == 2l && diasHastaLlegada > 1l) {
             return EstadosPedido.ENVIADO;
         } else if (diasHastaLlegada == 1l) {
             return EstadosPedido.EN_REPARTO;
         } else {
-            return EstadosPedido.ENTREGADO;
+            return EstadosPedido.CANCELADO;
         }
     }
 
