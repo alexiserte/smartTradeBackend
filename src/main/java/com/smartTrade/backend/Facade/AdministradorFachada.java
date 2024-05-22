@@ -343,21 +343,4 @@ public class AdministradorFachada extends Fachada {
     }
 
 
-    public ResponseEntity<?> updatePedidos(){
-        try{
-            pedidoServices.updatePedidos();
-            return new ResponseEntity<>("Pedidos actualizados correctamente",HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al actualizar los pedidos: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public ResponseEntity<?> updateActualPedidos(){
-        try{
-            pedidoServices.updatePedidos();
-            return new ResponseEntity<>("Pedidos actualizados correctamente",HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al actualizar los pedidos: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 }

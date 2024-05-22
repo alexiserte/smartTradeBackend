@@ -50,7 +50,4 @@ public class PedidoServices {
         return pedidos;
     }
 
-    public void updatePedidos(){
-        pedidoDAO.updateActualStates();
-    }
 }
