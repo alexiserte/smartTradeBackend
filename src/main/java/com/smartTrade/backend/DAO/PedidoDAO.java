@@ -199,26 +199,22 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     private EstadosPedido updateState(LocalDate fecha_creacion, LocalDate fecha_entrega) {
         LocalDate today = LocalDate.now();
 
-        long diasDesdeCreacion = DateMethods.calcularDiferenciaDias(today, fecha_creacion);
-        long diasHastaLlegada = DateMethods.calcularDiferenciaDias(fecha_entrega, today);
-
-        EstadosPedido nuevoEstado;
+        long diasDesdeCreacion = DateMethods.calcularDiferenciaDias(fecha_creacion, today);
+        long diasHastaLlegada = DateMethods.calcularDiferenciaDias(today, fecha_entrega);
 
         if (today.isEqual(fecha_entrega) || today.isAfter(fecha_entrega)) {
-            nuevoEstado = EstadosPedido.ENTREGADO;
+            return EstadosPedido.ENTREGADO;
         } else if (diasDesdeCreacion == 0) {
-            nuevoEstado = EstadosPedido.ESPERANDO_CONFIRMACION;
+            return EstadosPedido.ESPERANDO_CONFIRMACION;
         } else if (diasDesdeCreacion == 1) {
-            nuevoEstado = EstadosPedido.PROCESANDO;
+            return EstadosPedido.PROCESANDO;
         } else if (diasDesdeCreacion == 2) {
-            nuevoEstado = EstadosPedido.ENVIADO;
+            return EstadosPedido.ENVIADO;
         } else if (diasHastaLlegada == 1) {
-            nuevoEstado = EstadosPedido.EN_REPARTO;
+            return EstadosPedido.EN_REPARTO;
         } else {
-            nuevoEstado = EstadosPedido.ENTREGADO;
+            return EstadosPedido.CANCELADO;
         }
-
-        return nuevoEstado;
     }
 
 
