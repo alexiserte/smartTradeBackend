@@ -211,7 +211,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             return EstadosPedido.ESPERANDO_CONFIRMACION;
         } else if (diasDesdeCreacion == 1l) {
             return EstadosPedido.PROCESANDO;
-        } else if (diasDesdeCreacion == 2l && diasHastaLlegada > 1l) {
+        } else if (diasDesdeCreacion >= 2l && diasHastaLlegada > 1l) {
             return EstadosPedido.ENVIADO;
         } else if (diasHastaLlegada == 1l) {
             return EstadosPedido.EN_REPARTO;
