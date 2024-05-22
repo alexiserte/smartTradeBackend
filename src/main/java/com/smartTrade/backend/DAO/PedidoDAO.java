@@ -188,7 +188,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),3);
         }
         else if(estado == EstadosPedido.CANCELADO){
-            return Pair.of(null,null);
+            return Pair.of(0.0,0.0);
         }
 
         return null;
