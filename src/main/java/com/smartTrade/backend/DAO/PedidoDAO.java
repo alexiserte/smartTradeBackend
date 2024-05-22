@@ -204,16 +204,16 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
         if (today.isEqual(fecha_entrega) || today.isAfter(fecha_entrega)) {
             return EstadosPedido.ENTREGADO;
-        } else if (diasDesdeCreacion == 0) {
+        } else if (diasDesdeCreacion == 0l) {
             return EstadosPedido.ESPERANDO_CONFIRMACION;
-        } else if (diasDesdeCreacion == 1) {
+        } else if (diasDesdeCreacion == 1l) {
             return EstadosPedido.PROCESANDO;
-        } else if (diasDesdeCreacion == 2) {
+        } else if (diasDesdeCreacion == 2l) {
             return EstadosPedido.ENVIADO;
-        } else if (diasHastaLlegada == 1) {
+        } else if (diasHastaLlegada == 1l) {
             return EstadosPedido.EN_REPARTO;
         } else {
-            return EstadosPedido.EN_REPARTO;
+            return EstadosPedido.ENTREGADO;
         }
     }
 
