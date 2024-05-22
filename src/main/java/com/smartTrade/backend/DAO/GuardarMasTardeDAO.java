@@ -15,15 +15,6 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
     private JdbcTemplate database;
 
     @Autowired
-    CompradorDAO compradorDAO;
-
-    @Autowired
-    VendedorDAO vendedorDAO;
-
-    @Autowired
-    AdministradorDAO administradorDAO;
-
-    @Autowired
     UsuarioDAO usuarioDAO;
 
     public GuardarMasTardeDAO(JdbcTemplate database) {
