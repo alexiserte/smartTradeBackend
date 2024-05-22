@@ -199,8 +199,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     private EstadosPedido updateState(LocalDate fecha_creacion, LocalDate fecha_entrega) {
         LocalDate today = LocalDate.now();
 
-        long diasDesdeCreacion = DateMethods.calcularDiferenciaDias(fecha_creacion, today);
-        long diasHastaLlegada = DateMethods.calcularDiferenciaDias(today, fecha_entrega);
+        long diasDesdeCreacion = DateMethods.calcularDiferenciaDias(today, fecha_creacion);
+        long diasHastaLlegada = DateMethods.calcularDiferenciaDias(fecha_entrega, today);
 
         EstadosPedido nuevoEstado;
 
