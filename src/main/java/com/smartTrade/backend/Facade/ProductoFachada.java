@@ -122,8 +122,9 @@ public class ProductoFachada extends Fachada {
 
     }
 
-    public ResponseEntity<?> updateProduct(String nombre, HashMap<String, ?> atributos) {
+    public ResponseEntity<?> updateProduct(HashMap<String, ?> atributos) {
         try {
+            String nombre = (String) atributos.get("name");
             productoServices.updateProduct(nombre, atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {

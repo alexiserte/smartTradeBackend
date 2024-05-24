@@ -64,9 +64,8 @@ public class ProductoController {
     
 
     @PutMapping("/producto/")
-    public ResponseEntity<?> updateProduct(@RequestParam(name = "name", required = true) String productName,
-            @RequestBody(required = true) HashMap<String, ?> atributos, HttpServletRequest request) {
-        ResponseEntity<?> res = fachada.updateProduct(productName, atributos);
+    public ResponseEntity<?> updateProduct(@RequestBody(required = true) HashMap<String, ?> atributos, HttpServletRequest request) {
+        ResponseEntity<?> res = fachada.updateProduct(atributos);
         logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
