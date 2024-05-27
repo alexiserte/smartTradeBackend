@@ -1,6 +1,7 @@
 package com.smartTrade.backend.Controllers;
 
 import com.smartTrade.backend.Facade.AdministradorFachada;
+import com.smartTrade.backend.Facade.CompradorFachada;
 import com.smartTrade.backend.Logger.Logger;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class AdminController {
 
     @Autowired
     AdministradorFachada fechada;
+    CompradorFachada compradorFachada;
 
     @GetMapping("/admin/categorias")
     public ResponseEntity<?> mostrarCategorias(HttpServletRequest request) {
@@ -173,6 +175,14 @@ public class AdminController {
     @GetMapping("/_")
     public ResponseEntity<?> insertCityAndCountry(HttpServletRequest request){
         ResponseEntity<?> res = fechada.insertCountryAndCityWhereMissing();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+
+    @GetMapping("/pedido/{id}/productos")
+    public ResponseEntity<?> getProductsFromOnePedidoGivenTheId(@PathVariable int id, HttpServletRequest request){
+        ResponseEntity<?> res = compradorFachada.getProductsFromOnePedidoGivenTheId(id);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }

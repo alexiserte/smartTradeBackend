@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,4 +52,19 @@ public class PedidoServices {
         return pedidos;
     }
 
+    public List<Producto> getProductosFromOnePedidoGivenTheID(int id){
+        List<Pedido> pedidos = readAllPedidos();
+        List<Producto> res = new ArrayList<>();
+        List<Pedido> filtered = pedidos
+                                .stream()
+                                .filter(pedido -> pedido.getId() == id)
+                                .toList();
+        if(filtered.size() == 0) return res;
+        List<Pedido.ItemPedido> items = filtered.get(0).getProductos();
+        for(Pedido.ItemPedido item : items){
+            res.add(item.getProducto());
+        }
+        return res;
+
+    }
 }

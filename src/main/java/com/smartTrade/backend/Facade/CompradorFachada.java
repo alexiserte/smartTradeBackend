@@ -152,4 +152,15 @@ public class CompradorFachada extends Fachada {
             return new ResponseEntity<>("Error al obtener los pedidos realizados: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public ResponseEntity<?> getProductsFromOnePedidoGivenTheId(int id){
+        try{
+            List<Producto> productos = pedidoServices.getProductosFromOnePedidoGivenTheID(id);
+            return new ResponseEntity<>(productos,HttpStatus.OK);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("No se han encontrado productos en este pedido",HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener los productos del pedido: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
