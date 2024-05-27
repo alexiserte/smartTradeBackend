@@ -19,6 +19,7 @@ public class AdminController {
 
     @Autowired
     AdministradorFachada fechada;
+    @Autowired
     CompradorFachada compradorFachada;
 
     @GetMapping("/admin/categorias")
