@@ -2,6 +2,7 @@ package com.smartTrade.backend.Facade;
 
 import com.smartTrade.backend.Services.GuardarMasTardeServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,7 @@ public class GuardarMasTardeFachada extends Fachada{
             guardarMasTardeServices.insertarProducto(userNickname, productName, vendorName);
             return ResponseEntity.ok().build();
         }catch (Exception e){
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -39,7 +40,7 @@ public class GuardarMasTardeFachada extends Fachada{
         guardarMasTardeServices.deleteProducto(userNickname,productName,vendorName);
         return ResponseEntity.ok().build();
         }catch (Exception e){
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -48,7 +49,7 @@ public class GuardarMasTardeFachada extends Fachada{
             guardarMasTardeServices.vaciarLista(userNickname);
             return ResponseEntity.ok().build();
         }catch (Exception e){
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -56,7 +57,7 @@ public class GuardarMasTardeFachada extends Fachada{
         try {
             return ResponseEntity.ok(guardarMasTardeServices.readOne(userNickname));
         }catch (Exception e){
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -68,7 +69,7 @@ public class GuardarMasTardeFachada extends Fachada{
             guardarMasTardeServices.moverGuardadoMasTardeACarrito(userNickname, productName, vendorName);
             return ResponseEntity.ok().build();
         }catch (Exception e){
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
