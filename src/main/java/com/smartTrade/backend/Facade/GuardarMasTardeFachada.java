@@ -28,7 +28,7 @@ public class GuardarMasTardeFachada extends Fachada{
             guardarMasTardeServices.insertarProducto(userNickname, productName, vendorName);
             return ResponseEntity.ok().build();
         }catch (Exception e){
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -40,7 +40,7 @@ public class GuardarMasTardeFachada extends Fachada{
         guardarMasTardeServices.deleteProducto(userNickname,productName,vendorName);
         return ResponseEntity.ok().build();
         }catch (Exception e){
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -49,7 +49,7 @@ public class GuardarMasTardeFachada extends Fachada{
             guardarMasTardeServices.vaciarLista(userNickname);
             return ResponseEntity.ok().build();
         }catch (Exception e){
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -57,7 +57,7 @@ public class GuardarMasTardeFachada extends Fachada{
         try {
             return ResponseEntity.ok(guardarMasTardeServices.readOne(userNickname));
         }catch (Exception e){
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -69,7 +69,7 @@ public class GuardarMasTardeFachada extends Fachada{
             guardarMasTardeServices.moverGuardadoMasTardeACarrito(userNickname, productName, vendorName);
             return ResponseEntity.ok().build();
         }catch (Exception e){
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

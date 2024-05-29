@@ -207,7 +207,7 @@ public class CarritoCompraFachada extends Fachada{
             carritoCompraServices.moverProductosDeCarritoAGuardarMasTarde(userNickname, productName, vendorName);
             return ResponseEntity.ok().build();
         }catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
