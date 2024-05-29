@@ -31,7 +31,7 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
         String productName = (String) args.get("productName");
         String vendorName = (String) args.get("vendorName");
         int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
-        int id_producto = database.queryForObject("SELECT id_producto FROM Producto WHERE nombre = ?", Integer.class, productName);
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         int id_guardar_mas_tarde = database.queryForObject("SELECT id_guardar_mas_tarde FROM Guardar_Mas_Tarde WHERE id_comprador = ?", Integer.class, id_comprador);
         database.update("INSERT INTO Productos_Guardar_Mas_Tarde(id_producto,id_guardar_mas_tarde,id_vendedor) VALUES (?,?,?)",id_producto,id_guardar_mas_tarde,id_vendedor);
@@ -42,7 +42,7 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
         String productName = (String) args.get("productName");
         String vendorName = (String) args.get("vendorName");
         int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
-        int id_producto = database.queryForObject("SELECT id_producto FROM Producto WHERE nombre = ?", Integer.class, productName);
+        int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
         int id_guardar_mas_tarde = database.queryForObject("SELECT id_guardar_mas_tarde FROM Guardar_Mas_Tarde WHERE id_comprador = ?", Integer.class, id_comprador);
         database.update("DELETE FROM Productos_Guardar_Mas_Tarde WHERE id_producto = ? AND id_guardar_mas_tarde = ? AND id_vendedor = ?",id_producto,id_guardar_mas_tarde,id_vendedor);
