@@ -7,23 +7,26 @@ public class Cancelado implements EstadoPedido{
 
     private Logger logger = Logger.getInstance();
 
-    public void confirmar(Pedido pedido){
+    public boolean confirmar(Pedido pedido){
         /*
         *   No se puede confirmar un pedido cancelado.
         * */
+        return false;
     }
 
-    public void siguienteEstado(Pedido pedido) {
+    public boolean siguienteEstado(Pedido pedido) {
         /*
         *   No se puede pasar a otro estado.
         * */
+        return false;
     }
 
-    public void cancelar(Pedido pedido){
+    public boolean cancelar(Pedido pedido){
         /*
         *   No se puede cancelar un pedido ya cancelado.
         *
         * */
+        return false;
     }
 
     public String printPedidoState(Pedido pedido){
@@ -32,15 +35,17 @@ public class Cancelado implements EstadoPedido{
         return message;
     }
 
-    public void estadoAnterior(Pedido pedido){
+    public boolean estadoAnterior(Pedido pedido){
         /*
         *   No se puede volver a un estado anterior.
         * */
+        return false;
     };
 
-    public void procesar(Pedido pedido){
+    public boolean procesar(Pedido pedido){
         /*
         *   No se puede procesar un pedido cancelado.
         * */
+        return false;
     };
 }

@@ -15,16 +15,19 @@ public class EsperandoConfirmacion implements EstadoPedido{
     private static final EstadosPedido estado = EstadosPedido.ESPERANDO_CONFIRMACION;
 
 
-    public void confirmar(Pedido pedido) {
+    public boolean confirmar(Pedido pedido) {
         siguienteEstado(pedido);
+        return true;
     }
 
-    public void siguienteEstado(Pedido pedido) {
+    public boolean siguienteEstado(Pedido pedido) {
         pedido.setEstado(EstadosPedido.PROCESANDO);
+        return true;
     }
 
-    public void cancelar(Pedido pedido){
+    public boolean cancelar(Pedido pedido){
         pedido.setEstado(EstadosPedido.CANCELADO);
+        return true;
     }
 
     public String printPedidoState(Pedido pedido){
@@ -32,11 +35,17 @@ public class EsperandoConfirmacion implements EstadoPedido{
         logger.log(message);
         return message;
     }
-    public void estadoAnterior(Pedido pedido){
+    public boolean estadoAnterior(Pedido pedido){
         /*
         *   No se puede volver al estado anterior
         * */
+        return false;
     };
-    public void procesar(Pedido pedido){};
+    public boolean procesar(Pedido pedido){
+        /*
+        *   No se puede procesar un pedido en estado de espera
+        * */
+        return false;
+    };
 
 }

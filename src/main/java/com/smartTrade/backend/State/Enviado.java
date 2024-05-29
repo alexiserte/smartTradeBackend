@@ -4,30 +4,37 @@ import com.smartTrade.backend.Models.Pedido;
 
 public class Enviado implements EstadoPedido{
 
-    public void confirmar(Pedido pedido) {
+    public boolean confirmar(Pedido pedido) {
         /*
          *  No se puede confirmar un pedido enviado.
          * */
+        return false;
     }
 
     @Override
-    public void siguienteEstado(Pedido pedido) {
+    public boolean siguienteEstado(Pedido pedido) {
         pedido.setEstado(EstadosPedido.EN_REPARTO);
+        return true;
     }
 
     @Override
-    public void estadoAnterior(Pedido pedido) {
+    public boolean estadoAnterior(Pedido pedido) {
         pedido.setEstado(EstadosPedido.PROCESANDO);
+        return true;
     }
 
     @Override
-    public void procesar(Pedido pedido) {
-
+    public boolean procesar(Pedido pedido) {
+        /*
+         *  No se puede procesar un pedido enviado.
+         * */
+        return false;
     }
 
     @Override
-    public void cancelar(Pedido pedido) {
+    public boolean cancelar(Pedido pedido) {
         pedido.setEstado(EstadosPedido.CANCELADO);
+        return true;
     }
 
     @Override
