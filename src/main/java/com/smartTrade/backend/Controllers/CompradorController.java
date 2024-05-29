@@ -204,7 +204,7 @@ public class CompradorController {
         return res;
     }
 
-    @PutMapping("/comprador/carrtio-compra/mover-a-guardar-mas-tarde/")
+    @PutMapping("/comprador/carrito-compra/mover-a-guardar-mas-tarde/")
     public ResponseEntity<?> moverAGuardarMasTarde(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
         if(!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")){
             ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
