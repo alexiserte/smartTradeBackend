@@ -3,9 +3,11 @@ package com.smartTrade.backend.Services;
 import com.smartTrade.backend.DAO.Carrito_CompraDAO;
 import com.smartTrade.backend.DAO.GuardarMasTardeDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Service
 public class GuardarMasTardeServices {
 
     @Autowired
