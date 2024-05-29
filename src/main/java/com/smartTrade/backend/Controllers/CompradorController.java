@@ -3,6 +3,7 @@ package com.smartTrade.backend.Controllers;
 import java.util.HashMap;
 
 import com.smartTrade.backend.Facade.CarritoCompraFachada;
+import com.smartTrade.backend.Facade.GuardarMasTardeFachada;
 import com.smartTrade.backend.Facade.ListaDeDeseosFachada;
 import com.smartTrade.backend.Logger.Logger;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,9 @@ public class CompradorController {
 
     @Autowired
     ListaDeDeseosFachada listaDeDeseosFachada;
+
+    @Autowired
+    GuardarMasTardeFachada guardarMasTardeFachada;
 
     private Logger logger = Logger.getInstance();
 
@@ -147,6 +151,44 @@ public class CompradorController {
     public ResponseEntity<?> getPedidos(@RequestParam(value = "nickname", required = true) String nickname, HttpServletRequest request) {
         ResponseEntity<?> res = mediador.pedidosRealizadosPorUnUsuario(nickname);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+    @GetMapping("/comprador/guardar-mas-tarde/")
+    public ResponseEntity<?> getGuardarMasTarde(@RequestParam(value = "userNickname", required = true) String identifier, HttpServletRequest request) {
+        ResponseEntity<?> res = guardarMasTardeFachada.readOne(identifier);
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+    @PostMapping("/comprador/guardar-mas-tarde/")
+    public ResponseEntity<?> addProductToGuardarMasTardeList(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
+        if(!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")){
+            ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
+            logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
+            return res;
+        }
+        ResponseEntity<?> res = guardarMasTardeFachada.insertarProducto(body);
+        logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+    @DeleteMapping("/comprador/guardar-mas-tarde/")
+    public ResponseEntity<?> deleteProductFromGuardarMasTardeList(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
+        if(!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")){
+            ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
+            logger.logRequestAndResponse(HttpMethod.DELETE, request.getRequestURI() + request.getQueryString(), res.toString());
+            return res;
+        }
+        ResponseEntity<?> res = guardarMasTardeFachada.deleteProducto(body);
+        logger.logRequestAndResponse(HttpMethod.DELETE, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+    @DeleteMapping("/comprador/guardar-mas-tarde/vaciar/")
+    public ResponseEntity<?> vaciarGuardarMasTardeList(@RequestParam(value = "userNickname", required = true) String userNickname, HttpServletRequest request) {
+        ResponseEntity<?> res = guardarMasTardeFachada.vaciarLista(userNickname);
+        logger.logRequestAndResponse(HttpMethod.DELETE, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
 

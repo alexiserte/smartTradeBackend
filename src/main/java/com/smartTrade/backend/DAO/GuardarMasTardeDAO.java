@@ -26,7 +26,10 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
         database.update("INSERT INTO Guardar_Mas_Tarde(id_comprador) VALUES (?)",id_comprador);
     }
 
-    public void insertarProducto(String userNickname,String productName,String vendorName){
+    public void insertarProducto(Map<String,?> args){
+        String userNickname = (String) args.get("userNickname");
+        String productName = (String) args.get("productName");
+        String vendorName = (String) args.get("vendorName");
         int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
         int id_producto = database.queryForObject("SELECT id_producto FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
@@ -34,7 +37,10 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
         database.update("INSERT INTO Productos_Guardar_Mas_Tarde(id_producto,id_guardar_mas_tarde,id_vendedor) VALUES (?,?,?)",id_producto,id_guardar_mas_tarde,id_vendedor);
     }
 
-    public void deleteProducto(String userNickname,String productName,String vendorName){
+    public void deleteProducto(Map<String,?> args){
+        String userNickname = (String) args.get("userNickname");
+        String productName = (String) args.get("productName");
+        String vendorName = (String) args.get("vendorName");
         int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
         int id_producto = database.queryForObject("SELECT id_producto FROM Producto WHERE nombre = ?", Integer.class, productName);
         int id_vendedor = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, vendorName);
@@ -42,7 +48,8 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
         database.update("DELETE FROM Productos_Guardar_Mas_Tarde WHERE id_producto = ? AND id_guardar_mas_tarde = ? AND id_vendedor = ?",id_producto,id_guardar_mas_tarde,id_vendedor);
     }
 
-    public void vaciarLista(String userNickname){
+    public void vaciarLista(Map<String,?> args){
+        String userNickname = (String) args.get("userNickname");
         int id_comprador = database.queryForObject("SELECT id FROM Usuario WHERE nickname = ?", Integer.class, userNickname);
         int id_guardar_mas_tarde = database.queryForObject("SELECT id FROM Guardar_Mas_Tarde WHERE id_comprador = ?", Integer.class, id_comprador);
         database.update("DELETE FROM Productos_Guardar_Mas_Tarde WHERE id_guardar_mas_tarde = ?",id_guardar_mas_tarde);
