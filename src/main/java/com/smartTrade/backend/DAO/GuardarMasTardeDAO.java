@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+import com.smartTrade.backend.Mappers.ProductMapper;
 import com.smartTrade.backend.Models.Producto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -66,7 +67,7 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
         List<Integer> id_productos = database.queryForList("SELECT id_producto FROM Productos_Guardar_Mas_Tarde WHERE id_guardar_mas_tarde = ?", Integer.class, id_guardar_mas_tarde);
         List<Producto> productos = new ArrayList<>();
         for(Integer id_product : id_productos){
-            Producto producto = database.queryForObject("SELECT nombre, id_categoria, descripcion, id_imagen, fecha_añadido, validado, huella_ecologica, stock, etiqueta_inteligente FROM Producto WHERE id = ?", Producto.class, id_product);
+            Producto producto = database.queryForObject("SELECT nombre, id_categoria, descripcion, id_imagen, fecha_añadido, validado, huella_ecologica, stock, etiqueta_inteligente FROM Producto WHERE id = ?", new ProductMapper(), id_product);
             productos.add(producto);
         }
 
