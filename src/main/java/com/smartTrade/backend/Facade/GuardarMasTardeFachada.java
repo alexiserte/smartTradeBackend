@@ -3,13 +3,12 @@ package com.smartTrade.backend.Facade;
 import com.smartTrade.backend.Services.GuardarMasTardeServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-public class GuardarMasTardeFachada {
-
-    @Autowired
-    private GuardarMasTardeServices guardarMasTardeServices;
+@Component
+public class GuardarMasTardeFachada extends Fachada{
 
     public ResponseEntity<?> create(String compradorName){
         try {
