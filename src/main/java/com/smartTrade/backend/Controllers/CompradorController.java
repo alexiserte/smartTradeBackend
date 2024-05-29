@@ -192,4 +192,28 @@ public class CompradorController {
         return res;
     }
 
+    @PutMapping("/comprador/guardar-mas-tarde/mover-a-carrito/")
+    public ResponseEntity<?> moverGuardarMasTardeACarrito(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
+        if(!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")){
+            ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
+            logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
+            return res;
+        }
+        ResponseEntity<?> res = guardarMasTardeFachada.moverGuardadoMasTardeACarrito(body);
+        logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+    @PutMapping("/comprador/carrtio-compra/mover-a-guardar-mas-tarde/")
+    public ResponseEntity<?> moverAGuardarMasTarde(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
+        if(!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")){
+            ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
+            logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
+            return res;
+        }
+        ResponseEntity<?> res = carritoCompraFachada.moverCarritoAGuardarMasTarde(body);
+        logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
 }

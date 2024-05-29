@@ -12,32 +12,64 @@ public class GuardarMasTardeFachada {
     private GuardarMasTardeServices guardarMasTardeServices;
 
     public ResponseEntity<?> create(String compradorName){
-        guardarMasTardeServices.create(compradorName);
-        return ResponseEntity.ok().build();
+        try {
+            guardarMasTardeServices.create(compradorName);
+            return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     public ResponseEntity<?> insertarProducto(Map<String,?> args){
-        String userNickname = (String) args.get("userNickname");
-        String productName = (String) args.get("productName");
-        String vendorName = (String) args.get("vendorName");
-        guardarMasTardeServices.insertarProducto(userNickname,productName,vendorName);
-        return ResponseEntity.ok().build();
+        try {
+            String userNickname = (String) args.get("userNickname");
+            String productName = (String) args.get("productName");
+            String vendorName = (String) args.get("vendorName");
+            guardarMasTardeServices.insertarProducto(userNickname, productName, vendorName);
+            return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     public ResponseEntity<?> deleteProducto(Map<String,?> args){
+        try{
         String userNickname = (String) args.get("userNickname");
         String productName = (String) args.get("productName");
         String vendorName = (String) args.get("vendorName");
         guardarMasTardeServices.deleteProducto(userNickname,productName,vendorName);
         return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     public ResponseEntity<?> vaciarLista(String userNickname){
-        guardarMasTardeServices.vaciarLista(userNickname);
-        return ResponseEntity.ok().build();
+        try {
+            guardarMasTardeServices.vaciarLista(userNickname);
+            return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     public ResponseEntity<?> readOne(String userNickname) {
-        return ResponseEntity.ok(guardarMasTardeServices.readOne(userNickname));
+        try {
+            return ResponseEntity.ok(guardarMasTardeServices.readOne(userNickname));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity<?> moverGuardadoMasTardeACarrito(Map<String,?> args){
+        try {
+            String userNickname = (String) args.get("userNickname");
+            String productName = (String) args.get("productName");
+            String vendorName = (String) args.get("vendorName");
+            guardarMasTardeServices.moverGuardadoMasTardeACarrito(userNickname, productName, vendorName);
+            return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

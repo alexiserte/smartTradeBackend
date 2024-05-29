@@ -15,6 +15,7 @@ import com.smartTrade.backend.Models.Comprador;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class CarritoCompraFachada extends Fachada{
@@ -186,6 +187,27 @@ public class CarritoCompraFachada extends Fachada{
             }
         }catch(EmptyResultDataAccessException e){
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<?> vaciarCarrito(String userNickname){
+        try {
+            carritoCompraServices.vaciarCarrito(userNickname);
+            return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity<?> moverCarritoAGuardarMasTarde(Map<String,?> args){
+        try {
+            String userNickname = (String) args.get("userNickname");
+            String productName = (String) args.get("productName");
+            String vendorName = (String) args.get("vendorName");
+            carritoCompraServices.moverProductosDeCarritoAGuardarMasTarde(userNickname, productName, vendorName);
+            return ResponseEntity.ok().build();
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }

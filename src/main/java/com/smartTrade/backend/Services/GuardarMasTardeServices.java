@@ -1,5 +1,6 @@
 package com.smartTrade.backend.Services;
 
+import com.smartTrade.backend.DAO.Carrito_CompraDAO;
 import com.smartTrade.backend.DAO.GuardarMasTardeDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,6 +10,9 @@ public class GuardarMasTardeServices {
 
     @Autowired
     private GuardarMasTardeDAO guardarMasTardeDAO;
+
+    @Autowired
+    private Carrito_CompraDAO carritoCompraDAO;
 
     public void create(String compradorName){
         guardarMasTardeDAO.create(Map.of("compradorName",compradorName));
@@ -28,5 +32,10 @@ public class GuardarMasTardeServices {
 
     public Object readOne(String userNickname) {
        return guardarMasTardeDAO.readOne(Map.of("compradorName",userNickname));
+    }
+
+    public void moverGuardadoMasTardeACarrito(String userNickname, String productName, String vendorName){
+        carritoCompraDAO.insertarProduct(productName,vendorName,userNickname);
+        deleteProducto(userNickname,productName,vendorName);
     }
 }
