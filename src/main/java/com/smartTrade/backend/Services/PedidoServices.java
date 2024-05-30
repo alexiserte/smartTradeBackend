@@ -36,7 +36,7 @@ public class PedidoServices {
 
     public void createNewPedido(HashMap<String, ?> body){
         String nickname = (String) body.get("nickname");
-        String productos = (String) body.get("productos");
+        ArrayList<Producto> productos = (ArrayList<Producto>) body.get("productos");
         String precio_total = (String) body.get("precio_total");
         pedidoDAO.create(Map.of("nickname", nickname, "productos", productos, "precio_total", precio_total));
     }
