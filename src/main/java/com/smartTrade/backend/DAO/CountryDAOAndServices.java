@@ -56,7 +56,7 @@ public class CountryDAOAndServices {
 
         for(String country : countries){
             List<String> validCities = new ArrayList<>();
-            List<String> cities = CountriesMethods.getCitiesByCountry(country, null);
+            List<String> cities = CountriesMethods.getCitiesByCountry(country, 100);
             System.out.println(country);
             for(String city : cities){
                 try {
