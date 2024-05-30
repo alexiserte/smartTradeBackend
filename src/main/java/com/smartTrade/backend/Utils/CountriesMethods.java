@@ -396,9 +396,4 @@ public class CountriesMethods {
         res = StringComparison.quitarAcentos(res);
         return res;
     }
-
-
-    public static void main(String[] args) {
-        System.out.println(getPointBetweenCities("Xirivella","España","Gandía","España", 1));
-    }
 }

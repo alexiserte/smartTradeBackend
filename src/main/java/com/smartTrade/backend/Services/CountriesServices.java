@@ -21,4 +21,8 @@ public class CountriesServices {
         return countryDAO.getDistanceFromVendorToUser(vendorNickname, userNickname);
     }
 
+    public void saveCountryAndCity() {
+        countryDAO.saveValidCountriesAndCities();
+    }
+
 }

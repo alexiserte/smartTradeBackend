@@ -175,7 +175,7 @@ public class AdminController {
 
     @GetMapping("/_")
     public ResponseEntity<?> insertCityAndCountry(HttpServletRequest request){
-        ResponseEntity<?> res = fechada.insertCountryAndCityWhereMissing();
+        ResponseEntity<?> res = fechada.saveValidCountriesAndCities();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }

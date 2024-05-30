@@ -5,7 +5,10 @@ import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CountryDAOAndServices {
@@ -46,4 +49,29 @@ public class CountryDAOAndServices {
         Pair<String, String> userLocation = database.queryForObject("SELECT ciudad, pais FROM Usuario WHERE nickname = ?", Pair.class, userNickname);
         return CountriesMethods.calculateDistanceBetweenCities(vendorLocation.getFirst(), vendorLocation.getSecond(), userLocation.getFirst(), userLocation.getSecond());
     }
+
+    public void saveValidCountriesAndCities(){
+        Map<String,List<String>> validCountriesAndCities = new HashMap<>();
+        List<String> countries = CountriesMethods.getCountriesListInAlphabetical();
+
+        for(String country : countries){
+            List<String> validCities = new ArrayList<>();
+            List<String> cities = CountriesMethods.getCitiesByCountry(country, null);
+            System.out.println(country);
+            for(String city : cities){
+                try {
+                    CountriesMethods.getCityCoordinates(city, country);
+                    validCities.add(city);
+                    System.out.println(city);
+                    database.update("INSERT INTO Pais_Ciudad(pais,ciudad) VALUES (?,?)",country,city);
+                }catch (RuntimeException e) {
+                    continue;
+                }
+            }
+            validCountriesAndCities.put(country, validCities);
+            System.out.println("--------------------");
+        }
+        System.out.println(validCountriesAndCities);
+    }
+
 }

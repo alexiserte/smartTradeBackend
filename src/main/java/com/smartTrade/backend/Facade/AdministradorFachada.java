@@ -342,5 +342,14 @@ public class AdministradorFachada extends Fachada {
         }
     }
 
+    public ResponseEntity<?> saveValidCountriesAndCities(){
+        try{
+            countriesServices.saveCountryAndCity();
+            return new ResponseEntity<>("Países y ciudades guardados correctamente",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al guardar países y ciudades: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
