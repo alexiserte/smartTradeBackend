@@ -4,7 +4,11 @@ import java.util.Map;
 import java.util.ArrayList;
 
 import com.smartTrade.backend.Mappers.ProductMapper;
+import com.smartTrade.backend.Mappers.ProductoCarritoCompraMapper;
+import com.smartTrade.backend.Mappers.ProductoGuardarMasTardeMapper;
 import com.smartTrade.backend.Models.Producto;
+import com.smartTrade.backend.Models.ProductoCarrito;
+import com.smartTrade.backend.Models.ProductoGuardarMasTarde;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -75,6 +79,21 @@ public class GuardarMasTardeDAO implements DAOInterface<Object>{
 
     }
     public List<Object> readAll() {return null;}
+
+
+    public List<ProductoGuardarMasTarde> getGuardarMasTarde(String userNickname){
+        return database.query("SELECT id_guardar_mas_tarde,id_producto, id_vendedor FROM Productos_Guardar_Mas_Tarde WHERE id_guardar_mas_tarde IN(SELECT id_guardar_mas_tarde FROM Guardar_Mas_Tarde WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?))", new ProductoGuardarMasTardeMapper(), userNickname);
+    }
+
+    public double getTotalPrice(String userName) {
+        List<ProductoGuardarMasTarde> productos = database.query("SELECT id_guardar_mas_tarde,id_producto, id_vendedor FROM Productos_Guardar_Mas_Tarde WHERE id_guardar_mas_tarde IN(SELECT id_guardar_mas_tarde FROM Guardar_Mas_Tarde WHERE id_comprador = ANY(SELECT id FROM Usuario WHERE nickname = ?))", new ProductoGuardarMasTardeMapper(), userName);
+        double total = 0;
+        for(ProductoGuardarMasTarde producto : productos){
+            double precioProducto = database.queryForObject("SELECT precio FROM Vendedores_Producto WHERE id_vendedor = ? AND id_producto = ?", Double.class, producto.getId_vendedor(),producto.getId_producto());
+            total += precioProducto;
+        }
+        return total;
+    }
     
 
 }
