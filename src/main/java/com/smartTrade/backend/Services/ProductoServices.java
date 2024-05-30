@@ -176,6 +176,14 @@ public class ProductoServices {
         return precioDAO.getStats(productName);
     }
 
+    public void addValoracion(int id_pedido, String productName, int valoracion){
+        productoDAO.addValoracion(id_pedido, productName, valoracion);
+    }
+
+    public int getValoracion(String productName){
+        return productoDAO.getValoracion(productName);
+    }
+
 
 
 }

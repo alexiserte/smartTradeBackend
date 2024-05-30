@@ -1,6 +1,7 @@
 package com.smartTrade.backend.Services;
 
 import com.smartTrade.backend.DAO.CompradorDAO;
+import com.smartTrade.backend.DAO.ProductoDAO;
 import com.smartTrade.backend.Models.Comprador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,7 @@ public class CompradorServices {
     public Comprador getCompradorWithID(int id_usuario){
         return compradorDAO.getCompradorWithID(id_usuario);
     }
+
+
 
 }
