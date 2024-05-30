@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.util.Pair;
 import com.smartTrade.backend.Models.Pedido;
 import com.smartTrade.backend.Services.CompradorServices;
 import com.smartTrade.backend.Services.PedidoServices;
@@ -163,4 +164,16 @@ public class CompradorFachada extends Fachada {
             return new ResponseEntity<>("Error al obtener los productos del pedido: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public ResponseEntity<?> createNewPedido (HashMap<String, ?> body){
+        try{
+            pedidoServices.createNewPedido(body);
+            return new ResponseEntity<>("Producto creado correctamente",HttpStatus.CREATED);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>("--------",HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al crear el pedido: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

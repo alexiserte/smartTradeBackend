@@ -32,7 +32,12 @@ public class PedidoServices {
     @Autowired
     VendedorDAO vendedorDAO;
 
-    public void createNewPedido(String nickname, Map<Pair<Producto, String>, Integer> productos,double precio_total){
+    //String nickname, Map<Pair<Producto, String>, Integer> productos,double precio_total
+
+    public void createNewPedido(HashMap<String, ?> body){
+        String nickname = (String) body.get("nickname");
+        Map<Pair<Producto, String>, Integer> productos = (Map<Pair<Producto, String>, Integer>) body.get("productos");
+        double precio_total = (double) body.get("precio_total");
         pedidoDAO.create(Map.of("nickname", nickname, "productos", productos, "precio_total", precio_total));
     }
 
