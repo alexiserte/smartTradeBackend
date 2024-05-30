@@ -172,7 +172,7 @@ public class CompradorController {
 
 
     @GetMapping("/comprador/guardar-mas-tarde/")
-    public ResponseEntity<?> getGuardarMasTarde(@RequestParam(value = "userNickname", required = true) String identifier, HttpServletRequest request) {
+    public ResponseEntity<?> getGuardarMasTarde(@RequestParam(value = "identifier", required = true) String identifier, HttpServletRequest request) {
         ResponseEntity<?> res = guardarMasTardeFachada.getGuardarMasTarde(identifier);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
