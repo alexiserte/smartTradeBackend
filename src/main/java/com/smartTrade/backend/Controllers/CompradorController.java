@@ -1,13 +1,16 @@
 package com.smartTrade.backend.Controllers;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.smartTrade.backend.Facade.CarritoCompraFachada;
 import com.smartTrade.backend.Facade.GuardarMasTardeFachada;
 import com.smartTrade.backend.Facade.ListaDeDeseosFachada;
 import com.smartTrade.backend.Logger.Logger;
+import com.smartTrade.backend.Models.Producto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -153,6 +156,20 @@ public class CompradorController {
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
+
+    @PostMapping("/comprador/pedido/")
+    public ResponseEntity<?> createPedido(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
+        if (!body.containsKey("nickname") || !body.containsKey("productos") || !body.containsKey("precio_total")){
+            ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
+            logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
+            return res;
+        }
+        ResponseEntity<?> res = mediador.createNewPedido(body);
+        logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+
 
     @GetMapping("/comprador/guardar-mas-tarde/")
     public ResponseEntity<?> getGuardarMasTarde(@RequestParam(value = "userNickname", required = true) String identifier, HttpServletRequest request) {
