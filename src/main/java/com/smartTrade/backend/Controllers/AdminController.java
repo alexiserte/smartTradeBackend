@@ -187,5 +187,19 @@ public class AdminController {
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
+
+    @GetMapping("/paises")
+    public ResponseEntity<?> getValidCountries(HttpServletRequest request){
+        ResponseEntity<?> res = fechada.getCountries();
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+    @GetMapping("/pais/ciudades/")
+    public ResponseEntity<?> getValidCities(@RequestParam(value = "country", required = true) String country, HttpServletRequest request){
+        ResponseEntity<?> res = fechada.getCities(country);
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
 }
 

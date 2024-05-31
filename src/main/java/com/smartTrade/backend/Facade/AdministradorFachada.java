@@ -351,5 +351,21 @@ public class AdministradorFachada extends Fachada {
         }
     }
 
+    public ResponseEntity<?> getCountries(){
+        try{
+            return new ResponseEntity<>(countriesServices.getValidCountries(),HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener los países: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<?> getCities(String country){
+        try{
+            return new ResponseEntity<>(countriesServices.getValidCities(country),HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al obtener las ciudades: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

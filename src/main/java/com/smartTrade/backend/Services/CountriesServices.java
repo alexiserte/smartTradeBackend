@@ -7,6 +7,8 @@ import com.smartTrade.backend.Utils.CountriesMethods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CountriesServices {
 
@@ -23,6 +25,14 @@ public class CountriesServices {
 
     public void saveCountryAndCity() {
         countryDAO.saveValidCountriesAndCities();
+    }
+
+    public List<String> getValidCountries() {
+        return countryDAO.getListaDePaises();
+    }
+
+    public List<String> getValidCities(String country) {
+        return countryDAO.getListaDeCiudades(country);
     }
 
 }

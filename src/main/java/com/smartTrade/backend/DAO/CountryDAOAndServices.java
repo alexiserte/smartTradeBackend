@@ -43,6 +43,15 @@ public class CountryDAOAndServices {
         return Pair.of(ciudad, pais);
     }
 
+    public List<String> getListaDePaises(){
+        List<String> paises = database.queryForList("SELECT DISTINCT pais FROM Pais_Ciudad", String.class);
+        return paises;
+    }
+
+    public List<String> getListaDeCiudades(String pais){
+        List<String> ciudades = database.queryForList("SELECT ciudad FROM Pais_Ciudad WHERE pais = ?", String.class, pais);
+        return ciudades;
+    }
 
     public double getDistanceFromVendorToUser(String vendorNickname, String userNickname) {
         Pair<String, String> vendorLocation = database.queryForObject("SELECT ciudad, pais FROM Usuario WHERE nickname = ?", Pair.class, vendorNickname);
