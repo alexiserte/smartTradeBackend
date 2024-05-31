@@ -45,7 +45,13 @@ public class CountryDAOAndServices {
 
     public List<String> getListaDePaises(){
         List<String> paises = database.queryForList("SELECT DISTINCT pais FROM Pais_Ciudad", String.class);
-        return paises;
+        List<String> res = new ArrayList<>();
+        for(String pais : paises){
+            if(!pais.equals("")){
+                res.add(pais + " " + CountriesMethods.getFlagEmojiFromCountryName(pais));
+            }
+        }
+        return res;
     }
 
     public List<String> getListaDeCiudades(String pais){

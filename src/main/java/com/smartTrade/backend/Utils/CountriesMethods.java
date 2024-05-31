@@ -297,6 +297,18 @@ public class CountriesMethods {
         return new String(Character.toChars(firstChar)) + new String(Character.toChars(secondChar));
     }
 
+    public static String getFlagEmojiFromCountryName(String countryName) {
+        String countryCode = "";
+        if(getCountriesAndCodesEnglish().containsKey(countryName)){
+            countryCode = getCountriesAndCodesEnglish().get(countryName).getFirst();
+        }else if(isSpanish(countryName)){
+            countryCode = getCountriesAndCodesSpanish().get(countryName).getFirst();
+        }else{
+            throw new RuntimeException("Country not found");
+        }
+        return getFlagEmoji(countryCode);
+    }
+
     private static String makeARequest(String urlBase){
         URL url;
         try {
