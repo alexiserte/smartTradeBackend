@@ -133,4 +133,20 @@ public class ProductoController {
         return res;
     }
 
+    @GetMapping("/producto/valroacion/")
+    public ResponseEntity<?> getValroacion(@RequestParam(name = "productName", required = true) String productName, HttpServletRequest request){
+        ResponseEntity<?> res = fachada.getValoracion(productName);
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
+    @PutMapping("/producto/valoracion/")
+    public ResponseEntity<?> addValoracion(@RequestParam(name = "id_pedido", required = true) int id_pedido,
+                                           @RequestParam(name = "productName", required = true) String productName,
+                                           @RequestParam(name = "valoracion", required = true) int valoracion, HttpServletRequest request){
+        ResponseEntity<?> res = fachada.addValoracion(id_pedido,productName,valoracion);
+        logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
+        return res;
+    }
+
 }

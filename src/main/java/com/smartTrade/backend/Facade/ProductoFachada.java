@@ -401,6 +401,21 @@ public class ProductoFachada extends Fachada {
         return new ResponseEntity<>(stock, HttpStatus.OK);
     }
 
+    public ResponseEntity<?> addValoracion (int id_pedido, String productName, int valoracion){
+        try{
+            productoServices.addValoracion(id_pedido, productName, valoracion);
+            return new ResponseEntity<>("Valoración actualizada correctamente",HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error al actualizar la valoración: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<?> getValoracion(String productName) {
+        int valoracion = productoServices.getValoracion(productName);
+        return new ResponseEntity<>(valoracion, HttpStatus.OK);
+    }
+
+
 
 }
 

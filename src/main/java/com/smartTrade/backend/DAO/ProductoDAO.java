@@ -354,5 +354,16 @@ public class ProductoDAO implements DAOInterface<Object> {
         return database.queryForObject("SELECT stock_vendedor FROM Vendedores_Producto WHERE id_producto = ? AND id_vendedor = ?", Integer.class,id_producto,id_vendedor);
     }
 
+    public void addValoracion(int id_pedido, String productName, int valoracion){
+        int id_producto = getIDFromName(productName);
+        database.update("UPDATE Detalle_Pedido SET valoracion = ? WHERE id_producto = ? AND id_pedido = ?",
+                valoracion, id_producto, id_pedido);
+    }
+
+    public int getValoracion(String productName){
+        int id_producto = getIDFromName(productName);
+        return database.queryForObject("SELECT valoracion_media FROM Producto WHERE id = ?", Integer.class,id_producto);
+    }
+
 
 }
