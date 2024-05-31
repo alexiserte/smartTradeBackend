@@ -133,7 +133,7 @@ public class ProductoController {
         return res;
     }
 
-    @GetMapping("/producto/valroacion/")
+    @GetMapping("/producto/valoracion/")
     public ResponseEntity<?> getValroacion(@RequestParam(name = "productName", required = true) String productName, HttpServletRequest request){
         ResponseEntity<?> res = fachada.getValoracion(productName);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
