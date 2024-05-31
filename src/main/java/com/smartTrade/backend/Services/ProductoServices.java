@@ -180,7 +180,7 @@ public class ProductoServices {
         productoDAO.addValoracion(id_pedido, productName, valoracion);
     }
 
-    public int getValoracion(String productName){
+    public double getValoracion(String productName){
         return productoDAO.getValoracion(productName);
     }
 
