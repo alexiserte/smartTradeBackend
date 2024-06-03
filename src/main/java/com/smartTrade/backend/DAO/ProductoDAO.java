@@ -360,7 +360,7 @@ public class ProductoDAO implements DAOInterface<Object> {
                 valoracion, id_producto, id_pedido);
     }
 
-    public int getValoracion(String productName){
+    public double getValoracion(String productName){
         int id_producto = getIDFromName(productName);
         return database.queryForObject("SELECT valoracion_media FROM Producto WHERE id = ?", Integer.class,id_producto);
     }

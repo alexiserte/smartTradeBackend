@@ -411,7 +411,7 @@ public class ProductoFachada extends Fachada {
     }
 
     public ResponseEntity<?> getValoracion(String productName) {
-        int valoracion = productoServices.getValoracion(productName);
+        double valoracion = productoServices.getValoracion(productName);
         return new ResponseEntity<>(valoracion, HttpStatus.OK);
     }
 
