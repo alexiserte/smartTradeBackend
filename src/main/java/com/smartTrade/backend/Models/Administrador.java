@@ -2,8 +2,8 @@ package com.smartTrade.backend.Models;
 import java.sql.Date;
 public class Administrador extends Usuario {
 
-    public Administrador(String nickname, String password, String direccion, String correo) {
-        super(nickname, password, direccion, correo);
+    public Administrador(String nickname, String password, String direccion, String correo, String country, String city) {
+        super(nickname, password, direccion, correo, country, city);
     }
 
     public Administrador() {}
@@ -42,6 +42,22 @@ public class Administrador extends Usuario {
 
     public Date getFecha_registro() {
         return super.getFecha_registro();
+    }
+
+    public String getCountry() {
+        return super.getCountry();
+    }
+
+    public void setCountry(String country) {
+        super.setCountry(country);
+    }
+
+    public String getCity() {
+        return super.getCity();
+    }
+
+    public void setCity(String city) {
+        super.setCity(city);
     }
     
 }

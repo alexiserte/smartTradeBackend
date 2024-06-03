@@ -16,8 +16,8 @@ public class CompradorServices {
     @Autowired
     private CompradorDAO compradorDAO;
 
-    public void createNewComprador(String nombre, String password, String correo, String direccion){
-        compradorDAO.create(Map.of("nickname",nombre,"password",password,"correo",correo,"direccion",direccion));
+    public void createNewComprador(String nombre, String password, String correo, String direccion, String pais, String ciudad){
+        compradorDAO.create(Map.of("nickname",nombre,"password",password,"correo",correo,"direccion",direccion, "pais",pais,"ciudad",ciudad));
     }
 
     public void updateComprador(String nickname, Map atributos){

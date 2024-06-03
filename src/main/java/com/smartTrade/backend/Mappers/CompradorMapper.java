@@ -18,7 +18,9 @@ public class CompradorMapper implements RowMapper<Comprador> {
         String correo = (rs.getString("correo"));
         int puntos_responsabilidad = (rs.getInt("puntos_responsabilidad"));
         java.sql.Date fecha = (rs.getDate("fecha_registro"));
-        Comprador comprador = (Comprador) UserFactory.createUser(User_Types.COMPRADOR, nickname, password, direccion, correo);
+        String country = (rs.getString("pais"));
+        String city = (rs.getString("ciudad"));
+        Comprador comprador = (Comprador) UserFactory.createUser(User_Types.COMPRADOR, nickname, password, direccion, correo, country, city);
         comprador.setFecha_registro(fecha);
         comprador.setpuntosResponsabilidad(puntos_responsabilidad);
         return comprador;

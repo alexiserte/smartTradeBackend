@@ -272,11 +272,13 @@ public class AdministradorFachada extends Fachada {
         String password = body.get("user_password").toString();
         String correo = body.get("correo").toString();
         String direccion = body.get("direccion").toString();
+        String pais = body.get("pais").toString();
+        String ciudad = body.get("ciudad").toString();
         try {
             Administrador administrador = adminServices.readUser(nickname);
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
         } catch (EmptyResultDataAccessException e) {
-            adminServices.createNewUser(nickname, password, correo, direccion);
+            adminServices.createNewUser(nickname, password, correo, direccion, pais, ciudad);
             return new ResponseEntity<>("Administrador creado correctamente", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al crear el usuario: " + e.getLocalizedMessage(),

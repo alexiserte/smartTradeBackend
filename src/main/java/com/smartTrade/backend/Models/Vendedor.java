@@ -4,8 +4,8 @@ import java.sql.Date;
 public class Vendedor extends Usuario{
 
 
-    public Vendedor(String nickname, String password, String direccion, String correo) {
-        super(nickname, password, direccion, correo);
+    public Vendedor(String nickname, String password, String direccion, String correo, String country, String city) {
+        super(nickname, password, direccion, correo, country, city);
     }
 
     public Vendedor(){}
@@ -46,5 +46,20 @@ public class Vendedor extends Usuario{
         return super.getFecha_registro();
     }
 
+    public String getCountry() {
+        return super.getCountry();
+    }
+
+    public void setCountry(String country) {
+        super.setCountry(country);
+    }
+
+    public String getCity() {
+        return super.getCity();
+    }
+
+    public void setCity(String city) {
+        super.setCity(city);
+    }
     
 }

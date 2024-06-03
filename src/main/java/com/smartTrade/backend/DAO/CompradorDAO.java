@@ -40,10 +40,11 @@ public class CompradorDAO implements DAOInterface<Comprador>{
         String password = (String) args.get("password");
         String correo = (String) args.get("correo");
         String direccion = (String) args.get("direccion");
-
+        String pais = (String) args.get("pais");
+        String ciudad = (String) args.get("ciudad");
         Date fechaSQL = DateMethods.getTodayDate();
 
-        database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?);", nickname, correo, password, direccion, fechaSQL);
+        database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro, pais,ciudad) VALUES (?, ?, ?, ?, ?,?,?);", nickname, correo, password, direccion, fechaSQL, pais, ciudad);
         database.update("INSERT INTO Comprador(id_usuario, puntos_responsabilidad) SELECT id, 0 FROM Usuario WHERE nickname = ?;", nickname);
         carritoCompraDAO.create(Map.of("compradorName",nickname));
         guardarMasTardeDAO.create(Map.of("compradorName",nickname));
@@ -52,11 +53,11 @@ public class CompradorDAO implements DAOInterface<Comprador>{
 
     public Comprador readOne(Map<String,?> args) {
         String identifier = (String) args.get("identifier");
-        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new CompradorMapper(), identifier, identifier);
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro,u.pais,u.ciudad, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new CompradorMapper(), identifier, identifier);
     }
 
     public List<Comprador> readAll() {
-        return database.query("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id", new CompradorMapper());
+        return database.query("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro,u.pais,u.ciudad, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id", new CompradorMapper());
 
     }
 
@@ -88,8 +89,15 @@ public class CompradorDAO implements DAOInterface<Comprador>{
             if ((atributos.get(key)).equals(compradorObject.getpuntosResponsabilidad())) {
                 iterator.remove();
             }
+        }else if (key.equals("pais")) {
+            if (atributos.get(key) == compradorObject.getCountry()) {
+                iterator.remove();
+            }
+        }else if (key.equals("ciudad")) {
+            if (atributos.get(key) == compradorObject.getCity()) {
+                iterator.remove();
+            }
         }
-
     }
 
     if (keys.isEmpty()) {
@@ -141,7 +149,7 @@ public class CompradorDAO implements DAOInterface<Comprador>{
     }
 
     public Comprador getCompradorWithID(int id_usuario){
-        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id AND u.id = ?", new CompradorMapper(), id_usuario);
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, u.pais,u.ciudad, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id AND u.id = ?", new CompradorMapper(), id_usuario);
     }
 
 }

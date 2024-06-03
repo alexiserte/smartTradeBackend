@@ -72,11 +72,13 @@ public class VendedorFachada extends Fachada{
         String password = (String) body.get("password");
         String correo = (String) body.get("correo");
         String direccion = (String) body.get("direccion");
+        String pais = (String) body.get("pais");
+        String ciudad = (String) body.get("ciudad");
         try{
             Vendedor vendedor = vendedorServices.readOneVendedor(nickname);
             return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);  
         }catch(EmptyResultDataAccessException e){
-            vendedorServices.createNewVendedor(nickname, password,correo,direccion);
+            vendedorServices.createNewVendedor(nickname, password,correo,direccion, pais, ciudad);
             return new ResponseEntity<>("Usuario creado correctamente",HttpStatus.CREATED);
         }
         catch(Exception e){

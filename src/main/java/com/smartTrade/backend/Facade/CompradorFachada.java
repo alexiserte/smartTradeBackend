@@ -62,12 +62,14 @@ public class CompradorFachada extends Fachada {
                                                               // "user_password"
         String correo = (String) body.get("correo");
         String direccion = (String) body.get("direccion");
+        String pais = (String) body.get("pais");
+        String ciudad = (String) body.get("ciudad");
         try {
             Comprador comprador = compradorServices.readOneComprador(nickname);
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
         } catch (EmptyResultDataAccessException e) {
             System.out.println(":)");
-            compradorServices.createNewComprador(nickname, password, correo, direccion);
+            compradorServices.createNewComprador(nickname, password, correo, direccion, pais, ciudad);
             return new ResponseEntity<>("Comprador creado correctamente", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al crear el usuario: " + e.getLocalizedMessage(),

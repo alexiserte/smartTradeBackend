@@ -16,7 +16,9 @@ public class VendedorMapper implements RowMapper<Vendedor> {
         String direccion = (rs.getString("direccion"));
         String correo = (rs.getString("correo"));
         java.sql.Date fecha = (rs.getDate("fecha_registro"));
-        Vendedor vendedor = (Vendedor) UserFactory.createUser(User_Types.VENDEDOR, nickname, password, direccion, correo);
+        String country = (rs.getString("pais"));
+        String city = (rs.getString("ciudad"));
+        Vendedor vendedor = (Vendedor) UserFactory.createUser(User_Types.VENDEDOR, nickname, password, direccion, correo, country, city);
         vendedor.setFecha_registro(fecha);
         return vendedor;
     }

@@ -14,8 +14,8 @@ public class VendedorServices {
     @Autowired
     private VendedorDAO vendedorDAO;
 
-    public void createNewVendedor(String nombre, String password, String correo, String direccion){
-        vendedorDAO.create(Map.of("nickname",nombre,"password",password,"correo",correo,"direccion",direccion));
+    public void createNewVendedor(String nombre, String password, String correo, String direccion, String pais, String ciudad){
+        vendedorDAO.create(Map.of("nickname",nombre,"password",password,"correo",correo,"direccion",direccion, "pais",pais,"ciudad",ciudad));
     }
 
     public void updateVendedor(String nickname, Map atributos){

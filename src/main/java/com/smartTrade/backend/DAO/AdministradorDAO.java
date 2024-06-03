@@ -26,22 +26,24 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
         String password = (String) args.get("password");
         String correo = (String) args.get("correo");
         String direccion = (String) args.get("direccion");
+        String pais = (String) args.get("pais");
+        String ciudad = (String) args.get("ciudad");
         Date fechaSQL = DateMethods.getTodayDate();
 
         database.update(
-                "INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?);",
-                nickname, correo, password, direccion, fechaSQL);
+                "INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro, pais, ciudad) VALUES (?, ?, ?, ?, ?,?,?);",
+                nickname, correo, password, direccion, fechaSQL, pais, ciudad);
         database.update("INSERT INTO Administrador(id_usuario) SELECT id FROM Usuario WHERE nickname = ?;", nickname);
 
     }
 
     public Administrador readOne(Map<String,?> args) {
         String identifier = (String) args.get("identifier");
-        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro FROM Usuario u, Administrador a WHERE a.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new AdministradorMapper(), identifier, identifier);
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, u.pais, u.ciudad FROM Usuario u, Administrador a WHERE a.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new AdministradorMapper(), identifier, identifier);
     }
 
     public List<Administrador> readAll() {
-        return database.query("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro FROM Usuario u, Administrador a WHERE a.id_usuario = u.id", new AdministradorMapper());
+        return database.query("SELECT u.nickname, u.correo, u.user_password,u.direccion,u.fecha_registro, u.pais, u.ciudad FROM Usuario u, Administrador a WHERE a.id_usuario = u.id", new AdministradorMapper());
     }
 
 
@@ -69,7 +71,16 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
                 if (atributos.get(key) == compradorObject.getDireccion()) {
                     iterator.remove();
                 }
+            }else if (key.equals("pais")) {
+                if (atributos.get(key) == compradorObject.getCountry()) {
+                    iterator.remove();
+                }
+            }else if (key.equals("ciudad")) {
+                if (atributos.get(key) == compradorObject.getCity()) {
+                    iterator.remove();
+                }
             }
+
 
         }
 
@@ -99,7 +110,7 @@ public class AdministradorDAO implements DAOInterface<Administrador>{
 
 
     public Administrador getAdministradorWithID(int id){
-        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro FROM Usuario u, Administrador a WHERE a.id_usuario = u.id AND u.id = ?", new AdministradorMapper(), id);
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, u.pais,u.ciudad FROM Usuario u, Administrador a WHERE a.id_usuario = u.id AND u.id = ?", new AdministradorMapper(), id);
     }
 
 }

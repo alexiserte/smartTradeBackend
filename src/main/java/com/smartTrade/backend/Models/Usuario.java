@@ -8,13 +8,17 @@ public class Usuario {
     private String direccion;
     private String correo;
     private Date fecha_registro;
+    private String country;
+    private String city;
 
-    public Usuario(String nickname, String password, String direccion, String correo) {
+    public Usuario(String nickname, String password, String direccion, String correo, String country, String city) {
         this.nickname = nickname;
         this.password = password;
         this.correo = correo;
         this.direccion = direccion;
         this.fecha_registro = Date.valueOf(java.time.LocalDate.now());
+        this.country = country;
+        this.city = city;
     }
 
     public Usuario() {}
@@ -57,6 +61,22 @@ public class Usuario {
 
     public void setFecha_registro(Date fecha_registro) {
         this.fecha_registro = fecha_registro;
+    }
+
+    public String getCountry() {
+        return this.country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return this.city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     

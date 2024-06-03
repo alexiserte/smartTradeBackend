@@ -30,21 +30,23 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
         String password = (String) args.get("password");
         String correo = (String) args.get("correo");
         String direccion = (String) args.get("direccion");
+        String pais = (String) args.get("pais");
+        String ciudad = (String) args.get("ciudad");
 
         Date fechaSQL = DateMethods.getTodayDate();
 
-        database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro) VALUES (?, ?, ?, ?, ?);", nickname, correo, password, direccion, fechaSQL);
+        database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro, pais, ciudad) VALUES (?, ?, ?, ?, ?, ?, ?);", nickname, correo, password, direccion, fechaSQL, pais, ciudad);
         database.update("INSERT INTO Vendedor(id_usuario) SELECT id FROM Usuario WHERE nickname = ?;", nickname);
 
     }
 
     public Vendedor readOne(Map<String,?> args) {
         String identifier = (String) args.get("identifier");
-        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new VendedorMapper(), identifier, identifier);
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, u.pais, u.ciudad FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new VendedorMapper(), identifier, identifier);
     }
 
     public List<Vendedor> readAll() {
-        return database.query("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id", new VendedorMapper());
+        return database.query("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, u.pais, u.ciudad FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id", new VendedorMapper());
     }
 
     @SuppressWarnings("unchecked")
@@ -69,6 +71,14 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
                 }
             } else if (key.equals("direccion")) {
                 if (atributos.get(key) == compradorObject.getDireccion()) {
+                    iterator.remove();
+                }
+            }else if (key.equals("pais")) {
+                if (atributos.get(key) == compradorObject.getCountry()) {
+                    iterator.remove();
+                }
+            }else if (key.equals("ciudad")) {
+                if (atributos.get(key) == compradorObject.getCity()) {
                     iterator.remove();
                 }
             }
@@ -122,7 +132,7 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
     }
 
     public Vendedor getVendedorWithID(int id_vendedor) {
-        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id AND u.id = ?", new VendedorMapper(), id_vendedor);
+        return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, u.pais,u.ciudad FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id AND u.id = ?", new VendedorMapper(), id_vendedor);
     }
 
 

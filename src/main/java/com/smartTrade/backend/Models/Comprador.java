@@ -5,9 +5,9 @@ public class Comprador extends Usuario{
    
     private int puntosResponsabilidad;
 
-    public Comprador(String nickname, String password, String direccion, String correo,int puntosResponsabilidad) {
+    public Comprador(String nickname, String password, String direccion, String correo,int puntosResponsabilidad, String country, String city) {
 
-        super(nickname, password, direccion, correo);
+        super(nickname, password, direccion, correo, country, city);
         this.puntosResponsabilidad = puntosResponsabilidad;
     }
 
@@ -62,5 +62,20 @@ public class Comprador extends Usuario{
         super.setFecha_registro(fecha_registro);
     }
 
+    public String getCountry() {
+        return super.getCountry();
+    }
+
+    public void setCountry(String country) {
+        super.setCountry(country);
+    }
+
+    public String getCity() {
+        return super.getCity();
+    }
+
+    public void setCity(String city) {
+        super.setCity(city);
+    }
 
 }

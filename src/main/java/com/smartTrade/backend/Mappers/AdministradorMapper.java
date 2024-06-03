@@ -18,7 +18,9 @@ public class AdministradorMapper implements RowMapper<Administrador> {
         String direccion = (rs.getString("direccion"));
         String correo = (rs.getString("correo"));
         java.sql.Date fecha = (rs.getDate("fecha_registro"));
-        Administrador admin = (Administrador) UserFactory.createUser(User_Types.ADMINISTRADOR, nickname, password, direccion, correo);
+        String country = (rs.getString("pais"));
+        String city = (rs.getString("ciudad"));
+        Administrador admin = (Administrador) UserFactory.createUser(User_Types.ADMINISTRADOR, nickname, password, direccion, correo, country, city);
         admin.setFecha_registro(fecha);
         return admin;
     }

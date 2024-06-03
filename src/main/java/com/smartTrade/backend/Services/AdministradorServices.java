@@ -15,8 +15,8 @@ public class AdministradorServices {
     @Autowired
     private AdministradorDAO administradorDAO;
 
-    public void createNewUser(String nickname, String password, String correo, String direccion) {
-        administradorDAO.create(Map.of("nickname",nickname,"password",password,"correo",correo,"direccion",direccion));
+    public void createNewUser(String nickname, String password, String correo, String direccion, String pais, String ciudad) {
+        administradorDAO.create(Map.of("nickname",nickname,"password",password,"correo",correo,"direccion",direccion, "pais",pais,"ciudad",ciudad));
     }
 
     public void updateUser(String nickname, Map atributos) {
