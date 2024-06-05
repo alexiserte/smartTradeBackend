@@ -171,16 +171,16 @@ public class Pedido{
 
     // Implementacion del patron Estado
 
-    public void siguienteEstado() {estado.siguienteEstado(this);}
+    public boolean siguienteEstado() { return estado.siguienteEstado(this);}
 
-    public void estadoAnterior() {estado.estadoAnterior(this);}
+    public boolean estadoAnterior() {return estado.estadoAnterior(this);}
 
-    public void procesar() {estado.procesar(this);}
+    public boolean procesar() {return estado.procesar(this);}
 
-    public void cancelar() {estado.cancelar(this);}
+    public boolean cancelar() {return estado.cancelar(this);}
 
     public String printPedidoState() {return estado.printPedidoState(this);}
 
-    public void confirmar() {estado.confirmar(this);}
+    public boolean confirmar() {return estado.confirmar(this);}
 
 }

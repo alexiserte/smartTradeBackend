@@ -105,11 +105,24 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         Date fecha_entrega = database.queryForObject("SELECT fecha_llegada FROM Pedido WHERE id = ?", Date.class, id);
         Date fecha_creacion = database.queryForObject("SELECT fecha_realizacion FROM Pedido WHERE id = ?", Date.class, id);
 
-        EstadosPedido estado = updateState(fecha_creacion.toLocalDate(), fecha_entrega.toLocalDate());
 
-        System.out.println("Estado: " + estado.getNombreEstado());
+        int id_estado_del_pedido = pedido.getEstadoActual().getId();
+        int id_estado = updateState(fecha_creacion.toLocalDate(), fecha_entrega.toLocalDate()).getId();
+        if(id_estado_del_pedido < id_estado) {
+            for (int i = id_estado_del_pedido; i < id_estado; i++) {
+                boolean op = pedido.siguienteEstado();
+                if (!op) {throw new RuntimeException("Error al actualizar el estado del pedido");}
+            }
+            database.update("UPDATE Pedido SET estado = ? WHERE id = ?", pedido.getEstadoActual().getNombreEstado(), id);
+        }
+        else{
+            for(int i = id_estado_del_pedido; i > id_estado; i--){
+                boolean op = pedido.estadoAnterior();
+                if (!op) {throw new RuntimeException("Error al actualizar el estado del pedido");}
+            }
+        }
 
-        database.update("UPDATE Pedido SET estado = ? WHERE id = ?", estado.getNombreEstado(), id);
+        database.update("UPDATE Pedido SET estado = ? WHERE id = ?", pedido.getEstadoActual().getNombreEstado(), id);
 
         pedido = database.queryForObject(
                 "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
@@ -136,8 +149,29 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
     @Override
     public void delete(Map<String, ?> args) {
+        int id = (int) args.get("id");
+        List<Pair<Integer, Integer>> productos = database.query(
+                "SELECT id_producto, cantidad FROM Detalle_Pedido WHERE id_pedido = ?",
+                new Object[]{id},
+                (rs, rowNum) -> Pair.of(rs.getInt("id_producto"), rs.getInt("cantidad"))
+        );
+        List<Pedido.ItemPedido> productosMap = new ArrayList<>();
+        for (Pair<Integer, Integer> pareja : productos) {
+            int id_producto = pareja.getFirst();
+            Producto p = productoDAO.getProductByID(id_producto);
+            int cantidad = pareja.getSecond();
+            int id_vendedor = database.queryForObject("SELECT id_vendedor FROM Detalle_Pedido WHERE id_pedido = ? AND id_producto = ?", Integer.class, id, id_producto);
+            String vendorNickname = vendedorDAO.getVendorName(id_vendedor);
+            productosMap.add(new Pedido.ItemPedido(p, cantidad, vendorNickname));
+        }
+        Pedido pedido = database.queryForObject(
+                "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
 
+        boolean op = pedido.cancelar();
+        if (!op) {throw new RuntimeException("Error al cancelar el pedido");}
+        database.update("UPDATE Pedido SET estado = ? WHERE id = ?", pedido.getEstadoActual().getNombreEstado(), id);
     }
+
 
     private Date calculateTimeOfDelivery(String vendorNickname, String userNickname){
         String userCountry = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, userNickname);
