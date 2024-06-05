@@ -1,8 +1,6 @@
 package com.smartTrade.backend.State;
 
 import com.smartTrade.backend.Models.Pedido;
-import org.springframework.data.util.Pair;
-
 public interface EstadoPedido {
     boolean siguienteEstado(Pedido pedido);
     boolean estadoAnterior(Pedido pedido);

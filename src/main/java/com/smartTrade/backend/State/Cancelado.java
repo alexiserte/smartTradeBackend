@@ -2,6 +2,9 @@ package com.smartTrade.backend.State;
 
 import com.smartTrade.backend.Logger.Logger;
 import com.smartTrade.backend.Models.Pedido;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 
 public class Cancelado implements EstadoPedido{
 

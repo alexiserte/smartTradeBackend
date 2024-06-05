@@ -113,7 +113,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
                 boolean op = pedido.siguienteEstado();
                 if (!op) {throw new RuntimeException("Error al actualizar el estado del pedido");}
             }
-            database.update("UPDATE Pedido SET estado = ? WHERE id = ?", pedido.getEstadoActual().getNombreEstado(), id);
         }
         else{
             for(int i = id_estado_del_pedido; i > id_estado; i--){
@@ -121,8 +120,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
                 if (!op) {throw new RuntimeException("Error al actualizar el estado del pedido");}
             }
         }
-
-        database.update("UPDATE Pedido SET estado = ? WHERE id = ?", pedido.getEstadoActual().getNombreEstado(), id);
+        updatePedidoState(id, pedido.getEstadoActual());
 
         pedido = database.queryForObject(
                 "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
@@ -145,6 +143,16 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
     @Override
     public void update(Map<String, ?> args) {
+        int id = (int) args.get("id");
+        if(args.containsKey("estado")){
+            String estado = (String) args.get("estado");
+            if (estado.equals(EstadosPedido.CANCELADO.getNombreEstado())) {
+                delete(Map.of("id", id));
+            } else {
+                updatePedidoState(id, EstadosPedido.valueOf(estado));
+            }
+        }
+
     }
 
     @Override
@@ -170,6 +178,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         boolean op = pedido.cancelar();
         if (!op) {throw new RuntimeException("Error al cancelar el pedido");}
         database.update("UPDATE Pedido SET estado = ? WHERE id = ?", pedido.getEstadoActual().getNombreEstado(), id);
+
     }
 
 
