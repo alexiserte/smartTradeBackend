@@ -1,6 +1,7 @@
 package com.smartTrade.backend.Controllers;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.smartTrade.backend.Logger.Logger;
@@ -64,7 +65,7 @@ public class ProductoController {
     
 
     @PutMapping("/producto/")
-    public ResponseEntity<?> updateProduct(@RequestBody(required = true) HashMap<String, ?> atributos, HttpServletRequest request) {
+    public ResponseEntity<?> updateProduct(@RequestBody(required = true) Map<String, ?> atributos, HttpServletRequest request) {
         ResponseEntity<?> res = fachada.updateProduct(atributos);
         logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;

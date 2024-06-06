@@ -122,7 +122,7 @@ public class ProductoFachada extends Fachada {
 
     }
 
-    public ResponseEntity<?> updateProduct(HashMap<String, ?> atributos) {
+    public ResponseEntity<?> updateProduct(Map<String, ?> atributos) {
         try {
             String nombre = (String) atributos.get("name");
             productoServices.updateProduct(nombre, atributos);
