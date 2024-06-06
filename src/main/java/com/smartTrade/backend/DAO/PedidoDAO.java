@@ -57,8 +57,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         Date todayDate = DateMethods.getTodayDate();
         final String FIRST_ESTADO = EstadosPedido.PROCESANDO.getNombreEstado();
 
-        database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado,precio_total) VALUES(?,?,?,?)",id_comprador,todayDate,FIRST_ESTADO,precio_total);
-        int id_pedido = database.queryForObject("SELECT * FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)",Integer.class);
+        database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado,precio_total,fecha_llegada) VALUES(?,?,?,?,?)", id_comprador, todayDate, FIRST_ESTADO, precio_total, todayDate);
+        int id_pedido = database.queryForObject("SELECT id FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)",Integer.class);
         List<Date> fechas_entrega = new ArrayList<>();
         for(Pair<Producto, String> parejaProductoVendedor : productos.keySet()){
             Producto p = parejaProductoVendedor.getFirst();
@@ -72,6 +72,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             Date fecha_entrega = calculateTimeOfDelivery(vendorNickname, nickname);
             fechas_entrega.add(fecha_entrega);
             database.update("INSERT INTO Detalle_Pedido(id_pedido,id_producto,id_vendedor,cantidad) VALUES(?,?,?,?)",id_pedido,id_producto,id_vendedor,cantidad);
+            database.update("UPDATE Vendedores_Producto SET stock_vendedor = stock_vendedor - ? WHERE id_vendedor = ? AND id_producto = ?", cantidad, id_vendedor, id_producto);
         }
 
         Date latestDate = DateMethods.getLatestDateFromList(fechas_entrega);
