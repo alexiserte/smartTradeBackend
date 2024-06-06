@@ -46,7 +46,7 @@ public class CompradorController {
     
     @PostMapping("/comprador/")
     public ResponseEntity<?> register(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
-        if(!body.containsKey("nickname") || !body.containsKey("user_password") || !body.containsKey("correo") || !body.containsKey("direccion")){
+        if(!body.containsKey("nickname") || !body.containsKey("user_password") || !body.containsKey("correo") || !body.containsKey("direccion") || !body.containsKey("pais") || !body.containsKey("ciudad")){
             ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
             logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
             return res;

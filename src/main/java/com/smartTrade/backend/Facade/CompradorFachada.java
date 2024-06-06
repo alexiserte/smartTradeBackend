@@ -170,7 +170,7 @@ public class CompradorFachada extends Fachada {
     public ResponseEntity<?> createNewPedido (HashMap<String, ?> body){
         try{
             pedidoServices.createNewPedido(body);
-            return new ResponseEntity<>("Producto creado correctamente",HttpStatus.CREATED);
+            return new ResponseEntity<>("Pedido creado correctamente",HttpStatus.CREATED);
         }catch(EmptyResultDataAccessException e){
             return new ResponseEntity<>("--------",HttpStatus.NOT_FOUND);
         }catch(Exception e){

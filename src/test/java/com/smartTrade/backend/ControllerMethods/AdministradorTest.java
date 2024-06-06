@@ -9,6 +9,8 @@ import com.smartTrade.backend.Logger.Logger;
 import com.smartTrade.backend.Models.Categoria;
 import com.smartTrade.backend.Models.Comprador;
 import com.smartTrade.backend.Models.Producto;
+import com.smartTrade.backend.Models.Vendedor;
+import com.smartTrade.backend.Utils.DateMethods;
 import com.smartTrade.backend.Utils.ReflectionMethods;
 import com.smartTrade.backend.smartTradeConexion;
 import org.junit.jupiter.api.Test;
@@ -125,13 +127,13 @@ public class AdministradorTest {
     void mostrarVendedores() {
         HttpResponse<String> response = conexion.get("/admin/vendedores");
         try {
-            List<Comprador> usuarios = mapper.readValue(response.body(), new TypeReference<>() {
+            List<Vendedor> usuarios = mapper.readValue(response.body(), new TypeReference<>() {
             });
             System.out.println(JSONMethods.getPrettyJSON(usuarios));
             assertEquals(200, response.statusCode());
             assertNotEquals(0, usuarios.size());
 
-            for(Comprador c : usuarios){
+            for(Vendedor c : usuarios){
 
                 HttpResponse<String> response2 = conexion.get("/user/?identifier=" + c.getNickname() + "&password=" + c.getPassword());
                 assertEquals(200, response2.statusCode());
@@ -140,11 +142,14 @@ public class AdministradorTest {
                 assertEquals("VENDEDOR",map.get("userType"));
                 assertNotEquals("", c.getNickname());
                 assertNotEquals("admin", c.getNickname());
+                assert map.get("correo").toString().contains("@");
                 assertNotEquals("", c.getPassword());
                 assertNotEquals("", c.getCorreo());
                 assertNotEquals(null, c.getFecha_registro());
-                assertTrue(c.getpuntosResponsabilidad() >= 0);
+                assert DateMethods.isBefore(c.getFecha_registro(), DateMethods.getTodayDate());
                 assertNotEquals("", c.getDireccion());
+                assertNotEquals("", c.getCity());
+                assertNotEquals("", c.getCountry());
             }
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
         } catch (AssertionError error) {
