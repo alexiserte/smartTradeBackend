@@ -51,19 +51,44 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     public void create(Map<String, ?> args) {
         String nickname = (String) args.get("nickname");
         double precio_total = (double) args.get("precio_total");
-        Map<Pair<Producto, String>,Integer> productos = (Map<Pair<Producto, String>,Integer>) args.get("productos");
+
+        // Validación y conversión del tipo de 'productos'
+        Object productosObj = args.get("productos");
+        if (!(productosObj instanceof Map)) {
+            throw new IllegalArgumentException("El argumento 'productos' debe ser un mapa.");
+        }
+
+        Map<?, ?> rawProductos = (Map<?, ?>) productosObj;
+
+        // Verificamos que los tipos en el mapa sean correctos
+        for (Map.Entry<?, ?> entry : rawProductos.entrySet()) {
+            if (!(entry.getKey() instanceof Pair)) {
+                throw new IllegalArgumentException("Las claves del mapa 'productos' deben ser del tipo Pair<Producto, String>.");
+            }
+            if (!(entry.getValue() instanceof Integer)) {
+                throw new IllegalArgumentException("Los valores del mapa 'productos' deben ser enteros.");
+            }
+        }
+
+        // Hacemos el cast seguro ahora que hemos verificado los tipos
+        Map<Pair<Producto, String>, Integer> productos = (Map<Pair<Producto, String>, Integer>) rawProductos;
 
         int id_comprador = usuarioDAO.getID(nickname);
         Date todayDate = DateMethods.getTodayDate();
         final String FIRST_ESTADO = EstadosPedido.PROCESANDO.getNombreEstado();
 
-        database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado,precio_total,fecha_llegada) VALUES(?,?,?,?,?)", id_comprador, todayDate, FIRST_ESTADO, precio_total, todayDate);
-        int id_pedido = database.queryForObject("SELECT id FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)",Integer.class);
+        // Insertar el pedido en la base de datos
+        database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado,precio_total,fecha_llegada) VALUES(?,?,?,?,?)",
+                id_comprador, todayDate, FIRST_ESTADO, precio_total, todayDate);
+
+        // Obtener el ID del pedido recientemente insertado
+        int id_pedido = database.queryForObject("SELECT id FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)", Integer.class);
+
         List<Date> fechas_entrega = new ArrayList<>();
-        for(Pair<Producto, String> parejaProductoVendedor : productos.keySet()){
+        for (Pair<Producto, String> parejaProductoVendedor : productos.keySet()) {
             Producto p = parejaProductoVendedor.getFirst();
             String vendedor = parejaProductoVendedor.getSecond();
-            int cantidad = productos.get(p);
+            int cantidad = productos.get(parejaProductoVendedor);
             int id_producto = productoDAO.getIDFromName(p.getNombre());
             int id_vendedor = usuarioDAO.getID(vendedor);
 
@@ -71,13 +96,14 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
             Date fecha_entrega = calculateTimeOfDelivery(vendorNickname, nickname);
             fechas_entrega.add(fecha_entrega);
-            database.update("INSERT INTO Detalle_Pedido(id_pedido,id_producto,id_vendedor,cantidad) VALUES(?,?,?,?)",id_pedido,id_producto,id_vendedor,cantidad);
+            database.update("INSERT INTO Detalle_Pedido(id_pedido,id_producto,id_vendedor,cantidad) VALUES(?,?,?,?)", id_pedido, id_producto, id_vendedor, cantidad);
             database.update("UPDATE Vendedores_Producto SET stock_vendedor = stock_vendedor - ? WHERE id_vendedor = ? AND id_producto = ?", cantidad, id_vendedor, id_producto);
         }
 
         Date latestDate = DateMethods.getLatestDateFromList(fechas_entrega);
-        database.update("UPDATE Pedido SET fecha_entrega = ? WHERE id = ?",latestDate,id_pedido);
+        database.update("UPDATE Pedido SET fecha_entrega = ? WHERE id = ?", latestDate, id_pedido);
     }
+
 
     @Override
     public Pedido readOne(Map<String, ?> args) {
