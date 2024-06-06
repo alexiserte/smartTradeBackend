@@ -240,7 +240,7 @@ public class ProductoDAO implements DAOInterface<Object> {
                 }
 
             } else if (key.equals("imagen")) {
-                if (id_imagen == (product.getId_categoria())) {
+                if (id_imagen == (product.getId_imagen())) {
                     iterator.remove();
                 }
 
