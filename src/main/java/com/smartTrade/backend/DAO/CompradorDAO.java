@@ -73,7 +73,7 @@ public class CompradorDAO implements DAOInterface<Comprador>{
             if (atributos.get(key).equals(compradorObject.getNickname())) {
                 iterator.remove();
             }
-        } else if (key.equals("password")) {
+        } else if (key.equals("user_password")) {
             if (atributos.get(key) == (compradorObject.getPassword())) {
                 iterator.remove();
             }

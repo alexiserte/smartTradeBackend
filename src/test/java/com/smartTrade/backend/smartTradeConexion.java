@@ -34,7 +34,7 @@ public class smartTradeConexion {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(smartTradeURI + path))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .POST(body == null ? HttpRequest.BodyPublishers.ofString(body) : HttpRequest.BodyPublishers.noBody())
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -49,7 +49,7 @@ public class smartTradeConexion {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(smartTradeURI + path))
                 .header("Content-Type", "application/json")
-                .PUT(HttpRequest.BodyPublishers.ofString(body))
+                .PUT(body == null ? HttpRequest.BodyPublishers.ofString(body) : HttpRequest.BodyPublishers.noBody())
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
