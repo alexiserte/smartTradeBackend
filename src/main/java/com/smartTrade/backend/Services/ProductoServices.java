@@ -64,8 +64,8 @@ public class ProductoServices {
         return names;
     }
 
-    public void updateProduct(String nombre, Map atributos) {
-        productoDAO.update(Map.of("nombre",nombre,"atributos",atributos));
+    public void updateProduct(Map atributos) {
+        productoDAO.update(Map.of("atributos",atributos));
     }
 
     public void deleteProduct(String nombre) {

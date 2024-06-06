@@ -124,8 +124,8 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> updateProduct(HashMap<String, ?> atributos) {
         try {
-            String nombre = (String) atributos.get("name");
-            productoServices.updateProduct(nombre, atributos);
+
+            productoServices.updateProduct(atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);

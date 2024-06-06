@@ -203,6 +203,17 @@ public class ProductoDAO implements DAOInterface<Object> {
     public void update(Map<String,?> args) {
         String nombre = (String) args.get("nombre");
         HashMap<String, ?> atributos = (HashMap<String, ?>) args.get("atributos");
+        String imagen = (String) args.get("imagen");
+        String categoryName = (String) args.get("categoria");
+
+        int id_imagen = imagenDAO.getID(imagen);
+        if (id_imagen == -1) {
+            imagenDAO.create(Map.of("imagen",imagen));
+            id_imagen = imagenDAO.getID(imagen);
+
+        }
+
+        int id_categoria = categoriaDAO.getIDFromName(categoryName);
 
         if(atributos.keySet().contains("precio") || atributos.keySet().contains("stock")){
             updateProductFromOneVendor(nombre,(String) args.get("vendorName"),atributos);
@@ -214,12 +225,12 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
             String key = iterator.next();
-            if (key.equals("nombre")) {
+            if (key.equals("name")) {
                 if (atributos.get(key).equals(product.getNombre())) {
                     iterator.remove();
                 }
-            } else if (key.equals("id_categoria")) {
-                if ((int) atributos.get(key) == (product.getId_categoria())) {
+            } else if (key.equals("categoria")) {
+                if ((int) id_categoria == (product.getId_categoria())) {
                     iterator.remove();
                 }
 
@@ -228,12 +239,12 @@ public class ProductoDAO implements DAOInterface<Object> {
                     iterator.remove();
                 }
 
-            } else if (key.equals("id_imagen")) {
-                if ((int) atributos.get(key) == (product.getId_categoria())) {
+            } else if (key.equals("imagen")) {
+                if (id_imagen == (product.getId_categoria())) {
                     iterator.remove();
                 }
 
-            } else if (key.equals("fecha_añadido")) {
+            }/* else if (key.equals("fecha_añadido")) {
                 if (((Date) atributos.get(key)).equals(product.getFecha_publicacion())) {
                     iterator.remove();
                 }
@@ -241,11 +252,11 @@ public class ProductoDAO implements DAOInterface<Object> {
                 if ((boolean) atributos.get(key) == product.getValidado()) {
                     iterator.remove();
                 }
-            } else if (key.equals("huella_ecologica")) {
+            /else if (key.equals("huella_ecologica")) {
                 if ((int) atributos.get(key) == product.getHuella_ecologica()) {
                     iterator.remove();
                 }
-            }
+            }*/
             else if (key.equals("etiqueta_inteligente")) {
                 if (((String) atributos.get(key)).equals(product.getEtiqueta_inteligente())) {
                     iterator.remove();
@@ -261,7 +272,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         for (String key : keys) {
             Object valor = atributos.get(key);
             if (valor instanceof Integer) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?",
+                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND ",
                         (Integer) valor, nombre);
             } else if (valor instanceof String) {
                 database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?",
