@@ -330,20 +330,22 @@ public class ProductoDAO implements DAOInterface<Object> {
         List<String> keys = new ArrayList<>(atributos.keySet());
         int id_producto = getIDFromName(nombre);
         int id_vendedor = vendedorDAO.getVendorID(vendorName);
-        if (Objects.equals(keys.get(keys.indexOf("precio")), "precio")) {
 
-            double precio = (double) atributos.get("precio");
-            java.sql.Date fechaActual = DateMethods.getTodayDate();
-            database.update(
-                    "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)",
-                    id_producto, precio, fechaActual, id_vendedor);
-            database.update("UPDATE Vendedores_Producto SET precio = ? WHERE id_producto = ? AND id_vendedor = ?",
-                    precio, id_producto, id_vendedor);
-        }
-        else if(keys.contains("stock")){
-            int stock = (int) atributos.get("stock");
-            database.update("UPDATE Vendedores_Producto SET stock_vendedor = ? WHERE id_producto = ? AND id_vendedor = ?",
-                    stock, id_producto, id_vendedor);
+        for(String key : keys) {
+
+            if (key.equals("precio")) {
+                double precio = (double) atributos.get("precio");
+                java.sql.Date fechaActual = DateMethods.getTodayDate();
+                database.update(
+                        "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)",
+                        id_producto, precio, fechaActual, id_vendedor);
+                database.update("UPDATE Vendedores_Producto SET precio = ? WHERE id_producto = ? AND id_vendedor = ?",
+                        precio, id_producto, id_vendedor);
+            } else if (keys.contains("stock")) {
+                int stock = (int) atributos.get("stock");
+                database.update("UPDATE Vendedores_Producto SET stock_vendedor = ? WHERE id_producto = ? AND id_vendedor = ?",
+                        stock, id_producto, id_vendedor);
+            }
         }
     }
 
