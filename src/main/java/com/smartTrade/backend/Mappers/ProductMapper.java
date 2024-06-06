@@ -45,7 +45,7 @@ public class ProductMapper implements RowMapper<Producto> {
         int stock = rs.getInt("stock");
         String etiqueta_inteligente = rs.getString("etiqueta_inteligente");
         ProductFactory productFactory = new ProductFactory();
-        Producto producto = productFactory.getProduct(nombre, descripcion, id_categoria, fecha_publicacion, validado, huella_ecologica, id_imagen, stock, etiqueta_inteligente, null);
+        Producto producto = productFactory.getProduct(nombre, descripcion, id_categoria, fecha_publicacion, validado, huella_ecologica, id_imagen, stock, etiqueta_inteligente);
         return producto;
     }
 }
