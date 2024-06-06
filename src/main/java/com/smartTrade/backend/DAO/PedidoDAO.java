@@ -58,7 +58,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         final String FIRST_ESTADO = EstadosPedido.PROCESANDO.getNombreEstado();
 
         database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado,precio_total,fecha_llegada) VALUES(?,?,?,?,?)", id_comprador, todayDate, FIRST_ESTADO, precio_total, todayDate);
-        int id_pedido = database.queryForObject("SELECT * FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)",Integer.class);
+        int id_pedido = database.queryForObject("SELECT id FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)",Integer.class);
         List<Date> fechas_entrega = new ArrayList<>();
         for(Pair<Producto, String> parejaProductoVendedor : productos.keySet()){
             Producto p = parejaProductoVendedor.getFirst();
