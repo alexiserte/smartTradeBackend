@@ -210,7 +210,7 @@ public class ProductoDAO implements DAOInterface<Object> {
             id_imagen = imagenDAO.getID(imagen);
         try {
             System.out.println("perro sanxe");
-            if (id_imagen == -1) {
+            if (id_imagen == -1 || id_imagen == null) {
                 Map<String,String> args2 = Map.of("imagen",imagen);
                 System.out.println("Esto se ejecuta4");
                 imagenDAO.create(args2);
@@ -220,6 +220,7 @@ public class ProductoDAO implements DAOInterface<Object> {
                 System.out.println("Esto se ejecuta3");
             }
         }catch (NullPointerException e){
+            e.printStackTrace();
             throw new RuntimeException("\nsombra aqui sombra alla maquillate maquillate\n");
         }
 
