@@ -47,6 +47,7 @@ public class UsuarioFachada extends Fachada{
         HashMap<String, Object> body = new HashMap<>();
         System.out.println(map);
 
+
         String jsonWithoutBackslashes = map.replace("\\", "");
         String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");
         String[] parts = pureJSON.split(",");
