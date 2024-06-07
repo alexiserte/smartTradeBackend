@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 
 @Repository
-public class VendedorDAO implements DAOInterface<Vendedor>{
-    
+public class VendedorDAO implements DAOInterface<Vendedor> {
+
     private JdbcTemplate database;
 
     public VendedorDAO(JdbcTemplate database) {
@@ -25,7 +25,7 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
     }
 
     @Transactional
-    public void create(Map<String,?> args) {
+    public void create(Map<String, ?> args) {
         String nickname = (String) args.get("nickname");
         String password = (String) args.get("password");
         String correo = (String) args.get("correo");
@@ -40,7 +40,7 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
 
     }
 
-    public Vendedor readOne(Map<String,?> args) {
+    public Vendedor readOne(Map<String, ?> args) {
         String identifier = (String) args.get("identifier");
         return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, u.pais, u.ciudad FROM Usuario u, Vendedor v WHERE v.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new VendedorMapper(), identifier, identifier);
     }
@@ -50,12 +50,12 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
     }
 
     @SuppressWarnings("unchecked")
-    public void update(Map<String,?> args) {
+    public void update(Map<String, ?> args) {
         String nickname = (String) args.get("nickname");
         Map<String, Object> atributos = (Map<String, Object>) args.get("atributos");
         List<String> keys = new ArrayList<>(atributos.keySet());
-        Vendedor compradorObject = readOne(Map.of("identifier",nickname));
-        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
+        Vendedor compradorObject = readOne(Map.of("identifier", nickname));
+        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
             String key = iterator.next();
             if (key.equals("nickname")) {
                 if (atributos.get(key).equals(compradorObject.getNickname())) {
@@ -73,11 +73,11 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
                 if (atributos.get(key) == compradorObject.getDireccion()) {
                     iterator.remove();
                 }
-            }else if (key.equals("pais")) {
+            } else if (key.equals("pais")) {
                 if (atributos.get(key) == compradorObject.getCountry()) {
                     iterator.remove();
                 }
-            }else if (key.equals("ciudad")) {
+            } else if (key.equals("ciudad")) {
                 if (atributos.get(key) == compradorObject.getCity()) {
                     iterator.remove();
                 }
@@ -102,7 +102,7 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
         }
     }
 
-    public void delete(Map<String,?> args) {
+    public void delete(Map<String, ?> args) {
         String nickname = (String) args.get("nickname");
         database.update("DELETE FROM Vendedor WHERE id_usuario = ANY(SELECT id FROM Usuario WHERE nickname = ?);",
                 nickname);
@@ -136,5 +136,4 @@ public class VendedorDAO implements DAOInterface<Vendedor>{
     }
 
 
-    
 }

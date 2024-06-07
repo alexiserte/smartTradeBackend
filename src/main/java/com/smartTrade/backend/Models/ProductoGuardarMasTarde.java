@@ -11,4 +11,6 @@ public class ProductoGuardarMasTarde {
     private int id_producto;
     private int id_vendedor;
     private int id_guardar_mas_tarde;
+
+    //En esta clase hemos aprendido a utilizar Lombok para mejorar nuestra productividad
 }

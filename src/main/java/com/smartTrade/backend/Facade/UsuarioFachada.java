@@ -46,7 +46,6 @@ public class UsuarioFachada extends Fachada{
     @SuppressWarnings("unused") 
     public ResponseEntity<?> register(String map) {
         HashMap<String, Object> body = new HashMap<>();
-        System.out.println(map);
 
         ObjectMapper mapper = new ObjectMapper();
         if(!map.contains("\\")){
@@ -71,21 +70,14 @@ public class UsuarioFachada extends Fachada{
 
         String pais = (String) body.get("pais");
         body.replace("pais", pais.substring(0, pais.length()-4));
-        for(String key : body.keySet()){
-            System.out.println("---------------------------");
-            System.out.println(key + " : " + body.get(key));
-            System.out.println("---------------------------");
 
-        }
         switch (userType){
             case "vendedor":
-
                  return vendedorFachada.registerVendedor(body);
             case "comprador":
 
             return compradorFachada.register(body);
             case "administrador":
-
                 return administradorFachada.registerAdministrador(body);
             default:
                 return new ResponseEntity<>("Tipo de usuario no válido", HttpStatus.BAD_REQUEST);

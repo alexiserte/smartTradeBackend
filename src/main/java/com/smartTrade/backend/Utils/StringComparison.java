@@ -1,11 +1,12 @@
 package com.smartTrade.backend.Utils;
+
 import java.text.Normalizer;
 import java.util.Arrays;
 
 public class StringComparison {
-    
+
     public static int calculate(String s1, String s2) {
-        
+
         s1 = s1.toLowerCase();
         s2 = s2.toLowerCase();
 

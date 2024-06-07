@@ -44,17 +44,4 @@ public class ProductMapper implements RowMapper<Producto> {
         Producto producto = productFactory.getProduct(nombre, descripcion, id_categoria, fecha_publicacion, validado, huella_ecologica, id_imagen, stock, etiqueta_inteligente);
         return producto;
     }
-
-    public static void main(String[] args) {
-        ProductFactory productFactory = new ProductFactory();
-        Producto producto = productFactory.getProduct("nombre", "descripcion", 1, new java.sql.Date(0), true, 1, 1, 1, "etiqueta_inteligente");
-        System.out.println(producto.getClass().getSimpleName());
-        Producto producto2 = productFactory.getProduct("nombre", "descripcion", 5, new java.sql.Date(0), true, 1, 1, 1, "etiqueta_inteligente");
-        System.out.println(producto2.getClass().getSimpleName());
-        Producto producto3 = productFactory.getProduct("nombre", "descripcion", 8, new java.sql.Date(0), true, 1, 1, 1, "etiqueta_inteligente");
-        System.out.println(producto3.getClass().getSimpleName());
-        Producto producto4 = productFactory.getProduct("nombre", "descripcion", 9, new java.sql.Date(0), true, 1, 1, 1, "etiqueta_inteligente");
-        System.out.println(producto4.getClass().getSimpleName());
-
-    }
 }

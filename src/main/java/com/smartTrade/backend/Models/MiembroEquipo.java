@@ -1,12 +1,13 @@
 package com.smartTrade.backend.Models;
 
 public class MiembroEquipo {
-    
+
     private String nombre;
     private String apellido;
 
     public MiembroEquipo() {
     }
+
     public MiembroEquipo(String nombre, String apellido) {
         this.nombre = nombre;
         this.apellido = apellido;

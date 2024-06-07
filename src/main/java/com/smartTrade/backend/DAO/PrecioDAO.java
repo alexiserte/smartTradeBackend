@@ -1,4 +1,5 @@
 package com.smartTrade.backend.DAO;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Repository
-public class PrecioDAO implements DAOInterface<Object>{
+public class PrecioDAO implements DAOInterface<Object> {
 
     private final JdbcTemplate database;
 
@@ -39,7 +40,7 @@ public class PrecioDAO implements DAOInterface<Object>{
                 LocalDate.class, productName);
         LocalDate fechaActual = fechas.get(fechas.size() - 1);
 
-        List<TreeMap<String,Object>> listaDeMapaDeVendedores = new ArrayList<>();
+        List<TreeMap<String, Object>> listaDeMapaDeVendedores = new ArrayList<>();
         for (int j = 0; j < vendedores.size(); j++) {
             List<Double> preciosFromOneProduct = database.queryForList(
                     "SELECT precio FROM Historico_Precios WHERE id_producto = ? AND id_vendedor IN (SELECT id FROM Usuario WHERE nickname = ?) ORDER BY id",
@@ -86,7 +87,8 @@ public class PrecioDAO implements DAOInterface<Object>{
 
         }
         stats.put("Vendedores", listaDeMapaDeVendedores);
-        // Estadísticas generales
+
+
         stats.put("Precio máximo general", preciomaximo);
         stats.put("Precio mínimo general", preciominimo);
         stats.put("Precio promedio general", Math.round(preciomedio * 100.0) / 100.0);
@@ -102,13 +104,27 @@ public class PrecioDAO implements DAOInterface<Object>{
     }
 
 
-    private String getDato(){
+    private String getDato() {
         return null;
     }
 
-    public void create(Map<String,?> args) {;}
-    public void delete(Map<String,?> args) {;}
-    public void update(Map<String,?> args) {;}
-    public Object readOne(Map<String,?> args) {return null;}
-    public List<Object> readAll() {return null;}
+    public void create(Map<String, ?> args) {
+        ;
+    }
+
+    public void delete(Map<String, ?> args) {
+        ;
+    }
+
+    public void update(Map<String, ?> args) {
+        ;
+    }
+
+    public Object readOne(Map<String, ?> args) {
+        return null;
+    }
+
+    public List<Object> readAll() {
+        return null;
+    }
 }

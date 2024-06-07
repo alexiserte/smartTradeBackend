@@ -9,8 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.*;
 
@@ -25,9 +23,9 @@ public class CountriesMethods {
         List<String> countriesInEnglish = new ArrayList<>(getCountriesAndCodesEnglish().keySet());
 
         String countryCode = "";
-        if(countriesInEnglish.contains(countryName)) {
+        if (countriesInEnglish.contains(countryName)) {
             countryCode = getCountriesAndCodesEnglish().get(countryName).getFirst();
-        } else if(isSpanish(countryName)) {
+        } else if (isSpanish(countryName)) {
             countryCode = getCountriesAndCodesSpanish().get(countryName).getFirst();
         } else {
             throw new RuntimeException("Country not found");
@@ -43,15 +41,15 @@ public class CountriesMethods {
             Map<String, Object> responseMap = mapper.readValue(response, Map.class);
             List<Map<String, Object>> geonames = (List<Map<String, Object>>) responseMap.get("geonames");
 
-            // Añadir todas las ciudades a la lista junto con su población
+
             for (Map<String, Object> city : geonames) {
                 citiesList.add(city);
             }
 
-            // Ordenar la lista de ciudades por población en orden descendente
+
             citiesList.sort(Comparator.comparingInt((Map<String, Object> city) -> (Integer) city.get("population")).reversed());
 
-            // Extraer los nombres de las ciudades ordenadas
+
             for (Map<String, Object> city : citiesList) {
                 cityNames.add((String) city.get("toponymName"));
             }
@@ -62,11 +60,11 @@ public class CountriesMethods {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(cantidad == null){
+        if (cantidad == null) {
             return cityNames;
-        }else if(cantidad > cityNames.size()){
+        } else if (cantidad > cityNames.size()) {
             return cityNames;
-        }else{
+        } else {
             return cityNames.subList(0, cantidad);
         }
 
@@ -88,22 +86,21 @@ public class CountriesMethods {
     }
 
 
-    public static String getCapitalCity(String country1){
+    public static String getCapitalCity(String country1) {
         Map<String, Pair<String, String>> countriesInSpanish = getCountriesAndCodesSpanish();
         Pair<String, String> country1Codes;
-        if(isSpanish(country1)){
+        if (isSpanish(country1)) {
             country1Codes = countriesInSpanish.get(country1);
-        }
-        else{
+        } else {
             Map<String, Pair<String, String>> countriesInEnglish = getCountriesAndCodesEnglish();
             country1Codes = countriesInEnglish.get(country1);
         }
 
 
         String country1NameInEnglish;
-        if(isSpanish(country1)){
+        if (isSpanish(country1)) {
             country1NameInEnglish = new Locale("", country1Codes.getFirst()).getDisplayCountry(Locale.ENGLISH);
-        }else{
+        } else {
             country1NameInEnglish = country1;
         }
 
@@ -113,7 +110,7 @@ public class CountriesMethods {
         List responseData;
         String capitalCity;
 
-        try{
+        try {
             responseData = new ObjectMapper().readValue(response, List.class);
             List cities = (List) ((Map) responseData.get(0)).get("capital");
             capitalCity = (String) cities.get(0);
@@ -179,19 +176,19 @@ public class CountriesMethods {
         return countries;
     }
 
-    public static String getRandomCountry(){
+    public static String getRandomCountry() {
         List<String> listaDePaises = getCountriesListInAlphabetical();
         int random = (int) (Math.random() * listaDePaises.size());
         return listaDePaises.get(random);
     }
 
-    public static double calculateDistanceBetweenCountries(String country1, String country2){
+    public static double calculateDistanceBetweenCountries(String country1, String country2) {
         Pair<Double, Double> country1Coordinates = getCountryCoordinates(country1);
         Pair<Double, Double> country2Coordinates = getCountryCoordinates(country2);
         return calculateDistance(country1Coordinates, country2Coordinates);
     }
 
-    public static double calculateDistanceBetweenCities(String city1, String country1, String city2, String country2){
+    public static double calculateDistanceBetweenCities(String city1, String country1, String city2, String country2) {
         city1 = sanitizeNameForAPI(city1);
         city2 = sanitizeNameForAPI(city2);
         country1 = sanitizeNameForAPI(country1);
@@ -216,7 +213,7 @@ public class CountriesMethods {
             lon = firstElement.get("lon").toString();
         } catch (IOException e) {
             e.printStackTrace();
-        }catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             throw new RuntimeException("Country not found");
         }
 
@@ -251,16 +248,14 @@ public class CountriesMethods {
     }
 
 
-
     public static boolean hasBorderWith(String country1, String country2) {
         Map<String, Pair<String, String>> countriesInSpanish = getCountriesAndCodesSpanish();
         Pair<String, String> country1Codes;
         Pair<String, String> country2Codes;
-        if(countriesInSpanish.containsKey(country1)){
+        if (countriesInSpanish.containsKey(country1)) {
             country1Codes = countriesInSpanish.get(country1);
             country2Codes = countriesInSpanish.get(country2);
-            }
-        else{
+        } else {
             Map<String, Pair<String, String>> countriesInEnglish = getCountriesAndCodesEnglish();
             country1Codes = countriesInEnglish.get(country1);
             country2Codes = countriesInEnglish.get(country2);
@@ -268,18 +263,18 @@ public class CountriesMethods {
 
 
         String country1NameInEnglish;
-        if(isSpanish(country1)){
+        if (isSpanish(country1)) {
             country1NameInEnglish = new Locale("", country1Codes.getFirst()).getDisplayCountry(Locale.ENGLISH);
-        }else{
+        } else {
             country1NameInEnglish = country1;
         }
 
         String apiUrl = "https://restcountries.com/v3.1/name/" + StringComparison.quitarAcentos(country1NameInEnglish.replaceAll(" ", "%20")) + "?fields=borders";
         String response = makeARequest(apiUrl);
 
-        List<HashMap<String,Object>> countryData;
+        List<HashMap<String, Object>> countryData;
         List<String> countryBorders;
-        try{
+        try {
             countryData = new ObjectMapper().readValue(response, List.class);
             countryBorders = (List<String>) countryData.get(0).get("borders");
             return countryBorders.contains(country2Codes.getSecond());
@@ -299,17 +294,17 @@ public class CountriesMethods {
 
     public static String getFlagEmojiFromCountryName(String countryName) {
         String countryCode = "";
-        if(getCountriesAndCodesEnglish().containsKey(countryName)){
+        if (getCountriesAndCodesEnglish().containsKey(countryName)) {
             countryCode = getCountriesAndCodesEnglish().get(countryName).getFirst();
-        }else if(isSpanish(countryName)){
+        } else if (isSpanish(countryName)) {
             countryCode = getCountriesAndCodesSpanish().get(countryName).getFirst();
-        }else{
+        } else {
             throw new RuntimeException("Country not found");
         }
         return getFlagEmoji(countryCode);
     }
 
-    private static String makeARequest(String urlBase){
+    private static String makeARequest(String urlBase) {
         URL url;
         try {
             url = new URL(urlBase);
@@ -347,7 +342,7 @@ public class CountriesMethods {
             lon = firstElement.get("lon").toString();
         } catch (IOException e) {
             e.printStackTrace();
-        }catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             throw new RuntimeException("City not found");
         }
 
@@ -355,7 +350,7 @@ public class CountriesMethods {
     }
 
 
-    public static String getRandomCity(){
+    public static String getRandomCity() {
         List<String> listaDePaises = getCountriesListInAlphabetical();
         int random = (int) (Math.random() * listaDePaises.size());
         String pais = listaDePaises.get(random);
@@ -364,13 +359,13 @@ public class CountriesMethods {
         return listaDeCiudades.get(random);
     }
 
-    public static String getRandomCity(String country){
+    public static String getRandomCity(String country) {
         List<String> listaDeCiudades = getCitiesByCountry(country, null);
         int random = (int) (Math.random() * listaDeCiudades.size());
         return listaDeCiudades.get(random);
     }
 
-    public static Pair<String,String> getRandomCityAndCountry(){
+    public static Pair<String, String> getRandomCityAndCountry() {
         List<String> listaDePaises = getCountriesListInAlphabetical();
         int random = (int) (Math.random() * listaDePaises.size());
         String pais = listaDePaises.get(random);
@@ -379,7 +374,7 @@ public class CountriesMethods {
         return Pair.of(listaDeCiudades.get(random), pais);
     }
 
-    private static boolean isSpanish(String country){
+    private static boolean isSpanish(String country) {
         return getCountriesAndCodesSpanish().containsKey(country);
     }
 
@@ -387,8 +382,7 @@ public class CountriesMethods {
     private static Pair<Double, Double> getPointBetweenLocations(Pair<Double, Double> coordinates1, Pair<Double, Double> coordinates2, int steps) {
         if (steps <= 0) {
             return coordinates1;
-        }
-        else if (steps >= 3) {
+        } else if (steps >= 3) {
             return coordinates2;
         }
 

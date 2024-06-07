@@ -2,7 +2,7 @@ package com.smartTrade.backend.Models;
 
 import org.springframework.data.util.Pair;
 
-public class Producto{
+public class Producto {
 
     private String nombre;
     private String descripcion;
@@ -13,6 +13,7 @@ public class Producto{
     private int id_imagen;
     private int stock;
     private String etiqueta_inteligente;
+
     public Producto(String nombre, String descripcion, int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, int id_imagen, int stock, String etiqueta_inteligente) {
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -25,7 +26,8 @@ public class Producto{
         this.etiqueta_inteligente = etiqueta_inteligente;
     }
 
-    public Producto(){}
+    public Producto() {
+    }
 
     public String getNombre() {
         return nombre;
@@ -43,7 +45,6 @@ public class Producto{
     public int getStock() {
         return stock;
     }
-
 
 
     public java.sql.Date getFecha_publicacion() {

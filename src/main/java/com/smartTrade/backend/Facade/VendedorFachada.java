@@ -15,7 +15,7 @@ import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Models.Vendedor;
 
 @Component
-public class VendedorFachada extends Fachada{
+public class VendedorFachada extends Fachada {
 
     @Autowired
     private VendedorServices vendedorServices;
@@ -24,22 +24,20 @@ public class VendedorFachada extends Fachada{
     private ProductoServices productoServices;
 
     public ResponseEntity<?> getVendedor(String identifier, String password) {
-        if(password == null){ // Si no se envía la contraseña, se asume que se quiere obtener la información del usuario
-            try{
+        if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información del usuario
+            try {
                 Vendedor vendedor = vendedorServices.readOneVendedor(identifier);
                 return new ResponseEntity<>(vendedor, HttpStatus.OK);
-            }catch(EmptyResultDataAccessException e){
+            } catch (EmptyResultDataAccessException e) {
                 return new ResponseEntity<>("Usuario no econtrado", HttpStatus.NOT_FOUND);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 return new ResponseEntity<>("Error al obtener el usuario", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }
-        else{ // Si se envía la contraseña, se asume que se quiere hacer login
+        } else { // Si se envía la contraseña, se asume que se quiere hacer login
             try {
                 Vendedor vendedor = vendedorServices.readOneVendedor(identifier);
                 if (vendedor.getPassword().equals(password)) {
-                    
+
                     return new ResponseEntity<>(vendedor, HttpStatus.OK);
                 }
                 return new ResponseEntity<>("Contraseña incorrecta", HttpStatus.UNAUTHORIZED);
@@ -47,12 +45,12 @@ public class VendedorFachada extends Fachada{
                 return new ResponseEntity<>("Usuario no econtrado", HttpStatus.NOT_FOUND);
             } catch (Exception e) {
                 return new ResponseEntity<>("Error al obtener el usuario", HttpStatus.INTERNAL_SERVER_ERROR);
-            } 
+            }
         }
     }
 
 
-     public ResponseEntity<?> getProductsFromOneVendor(String identifier) {
+    public ResponseEntity<?> getProductsFromOneVendor(String identifier) {
         try {
             Vendedor vendedor = vendedorServices.readOneVendedor(identifier);
             List<Producto> productos = productoServices.getProductsByVendor(vendedor.getNickname());
@@ -70,58 +68,57 @@ public class VendedorFachada extends Fachada{
     public ResponseEntity<?> registerVendedor(HashMap<String, ?> body) {
         String nickname = (String) body.get("nickname");
         String password = (String) body.get("password");
-        if(password == null){password = (String) body.get("user_password");}
+        if (password == null) {
+            password = (String) body.get("user_password");
+        }
         String correo = (String) body.get("correo");
         String direccion = (String) body.get("direccion");
         String pais = (String) body.get("pais");
         String ciudad = (String) body.get("ciudad");
-        try{
+        try {
             Vendedor vendedor = vendedorServices.readOneVendedor(nickname);
-            return new ResponseEntity<>("El usuario ya existe",HttpStatus.CONFLICT);  
-        }catch(EmptyResultDataAccessException e){
-            vendedorServices.createNewVendedor(nickname, password,correo,direccion, pais, ciudad);
-            return new ResponseEntity<>("Usuario creado correctamente",HttpStatus.CREATED);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>("Error al crear el usuario",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
+        } catch (EmptyResultDataAccessException e) {
+            vendedorServices.createNewVendedor(nickname, password, correo, direccion, pais, ciudad);
+            return new ResponseEntity<>("Usuario creado correctamente", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al crear el usuario", HttpStatus.BAD_REQUEST);
         }
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity<?> deleteVendedor(String  nickname) {
-        try{    
+    public ResponseEntity<?> deleteVendedor(String nickname) {
+        try {
             Vendedor vendedor = vendedorServices.readOneVendedor(nickname);
             vendedorServices.deleteVendedor(nickname);
-            return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
-        }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>("Error al eliminar el usuario",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar el usuario", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<?> updateVendedor(String nickname,String password,String dirección,String mail)
-    {
-        try{
-            Map<String,Object> attributes = new HashMap<>();
-            if(password == null && dirección == null && mail == null ){
+    public ResponseEntity<?> updateVendedor(String nickname, String password, String dirección, String mail) {
+        try {
+            Map<String, Object> attributes = new HashMap<>();
+            if (password == null && dirección == null && mail == null) {
                 return ResponseEntity.ok(ResponseEntity.status(400).body("No se ha enviado ningún atributo para actualizar."));
             }
-            if(password != null){
+            if (password != null) {
                 attributes.put("user_password", password);
             }
-            if(dirección != null){
+            if (dirección != null) {
                 attributes.put("direccion", dirección);
             }
-            if(mail != null){
+            if (mail != null) {
                 attributes.put("correo", mail);
             }
 
             vendedorServices.updateVendedor(nickname, attributes);
             return ResponseEntity.ok(ResponseEntity.status(200).body("Usuario actualizado correctamente."));
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.ok(ResponseEntity.status(400).body("Error al actualizar el usuario."));
-        } 
+        }
     }
 }

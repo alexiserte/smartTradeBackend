@@ -68,13 +68,13 @@ public class AdministradorFachada extends Fachada {
     }
 
     public ResponseEntity<?> mostrarProductos(boolean oldMode) {
-        if(oldMode) return new ResponseEntity<>(productoServices.readAllProducts(), HttpStatus.OK);
-        else{
+        if (oldMode) return new ResponseEntity<>(productoServices.readAllProducts(), HttpStatus.OK);
+        else {
             List<Producto> listaDeProductos = productoServices.readAllProducts();
             List<ProductoDAO.ProductoAntiguo> listaDeProductosAntiguos = new ArrayList<>();
-            for(Producto p : listaDeProductos){
+            for (Producto p : listaDeProductos) {
                 String imagen = productoServices.getImageFromOneProduct(p.getNombre());
-                ProductoDAO.ProductoAntiguo productoAntiguo = new ProductoDAO.ProductoAntiguo(p,imagen);
+                ProductoDAO.ProductoAntiguo productoAntiguo = new ProductoDAO.ProductoAntiguo(p, imagen);
                 listaDeProductosAntiguos.add(productoAntiguo);
             }
             return new ResponseEntity<>(listaDeProductosAntiguos, HttpStatus.OK);
@@ -246,7 +246,7 @@ public class AdministradorFachada extends Fachada {
 
     public ResponseEntity<?> loginAdministrador(String identifier, String password) {
         if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información
-                                // del usuario
+            // del usuario
             try {
                 Administrador administrador = adminServices.readUser(identifier);
                 return new ResponseEntity<>(administrador, HttpStatus.OK);
@@ -270,7 +270,9 @@ public class AdministradorFachada extends Fachada {
     public ResponseEntity<?> registerAdministrador(HashMap<String, ?> body) {
         String nickname = body.get("nickname").toString();
         String password = body.get("user_password").toString();
-        if(password == null){password = (String) body.get("password");}
+        if (password == null) {
+            password = (String) body.get("password");
+        }
         String correo = body.get("correo").toString();
         String direccion = body.get("direccion").toString();
         String pais = body.get("pais").toString();
@@ -287,7 +289,7 @@ public class AdministradorFachada extends Fachada {
         }
     }
 
-    public ResponseEntity<?> updateAdministrador(String nickname,String password, String correo, String dirección) {
+    public ResponseEntity<?> updateAdministrador(String nickname, String password, String correo, String dirección) {
         try {
             Administrador administrador = adminServices.readUser(nickname);
             Map<String, Object> attributes = new HashMap<>();
@@ -312,61 +314,62 @@ public class AdministradorFachada extends Fachada {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    public ResponseEntity<?> deleteAdministrador(String  nickname) {
-        try{  
+
+    public ResponseEntity<?> deleteAdministrador(String nickname) {
+        try {
             Administrador administrador = adminServices.readUser(nickname);
             adminServices.deleteUser(administrador.getNickname());
-            return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
-        }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al eliminar el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar el usuario: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
-    public ResponseEntity<?> getLog(Integer id){
-        try{
-            if(id != null){
-                return new ResponseEntity<>(Logger.getLog(id),HttpStatus.OK);
+    public ResponseEntity<?> getLog(Integer id) {
+        try {
+            if (id != null) {
+                return new ResponseEntity<>(Logger.getLog(id), HttpStatus.OK);
             }
-            return new ResponseEntity<>(Logger.getFullLog(),HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener los logs: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Logger.getFullLog(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener los logs: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<?> insertCountryAndCityWhereMissing(){
-        try{
+    public ResponseEntity<?> insertCountryAndCityWhereMissing() {
+        try {
             countriesServices.insertCountryAndCityWhereMissing();
-            return new ResponseEntity<>("País y ciudad insertados correctamente",HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al insertar país y ciudad: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("País y ciudad insertados correctamente", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al insertar país y ciudad: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<?> saveValidCountriesAndCities(){
-        try{
+    public ResponseEntity<?> saveValidCountriesAndCities() {
+        try {
             countriesServices.saveCountryAndCity();
-            return new ResponseEntity<>("Países y ciudades guardados correctamente",HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al guardar países y ciudades: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Países y ciudades guardados correctamente", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al guardar países y ciudades: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<?> getCountries(){
-        try{
-            return new ResponseEntity<>(countriesServices.getValidCountries(),HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener los países: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> getCountries() {
+        try {
+            return new ResponseEntity<>(countriesServices.getValidCountries(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener los países: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<?> getCities(String country){
-        try{
-            return new ResponseEntity<>(countriesServices.getValidCities(country),HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener las ciudades: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> getCities(String country) {
+        try {
+            return new ResponseEntity<>(countriesServices.getValidCities(country), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener las ciudades: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

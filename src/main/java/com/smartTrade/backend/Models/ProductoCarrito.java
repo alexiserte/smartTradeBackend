@@ -13,7 +13,8 @@ public class ProductoCarrito {
         this.cantidad = cantidad;
     }
 
-    public ProductoCarrito(){}
+    public ProductoCarrito() {
+    }
 
     public int getId_carrito() {
         return id_carrito;
@@ -43,7 +44,7 @@ public class ProductoCarrito {
         return cantidad;
     }
 
-public void setCantidad(int cantidad) {
+    public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
 }

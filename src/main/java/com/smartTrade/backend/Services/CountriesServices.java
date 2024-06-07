@@ -15,7 +15,7 @@ public class CountriesServices {
     @Autowired
     private CountryDAOAndServices countryDAO;
 
-    public void insertCountryAndCityWhereMissing(){
+    public void insertCountryAndCityWhereMissing() {
         countryDAO.insertCountryAndCityWhereMissing();
     }
 

@@ -9,8 +9,8 @@ import java.sql.Date;
 import java.util.Map;
 
 
-public class Pedido{
-     public static class ItemPedido{
+public class Pedido {
+    public static class ItemPedido {
         private Producto producto;
         private int cantidad;
         private String vendedor;
@@ -48,6 +48,7 @@ public class Pedido{
 
 
     }
+
     private int id;
     private int id_comprador;
     private List<ItemPedido> productos;
@@ -56,9 +57,9 @@ public class Pedido{
     private double precio_total;
     private EstadoPedido estado;
     private Date fecha_entrega;
-    private Pair<Double,Double> location;
+    private Pair<Double, Double> location;
 
-    public Pedido(int id,int id_comprador, List<ItemPedido> productos, Date fecha_realizacion,double precio_total, Date fecha_entrega, Pair<Double,Double> location){
+    public Pedido(int id, int id_comprador, List<ItemPedido> productos, Date fecha_realizacion, double precio_total, Date fecha_entrega, Pair<Double, Double> location) {
         this.id = id;
         this.id_comprador = id_comprador;
         this.productos = productos;
@@ -70,39 +71,53 @@ public class Pedido{
         this.location = location;
     }
 
-    public Pedido(){
+    public Pedido() {
         this.estado = new EsperandoConfirmacion();
         this.estadoActual = EstadosPedido.ESPERANDO_CONFIRMACION;
     }
 
-    public int getId() {return id;}
+    public int getId() {
+        return id;
+    }
 
-    public void setId(int id) {this.id = id;}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getId_comprador() {return id_comprador;}
+    public int getId_comprador() {
+        return id_comprador;
+    }
 
-    public void setId_comprador(int id_comprador) {this.id_comprador = id_comprador;}
+    public void setId_comprador(int id_comprador) {
+        this.id_comprador = id_comprador;
+    }
 
-    public List<ItemPedido> getProductos() {return productos;}
+    public List<ItemPedido> getProductos() {
+        return productos;
+    }
 
-    public void setProductos(List<ItemPedido> productos) {this.productos = productos;}
+    public void setProductos(List<ItemPedido> productos) {
+        this.productos = productos;
+    }
 
-    public EstadosPedido getEstadoActual() {return this.estadoActual;}
+    public EstadosPedido getEstadoActual() {
+        return this.estadoActual;
+    }
 
 
     public void setEstado(EstadoPedido estado) {
         this.estado = estado;
-        for(EstadosPedido e : EstadosPedido.values()){
-            if(e.getNombreEstado().equals(estado.getClass().getSimpleName())){
+        for (EstadosPedido e : EstadosPedido.values()) {
+            if (e.getNombreEstado().equals(estado.getClass().getSimpleName())) {
                 this.estadoActual = e;
             }
         }
     }
 
 
-    public EstadosPedido getEstadoActual(String estado){
-        for(EstadosPedido e : EstadosPedido.values()){
-            if(e.getNombreEstado().equals(estado)){
+    public EstadosPedido getEstadoActual(String estado) {
+        for (EstadosPedido e : EstadosPedido.values()) {
+            if (e.getNombreEstado().equals(estado)) {
                 return e;
             }
         }
@@ -110,7 +125,7 @@ public class Pedido{
     }
 
     public void setEstado(EstadosPedido estado) {
-        switch (estado){
+        switch (estado) {
             case ESPERANDO_CONFIRMACION:
                 this.estado = new EsperandoConfirmacion();
                 this.estadoActual = EstadosPedido.ESPERANDO_CONFIRMACION;
@@ -143,22 +158,32 @@ public class Pedido{
     }
 
 
-    // public EstadoPedido getEstado() {return estado;}
+    public Date getFecha_realizacion() {
+        return fecha_realizacion;
+    }
 
-    public Date getFecha_realizacion() {return fecha_realizacion;}
+    public void setFecha_realizacion(Date fecha_realizacion) {
+        this.fecha_realizacion = fecha_realizacion;
+    }
 
-    public void setFecha_realizacion(Date fecha_realizacion) {this.fecha_realizacion = fecha_realizacion;}
+    public double getPrecio_total() {
+        return precio_total;
+    }
 
-    public double getPrecio_total() {return precio_total;}
+    public void setPrecio_total(double precio_total) {
+        this.precio_total = precio_total;
+    }
 
-    public void setPrecio_total(double precio_total) {this.precio_total = precio_total;}
+    public Date getFecha_entrega() {
+        return fecha_entrega;
+    }
 
-    public Date getFecha_entrega() {return fecha_entrega;}
+    public void setFecha_entrega(Date fecha_entrega) {
+        this.fecha_entrega = fecha_entrega;
+    }
 
-    public void setFecha_entrega(Date fecha_entrega) {this.fecha_entrega = fecha_entrega;}
-
-    public HashMap<String,Double> getLocation() {
-        HashMap<String,Double> location = new HashMap<>();
+    public HashMap<String, Double> getLocation() {
+        HashMap<String, Double> location = new HashMap<>();
         location.put("latitud", this.location.getFirst());
         location.put("longitud", this.location.getSecond());
         return location;
@@ -171,16 +196,28 @@ public class Pedido{
 
     // Implementacion del patron Estado
 
-    public boolean siguienteEstado() { return estado.siguienteEstado(this);}
+    public boolean siguienteEstado() {
+        return estado.siguienteEstado(this);
+    }
 
-    public boolean estadoAnterior() {return estado.estadoAnterior(this);}
+    public boolean estadoAnterior() {
+        return estado.estadoAnterior(this);
+    }
 
-    public boolean procesar() {return estado.procesar(this);}
+    public boolean procesar() {
+        return estado.procesar(this);
+    }
 
-    public boolean cancelar() {return estado.cancelar(this);}
+    public boolean cancelar() {
+        return estado.cancelar(this);
+    }
 
-    public String printPedidoState() {return estado.printPedidoState(this);}
+    public String printPedidoState() {
+        return estado.printPedidoState(this);
+    }
 
-    public boolean confirmar() {return estado.confirmar(this);}
+    public boolean confirmar() {
+        return estado.confirmar(this);
+    }
 
 }

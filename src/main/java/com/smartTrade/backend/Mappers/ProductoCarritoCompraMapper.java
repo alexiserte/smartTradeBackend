@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProductoCarritoCompraMapper implements RowMapper<ProductoCarrito> {
-    
+
     @Override
     public ProductoCarrito mapRow(ResultSet rs, int rowNum) throws SQLException {
         ProductoCarrito productoCarritto = new ProductoCarrito();

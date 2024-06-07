@@ -5,7 +5,7 @@ public class Caracteristica {
     private int id_producto;
     private String valor;
     private int id_categoria;
-    
+
     public Caracteristica(int id_caracteristica, int id_producto, String valor, int id_categoria) {
         this.id_caracteristica = id_caracteristica;
         this.id_producto = id_producto;
@@ -13,7 +13,8 @@ public class Caracteristica {
         this.id_categoria = id_categoria;
     }
 
-    public Caracteristica(){}
+    public Caracteristica() {
+    }
 
     public int getId_caracteristica() {
         return id_caracteristica;

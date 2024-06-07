@@ -1,12 +1,11 @@
 package com.smartTrade.backend.State;
 
-import com.mysql.cj.log.Log;
 import com.smartTrade.backend.Logger.Logger;
 import com.smartTrade.backend.Models.Pedido;
 
-public class Procesando implements EstadoPedido{
+public class Procesando implements EstadoPedido {
 
-    private Logger logger = Logger.getInstance();
+    private final Logger logger = Logger.getInstance();
 
 
     public boolean confirmar(Pedido pedido) {
@@ -16,7 +15,7 @@ public class Procesando implements EstadoPedido{
         return false;
     }
 
-    @Override 
+    @Override
     public boolean siguienteEstado(Pedido pedido) {
         pedido.setEstado(EstadosPedido.ENVIADO);
         return true;

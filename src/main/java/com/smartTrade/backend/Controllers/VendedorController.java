@@ -25,7 +25,7 @@ public class VendedorController {
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
+
 
     @GetMapping("/vendedor/productos/")
     public ResponseEntity<?> getVendedorProductos(@RequestParam(value = "identifier", required = true) String identifier, HttpServletRequest request) {
@@ -33,21 +33,21 @@ public class VendedorController {
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
 
-    
+
     @PostMapping("/vendedor/")
     public ResponseEntity<?> register(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
         if (!body.containsKey("nickname") || !body.containsKey("user_password") || !body.containsKey("correo")
-                || !body.containsKey("direccion")){
+                || !body.containsKey("direccion")) {
             ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
             logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
             return res;
         }
         ResponseEntity<?> res = fechada.registerVendedor(body);
         logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
-        return res;}
-    
+        return res;
+    }
+
     @DeleteMapping("/vendedor/")
     public ResponseEntity<?> deleteVendedor(@RequestParam(value = "nickname", required = true) String nickname, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.deleteVendedor(nickname);
@@ -57,12 +57,12 @@ public class VendedorController {
 
     @PutMapping("/vendedor/")
     public ResponseEntity<?> updateVendedor(@RequestParam(value = "nickname", required = true) String nickname,
-            @RequestParam(value = "password", required = false) String password,
-            @RequestParam(value = "direccion", required = false) String dirección,
-            @RequestParam(value = "mail", required = false) String mail, HttpServletRequest request) {
+                                            @RequestParam(value = "password", required = false) String password,
+                                            @RequestParam(value = "direccion", required = false) String dirección,
+                                            @RequestParam(value = "mail", required = false) String mail, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.updateVendedor(nickname, password, dirección, mail);
         logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
+
 }

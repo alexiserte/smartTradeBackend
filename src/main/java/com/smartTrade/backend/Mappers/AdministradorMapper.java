@@ -10,7 +10,7 @@ import com.smartTrade.backend.Models.Administrador;
 import com.smartTrade.backend.Models.User_Types;
 
 public class AdministradorMapper implements RowMapper<Administrador> {
-    
+
     @Override
     public Administrador mapRow(ResultSet rs, int rowNum) throws SQLException {
         String nickname = (rs.getString("nickname"));

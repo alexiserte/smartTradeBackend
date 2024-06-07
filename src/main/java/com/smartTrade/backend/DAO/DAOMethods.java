@@ -8,7 +8,8 @@ import java.util.Map;
 public class DAOMethods {
 
     private static JdbcTemplate database;
-    public DAOMethods (JdbcTemplate database) {
+
+    public DAOMethods(JdbcTemplate database) {
         this.database = database;
     }
 
@@ -33,23 +34,31 @@ public class DAOMethods {
             query += key + "=" + args.get(key) + ",";
         }
         query = query.substring(0, query.length() - 1);
-        if(condition != null && !condition.isEmpty()) {query += " WHERE " + condition;}
+        if (condition != null && !condition.isEmpty()) {
+            query += " WHERE " + condition;
+        }
         database.update(query);
     }
 
 
     public static void delete(String table, String condition) {
         String query = "DELETE FROM " + table;
-        if(condition != null && !condition.isEmpty()) {query += " WHERE " + condition;}
+        if (condition != null && !condition.isEmpty()) {
+            query += " WHERE " + condition;
+        }
         database.update(query);
     }
 
 
-    public static void read(String table,String attributes, String condition, RowCallbackHandler rch) {
+    public static void read(String table, String attributes, String condition, RowCallbackHandler rch) {
         String attributesQuery = attributes;
-        if(attributes == null || attributes.isEmpty()) {attributesQuery = "*";}
-          String query = "SELECT " + attributesQuery + " FROM " + table;
-        if(condition != null && !condition.isEmpty()) {query += " WHERE " + condition;}
+        if (attributes == null || attributes.isEmpty()) {
+            attributesQuery = "*";
+        }
+        String query = "SELECT " + attributesQuery + " FROM " + table;
+        if (condition != null && !condition.isEmpty()) {
+            query += " WHERE " + condition;
+        }
         database.query(query, rch);
     }
 }
