@@ -216,7 +216,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
             }
         }catch (NullPointerException e){
-            System.out.println("Hola Sergio :=)");
+            throw new RuntimeException("hola sergio :)");
         }
 
 
@@ -295,8 +295,6 @@ public class ProductoDAO implements DAOInterface<Object> {
                         (Double) valor, nombre);
             }
         }
-
-        System.out.println("Esto se ejecuta7");
 
     }
 
