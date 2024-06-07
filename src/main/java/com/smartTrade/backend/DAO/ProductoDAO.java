@@ -229,10 +229,12 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         int id_categoria = categoriaDAO.getIDFromName(categoryName);
 
+        System.out.println("en la categoria no dio error");
         if(atributos.keySet().contains("precio") || atributos.keySet().contains("stock")){
             updateProductFromOneVendor(nombre,(String) args.get("vendorName"),atributos);
             return;
         }
+        System.out.println("actualizarlo deberia no dar error");
 
         System.out.println("fffff");
 
