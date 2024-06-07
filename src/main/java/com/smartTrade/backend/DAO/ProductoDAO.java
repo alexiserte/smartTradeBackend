@@ -208,11 +208,15 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         System.out.println("Esto se ejecuta1");
 
-        int id_imagen = imagenDAO.getID(imagen);
-        if (id_imagen == -1) {
-            imagenDAO.create(Map.of("imagen",imagen));
-            id_imagen = imagenDAO.getID(imagen);
+        try {
+            int id_imagen = imagenDAO.getID(imagen);
+            if (id_imagen == -1) {
+                imagenDAO.create(Map.of("imagen", imagen));
+                id_imagen = imagenDAO.getID(imagen);
 
+            }
+        }catch (NullPointerException e){
+            System.out.println("Hola Sergio :=)");
         }
 
 
