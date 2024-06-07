@@ -19,14 +19,13 @@ public class ImagenDAO implements DAOInterface<String>{
         this.database = database;
     }
 
-    ConverterFactory factory = new ConverterFactory();
-    PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
+    private static final ConverterFactory factory = new ConverterFactory();
+    private final PNGConverter converter = (PNGConverter) factory.createConversor("PNG");
     
 
     public void create(Map<String,?> args) {
         String image = (String) args.get("imagen");
         System.out.println("hola:)");
-        PNGConverter converter = new PNGConverter();
         String imagenResized = converter.procesar(image);
         System.out.println("hola:)2");
         database.update("INSERT INTO Imagen(imagen) VALUE(?)",imagenResized);
