@@ -372,6 +372,8 @@ public class ProductoDAO implements DAOInterface<Object> {
         int id_producto = getIDFromName(nombre);
         int id_vendedor = vendedorDAO.getVendorID(vendorName);
 
+        System.out.println("ESTO ESTA BIEN X1");
+
         for(String key : keys) {
 
             if (key.equals("precio")) {
@@ -380,12 +382,16 @@ public class ProductoDAO implements DAOInterface<Object> {
                 database.update(
                         "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)",
                         id_producto, precio, fechaActual, id_vendedor);
+                System.out.println("ESTO ESTA BIEN X2");
                 database.update("UPDATE Vendedores_Producto SET precio = ? WHERE id_producto = ? AND id_vendedor = ?",
                         precio, id_producto, id_vendedor);
+                System.out.println("ESTO ESTA BIEN X3");
             } else if (keys.contains("stock")) {
                 int stock = (int) atributos.get("stock");
+                System.out.println("ESTO ESTA BIEN X4");
                 database.update("UPDATE Vendedores_Producto SET stock_vendedor = ? WHERE id_producto = ? AND id_vendedor = ?",
                         stock, id_producto, id_vendedor);
+                System.out.println("ESTO ESTA BIEN X5");
             }
         }
     }
