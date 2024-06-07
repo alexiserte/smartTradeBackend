@@ -58,12 +58,18 @@ public class CompradorFachada extends Fachada {
     @SuppressWarnings("unused")
     public ResponseEntity<?> register(Map<String, ?> body) {
         String nickname = (String) body.get("nickname");
+        System.out.println("error en el nickname: " + nickname);
         String password = (String) body.get("user_password"); // Se cambió el nombre de la clave de "password" a
                                                               // "user_password"
+        System.out.println("error en el password: " + password);
         String correo = (String) body.get("correo");
+        System.out.println("error en el correo: " + correo);
         String direccion = (String) body.get("direccion");
+        System.out.println("error en la direccion: " + direccion);
         String pais = (String) body.get("pais");
+        System.out.println("error en el pais: " + pais);
         String ciudad = (String) body.get("ciudad");
+        System.out.println("error en la ciudad: " + ciudad);
         try {
             Comprador comprador = compradorServices.readOneComprador(nickname);
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
