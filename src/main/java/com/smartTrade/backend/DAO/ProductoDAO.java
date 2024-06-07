@@ -207,9 +207,9 @@ public class ProductoDAO implements DAOInterface<Object> {
         String categoryName = (String) args.get("categoria");
 
         System.out.println("Esto se ejecuta1");
-
+        int id_imagen = -1;
         try {
-            int id_imagen = imagenDAO.getID(imagen);
+            id_imagen = imagenDAO.getID(imagen);
             if (id_imagen == -1) {
                 imagenDAO.create(Map.of("imagen", imagen));
                 id_imagen = imagenDAO.getID(imagen);
