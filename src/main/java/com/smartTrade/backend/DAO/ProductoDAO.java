@@ -204,6 +204,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         String nombre = (String) args.get("nombre");
         HashMap<String, ?> atributos = (HashMap<String, ?>) args.get("atributos");
         String imagen = (String) args.get("imagen");
+        System.out.println(imagen);
         String categoryName = (String) args.get("categoria");
 
         Integer id_imagen = -1;
