@@ -237,8 +237,9 @@ public class ProductoDAO implements DAOInterface<Object> {
         System.out.println("fffff");
 
         List<String> keys = new ArrayList<>(atributos.keySet());
+        Producto product = null;
         try {
-            Producto product = readOneProduct(nombre);
+            product = readOneProduct(nombre);
         }catch (Exception e){
             throw new RuntimeException("Perú es español");
         }
