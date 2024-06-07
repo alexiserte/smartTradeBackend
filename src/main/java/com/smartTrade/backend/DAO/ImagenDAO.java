@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.smartTrade.backend.Template.PNGConverter;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -55,8 +56,7 @@ public class ImagenDAO implements DAOInterface<String>{
     public int getID(String image) {
         try{
             return database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, image);
-        }catch(Exception e){
-            System.out.println("No se ha encontrado la imagen");
+        }catch(NullPointerException | EmptyResultDataAccessException e){
             return -1;
         }
     }
