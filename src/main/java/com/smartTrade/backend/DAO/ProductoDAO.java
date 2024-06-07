@@ -201,11 +201,12 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     @SuppressWarnings("unchecked")
     public void update(Map<String,?> args) {
-        String nombre = (String) args.get("nombre");
+
         HashMap<String, ?> atributos = (HashMap<String, ?>) args.get("atributos");
-        String imagen = (String) args.get("imagen");
+        String nombre = (String) atributos.get("nombre");
+        String imagen = (String) atributos.get("imagen");
         System.out.println(imagen);
-        String categoryName = (String) args.get("categoria");
+        String categoryName = (String) atributos.get("categoria");
 
         Integer id_imagen = -1;
             id_imagen = imagenDAO.getID(imagen);

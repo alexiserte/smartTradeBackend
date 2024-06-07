@@ -66,7 +66,7 @@ public class ProductoServices {
 
     public void updateProduct(Map atributos) {
         System.out.println("imagen en productoServices: " + atributos.get("imagen"));
-        productoDAO.update(atributos);
+        productoDAO.update(Map.of("atributos",atributos));
     }
 
     public void deleteProduct(String nombre) {
