@@ -215,6 +215,9 @@ public class ProductoDAO implements DAOInterface<Object> {
                 imagenDAO.create(args2);
                 id_imagen = imagenDAO.getID(imagen);
             }
+            else{
+                System.out.println("Esto se ejecuta3");
+            }
         }catch (NullPointerException e){
             throw new RuntimeException("\nsombra aqui sombra alla maquillate maquillate\n");
         }
