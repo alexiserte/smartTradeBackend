@@ -70,7 +70,7 @@ public class UsuarioFachada extends Fachada{
         String userType = (String) body.get("userType");
 
         String pais = (String) body.get("pais");
-        body.replace("pais", pais.substring(1, pais.length()-3));
+        body.replace("pais", pais.substring(0, pais.length()-4));
         for(String key : body.keySet()){
             System.out.println("---------------------------");
             System.out.println(key + " : " + body.get(key));
