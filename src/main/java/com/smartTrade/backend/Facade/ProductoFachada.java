@@ -124,7 +124,7 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> updateProduct(Map<String, ?> atributos) {
         try {
-
+            System.out.println("imagen en fachada: " + atributos.get("imagen"));
             productoServices.updateProduct(atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
