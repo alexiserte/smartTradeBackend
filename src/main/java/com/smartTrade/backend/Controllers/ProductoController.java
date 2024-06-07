@@ -67,6 +67,7 @@ public class ProductoController {
     @PutMapping("/producto/")
     public ResponseEntity<?> updateProduct(@RequestBody(required = true) Map<String, ?> atributos, HttpServletRequest request) {
         ResponseEntity<?> res = fachada.updateProduct(atributos);
+        System.out.println("Request body" + atributos.toString());
         logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
