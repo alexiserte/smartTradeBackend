@@ -215,7 +215,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         }
 
-        System.out.println("Esto se ejecuta2");
+
 
         int id_categoria = categoriaDAO.getIDFromName(categoryName);
 
@@ -224,12 +224,9 @@ public class ProductoDAO implements DAOInterface<Object> {
             return;
         }
 
-        System.out.println("Esto se ejecuta3");
-
         List<String> keys = new ArrayList<>(atributos.keySet());
         Producto product = readOneProduct(nombre);
 
-        System.out.println("Esto se ejecuta4");
 
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
             String key = iterator.next();
