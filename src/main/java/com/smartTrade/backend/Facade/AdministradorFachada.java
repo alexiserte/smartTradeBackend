@@ -270,6 +270,7 @@ public class AdministradorFachada extends Fachada {
     public ResponseEntity<?> registerAdministrador(HashMap<String, ?> body) {
         String nickname = body.get("nickname").toString();
         String password = body.get("user_password").toString();
+        if(password == null){password = (String) body.get("password");}
         String correo = body.get("correo").toString();
         String direccion = body.get("direccion").toString();
         String pais = body.get("pais").toString();
