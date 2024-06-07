@@ -211,7 +211,8 @@ public class ProductoDAO implements DAOInterface<Object> {
         try {
             System.out.println("perro sanxe");
             if (id_imagen == -1 || id_imagen == null) {
-                Map<String,String> args2 = Map.of("imagen",imagen);
+                Map<String,String> args2 = new HashMap<>();
+                args2.put("imagen",imagen);
                 System.out.println("Esto se ejecuta4");
                 imagenDAO.create(args2);
                 id_imagen = imagenDAO.getID(imagen);
