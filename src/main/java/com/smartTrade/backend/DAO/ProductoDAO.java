@@ -236,6 +236,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         List<String> keys = new ArrayList<>(atributos.keySet());
         Producto product = readOneProduct(nombre);
+        System.out.println("Esto se ejecuta4");
 
 
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
