@@ -369,10 +369,13 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
     public void updateProductFromOneVendor(String nombre, String vendorName, Map atributos) {
+        int id_producto = 0;
+        int id_vendedor = 0;
+        List<String> keys = new ArrayList<>();
         try {
-            List<String> keys = new ArrayList<>(atributos.keySet());
-            int id_producto = getIDFromName(nombre);
-            int id_vendedor = vendedorDAO.getVendorID(vendorName);
+            keys = new ArrayList<>(atributos.keySet());
+            id_producto = getIDFromName(nombre);
+            id_vendedor = vendedorDAO.getVendorID(vendorName);
         }catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException("Perú es español");
