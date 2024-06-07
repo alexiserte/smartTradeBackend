@@ -232,7 +232,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         System.out.println("en la categoria no dio error");
         if(atributos.keySet().contains("precio") || atributos.keySet().contains("stock")){
-            updateProductFromOneVendor(nombre,(String) args.get("vendorName"),atributos);
+            updateProductFromOneVendor(nombre,(String) args.get("vendedor"),atributos);
             return;
         }
         System.out.println("actualizarlo deberia no dar error");
