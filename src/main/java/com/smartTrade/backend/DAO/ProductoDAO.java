@@ -302,7 +302,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         for (String key : keys) {
             String keyValue = (String) key;
             if(keyValue.equals("name")) keyValue = "nombre";
-            if (keyValue.equals("vendedor") || keyValue.equals("precio") || keyValue.equals("stock") ) continue;
+            if (keyValue.equals("vendedor") || keyValue.equals("precio") || keyValue.equals("stock") || keyValue.equals("imagen") ) continue;
             Object valor = atributos.get(key);
 
             if (valor instanceof Integer) {
