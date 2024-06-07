@@ -54,6 +54,10 @@ public class UsuarioFachada extends Fachada{
             String[] keyValue = part.split(":");
             String key = keyValue[0].replace("\"", "").trim();
             String value = keyValue[1].replace("\"", "").trim();
+            if(key.equals("pais")){
+                // En el caso de que sea el país eliminamos los tres ultimos caracteres que son el código del país
+                value = value.substring(0, value.length() - 3);
+            }
             body.put(key, value);
         }
         String userType = (String) body.get("userType");
