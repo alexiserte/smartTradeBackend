@@ -131,7 +131,8 @@ public class ProductoFachada extends Fachada {
             return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage() + e.getClass(),
+
+            return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage() + e.getClass() + e.getStackTrace(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
