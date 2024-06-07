@@ -206,18 +206,12 @@ public class ProductoDAO implements DAOInterface<Object> {
         String imagen = (String) args.get("imagen");
         String categoryName = (String) args.get("categoria");
 
-        System.out.println("Esto se ejecuta1");
         int id_imagen = -1;
-        try {
             id_imagen = imagenDAO.getID(imagen);
-        }catch (NullPointerException e){
-            id_imagen = -1;
-            throw new RuntimeException("\nla vida es una tombola tom tom tombola, de luh de y de colohhhhhhhhhhhhhhhh\n");
-        }
-
         try {
             if (id_imagen == -1) {
                 Map<String,?> args2 = Map.of("imagen",imagen);
+                System.out.println("Esto se ejecuta4");
                 imagenDAO.create(args2);
                 id_imagen = imagenDAO.getID(imagen);
             }
