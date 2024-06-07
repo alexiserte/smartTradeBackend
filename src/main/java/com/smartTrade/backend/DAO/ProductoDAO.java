@@ -209,7 +209,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         String categoryName = (String) atributos.get("categoria");
 
         Integer id_imagen = -1;
-            id_imagen = imagenDAO.getID(imagen);
+        id_imagen = imagenDAO.getID(imagen);
         try {
             System.out.println("perro sanxe");
             if (id_imagen == -1 || id_imagen == null) {
@@ -226,10 +226,6 @@ public class ProductoDAO implements DAOInterface<Object> {
             e.printStackTrace();
             throw new RuntimeException("\nsombra aqui sombra alla maquillate maquillate\n");
         }
-
-
-
-
 
         int id_categoria = categoriaDAO.getIDFromName(categoryName);
 
@@ -306,6 +302,7 @@ public class ProductoDAO implements DAOInterface<Object> {
             }
         }
 
+        System.out.println("Esto se ejecuta7");
     }
 
     public void delete(Map<String,?> args) {
