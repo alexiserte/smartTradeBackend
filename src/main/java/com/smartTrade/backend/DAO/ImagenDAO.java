@@ -24,8 +24,10 @@ public class ImagenDAO implements DAOInterface<String>{
 
     public void create(Map<String,?> args) {
         String image = (String) args.get("imagen");
+        System.out.println("hola:)");
         String imagenResized = converter.procesar(image);
-        database.update("INSERT INTO Imagen(imagen) VALUES (?)",imagenResized);
+        System.out.println("hola:)2");
+        database.update("INSERT INTO Imagen(imagen) VALUE(?)",imagenResized);
     }
 
     public void update(Map<String,?> args) {
