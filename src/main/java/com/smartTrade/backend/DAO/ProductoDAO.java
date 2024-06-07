@@ -206,12 +206,16 @@ public class ProductoDAO implements DAOInterface<Object> {
         String imagen = (String) args.get("imagen");
         String categoryName = (String) args.get("categoria");
 
+        System.out.println("Esto se ejecuta1");
+
         int id_imagen = imagenDAO.getID(imagen);
         if (id_imagen == -1) {
             imagenDAO.create(Map.of("imagen",imagen));
             id_imagen = imagenDAO.getID(imagen);
 
         }
+
+        System.out.println("Esto se ejecuta2");
 
         int id_categoria = categoriaDAO.getIDFromName(categoryName);
 
@@ -220,8 +224,12 @@ public class ProductoDAO implements DAOInterface<Object> {
             return;
         }
 
+        System.out.println("Esto se ejecuta3");
+
         List<String> keys = new ArrayList<>(atributos.keySet());
         Producto product = readOneProduct(nombre);
+
+        System.out.println("Esto se ejecuta4");
 
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
             String key = iterator.next();
@@ -265,9 +273,13 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         }
 
+        System.out.println("Esto se ejecuta5");
+
         if (keys.isEmpty()) {
             return;
         }
+
+        System.out.println("Esto se ejecuta6");
 
         for (String key : keys) {
             Object valor = atributos.get(key);
@@ -282,6 +294,8 @@ public class ProductoDAO implements DAOInterface<Object> {
                         (Double) valor, nombre);
             }
         }
+
+        System.out.println("Esto se ejecuta7");
 
     }
 
