@@ -249,6 +249,56 @@ public class ProductoDAO implements DAOInterface<Object> {
         System.out.println("Esto se ejecuta4");
 
 
+        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
+            String key = iterator.next();
+            if (key.equals("name")) {
+                if (atributos.get(key).equals(product.getNombre())) {
+                    iterator.remove();
+                }
+            } else if (key.equals("categoria")) {
+                if ((int) id_categoria == (product.getId_categoria())) {
+                    iterator.remove();
+                }
+
+            } else if (key.equals("descripcion")) {
+                if (((String) atributos.get(key)).equals(product.getDescripcion())) {
+                    iterator.remove();
+                }
+
+            } else if (key.equals("imagen")) {
+                if (id_imagen == (product.getId_imagen())) {
+                    iterator.remove();
+                }
+
+            }/* else if (key.equals("fecha_añadido")) {
+                if (((Date) atributos.get(key)).equals(product.getFecha_publicacion())) {
+                    iterator.remove();
+                }
+            } else if (key.equals("validado")) {
+                if ((boolean) atributos.get(key) == product.getValidado()) {
+                    iterator.remove();
+                }
+            /else if (key.equals("huella_ecologica")) {
+                if ((int) atributos.get(key) == product.getHuella_ecologica()) {
+                    iterator.remove();
+                }
+            }*/
+            else if (key.equals("etiqueta_inteligente")) {
+                if (((String) atributos.get(key)).equals(product.getEtiqueta_inteligente())) {
+                    iterator.remove();
+                }
+            }
+
+        }
+
+        System.out.println("Esto se ejecuta5");
+
+        if (keys.isEmpty()) {
+            return;
+        }
+
+        System.out.println("Esto se ejecuta6");
+
         for (String key : keys) {
             Object valor = atributos.get(key);
             if (valor instanceof Integer) {
