@@ -25,6 +25,7 @@ public class ImagenDAO implements DAOInterface<String>{
 
     public void create(Map<String,?> args) {
         String image = (String) args.get("imagen");
+        System.out.println(image);
         System.out.println("hola:)");
         String imagenResized = converter.procesar(image);
         System.out.println("hola:)2");
