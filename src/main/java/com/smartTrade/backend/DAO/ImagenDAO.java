@@ -53,7 +53,7 @@ public class ImagenDAO implements DAOInterface<String>{
         return database.queryForList("SELECT imagen FROM Imagen ORDER BY id", String.class);
     }
 
-    public int getID(String image) {
+    public Integer getID(String image) {
         try{
             return database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, image);
         }catch(NullPointerException | EmptyResultDataAccessException e){

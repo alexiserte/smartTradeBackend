@@ -206,7 +206,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         String imagen = (String) args.get("imagen");
         String categoryName = (String) args.get("categoria");
 
-        int id_imagen = -1;
+        Integer id_imagen = -1;
             id_imagen = imagenDAO.getID(imagen);
         try {
             System.out.println("perro sanxe");
