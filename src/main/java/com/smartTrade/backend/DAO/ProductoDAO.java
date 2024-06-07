@@ -217,9 +217,9 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         try {
             if (id_imagen == -1) {
-                imagenDAO.create(Map.of("imagen", imagen));
+                Map<String,?> args2 = Map.of("imagen",imagen);
+                imagenDAO.create(args2);
                 id_imagen = imagenDAO.getID(imagen);
-
             }
         }catch (NullPointerException e){
             throw new RuntimeException("\nsombra aqui sombra alla maquillate maquillate\n");

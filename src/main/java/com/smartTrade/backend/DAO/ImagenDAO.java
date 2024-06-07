@@ -56,6 +56,7 @@ public class ImagenDAO implements DAOInterface<String>{
         try{
             return database.queryForObject("SELECT id FROM Imagen WHERE imagen = ?", Integer.class, image);
         }catch(Exception e){
+            System.out.println("No se ha encontrado la imagen");
             return -1;
         }
     }
