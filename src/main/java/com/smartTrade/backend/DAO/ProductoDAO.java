@@ -222,7 +222,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
             }
         }catch (NullPointerException e){
-            throw new RuntimeException("\nla vida es una tombola tom tom tombola, de luh de y de colohhhhhhhhhhhhhhhh\n");
+            throw new RuntimeException("\nsombra aqui sombra alla maquillate maquillate\n");
         }
 
 
