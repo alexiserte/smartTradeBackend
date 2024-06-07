@@ -3,6 +3,7 @@ package com.smartTrade.backend.DAO;
 import com.smartTrade.backend.Models.Vendedor;
 import com.smartTrade.backend.Template.Converter;
 import com.smartTrade.backend.Template.PNGConverter;
+import net.sf.jsqlparser.expression.TryCastExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -368,9 +369,14 @@ public class ProductoDAO implements DAOInterface<Object> {
     }
 
     public void updateProductFromOneVendor(String nombre, String vendorName, Map atributos) {
-        List<String> keys = new ArrayList<>(atributos.keySet());
-        int id_producto = getIDFromName(nombre);
-        int id_vendedor = vendedorDAO.getVendorID(vendorName);
+        try {
+            List<String> keys = new ArrayList<>(atributos.keySet());
+            int id_producto = getIDFromName(nombre);
+            int id_vendedor = vendedorDAO.getVendorID(vendorName);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Perú es español");
+        }
 
         System.out.println("ESTO ESTA BIEN X1");
 
