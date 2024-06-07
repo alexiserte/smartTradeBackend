@@ -300,15 +300,18 @@ public class ProductoDAO implements DAOInterface<Object> {
         System.out.println("Esto se ejecuta6");
 
         for (String key : keys) {
+            String keyValue = (String) key;
+            if(keyValue.equals("name")) keyValue = "nombre";
             Object valor = atributos.get(key);
+
             if (valor instanceof Integer) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND ",
+                database.update("UPDATE Producto SET " + keyValue + " = ? WHERE nombre = ? AND ",
                         (Integer) valor, nombre);
             } else if (valor instanceof String) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?",
+                database.update("UPDATE Producto SET " + keyValue + " = ? WHERE nombre = ?",
                         (String) valor, nombre);
             } else if (valor instanceof Double) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?",
+                database.update("UPDATE Producto SET " + keyValue + " = ? WHERE nombre = ?",
                         (Double) valor, nombre);
             }
         }
