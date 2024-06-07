@@ -132,7 +132,7 @@ public class ProductoFachada extends Fachada {
 
         } catch (Exception e) {
 
-            return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage() + e.getClass() + e.getStackTrace().toString(),
+            return new ResponseEntity<>("Error al actualizar el producto: " + e.getLocalizedMessage() + e.getClass() + Arrays.stream(e.getStackTrace()).toList(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
