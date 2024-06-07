@@ -75,6 +75,12 @@ public class CompradorFachada extends Fachada {
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
         } catch (EmptyResultDataAccessException e) {
             System.out.println(":)");
+            System.out.println(nickname);
+            System.out.println(password);
+            System.out.println(correo);
+            System.out.println(direccion);
+            System.out.println(pais);
+            System.out.println(ciudad);
             compradorServices.createNewComprador(nickname, password, correo, direccion, pais, ciudad);
             return new ResponseEntity<>("Comprador creado correctamente", HttpStatus.CREATED);
         } catch (Exception e) {
