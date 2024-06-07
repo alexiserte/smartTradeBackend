@@ -201,27 +201,41 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     @SuppressWarnings("unchecked")
     public void update(Map<String,?> args) {
+        // Verifica si los argumentos no son nulos
+        if (args == null) {
+            throw new IllegalArgumentException("El argumento args no puede ser null");
+        }
+
         String nombre = (String) args.get("nombre");
         HashMap<String, ?> atributos = (HashMap<String, ?>) args.get("atributos");
         String imagen = (String) args.get("imagen");
         String categoryName = (String) args.get("categoria");
 
+        // Verifica si los valores necesarios no son nulos
+        if (nombre == null || atributos == null || imagen == null || categoryName == null) {
+            throw new IllegalArgumentException("Uno o más argumentos necesarios son null");
+        }
+
         int id_imagen = imagenDAO.getID(imagen);
         if (id_imagen == -1) {
-            imagenDAO.create(Map.of("imagen",imagen));
+            imagenDAO.create(Map.of("imagen", imagen));
             id_imagen = imagenDAO.getID(imagen);
-
         }
 
         int id_categoria = categoriaDAO.getIDFromName(categoryName);
 
-        if(atributos.keySet().contains("precio") || atributos.keySet().contains("stock")){
-            updateProductFromOneVendor(nombre,(String) args.get("vendorName"),atributos);
+        if (atributos.keySet().contains("precio") || atributos.keySet().contains("stock")) {
+            updateProductFromOneVendor(nombre, (String) args.get("vendorName"), atributos);
             return;
         }
 
         List<String> keys = new ArrayList<>(atributos.keySet());
         Producto product = readOneProduct(nombre);
+
+        // Verifica si el producto es nulo
+        if (product == null) {
+            throw new IllegalStateException("Producto no encontrado: " + nombre);
+        }
 
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
             String key = iterator.next();
@@ -230,39 +244,22 @@ public class ProductoDAO implements DAOInterface<Object> {
                     iterator.remove();
                 }
             } else if (key.equals("categoria")) {
-                if ((int) id_categoria == (product.getId_categoria())) {
+                if (id_categoria == product.getId_categoria()) {
                     iterator.remove();
                 }
-
             } else if (key.equals("descripcion")) {
-                if (((String) atributos.get(key)).equals(product.getDescripcion())) {
+                if (atributos.get(key).equals(product.getDescripcion())) {
                     iterator.remove();
                 }
-
             } else if (key.equals("imagen")) {
-                if (id_imagen == (product.getId_imagen())) {
+                if (id_imagen == product.getId_imagen()) {
                     iterator.remove();
                 }
-
-            }/* else if (key.equals("fecha_añadido")) {
-                if (((Date) atributos.get(key)).equals(product.getFecha_publicacion())) {
-                    iterator.remove();
-                }
-            } else if (key.equals("validado")) {
-                if ((boolean) atributos.get(key) == product.getValidado()) {
-                    iterator.remove();
-                }
-            /else if (key.equals("huella_ecologica")) {
-                if ((int) atributos.get(key) == product.getHuella_ecologica()) {
-                    iterator.remove();
-                }
-            }*/
-            else if (key.equals("etiqueta_inteligente")) {
-                if (((String) atributos.get(key)).equals(product.getEtiqueta_inteligente())) {
+            } else if (key.equals("etiqueta_inteligente")) {
+                if (atributos.get(key).equals(product.getEtiqueta_inteligente())) {
                     iterator.remove();
                 }
             }
-
         }
 
         if (keys.isEmpty()) {
@@ -271,19 +268,21 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         for (String key : keys) {
             Object valor = atributos.get(key);
-            if (valor instanceof Integer) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ? AND ",
-                        (Integer) valor, nombre);
-            } else if (valor instanceof String) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?",
-                        (String) valor, nombre);
-            } else if (valor instanceof Double) {
-                database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?",
-                        (Double) valor, nombre);
+            try {
+                if (valor instanceof Integer) {
+                    database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?", (Integer) valor, nombre);
+                } else if (valor instanceof String) {
+                    database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?", (String) valor, nombre);
+                } else if (valor instanceof Double) {
+                    database.update("UPDATE Producto SET " + key + " = ? WHERE nombre = ?", (Double) valor, nombre);
+                }
+            } catch (Exception e) {
+                System.err.println("Error al actualizar el campo " + key + " con el valor " + valor + ": " + e.getMessage());
+                e.printStackTrace();
             }
         }
-
     }
+
 
     public void delete(Map<String,?> args) {
         String nombre = (String) args.get("nombre");
