@@ -38,15 +38,15 @@ public class CompradorController {
     public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
                                    @RequestParam(value = "password", required = false) String password, HttpServletRequest request) {
 
-        ResponseEntity<?> res =  mediador.login(identifier, password);
+        ResponseEntity<?> res = mediador.login(identifier, password);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
 
-    
+
     @PostMapping("/comprador/")
     public ResponseEntity<?> register(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
-        if(!body.containsKey("nickname") || !body.containsKey("user_password") || !body.containsKey("correo") || !body.containsKey("direccion") || !body.containsKey("pais") || !body.containsKey("ciudad")){
+        if (!body.containsKey("nickname") || !body.containsKey("user_password") || !body.containsKey("correo") || !body.containsKey("direccion") || !body.containsKey("pais") || !body.containsKey("ciudad")) {
             ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
             logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
             return res;
@@ -67,16 +67,16 @@ public class CompradorController {
 
     @PutMapping("/comprador/")
     public ResponseEntity<?> updateComprador(@RequestParam(value = "nickname", required = true) String nickname,
-                                           @RequestParam(value = "password", required = false) String password,
-                                           @RequestParam(value = "correo", required = false) String correo,
-                                           @RequestParam(value = "direccion", required = false) String direccion,
-                                           @RequestParam(value = "puntos_responsabilidad", required = false) Integer puntos_responsabilidad, HttpServletRequest request) {
+                                             @RequestParam(value = "password", required = false) String password,
+                                             @RequestParam(value = "correo", required = false) String correo,
+                                             @RequestParam(value = "direccion", required = false) String direccion,
+                                             @RequestParam(value = "puntos_responsabilidad", required = false) Integer puntos_responsabilidad, HttpServletRequest request) {
         ResponseEntity<?> res = mediador.updateComprador(nickname, password, correo, direccion, puntos_responsabilidad);
         logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
 
-   
+
     @GetMapping("/comprador/productos_comprados/")
     public ResponseEntity<?> getProductsBought(@RequestParam(value = "nickname", required = true) String nickname, HttpServletRequest request) {
         ResponseEntity<?> res = mediador.productosComprados(nickname);
@@ -86,7 +86,7 @@ public class CompradorController {
 
     @GetMapping("/comprador/carrito-compra/")
     public ResponseEntity<?> getCarritoCompra(@RequestParam(value = "identifier", required = true) String identifier,
-                                             @RequestParam(value = "discountCode", required = false) String discountCode,HttpServletRequest request) {
+                                              @RequestParam(value = "discountCode", required = false) String discountCode, HttpServletRequest request) {
         ResponseEntity<?> res = carritoCompraFachada.getCarritoCompra(identifier, discountCode);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
@@ -112,8 +112,8 @@ public class CompradorController {
 
     @PostMapping("/comprador/carrito-compra/")
     public ResponseEntity<?> addProductCarrito(@RequestParam(value = "productName", required = true) String productName,
-                                        @RequestParam(value = "vendorName", required = true) String vendorName,
-                                        @RequestParam(value = "userNickname", required = true) String userNickname, HttpServletRequest request) {
+                                               @RequestParam(value = "vendorName", required = true) String vendorName,
+                                               @RequestParam(value = "userNickname", required = true) String userNickname, HttpServletRequest request) {
 
         ResponseEntity<?> res = carritoCompraFachada.insertarProducto(productName, vendorName, userNickname);
         logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
@@ -122,8 +122,8 @@ public class CompradorController {
 
     @PostMapping("/comprador/lista-deseos/")
     public ResponseEntity<?> addProductListaDeseos(@RequestParam(value = "productName", required = true) String productName,
-                                        @RequestParam(value = "vendorName", required = true) String vendorName,
-                                        @RequestParam(value = "userNickname", required = true) String userNickname, HttpServletRequest request) {
+                                                   @RequestParam(value = "vendorName", required = true) String vendorName,
+                                                   @RequestParam(value = "userNickname", required = true) String userNickname, HttpServletRequest request) {
 
         ResponseEntity<?> res = listaDeDeseosFachada.insertarProducto(productName, vendorName, userNickname);
         logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
@@ -132,8 +132,8 @@ public class CompradorController {
 
     @DeleteMapping("/comprador/carrito-compra/")
     public ResponseEntity<?> deleteProductCarrito(@RequestParam(value = "productName", required = true) String productName,
-                                           @RequestParam(value = "vendorName", required = true) String vendorName,
-                                           @RequestParam(value = "userNickname", required = true) String userNickname, HttpServletRequest request) {
+                                                  @RequestParam(value = "vendorName", required = true) String vendorName,
+                                                  @RequestParam(value = "userNickname", required = true) String userNickname, HttpServletRequest request) {
 
         ResponseEntity<?> res = carritoCompraFachada.deleteProduct(productName, vendorName, userNickname);
         logger.logRequestAndResponse(HttpMethod.DELETE, request.getRequestURI() + request.getQueryString(), res.toString());
@@ -142,8 +142,8 @@ public class CompradorController {
 
     @DeleteMapping("/comprador/lista-deseos/")
     public ResponseEntity<?> deleteProductListaDeseos(@RequestParam(value = "productName", required = true) String productName,
-                                                  @RequestParam(value = "vendorName", required = true) String vendorName,
-                                                  @RequestParam(value = "userNickname", required = true) String userNickname, HttpServletRequest request) {
+                                                      @RequestParam(value = "vendorName", required = true) String vendorName,
+                                                      @RequestParam(value = "userNickname", required = true) String userNickname, HttpServletRequest request) {
 
         ResponseEntity<?> res = listaDeDeseosFachada.deleteProduct(productName, vendorName, userNickname);
         logger.logRequestAndResponse(HttpMethod.DELETE, request.getRequestURI() + request.getQueryString(), res.toString());
@@ -159,7 +159,7 @@ public class CompradorController {
 
     @PostMapping("/comprador/pedido/")
     public ResponseEntity<?> createPedido(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
-        if (!body.containsKey("nickname") || !body.containsKey("productos") || !body.containsKey("precio_total")){
+        if (!body.containsKey("nickname") || !body.containsKey("productos") || !body.containsKey("precio_total")) {
             ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
             logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
             return res;
@@ -168,7 +168,6 @@ public class CompradorController {
         logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-
 
 
     @GetMapping("/comprador/guardar-mas-tarde/")
@@ -180,7 +179,7 @@ public class CompradorController {
 
     @PostMapping("/comprador/guardar-mas-tarde/")
     public ResponseEntity<?> addProductToGuardarMasTardeList(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
-        if(!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")){
+        if (!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")) {
             ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
             logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
             return res;
@@ -192,7 +191,7 @@ public class CompradorController {
 
     @DeleteMapping("/comprador/guardar-mas-tarde/")
     public ResponseEntity<?> deleteProductFromGuardarMasTardeList(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
-        if(!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")){
+        if (!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")) {
             ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
             logger.logRequestAndResponse(HttpMethod.DELETE, request.getRequestURI() + request.getQueryString(), res.toString());
             return res;
@@ -211,7 +210,7 @@ public class CompradorController {
 
     @PutMapping("/comprador/guardar-mas-tarde/mover-a-carrito/")
     public ResponseEntity<?> moverGuardarMasTardeACarrito(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
-        if(!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")){
+        if (!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")) {
             ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
             logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
             return res;
@@ -223,7 +222,7 @@ public class CompradorController {
 
     @PutMapping("/comprador/carrito-compra/mover-a-guardar-mas-tarde/")
     public ResponseEntity<?> moverAGuardarMasTarde(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
-        if(!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")){
+        if (!body.containsKey("userNickname") || !body.containsKey("productName") || !body.containsKey("vendorName")) {
             ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
             logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
             return res;

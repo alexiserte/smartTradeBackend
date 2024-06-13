@@ -2,14 +2,16 @@ package com.smartTrade.backend.Models;
 
 public class Categoria_Caracteristica {
     private String nombre;
-    private int id_categoria;;
+    private int id_categoria;
+    ;
 
     public Categoria_Caracteristica(String nombre, int id_categoria) {
         this.nombre = nombre;
         this.id_categoria = id_categoria;
     }
 
-    public Categoria_Caracteristica(){}
+    public Categoria_Caracteristica() {
+    }
 
     public String getNombre() {
         return nombre;

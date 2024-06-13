@@ -17,44 +17,40 @@ public class SystemServices {
 
 
     public String getTableAttributes(String tableName) {
-        return systemDAO.readOne(Map.of("tableName",tableName));
+        return systemDAO.readOne(Map.of("tableName", tableName));
     }
 
     public List<String> getAllTables() {
         return systemDAO.readAll();
     }
 
-    public List<String> getFullListOfCountries(boolean emoji){
-        if(emoji){
+    public List<String> getFullListOfCountries(boolean emoji) {
+        if (emoji) {
             return CountriesMethods.getCountriesListInAlphabeticalWithEmojis();
-        }else{
+        } else {
             return CountriesMethods.getCountriesListInAlphabetical();
         }
     }
 
-    public List<String> getCitiesFromCountry(String country,Integer cantidad){
-        return CountriesMethods.getCitiesByCountry(country,cantidad);
+    public List<String> getCitiesFromCountry(String country, Integer cantidad) {
+        return CountriesMethods.getCitiesByCountry(country, cantidad);
     }
 
-    public double getDistanceFromTwoCountries(String country1, String country2){
-        return CountriesMethods.calculateDistanceBetweenCountries(country1,country2);
+    public double getDistanceFromTwoCountries(String country1, String country2) {
+        return CountriesMethods.calculateDistanceBetweenCountries(country1, country2);
     }
 
-    public boolean twoCountriesShareBorder(String country1, String country2){
-        return CountriesMethods.hasBorderWith(country1,country2);
+    public boolean twoCountriesShareBorder(String country1, String country2) {
+        return CountriesMethods.hasBorderWith(country1, country2);
     }
 
-    public String getCountryCapital(String country){
+    public String getCountryCapital(String country) {
         return CountriesMethods.getCapitalCity(country);
     }
 
-    public double getDistanceFromTwoCities(String city1, String country1, String city2, String country2){
-        return CountriesMethods.calculateDistanceBetweenCities(city1,country1,city2,country2);
+    public double getDistanceFromTwoCities(String city1, String country1, String city2, String country2) {
+        return CountriesMethods.calculateDistanceBetweenCities(city1, country1, city2, country2);
     }
-
-
-
-
 
 
 }

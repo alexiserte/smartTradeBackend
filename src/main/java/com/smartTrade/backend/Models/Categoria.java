@@ -10,12 +10,13 @@ public class Categoria {
     }
 
 
-    public Categoria(String nombre){
+    public Categoria(String nombre) {
         this.nombre = nombre;
         this.categoria_principal = null;
     }
 
-    public Categoria(){}
+    public Categoria() {
+    }
 
     public String getNombre() {
         return nombre;

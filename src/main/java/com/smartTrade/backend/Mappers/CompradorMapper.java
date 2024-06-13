@@ -2,6 +2,7 @@ package com.smartTrade.backend.Mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.springframework.jdbc.core.RowMapper;
 
 import com.smartTrade.backend.Factory.UserFactory;
@@ -9,7 +10,7 @@ import com.smartTrade.backend.Models.Comprador;
 import com.smartTrade.backend.Models.User_Types;
 
 public class CompradorMapper implements RowMapper<Comprador> {
-    
+
     @Override
     public Comprador mapRow(ResultSet rs, int rowNum) throws SQLException {
         String nickname = (rs.getString("nickname"));

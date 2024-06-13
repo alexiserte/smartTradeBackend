@@ -14,7 +14,7 @@ import com.smartTrade.backend.Mappers.CaracteristicaMapper;
 import com.smartTrade.backend.Models.Caracteristica;
 
 @Repository
-public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica>{
+public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica> {
     private JdbcTemplate database;
 
     public Caracteristica_ProductoDAO(JdbcTemplate database) {
@@ -24,7 +24,7 @@ public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica>{
     @Autowired
     CaracteristicaDAO caracteristicaDAO;
 
-    public void create(Map<String,?> args) {
+    public void create(Map<String, ?> args) {
         String nombre = (String) args.get("nombre");
         String productName = (String) args.get("productName");
         String vendorName = (String) args.get("vendorName");
@@ -35,7 +35,7 @@ public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica>{
         database.update("INSERT INTO Caracteristica(nombre, id_producto, valor, id_categoria) VALUES (?, ?, ?, ?);", nombre, id_producto, valor, id_categoria);
     }
 
-    public Caracteristica readOne(Map<String,?> args) {
+    public Caracteristica readOne(Map<String, ?> args) {
         String nombre = (String) args.get("nombre");
         String productName = (String) args.get("productName");
         String vendorName = (String) args.get("vendorName");
@@ -48,7 +48,7 @@ public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica>{
     }
 
     @SuppressWarnings("unchecked")
-    public void update(Map<String,?> args) {
+    public void update(Map<String, ?> args) {
         String nombre = (String) args.get("nombre");
         String productName = (String) args.get("productName");
         String vendorName = (String) args.get("vendorName");
@@ -67,14 +67,14 @@ public class Caracteristica_ProductoDAO implements DAOInterface<Caracteristica>{
         }
     }
 
-    public void delete(Map<String,?> args) {
+    public void delete(Map<String, ?> args) {
         String nombre = (String) args.get("nombre");
         String productName = (String) args.get("productName");
         String vendorName = (String) args.get("vendorName");
         int id_producto = database.queryForObject("SELECT id FROM Producto WHERE nombre = ? AND id_vendedor = (SELECT id_usuario FROM Vendedor WHERE id_usuario IN(SELECT id FROM Usuario WHERE nickname = ?));", Integer.class, productName, vendorName);
         database.update("DELETE FROM Caracteristica WHERE nombre = ? AND id_producto = ?;", nombre, id_producto);
     }
-    
+
     public HashMap<String, String> getSmartTag(String productName) {
         List<String> listaDeCaracteristica = new ArrayList<>();
 

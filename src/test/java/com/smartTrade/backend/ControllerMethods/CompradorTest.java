@@ -3,14 +3,12 @@ package com.smartTrade.backend.ControllerMethods;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartTrade.backend.Logger.Logger;
-import com.smartTrade.backend.Models.Producto;
 import com.smartTrade.backend.Utils.JSONMethods;
 import com.smartTrade.backend.Utils.ReflectionMethods;
 import com.smartTrade.backend.smartTradeConexion;
 import org.junit.jupiter.api.Test;
 
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,10 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CompradorTest {
 
-    private Logger logger = Logger.getInstance();
     private final ObjectMapper mapper = new ObjectMapper();
     private final smartTradeConexion conexion = new smartTradeConexion();
-
+    private final Logger logger = Logger.getInstance();
 
     @Test
     void getComprador() {
@@ -30,7 +27,7 @@ public class CompradorTest {
         try {
             HttpResponse<String> response = conexion.get("/comprador/?identifier=" + nickname + "&password=" + password);
             HashMap responseBody = mapper.readValue(response.body(), HashMap.class);
-            System.out.println(JSONMethods.getPrettyJSON(responseBody));
+
 
             assert response.statusCode() == 200;
 
@@ -49,7 +46,7 @@ public class CompradorTest {
             assert responseBody.get("direccion").equals("1G - 1E");
 
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch(AssertionError e){
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             e.printStackTrace();
         } catch (Exception e) {
@@ -66,10 +63,9 @@ public class CompradorTest {
         body.put("direccion", "1G - 1E");
         try {
             HttpResponse<String> response = conexion.post("/comprador/", JSONMethods.getPrettyJSON(body));
-            System.out.println(JSONMethods.getPrettyJSON(body));
             assertEquals(201, response.statusCode());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             throw e;
         }
@@ -80,10 +76,10 @@ public class CompradorTest {
         String nickname = "CompradorDePrueba";
         try {
             HttpResponse<String> response = conexion.delete("/comprador/?nickname=" + nickname);
-            System.out.println(response.body());
+
             assertEquals(200, response.statusCode());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             throw e;
         }
@@ -96,11 +92,11 @@ public class CompradorTest {
 
         HashMap body = new HashMap();
         try {
-            HttpResponse<String> response = conexion.put("/comprador/?nickname=CompradorDePrueba&password=" + password + "&correo=" + correo,JSONMethods.getPrettyJSON(body));
-            System.out.println(response.body());
+            HttpResponse<String> response = conexion.put("/comprador/?nickname=CompradorDePrueba&password=" + password + "&correo=" + correo, JSONMethods.getPrettyJSON(body));
+
             assertEquals(200, response.statusCode());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch (AssertionError e) {
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             throw e;
         }
@@ -108,16 +104,16 @@ public class CompradorTest {
     }
 
     @Test
-    void cantidadDeProductosComprados(){
+    void cantidadDeProductosComprados() {
         String nicknameCaseOne = "alex1serte";
         String nicknameCaseTwo = "dpuckett4";
         try {
             /*  TEST PARA EL CASO alex1serte    */
             HttpResponse<String> response = conexion.get("/comprador/productos_comprados/?nickname=" + nicknameCaseOne);
-            System.out.println(JSONMethods.getPrettyJSON(response.body()));
+
             String result = response.body();
             assert response.statusCode() == 404;
-            assertEquals("No se han encontrado productos comprados por este usuario",result);
+            assertEquals("No se han encontrado productos comprados por este usuario", result);
 
             /*  TEST PARA EL CASO dpuckett4    */
             response = conexion.get("/comprador/productos_comprados/?nickname=" + nicknameCaseTwo);
@@ -128,7 +124,7 @@ public class CompradorTest {
 
 
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch(AssertionError e){
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             e.printStackTrace();
         } catch (Exception e) {
@@ -147,12 +143,10 @@ public class CompradorTest {
             List productos = (List) responseBody.get("productos");
             int numProductos = (int) responseBody.get("numeroProductos");
 
-            System.out.println(JSONMethods.getPrettyJSON(response.body()));
 
             assert response.statusCode() == 200;
             assert numProductos == 3;
             assert productos.size() == 3;
-
 
 
             HttpResponse<String> response2 = conexion.get("/comprador/carrito-compra/?identifier=" + identifier + "&discountCode=" + discountCode);
@@ -161,7 +155,6 @@ public class CompradorTest {
             List productos2 = (List) responseBody2.get("productos");
             int numProductos2 = (int) responseBody2.get("numeroProductos");
 
-            System.out.println(JSONMethods.getPrettyJSON(response2.body()));
 
             assert response2.statusCode() == 200;
             assert numProductos2 == 3;
@@ -188,11 +181,9 @@ public class CompradorTest {
         String identifier = "TestComprador";
         try {
             HttpResponse<String> response = conexion.get("/comprador/lista-deseos/?identifier=" + identifier);
-            System.out.println(JSONMethods.getPrettyJSON(response.body()));
             assert response.statusCode() == 200;
 
             HttpResponse<String> response2 = conexion.get("/comprador/lista-deseos/?identifier=SergioMG");
-            System.out.println(JSONMethods.getPrettyJSON(response2.body()));
             assert response2.statusCode() == 200;
             HashMap responseBody = mapper.readValue(response2.body(), HashMap.class);
             int productos = (int) responseBody.get("numeroProductos");

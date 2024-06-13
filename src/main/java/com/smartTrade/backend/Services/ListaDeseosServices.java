@@ -15,7 +15,7 @@ public class ListaDeseosServices {
     private ListaDeDeseosDAO listaDeDeseosDAO;
 
     public void createNewListaDeseos(String nombre) {
-        listaDeDeseosDAO.create(Map.of("compradorName",nombre));
+        listaDeDeseosDAO.create(Map.of("compradorName", nombre));
     }
 
     public List<ProductoListaDeseos> getListaDeseosFromUser(String nombre) {
@@ -34,7 +34,7 @@ public class ListaDeseosServices {
         listaDeDeseosDAO.vaciarLista(userNickname);
     }
 
-public boolean productInListaDeseos(String productName, String vendorName, String userNickname) {
+    public boolean productInListaDeseos(String productName, String vendorName, String userNickname) {
         return listaDeDeseosDAO.productInListaDeseos(productName, vendorName, userNickname);
     }
 

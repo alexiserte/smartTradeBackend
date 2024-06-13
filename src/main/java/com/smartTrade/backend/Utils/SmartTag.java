@@ -2,6 +2,7 @@ package com.smartTrade.backend.Utils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -10,22 +11,12 @@ public class SmartTag {
 
     private static final String SMART_TAG = "Origen: %s\nProducto: %s\nProceso de producción: %s\nImpacto: %s\nODS: %s\n";
 
-    public static void main(String[] args) {
-        try {
-            System.out.println("\n-----------------------------------------------\n");
-            System.out.println(createSmartTag("Producto"));
-        } catch (IllegalAccessException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static List<Field> getFields() throws ClassNotFoundException {
         Field[] listaDeAtributos;
         listaDeAtributos = Class.forName("com.smartTrade.backend.Utils.SmartTagStrings").getDeclaredFields();
         List<Field> listaDeAtributosList = new ArrayList<>();
-        for (Field field : listaDeAtributos) {
-            listaDeAtributosList.add(field);
-        }
+        Collections.addAll(listaDeAtributosList, listaDeAtributos);
         return listaDeAtributosList;
     }
 
@@ -60,7 +51,7 @@ public class SmartTag {
         return getRandomMensaje(mensajesOds);
     }
 
-    public static String createSmartTag(String producto) throws IllegalAccessException, ClassNotFoundException{
+    public static String createSmartTag(String producto) throws IllegalAccessException, ClassNotFoundException {
         String pais = CountriesMethods.getRandomCountry();
         String produccion = String.format(getRandomMensajeProduccion(), producto, pais);
         String impacto = String.format(getRandomMensajeImpacto(), producto);

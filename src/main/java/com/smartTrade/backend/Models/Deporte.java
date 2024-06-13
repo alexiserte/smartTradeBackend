@@ -1,12 +1,12 @@
 package com.smartTrade.backend.Models;
 
-public class Deporte extends Producto{
+public class Deporte extends Producto {
     private String tipo;
     private String marca;
     private String modelo;
     private String especificaciones;
 
-    public Deporte(String nombre, String descripcion, int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica,int id_imagen, int stock,String etiqueta_inteligente, String tipo, String marca, String modelo, String especificaciones) {
+    public Deporte(String nombre, String descripcion, int id_categoria, java.sql.Date fecha_publicacion, boolean validado, int huella_ecologica, int id_imagen, int stock, String etiqueta_inteligente, String tipo, String marca, String modelo, String especificaciones) {
         super(nombre, descripcion, id_categoria, fecha_publicacion, validado, huella_ecologica, id_imagen, stock, etiqueta_inteligente);
         this.tipo = tipo;
         this.marca = marca;

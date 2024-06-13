@@ -20,9 +20,10 @@ public class Logger {
 
     private PrintWriter writer;
     private static Random random = new Random();
-    private enum Level{INFO, ERROR, WARNING, DEBUG, TRACE,SYSTEM,REQUEST,RESPONSE, TEST}
 
-    private Logger(){
+    private enum Level {INFO, ERROR, WARNING, DEBUG, TRACE, SYSTEM, REQUEST, RESPONSE, TEST}
+
+    private Logger() {
         try {
             writer = new PrintWriter(new FileWriter("smartTrade.log", true));
         } catch (IOException e) {
@@ -30,14 +31,14 @@ public class Logger {
         }
     }
 
-    public static Logger getInstance(){
-        if(logger == null){
+    public static Logger getInstance() {
+        if (logger == null) {
             logger = new Logger();
         }
         return logger;
     }
 
-    public void log(String message){
+    public void log(String message) {
         int id = generateID();
         String cabecera = createHeader(Level.INFO, id);
         String messagePrint = "%s %s";
@@ -45,7 +46,7 @@ public class Logger {
         writer.flush();
     }
 
-    public void logError(Exception e){
+    public void logError(Exception e) {
         int id = generateID();
         String cabecera = createHeader(Level.ERROR, id);
         String message = "%s %s: %s";
@@ -58,85 +59,84 @@ public class Logger {
         writer.flush();
     }
 
-    public void logWarning(String warning){
+    public void logWarning(String warning) {
         int id = generateID();
         String cabecera = createHeader(Level.WARNING, id);
         String message = "%s %s";
-        writer.println(String.format(message,cabecera, warning));
+        writer.println(String.format(message, cabecera, warning));
         writer.flush();
     }
 
-    public void logDebug(String debug){
+    public void logDebug(String debug) {
         int id = generateID();
         String cabecera = createHeader(Level.DEBUG, id);
         String message = "%s %s";
-        writer.println(String.format(message,cabecera, debug));
+        writer.println(String.format(message, cabecera, debug));
         writer.flush();
     }
 
-    private void logTrace(String trace, int id){
-        String cabecera = createHeader(Level.TRACE,id);
+    private void logTrace(String trace, int id) {
+        String cabecera = createHeader(Level.TRACE, id);
         String message = "%s %s";
-        writer.println(String.format(message,cabecera, trace));
+        writer.println(String.format(message, cabecera, trace));
         writer.flush();
     }
 
-public void logSystem(String system){
+    public void logSystem(String system) {
         int id = generateID();
-        String cabecera = createHeader(Level.SYSTEM,id);
+        String cabecera = createHeader(Level.SYSTEM, id);
         String message = "%s %s";
-        writer.println(String.format(message,cabecera, system));
+        writer.println(String.format(message, cabecera, system));
         writer.flush();
     }
 
-    private void logRequest(HttpMethod method, String request,int id){
-        String cabecera = createHeader(Level.REQUEST,id);
+    private void logRequest(HttpMethod method, String request, int id) {
+        String cabecera = createHeader(Level.REQUEST, id);
         String message = "%s %s %s";
-        writer.println(String.format(message,cabecera, method, request));
+        writer.println(String.format(message, cabecera, method, request));
         writer.flush();
     }
 
-    private void logResponse(String response,int id){
-        String cabecera = createHeader(Level.RESPONSE,id);
+    private void logResponse(String response, int id) {
+        String cabecera = createHeader(Level.RESPONSE, id);
         String message = "%s %s";
-        writer.println(String.format(message,cabecera, response));
+        writer.println(String.format(message, cabecera, response));
         writer.flush();
     }
 
-    public void logRequestAndResponse(HttpMethod method, String request, String response){
+    public void logRequestAndResponse(HttpMethod method, String request, String response) {
         int id = generateID();
-        logRequest(method, request,id);
-        logResponse(response,id);
+        logRequest(method, request, id);
+        logResponse(response, id);
     }
 
 
-    public void logTestResult(String test, boolean result){
+    public void logTestResult(String test, boolean result) {
         int id = generateID();
         String cabecera = createHeader(Level.TEST, id);
         String message = "%s TEST %s";
-        writer.println(String.format(message,cabecera, test + " " + (result ? "PASSED" : "FAILED")));
+        writer.println(String.format(message, cabecera, test + " " + (result ? "PASSED" : "FAILED")));
         writer.flush();
     }
 
 
-
-    private static String createHeader(Level level, int id){
+    private static String createHeader(Level level, int id) {
         String template = "[%s %s %s | %d | %s]";
         DateTimeFormatter timeFormatter = new DateTimeFormatterBuilder()
                 .appendPattern("HH:mm") // Formato de 24 horas
                 .toFormatter();
-        return String.format(template, level.toString(), LocalDate.now(), LocalTime.now().format(timeFormatter),id, "smartTrade");
+        return String.format(template, level.toString(), LocalDate.now(), LocalTime.now().format(timeFormatter), id, "smartTrade");
     }
 
-    private static int generateID(){
+    private static int generateID() {
         return random.nextInt(10000);
     }
 
-    public void close(){
+    public void close() {
         writer.close();
     }
 
-    public static String getFullLog(){
+    public static String getFullLog() {
         String log = "";
         try {
             log = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("smartTrade.log")));
@@ -146,12 +146,12 @@ public void logSystem(String system){
         return log;
     }
 
-    public static String getLog(int id){
+    public static String getLog(int id) {
         String log = getFullLog();
         String[] lines = log.split("\n");
         StringBuilder res = new StringBuilder();
         for (String line : lines) {
-            if(line.contains(" | " + id + " | ")){
+            if (line.contains(" | " + id + " | ")) {
                 res.append(line + "\n");
             }
         }

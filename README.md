@@ -29,5 +29,6 @@ $ mvn spring-boot:run
 ## Cosas a cambiar o a implementar
 
 
+
 • Decidir que se hace con el patrón fábrica
 •  Plantear crear una nueva tabla solo de imagenes para el Sprint 2 (que contenga el atributo imágen, id autoincremental. En la tabla producto se quedaría una int que seria una clave ajena a la id de imagen)

@@ -2,7 +2,7 @@ package com.smartTrade.backend.State;
 
 import com.smartTrade.backend.Models.Pedido;
 
-public class Enviado implements EstadoPedido{
+public class Enviado implements EstadoPedido {
 
     public boolean confirmar(Pedido pedido) {
         /*

@@ -1,4 +1,5 @@
 package com.smartTrade.backend.Utils;
+
 public class SmartTagStrings {
 
     public static final String MENSAJE_PRODUCCION_1 = "El proceso de fabricación de %s siempre en %s se caracteriza por su compromiso con la sostenibilidad, implementando tecnologías y prácticas que minimizan el consumo de recursos y reducen la generación de residuos.";

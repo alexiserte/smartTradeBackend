@@ -2,14 +2,15 @@ package com.smartTrade.backend.State;
 
 import com.smartTrade.backend.Models.Pedido;
 
-public class EnReparto implements EstadoPedido{
+public class EnReparto implements EstadoPedido {
 
-    public boolean confirmar(Pedido pedido){
+    public boolean confirmar(Pedido pedido) {
         /*
-        *   No se puede confirmar un pedido en reparto.
-        * */
+         *   No se puede confirmar un pedido en reparto.
+         * */
         return false;
     }
+
     @Override
     public boolean siguienteEstado(Pedido pedido) {
         pedido.setEstado(EstadosPedido.ENTREGADO);

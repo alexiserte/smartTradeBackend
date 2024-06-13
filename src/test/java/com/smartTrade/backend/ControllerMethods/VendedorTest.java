@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VendedorTest {
 
-    private Logger logger = Logger.getInstance();
     private final ObjectMapper mapper = new ObjectMapper();
     private final smartTradeConexion conexion = new smartTradeConexion();
+    private final Logger logger = Logger.getInstance();
 
     @Test
     void getVendedor() {
@@ -25,7 +25,6 @@ public class VendedorTest {
         try {
             HttpResponse<String> response = conexion.get("/vendedor/?identifier=" + nickname + "&password=" + password);
             HashMap responseBody = mapper.readValue(response.body(), HashMap.class);
-            System.out.println(JSONMethods.getPrettyJSON(responseBody));
 
             assert response.statusCode() == 200;
 
@@ -41,7 +40,7 @@ public class VendedorTest {
             assert responseBody.get("direccion").equals("1G - 1E");
 
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch(AssertionError e){
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             e.printStackTrace();
         } catch (Exception e) {
@@ -58,10 +57,10 @@ public class VendedorTest {
         body.put("direccion", "1G - 1E");
         try {
             HttpResponse<String> response = conexion.post("/vendedor/", JSONMethods.getPrettyJSON(body));
-            System.out.println(JSONMethods.getPrettyJSON(body));
+
             assertEquals(201, response.statusCode());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             throw e;
         }
@@ -72,10 +71,10 @@ public class VendedorTest {
         String nickname = "VendedorDePrueba";
         try {
             HttpResponse<String> response = conexion.delete("/vendedor/?nickname=" + nickname);
-            System.out.println(response.body());
+
             assertEquals(200, response.statusCode());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             throw e;
         }
@@ -88,11 +87,11 @@ public class VendedorTest {
 
         HashMap body = new HashMap();
         try {
-            HttpResponse<String> response = conexion.put("/vendedor/?nickname=VendedorDePrueba&password=" + password + "&correo=" + correo,JSONMethods.getPrettyJSON(body));
-            System.out.println(response.body());
+            HttpResponse<String> response = conexion.put("/vendedor/?nickname=VendedorDePrueba&password=" + password + "&correo=" + correo, JSONMethods.getPrettyJSON(body));
+
             assertEquals(200, response.statusCode());
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch (AssertionError e) {
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             throw e;
         }
@@ -104,16 +103,16 @@ public class VendedorTest {
         try {
             HttpResponse<String> response = conexion.get("/vendedor/productos/?identifier=" + identifier);
             HashMap responseBody = mapper.readValue(response.body(), HashMap.class);
-            System.out.println(JSONMethods.getPrettyJSON(responseBody));
+
 
             assert response.statusCode() == 200;
             assert responseBody.containsKey("productos");
 
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), true);
-        }catch (AssertionError e){
+        } catch (AssertionError e) {
             logger.logTestResult(ReflectionMethods.obtenerNombreMetodoActual(), false);
             e.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

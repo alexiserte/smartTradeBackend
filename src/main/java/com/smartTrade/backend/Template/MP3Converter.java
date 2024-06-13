@@ -7,11 +7,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Base64;
 
-public class MP3Converter extends Converter<AudioInputStream>{
+public class MP3Converter extends Converter<AudioInputStream> {
 
 
     @Override

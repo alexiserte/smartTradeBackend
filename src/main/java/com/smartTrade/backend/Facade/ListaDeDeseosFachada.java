@@ -69,7 +69,7 @@ public class ListaDeDeseosFachada extends Fachada {
                     Producto p = productoServices.getSimpleProduct(producto.getId_producto());
                     String vendedor = vendedorServices.getVendorNameWithID(producto.getId_vendedor());
                     double precio = productoServices.getPrecioProducto(producto.getId_vendedor(), producto.getId_producto());
-                    productos_vendedores.add(new Producto_Vendedor(p,vendedor,precio));
+                    productos_vendedores.add(new Producto_Vendedor(p, vendedor, precio));
                 }
 
                 class ListaDeseos {
@@ -104,7 +104,7 @@ public class ListaDeDeseosFachada extends Fachada {
 
                 }
 
-                return new ResponseEntity<>(new ListaDeseos(comprador.getNickname(),listaDeseosServices.productosEnLista(comprador.getNickname()), productos_vendedores, listaDeseosServices.getPrecioTotal(comprador.getNickname())), HttpStatus.OK);
+                return new ResponseEntity<>(new ListaDeseos(comprador.getNickname(), listaDeseosServices.productosEnLista(comprador.getNickname()), productos_vendedores, listaDeseosServices.getPrecioTotal(comprador.getNickname())), HttpStatus.OK);
             } catch (EmptyResultDataAccessException e) {
                 return new ResponseEntity<>("La lista de deseos esta vacía.", HttpStatus.NOT_FOUND);
             } catch (IllegalArgumentException e) {
@@ -121,7 +121,7 @@ public class ListaDeDeseosFachada extends Fachada {
             if (!listaDeseosServices.productInListaDeseos(productName, vendorName, userNickname)) {
                 listaDeseosServices.insertarProducto(userNickname, productName, vendorName);
                 return new ResponseEntity<>("Producto insertado", HttpStatus.OK);
-            }else{
+            } else {
                 return new ResponseEntity<>("Producto ya existente en la lista de deseos", HttpStatus.OK);
             }
         } catch (EmptyResultDataAccessException e) {
@@ -129,7 +129,7 @@ public class ListaDeDeseosFachada extends Fachada {
         }
     }
 
-    public ResponseEntity<?> deleteProduct(String productName, String vendorName, String userNickname){
+    public ResponseEntity<?> deleteProduct(String productName, String vendorName, String userNickname) {
         try {
             if (!listaDeseosServices.productInListaDeseos(productName, vendorName, userNickname)) {
                 return new ResponseEntity<>("Producto no encontrado", HttpStatus.NOT_FOUND);
@@ -137,7 +137,7 @@ public class ListaDeDeseosFachada extends Fachada {
                 listaDeseosServices.eliminarProducto(productName, vendorName, userNickname);
                 return new ResponseEntity<>("Producto eliminado", HttpStatus.OK);
             }
-        }catch(EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
         }
     }

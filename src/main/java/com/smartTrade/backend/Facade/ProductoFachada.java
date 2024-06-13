@@ -85,8 +85,6 @@ public class ProductoFachada extends Fachada {
             String vendedor = ((String) map.get("vendedor")).trim();
 
             double precio = Double.parseDouble((String) map.get("precio"));
-
-            System.out.println("HOLA");
             productoServices.createNewProduct(nombre, categoria, vendedor, precio, descripcion, imagen);
 
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -124,7 +122,6 @@ public class ProductoFachada extends Fachada {
 
     public ResponseEntity<?> updateProduct(Map<String, ?> atributos) {
         try {
-            System.out.println("imagen en fachada: " + atributos.get("imagen"));
             productoServices.updateProduct(atributos);
             return new ResponseEntity<>("Producto actualizado correctamente", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
@@ -277,7 +274,6 @@ public class ProductoFachada extends Fachada {
     }
 
     public ResponseEntity<?> generateQRForOneProduct(String name) {
-        System.out.println("Generando QR para el producto: " + name);
         return new ResponseEntity<>(productoServices.crearSmartTag(name), HttpStatus.OK);
     }
 
@@ -402,12 +398,12 @@ public class ProductoFachada extends Fachada {
         return new ResponseEntity<>(stock, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> addValoracion (int id_pedido, String productName, int valoracion){
-        try{
+    public ResponseEntity<?> addValoracion(int id_pedido, String productName, int valoracion) {
+        try {
             productoServices.addValoracion(id_pedido, productName, valoracion);
-            return new ResponseEntity<>("Valoración actualizada correctamente",HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al actualizar la valoración: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Valoración actualizada correctamente", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al actualizar la valoración: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -415,7 +411,6 @@ public class ProductoFachada extends Fachada {
         double valoracion = productoServices.getValoracion(productName);
         return new ResponseEntity<>(valoracion, HttpStatus.OK);
     }
-
 
 
 }

@@ -1,10 +1,6 @@
 package com.smartTrade.backend.Utils;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import javax.print.DocFlavor;
-import java.util.HashMap;
 
 public class JSONMethods {
 

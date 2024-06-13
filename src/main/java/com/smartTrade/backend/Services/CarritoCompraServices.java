@@ -20,7 +20,7 @@ public class CarritoCompraServices {
     private GuardarMasTardeDAO guardarMasTardeDAO;
 
     public void createNewCarritoCompra(String nombre) {
-        carritoCompraDAO.create(Map.of("compradorName",nombre));
+        carritoCompraDAO.create(Map.of("compradorName", nombre));
     }
 
     public List<ProductoCarrito> getCarritoFromUser(String nombre) {
@@ -72,12 +72,12 @@ public class CarritoCompraServices {
     }
 
     public void deleteUserCarrito(String userName) {
-        carritoCompraDAO.delete(Map.of("nickname",userName));
+        carritoCompraDAO.delete(Map.of("nickname", userName));
     }
 
 
     public void moverProductosDeCarritoAGuardarMasTarde(String userName, String productName, String vendorName) {
-        guardarMasTardeDAO.insertarProducto(Map.of("userNickname",userName,"productName",productName,"vendorName",vendorName));
+        guardarMasTardeDAO.insertarProducto(Map.of("userNickname", userName, "productName", productName, "vendorName", vendorName));
         eliminarProducto(productName, vendorName, userName);
 
     }

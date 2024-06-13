@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class PedidoDAO implements DAOInterface<Pedido>{
+public class PedidoDAO implements DAOInterface<Pedido> {
 
     @Autowired
     UsuarioDAO usuarioDAO;
@@ -43,7 +43,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
 
     private static JdbcTemplate database;
-    public PedidoDAO (JdbcTemplate database) {
+
+    public PedidoDAO(JdbcTemplate database) {
         this.database = database;
     }
 
@@ -52,7 +53,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         String nickname = (String) args.get("nickname");
         double precio_total = (double) args.get("precio_total");
 
-        // Validación y conversión del tipo de 'productos'
         Object productosObj = args.get("productos");
         if (!(productosObj instanceof Map)) {
             throw new IllegalArgumentException("El argumento 'productos' debe ser un mapa.");
@@ -60,7 +60,6 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
         Map<?, ?> rawProductos = (Map<?, ?>) productosObj;
 
-        // Verificamos que los tipos en el mapa sean correctos
         for (Map.Entry<?, ?> entry : rawProductos.entrySet()) {
             if (!(entry.getKey() instanceof Pair)) {
                 throw new IllegalArgumentException("Las claves del mapa 'productos' deben ser del tipo Pair<Producto, String>.");
@@ -70,18 +69,16 @@ public class PedidoDAO implements DAOInterface<Pedido>{
             }
         }
 
-        // Hacemos el cast seguro ahora que hemos verificado los tipos
         Map<Pair<Producto, String>, Integer> productos = (Map<Pair<Producto, String>, Integer>) rawProductos;
 
         int id_comprador = usuarioDAO.getID(nickname);
         Date todayDate = DateMethods.getTodayDate();
         final String FIRST_ESTADO = EstadosPedido.PROCESANDO.getNombreEstado();
 
-        // Insertar el pedido en la base de datos
+
         database.update("INSERT INTO Pedido(id_comprador,fecha_realizacion,estado,precio_total,fecha_llegada) VALUES(?,?,?,?,?)",
                 id_comprador, todayDate, FIRST_ESTADO, precio_total, todayDate);
 
-        // Obtener el ID del pedido recientemente insertado
         int id_pedido = database.queryForObject("SELECT id FROM Pedido WHERE id = (SELECT MAX(id) FROM Pedido)", Integer.class);
 
         List<Date> fechas_entrega = new ArrayList<>();
@@ -135,16 +132,19 @@ public class PedidoDAO implements DAOInterface<Pedido>{
 
         int id_estado_del_pedido = pedido.getEstadoActual().getId();
         int id_estado = updateState(fecha_creacion.toLocalDate(), fecha_entrega.toLocalDate()).getId();
-        if(id_estado_del_pedido < id_estado) {
+        if (id_estado_del_pedido < id_estado) {
             for (int i = id_estado_del_pedido; i < id_estado; i++) {
                 boolean op = pedido.siguienteEstado();
-                if (!op) {throw new RuntimeException("Error al actualizar el estado del pedido");}
+                if (!op) {
+                    throw new RuntimeException("Error al actualizar el estado del pedido");
+                }
             }
-        }
-        else{
-            for(int i = id_estado_del_pedido; i > id_estado; i--){
+        } else {
+            for (int i = id_estado_del_pedido; i > id_estado; i--) {
                 boolean op = pedido.estadoAnterior();
-                if (!op) {throw new RuntimeException("Error al actualizar el estado del pedido");}
+                if (!op) {
+                    throw new RuntimeException("Error al actualizar el estado del pedido");
+                }
             }
         }
         updatePedidoState(id, pedido.getEstadoActual());
@@ -152,7 +152,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
         pedido = database.queryForObject(
                 "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
 
-        Pair<Double,Double> location = localizePedido(pedido);
+        Pair<Double, Double> location = localizePedido(pedido);
         pedido.setLocation(location);
         return pedido;
     }
@@ -161,8 +161,8 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     public List<Pedido> readAll() {
         List<Integer> ids = database.queryForList("SELECT id FROM Pedido", Integer.class);
         List<Pedido> pedidos = new ArrayList<>();
-        for(Integer id : ids){
-            Pedido p = readOne(Map.of("id",id));
+        for (Integer id : ids) {
+            Pedido p = readOne(Map.of("id", id));
             pedidos.add(p);
         }
         return pedidos;
@@ -171,7 +171,7 @@ public class PedidoDAO implements DAOInterface<Pedido>{
     @Override
     public void update(Map<String, ?> args) {
         int id = (int) args.get("id");
-        if(args.containsKey("estado")){
+        if (args.containsKey("estado")) {
             String estado = (String) args.get("estado");
             if (estado.equals(EstadosPedido.CANCELADO.getNombreEstado())) {
                 delete(Map.of("id", id));
@@ -203,62 +203,56 @@ public class PedidoDAO implements DAOInterface<Pedido>{
                 "SELECT * FROM Pedido WHERE id = ?", new PedidoMapper(productosMap), id);
 
         boolean op = pedido.cancelar();
-        if (!op) {throw new RuntimeException("Error al cancelar el pedido");}
+        if (!op) {
+            throw new RuntimeException("Error al cancelar el pedido");
+        }
         database.update("UPDATE Pedido SET estado = ? WHERE id = ?", pedido.getEstadoActual().getNombreEstado(), id);
 
     }
 
 
-    private Date calculateTimeOfDelivery(String vendorNickname, String userNickname){
+    private Date calculateTimeOfDelivery(String vendorNickname, String userNickname) {
         String userCountry = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, userNickname);
         String vendorCountry = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, vendorNickname);
 
-        if(userCountry.equals(vendorCountry)) {
+        if (userCountry.equals(vendorCountry)) {
             return DateMethods.getFutureDate(1);
-        }
-        else if(CountriesMethods.hasBorderWith(userCountry, vendorCountry)){
+        } else if (CountriesMethods.hasBorderWith(userCountry, vendorCountry)) {
             return DateMethods.getFutureDate(2);
-        }
-        else{
+        } else {
             double distance = countryDAO.getDistanceFromVendorToUser(vendorNickname, userNickname);
-            if(distance < 1000){
+            if (distance < 1000) {
                 return DateMethods.getFutureDate(7);
-            }
-            else if(distance < 5000){
+            } else if (distance < 5000) {
                 return DateMethods.getFutureDate(14);
-            }
-            else{
+            } else {
                 return DateMethods.getFutureDate(28);
             }
         }
 
     }
 
-    private Pair<Double,Double> localizePedido(Pedido pedido){
-        if(pedido.getProductos().size() == 0){
+    private Pair<Double, Double> localizePedido(Pedido pedido) {
+        if (pedido.getProductos().size() == 0) {
             return countryDAO.getDefaultCoordinates();
         }
         EstadosPedido estado = pedido.getEstadoActual();
         String vendorNickname = pedido.getProductos().get(0).getVendedor();
         String userNickname = usuarioDAO.getUser(pedido.getId_comprador()).getNickname();
-        Pair<String,String> location = countryDAO.getCountryAndCityFromUser(userNickname);
-        Pair<String,String> locationVendor = countryDAO.getCountryAndCityFromUser(vendorNickname);
+        Pair<String, String> location = countryDAO.getCountryAndCityFromUser(userNickname);
+        Pair<String, String> locationVendor = countryDAO.getCountryAndCityFromUser(vendorNickname);
 
 
-        if(estado == EstadosPedido.ESPERANDO_CONFIRMACION || estado == EstadosPedido.PROCESANDO){
-            return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),0);
-        }
-        else if(estado == EstadosPedido.ENVIADO){
-            return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),1);
-        }
-        else if(estado == EstadosPedido.EN_REPARTO){
-            return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),2);
-        }
-        else if(estado == EstadosPedido.ENTREGADO){
-            return CountriesMethods.getPointBetweenCities(location.getFirst(),location.getSecond(),locationVendor.getFirst(),locationVendor.getSecond(),3);
-        }
-        else if(estado == EstadosPedido.CANCELADO){
-            return Pair.of(0.0,0.0);
+        if (estado == EstadosPedido.ESPERANDO_CONFIRMACION || estado == EstadosPedido.PROCESANDO) {
+            return CountriesMethods.getPointBetweenCities(location.getFirst(), location.getSecond(), locationVendor.getFirst(), locationVendor.getSecond(), 0);
+        } else if (estado == EstadosPedido.ENVIADO) {
+            return CountriesMethods.getPointBetweenCities(location.getFirst(), location.getSecond(), locationVendor.getFirst(), locationVendor.getSecond(), 1);
+        } else if (estado == EstadosPedido.EN_REPARTO) {
+            return CountriesMethods.getPointBetweenCities(location.getFirst(), location.getSecond(), locationVendor.getFirst(), locationVendor.getSecond(), 2);
+        } else if (estado == EstadosPedido.ENTREGADO) {
+            return CountriesMethods.getPointBetweenCities(location.getFirst(), location.getSecond(), locationVendor.getFirst(), locationVendor.getSecond(), 3);
+        } else if (estado == EstadosPedido.CANCELADO) {
+            return Pair.of(0.0, 0.0);
         }
 
         return null;

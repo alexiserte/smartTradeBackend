@@ -7,7 +7,6 @@ import com.smartTrade.backend.Logger.Logger;
 import com.smartTrade.backend.Models.MiembroEquipo;
 import com.smartTrade.backend.smartTradeConexion;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.net.http.HttpResponse;
 import java.util.List;

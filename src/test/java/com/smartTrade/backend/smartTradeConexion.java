@@ -8,8 +8,8 @@ import java.net.http.HttpResponse;
 
 public class smartTradeConexion {
 
-    private static HttpClient client = null;
     private static final URI smartTradeURI = URI.create("http://13.53.197.14:8080");
+    private static HttpClient client = null;
 
 
     public smartTradeConexion() {

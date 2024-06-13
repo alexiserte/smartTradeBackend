@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 @Repository
-public class CompradorDAO implements DAOInterface<Comprador>{
+public class CompradorDAO implements DAOInterface<Comprador> {
 
     private JdbcTemplate database;
 
@@ -24,7 +24,7 @@ public class CompradorDAO implements DAOInterface<Comprador>{
         this.database = database;
     }
 
-    
+
     @Autowired
     Carrito_CompraDAO carritoCompraDAO;
 
@@ -35,7 +35,7 @@ public class CompradorDAO implements DAOInterface<Comprador>{
     ListaDeDeseosDAO listaDeDeseosDAO;
 
     @Transactional
-    public void create(Map<String,?> args) {
+    public void create(Map<String, ?> args) {
         String nickname = (String) args.get("nickname");
         String password = (String) args.get("password");
         String correo = (String) args.get("correo");
@@ -46,12 +46,12 @@ public class CompradorDAO implements DAOInterface<Comprador>{
 
         database.update("INSERT INTO Usuario(nickname, correo, user_password, direccion, fecha_registro, pais,ciudad) VALUES (?, ?, ?, ?, ?,?,?);", nickname, correo, password, direccion, fechaSQL, pais, ciudad);
         database.update("INSERT INTO Comprador(id_usuario, puntos_responsabilidad) SELECT id, 0 FROM Usuario WHERE nickname = ?;", nickname);
-        carritoCompraDAO.create(Map.of("compradorName",nickname));
-        guardarMasTardeDAO.create(Map.of("compradorName",nickname));
-        listaDeDeseosDAO.create(Map.of("compradorName",nickname));
+        carritoCompraDAO.create(Map.of("compradorName", nickname));
+        guardarMasTardeDAO.create(Map.of("compradorName", nickname));
+        listaDeDeseosDAO.create(Map.of("compradorName", nickname));
     }
 
-    public Comprador readOne(Map<String,?> args) {
+    public Comprador readOne(Map<String, ?> args) {
         String identifier = (String) args.get("identifier");
         return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro,u.pais,u.ciudad, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id AND (u.nickname = ? OR u.correo = ?)", new CompradorMapper(), identifier, identifier);
     }
@@ -62,52 +62,51 @@ public class CompradorDAO implements DAOInterface<Comprador>{
     }
 
     @SuppressWarnings("unchecked")
-    public void update(Map<String,?> args) {
-    String nickname = (String) args.get("nickname");
-    Map<String, Object> atributos = (Map<String, Object>) args.get("atributos");
+    public void update(Map<String, ?> args) {
+        String nickname = (String) args.get("nickname");
+        Map<String, Object> atributos = (Map<String, Object>) args.get("atributos");
         List<String> keys = new ArrayList<>(atributos.keySet());
-    Comprador compradorObject = readOne(Map.of("identifier",nickname));
-    for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
-        String key = iterator.next();
-        if (key.equals("nickname")) {
-            if (atributos.get(key).equals(compradorObject.getNickname())) {
-                iterator.remove();
-            }
-        } else if (key.equals("user_password")) {
-            if (atributos.get(key) == (compradorObject.getPassword())) {
-                iterator.remove();
-            }
-        } else if (key.equals("correo")) {
-            if (atributos.get(key) == compradorObject.getCorreo()) {
-                iterator.remove();
-            }
-        } else if (key.equals("direccion")) {
-            if (atributos.get(key) == compradorObject.getDireccion()) {
-                iterator.remove();
-            }
-        } else if (key.equals("puntos_responsabilidad")) {
-            if ((atributos.get(key)).equals(compradorObject.getpuntosResponsabilidad())) {
-                iterator.remove();
-            }
-        }else if (key.equals("pais")) {
-            if (atributos.get(key) == compradorObject.getCountry()) {
-                iterator.remove();
-            }
-        }else if (key.equals("ciudad")) {
-            if (atributos.get(key) == compradorObject.getCity()) {
-                iterator.remove();
+        Comprador compradorObject = readOne(Map.of("identifier", nickname));
+        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
+            String key = iterator.next();
+            if (key.equals("nickname")) {
+                if (atributos.get(key).equals(compradorObject.getNickname())) {
+                    iterator.remove();
+                }
+            } else if (key.equals("user_password")) {
+                if (atributos.get(key) == (compradorObject.getPassword())) {
+                    iterator.remove();
+                }
+            } else if (key.equals("correo")) {
+                if (atributos.get(key) == compradorObject.getCorreo()) {
+                    iterator.remove();
+                }
+            } else if (key.equals("direccion")) {
+                if (atributos.get(key) == compradorObject.getDireccion()) {
+                    iterator.remove();
+                }
+            } else if (key.equals("puntos_responsabilidad")) {
+                if ((atributos.get(key)).equals(compradorObject.getpuntosResponsabilidad())) {
+                    iterator.remove();
+                }
+            } else if (key.equals("pais")) {
+                if (atributos.get(key) == compradorObject.getCountry()) {
+                    iterator.remove();
+                }
+            } else if (key.equals("ciudad")) {
+                if (atributos.get(key) == compradorObject.getCity()) {
+                    iterator.remove();
+                }
             }
         }
-    }
 
-    if (keys.isEmpty()) {
-        return;
-    }
+        if (keys.isEmpty()) {
+            return;
+        }
         for (String key : keys) {
-            if(key.equals("puntos_responsabilidad")){
+            if (key.equals("puntos_responsabilidad")) {
                 database.update("UPDATE Comprador SET puntos_responsabilidad = ? WHERE id_usuario = (SELECT id FROM Usuario WHERE nickname = ?);", (Integer) atributos.get(key), nickname);
-            }
-            else{
+            } else {
                 Object valor = atributos.get(key);
                 if (valor instanceof Integer) {
                     database.update("UPDATE Usuario SET " + key + " = ? WHERE nickname = ?;", (Integer) valor, nickname);
@@ -120,7 +119,7 @@ public class CompradorDAO implements DAOInterface<Comprador>{
         }
     }
 
-    public void delete(Map<String,?> args) {
+    public void delete(Map<String, ?> args) {
         String nickname = (String) args.get("nickname");
 
         database.update("DELETE FROM Carrito_Compra WHERE id_comprador IN(SELECT id FROM Usuario WHERE nickname = ?);",
@@ -148,7 +147,7 @@ public class CompradorDAO implements DAOInterface<Comprador>{
         }
     }
 
-    public Comprador getCompradorWithID(int id_usuario){
+    public Comprador getCompradorWithID(int id_usuario) {
         return database.queryForObject("SELECT u.nickname, u.correo, u.user_password, u.direccion, u.fecha_registro, u.pais,u.ciudad, c.puntos_responsabilidad FROM Usuario u, Comprador c WHERE c.id_usuario = u.id AND u.id = ?", new CompradorMapper(), id_usuario);
     }
 

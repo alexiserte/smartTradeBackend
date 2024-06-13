@@ -16,19 +16,19 @@ public class CategoriaServices {
     private CategoriaDAO categoriaDAO;
 
     public void createNewCategory(String nombre, String categoria_principal) {
-        categoriaDAO.create(Map.of("nombre",nombre,"categoria_principal",categoria_principal));
+        categoriaDAO.create(Map.of("nombre", nombre, "categoria_principal", categoria_principal));
     }
 
     public void deleteCategory(String nombre) {
-        categoriaDAO.delete(Map.of("nombre",nombre));
+        categoriaDAO.delete(Map.of("nombre", nombre));
     }
 
     public void updateCategory(String nombre, Map atributos) {
-        categoriaDAO.update(Map.of("nombre",nombre,"atributos",atributos));
+        categoriaDAO.update(Map.of("nombre", nombre, "atributos", atributos));
     }
 
     public Categoria readOneCategory(String nombre) {
-        return categoriaDAO.readOne(Map.of("nombre",nombre));
+        return categoriaDAO.readOne(Map.of("nombre", nombre));
     }
 
     public List<Categoria> readAllCategories() {
@@ -37,8 +37,8 @@ public class CategoriaServices {
 
     public int getIDFromName(String nombre) {
         List<Categoria> listaDeCategorias = readAllCategories();
-        for(Categoria c : listaDeCategorias) {
-            if(c.getNombre().equals(nombre)) {
+        for (Categoria c : listaDeCategorias) {
+            if (c.getNombre().equals(nombre)) {
                 return listaDeCategorias.indexOf(c) + 1;
             }
         }
@@ -54,19 +54,19 @@ public class CategoriaServices {
         int id = getIDFromName(nombre);
         List<Categoria> listaDeCategorias = readAllCategories();
         List<Categoria> subcategorias = new ArrayList<>();
-        for(Categoria c : listaDeCategorias) {
-            if(c.getCategoria_principal() == id) {
+        for (Categoria c : listaDeCategorias) {
+            if (c.getCategoria_principal() == id) {
                 subcategorias.add(c);
             }
         }
         return subcategorias;
     }
 
-    public List<Categoria> getCategoriasPrincipales(){
+    public List<Categoria> getCategoriasPrincipales() {
         List<Categoria> listaDeCategorias = readAllCategories();
         List<Categoria> categoriasPrincipales = new ArrayList<>();
-        for(Categoria c : listaDeCategorias) {
-            if(c.getCategoria_principal() == 0) {
+        for (Categoria c : listaDeCategorias) {
+            if (c.getCategoria_principal() == 0) {
                 categoriasPrincipales.add(c);
             }
         }

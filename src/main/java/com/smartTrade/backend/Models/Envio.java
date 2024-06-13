@@ -1,16 +1,16 @@
 package com.smartTrade.backend.Models;
 
 public class Envio {
-   private int id_envio;
-   private int id_pedido;
-   private String estado_envio;
-   private float coste_total_productos_enviados;
-   
+    private int id_envio;
+    private int id_pedido;
+    private String estado_envio;
+    private float coste_total_productos_enviados;
+
     public Envio(int id_envio, int id_pedido, String estado_envio, float coste_total_productos_enviados) {
-         this.id_envio = id_envio;
-         this.id_pedido = id_pedido;
-         this.estado_envio = estado_envio;
-         this.coste_total_productos_enviados = coste_total_productos_enviados;
+        this.id_envio = id_envio;
+        this.id_pedido = id_pedido;
+        this.estado_envio = estado_envio;
+        this.coste_total_productos_enviados = coste_total_productos_enviados;
     }
 
     public int getId_envio() {

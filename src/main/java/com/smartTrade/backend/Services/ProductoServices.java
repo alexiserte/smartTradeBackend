@@ -37,11 +37,11 @@ public class ProductoServices {
     private SmartTagDAO smartTagDAO;
 
     public void createNewProduct(String nombre, String characteristicName, String vendorName, double precio, String descripcion, String imagen) {
-        productoDAO.create(Map.of("nombre",nombre,"characteristicName",characteristicName,"vendorName",vendorName,"precio",precio,"descripcion",descripcion,"imagen",imagen));
+        productoDAO.create(Map.of("nombre", nombre, "characteristicName", characteristicName, "vendorName", vendorName, "precio", precio, "descripcion", descripcion, "imagen", imagen));
     }
 
     public Object readFullProduct(String nombre) {
-        return productoDAO.readOne(Map.of("productName",nombre));
+        return productoDAO.readOne(Map.of("productName", nombre));
     }
 
     public Producto readOneProduct(String nombre) {
@@ -65,12 +65,11 @@ public class ProductoServices {
     }
 
     public void updateProduct(Map atributos) {
-        System.out.println("imagen en productoServices: " + atributos.get("imagen"));
-        productoDAO.update(Map.of("atributos",atributos));
+        productoDAO.update(Map.of("atributos", atributos));
     }
 
     public void deleteProduct(String nombre) {
-        productoDAO.delete(Map.of("nombre",nombre));
+        productoDAO.delete(Map.of("nombre", nombre));
     }
 
 
@@ -113,7 +112,7 @@ public class ProductoServices {
 
     public String getImageFromOneProduct(String productName) {
         int id = productoDAO.readOneProduct(productName).getId_imagen();
-        return imagenDAO.readOne(Map.of("id_imagen",id));
+        return imagenDAO.readOne(Map.of("id_imagen", id));
     }
 
     public List<Producto> getProductosCompradosPorUsuario(String username) {
@@ -145,7 +144,7 @@ public class ProductoServices {
     }
 
     public double getPrecioProducto(String vendorName, String productName) {
-        HashMap vendedores = (HashMap) productoDAO.readOne(Map.of("productName",productName)).get(3);
+        HashMap vendedores = (HashMap) productoDAO.readOne(Map.of("productName", productName)).get(3);
         return (double) vendedores.get(vendorName);
     }
 
@@ -165,7 +164,7 @@ public class ProductoServices {
         int id_vendedor = usuarioDAO.getID(vendorName);
         List<Producto> result = new ArrayList<>();
         for (Producto p : readAllProducts()) {
-            Map vendedores = (Map) productoDAO.readOne(Map.of("productName",p.getNombre())).get(3);
+            Map vendedores = (Map) productoDAO.readOne(Map.of("productName", p.getNombre())).get(3);
             if (vendedores.containsKey(vendorName)) {
                 result.add(p);
             }
@@ -177,14 +176,13 @@ public class ProductoServices {
         return precioDAO.getStats(productName);
     }
 
-    public void addValoracion(int id_pedido, String productName, int valoracion){
+    public void addValoracion(int id_pedido, String productName, int valoracion) {
         productoDAO.addValoracion(id_pedido, productName, valoracion);
     }
 
-    public double getValoracion(String productName){
+    public double getValoracion(String productName) {
         return productoDAO.getValoracion(productName);
     }
-
 
 
 }

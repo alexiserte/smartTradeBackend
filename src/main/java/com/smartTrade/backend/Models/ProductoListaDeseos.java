@@ -11,7 +11,8 @@ public class ProductoListaDeseos {
         this.id_vendedor = id_vendedor;
     }
 
-    public ProductoListaDeseos(){}
+    public ProductoListaDeseos() {
+    }
 
     public int getId_listaDeseos() {
         return id_listaDeseos;

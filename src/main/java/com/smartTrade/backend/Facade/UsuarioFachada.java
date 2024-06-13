@@ -1,5 +1,6 @@
 package com.smartTrade.backend.Facade;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartTrade.backend.Services.AdministradorServices;
 import com.smartTrade.backend.Services.CompradorServices;
 import com.smartTrade.backend.Services.UsuarioServices;
@@ -45,39 +46,38 @@ public class UsuarioFachada extends Fachada{
     @SuppressWarnings("unused") 
     public ResponseEntity<?> register(String map) {
         HashMap<String, Object> body = new HashMap<>();
-        System.out.println(map);
 
-
-        String jsonWithoutBackslashes = map.replace("\\", "");
-        String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");
-        String[] parts = pureJSON.split(",");
-        for (String part : parts) {
-            String[] keyValue = part.split(":");
-            String key = keyValue[0].replace("\"", "").trim();
-            String value = keyValue[1].replace("\"", "").trim();
-            if(key.equals("pais")){
-                // En el caso de que sea el país eliminamos los tres ultimos caracteres que son el código del país
-                value = value.substring(0, value.length() - 3);
+        ObjectMapper mapper = new ObjectMapper();
+        if(!map.contains("\\")){
+            try {
+                body = mapper.readValue(map, HashMap.class);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            body.put(key, value);
+        }
+        else {
+            String jsonWithoutBackslashes = map.replace("\\", "");
+            String pureJSON = jsonWithoutBackslashes.replace("{", "").replace("}", "");
+            String[] parts = pureJSON.split(",");
+            for (String part : parts) {
+                String[] keyValue = part.split(":");
+                String key = keyValue[0].replace("\"", "").trim();
+                String value = keyValue[1].replace("\"", "").trim();
+                body.put(key, value);
+            }
         }
         String userType = (String) body.get("userType");
 
-        for(String key : body.keySet()){
-            System.out.println("---------------------------");
-            System.out.println(key + " : " + body.get(key));
-            System.out.println("---------------------------");
+        String pais = (String) body.get("pais");
+        body.replace("pais", pais.substring(0, pais.length()-4));
 
-        }
         switch (userType){
             case "vendedor":
-
                  return vendedorFachada.registerVendedor(body);
             case "comprador":
 
             return compradorFachada.register(body);
             case "administrador":
-
                 return administradorFachada.registerAdministrador(body);
             default:
                 return new ResponseEntity<>("Tipo de usuario no válido", HttpStatus.BAD_REQUEST);

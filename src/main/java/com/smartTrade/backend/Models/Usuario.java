@@ -21,7 +21,8 @@ public class Usuario {
         this.city = city;
     }
 
-    public Usuario() {}
+    public Usuario() {
+    }
 
     public String getNickname() {
         return this.nickname;
@@ -79,5 +80,5 @@ public class Usuario {
         this.city = city;
     }
 
-    
+
 }

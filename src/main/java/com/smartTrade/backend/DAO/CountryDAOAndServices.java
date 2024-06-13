@@ -19,42 +19,39 @@ public class CountryDAOAndServices {
         this.database = database;
     }
 
-    public void insertCountryAndCityWhereMissing(){
-        // Obtener los IDs de los usuarios que tienen país o ciudad nulos
+    public void insertCountryAndCityWhereMissing() {
+
         List<Integer> ids = database.queryForList("SELECT id FROM Usuario WHERE pais = '' OR ciudad = ''", Integer.class);
 
         for (int id : ids) {
-            // Obtener un país y ciudad aleatorios
             Pair<String, String> countryAndCity = CountriesMethods.getRandomCityAndCountry();
-
-            // Actualizar el usuario con el país y ciudad obtenidos
             database.update("UPDATE Usuario SET pais = ?, ciudad = ? WHERE id = ?", countryAndCity.getSecond(), countryAndCity.getFirst(), id);
         }
     }
 
-    public static Pair<Double,Double> getDefaultCoordinates(){
+    public static Pair<Double, Double> getDefaultCoordinates() {
         return Pair.of(39.48254552490556, -0.3467672635500624);
     }
 
 
-    public Pair<String,String> getCountryAndCityFromUser(String nickname){
+    public Pair<String, String> getCountryAndCityFromUser(String nickname) {
         String ciudad = database.queryForObject("SELECT ciudad FROM Usuario WHERE nickname = ?", String.class, nickname);
         String pais = database.queryForObject("SELECT pais FROM Usuario WHERE nickname = ?", String.class, nickname);
         return Pair.of(ciudad, pais);
     }
 
-    public List<String> getListaDePaises(){
+    public List<String> getListaDePaises() {
         List<String> paises = database.queryForList("SELECT DISTINCT pais FROM Pais_Ciudad", String.class);
         List<String> res = new ArrayList<>();
-        for(String pais : paises){
-            if(!pais.equals("")){
+        for (String pais : paises) {
+            if (!pais.equals("")) {
                 res.add(pais + " " + CountriesMethods.getFlagEmojiFromCountryName(pais));
             }
         }
         return res;
     }
 
-    public List<String> getListaDeCiudades(String pais){
+    public List<String> getListaDeCiudades(String pais) {
         List<String> ciudades = database.queryForList("SELECT ciudad FROM Pais_Ciudad WHERE pais = ?", String.class, pais);
         return ciudades;
     }
@@ -65,28 +62,25 @@ public class CountryDAOAndServices {
         return CountriesMethods.calculateDistanceBetweenCities(vendorLocation.getFirst(), vendorLocation.getSecond(), userLocation.getFirst(), userLocation.getSecond());
     }
 
-    public void saveValidCountriesAndCities(){
-        Map<String,List<String>> validCountriesAndCities = new HashMap<>();
+    public void saveValidCountriesAndCities() {
+        Map<String, List<String>> validCountriesAndCities = new HashMap<>();
         List<String> countries = CountriesMethods.getCountriesListInAlphabetical();
 
-        for(String country : countries){
+        for (String country : countries) {
             List<String> validCities = new ArrayList<>();
             List<String> cities = CountriesMethods.getCitiesByCountry(country, 100);
-            System.out.println(country);
-            for(String city : cities){
+
+            for (String city : cities) {
                 try {
                     CountriesMethods.getCityCoordinates(city, country);
                     validCities.add(city);
-                    System.out.println(city);
-                    database.update("INSERT INTO Pais_Ciudad(pais,ciudad) VALUES (?,?)",country,city);
-                }catch (RuntimeException e) {
+                    database.update("INSERT INTO Pais_Ciudad(pais,ciudad) VALUES (?,?)", country, city);
+                } catch (RuntimeException e) {
                     continue;
                 }
             }
             validCountriesAndCities.put(country, validCities);
-            System.out.println("--------------------");
         }
-        System.out.println(validCountriesAndCities);
     }
 
 }

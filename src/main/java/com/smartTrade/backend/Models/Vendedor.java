@@ -1,14 +1,16 @@
 package com.smartTrade.backend.Models;
+
 import java.sql.Date;
 
-public class Vendedor extends Usuario{
+public class Vendedor extends Usuario {
 
 
     public Vendedor(String nickname, String password, String direccion, String correo, String country, String city) {
         super(nickname, password, direccion, correo, country, city);
     }
 
-    public Vendedor(){}
+    public Vendedor() {
+    }
 
     public String getNickname() {
         return super.getNickname();
@@ -61,5 +63,5 @@ public class Vendedor extends Usuario{
     public void setCity(String city) {
         super.setCity(city);
     }
-    
+
 }

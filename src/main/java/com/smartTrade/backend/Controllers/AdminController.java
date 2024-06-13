@@ -28,51 +28,54 @@ public class AdminController {
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
-    
+
+
     @GetMapping("/admin/categorias/principales")
     public ResponseEntity<?> mostrarCategoriasPrincipales(HttpServletRequest request) {
         ResponseEntity<?> res = fechada.mostrarCategoriasPrincipales();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
+
 
     @GetMapping("/admin/database")
     public ResponseEntity<?> mostrarBasesDeDatos(HttpServletRequest request) {
-        ResponseEntity<?> res =  fechada.mostrarBasesDeDatos();
+        ResponseEntity<?> res = fechada.mostrarBasesDeDatos();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
 
     @GetMapping("/admin/compradores")
     public ResponseEntity<?> mostrarUsuarios(HttpServletRequest request) {
-        ResponseEntity<?> res =  fechada.mostrarUsuarios();
+        ResponseEntity<?> res = fechada.mostrarUsuarios();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
+
 
     @GetMapping("/admin/vendedores")
     public ResponseEntity<?> mostrarVendedores(HttpServletRequest request) {
-        ResponseEntity<?> res =  fechada.mostrarVendedores();
+        ResponseEntity<?> res = fechada.mostrarVendedores();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
 
     @GetMapping("/admin/pedidos")
     public ResponseEntity<?> mostrarPedidos(HttpServletRequest request) {
-        ResponseEntity<?> res =  fechada.mostrarTodosLosPedidos();
+        ResponseEntity<?> res = fechada.mostrarTodosLosPedidos();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
 
 
     @GetMapping("/admin/productos/")
-    public ResponseEntity<?> mostrarProductos(HttpServletRequest request, @RequestParam(value = "oldMode", required = false) boolean oldMode){
+    public ResponseEntity<?> mostrarProductos(HttpServletRequest request, @RequestParam(value = "oldMode", required = false) boolean oldMode) {
         ResponseEntity<?> res;
-        if(oldMode) {res = fechada.mostrarProductos(true);}
-        else {res = fechada.mostrarProductos(false);}
+        if (oldMode) {
+            res = fechada.mostrarProductos(true);
+        } else {
+            res = fechada.mostrarProductos(false);
+        }
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
@@ -84,15 +87,15 @@ public class AdminController {
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
+
 
     @GetMapping("/admin/categoria/existen_subcategorias/")
     public ResponseEntity<?> existenSubcategorias(@RequestParam(value = "name", required = true) String name, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.existenSubcategorias(name);
-        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(),res.toString());
+        logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
+
 
     @GetMapping("/admin/categoria/")
     public ResponseEntity<?> mostrarCategoria(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "id", required = false) Integer id, HttpServletRequest request) {
@@ -102,39 +105,39 @@ public class AdminController {
     }
 
     @GetMapping("admin/categoria/subcategorias/")
-    public ResponseEntity<?> mostrarSubcategorias(@RequestParam(value = "name", required = true) String name, HttpServletRequest request){
+    public ResponseEntity<?> mostrarSubcategorias(@RequestParam(value = "name", required = true) String name, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.mostrarSubcategorias(name);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
+
     @GetMapping("/admin/productos/comprador/")
-    public ResponseEntity<?> productsBoughtByOneBuyer(@RequestParam(value = "identifier", required = true) String identifier, HttpServletRequest request){
+    public ResponseEntity<?> productsBoughtByOneBuyer(@RequestParam(value = "identifier", required = true) String identifier, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.productsBoughtByUser(identifier);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-   
+
     @GetMapping("/admin/productos/vendedor/")
-    public ResponseEntity<?> getProductsFromOneVendor(@RequestParam(value = "identifier", required = true) String identifier, HttpServletRequest request){
+    public ResponseEntity<?> getProductsFromOneVendor(@RequestParam(value = "identifier", required = true) String identifier, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.productsSoldByOneVendor(identifier);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
+
     @GetMapping("/admin/")
-    public ResponseEntity<?> loginAdministrador(@RequestParam(value = "identifier", required = true) String identifier, @RequestParam(value = "password", required = false) String password, HttpServletRequest request){
+    public ResponseEntity<?> loginAdministrador(@RequestParam(value = "identifier", required = true) String identifier, @RequestParam(value = "password", required = false) String password, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.loginAdministrador(identifier, password);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
+
 
     @PostMapping("/admin/")
     public ResponseEntity<?> registerAdministrador(@RequestBody HashMap<String, ?> body, HttpServletRequest request) {
         if (!body.containsKey("nickname") || !body.containsKey("user_password") || !body.containsKey("correo")
-                || !body.containsKey("direccion")){
-            ResponseEntity<?> res =  ResponseEntity.badRequest().body("Faltan campos obligatorios");
+                || !body.containsKey("direccion")) {
+            ResponseEntity<?> res = ResponseEntity.badRequest().body("Faltan campos obligatorios");
             logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
             return res;
         }
@@ -142,14 +145,13 @@ public class AdminController {
         logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-    
 
 
     @PutMapping("/admin/")
     public ResponseEntity<?> updateAdministrador(@RequestParam(value = "nickname", required = true) String nickname,
-            @RequestParam(value = "password", required = false) String password,
-            @RequestParam(value = "mail", required = false) String correo,
-            @RequestParam(value = "direction", required = false) String dirección, HttpServletRequest request) {
+                                                 @RequestParam(value = "password", required = false) String password,
+                                                 @RequestParam(value = "mail", required = false) String correo,
+                                                 @RequestParam(value = "direction", required = false) String dirección, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.updateAdministrador(nickname, password, correo, dirección);
         logger.logRequestAndResponse(HttpMethod.PUT, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
@@ -164,8 +166,8 @@ public class AdminController {
     }
 
     @GetMapping("/admin/log/")
-    public ResponseEntity<?> getLogs(HttpServletRequest request, @RequestParam(value = "id", required = false) Integer id){
-        if(id == null){
+    public ResponseEntity<?> getLogs(HttpServletRequest request, @RequestParam(value = "id", required = false) Integer id) {
+        if (id == null) {
             ResponseEntity<?> res = fechada.getLog(null);
             return res;
         }
@@ -174,7 +176,7 @@ public class AdminController {
     }
 
     @GetMapping("/_")
-    public ResponseEntity<?> insertCityAndCountry(HttpServletRequest request){
+    public ResponseEntity<?> insertCityAndCountry(HttpServletRequest request) {
         ResponseEntity<?> res = fechada.saveValidCountriesAndCities();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
@@ -182,21 +184,21 @@ public class AdminController {
 
 
     @GetMapping("/pedido/{id}/productos")
-    public ResponseEntity<?> getProductsFromOnePedidoGivenTheId(@PathVariable int id, HttpServletRequest request){
+    public ResponseEntity<?> getProductsFromOnePedidoGivenTheId(@PathVariable int id, HttpServletRequest request) {
         ResponseEntity<?> res = compradorFachada.getProductsFromOnePedidoGivenTheId(id);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
 
     @GetMapping("/paises")
-    public ResponseEntity<?> getValidCountries(HttpServletRequest request){
+    public ResponseEntity<?> getValidCountries(HttpServletRequest request) {
         ResponseEntity<?> res = fechada.getCountries();
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
 
     @GetMapping("/pais/ciudades/")
-    public ResponseEntity<?> getValidCities(@RequestParam(value = "country", required = true) String country, HttpServletRequest request){
+    public ResponseEntity<?> getValidCities(@RequestParam(value = "country", required = true) String country, HttpServletRequest request) {
         ResponseEntity<?> res = fechada.getCities(country);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;

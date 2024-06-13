@@ -10,31 +10,37 @@ import java.util.Map;
 
 @Repository
 public class SmartTagDAO implements DAOInterface<Object> {
-    
+
     private JdbcTemplate database;
 
-    public SmartTagDAO (JdbcTemplate database) {
+    public SmartTagDAO(JdbcTemplate database) {
         this.database = database;
     }
-    @Override
-    public void create(Map<String,?> args) {}
 
     @Override
-    public Object readOne(Map<String,?> args) {
+    public void create(Map<String, ?> args) {
+    }
+
+    @Override
+    public Object readOne(Map<String, ?> args) {
         return null;
     }
 
     @Override
-    public void update(Map<String,?> args) {}
+    public void update(Map<String, ?> args) {
+    }
 
     @Override
-    public void delete(Map<String,?> args) {}
+    public void delete(Map<String, ?> args) {
+    }
 
     @Override
-    public List<Object> readAll() {return null;}
+    public List<Object> readAll() {
+        return null;
+    }
 
 
-    public String createSmartTag(String productName){
+    public String createSmartTag(String productName) {
         try {
             String smartTag = SmartTag.createSmartTag(productName);
             return QRGenerator.crearQR(smartTag);
@@ -43,7 +49,6 @@ public class SmartTagDAO implements DAOInterface<Object> {
         }
         return null;
     }
-
 
 
 }

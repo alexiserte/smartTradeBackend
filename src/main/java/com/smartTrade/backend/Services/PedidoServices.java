@@ -32,9 +32,8 @@ public class PedidoServices {
     @Autowired
     VendedorDAO vendedorDAO;
 
-    //String nickname, Map<Pair<Producto, String>, Integer> productos,double precio_total
 
-    public void createNewPedido(HashMap<String, ?> body){
+    public void createNewPedido(HashMap<String, ?> body) {
         String nickname = (String) body.get("nickname");
         Map<Pair<Producto, String>, Integer> productos = (Map<Pair<Producto, String>, Integer>) body.get("productos");
         double precio_total = (double) body.get("precio_total");
@@ -50,23 +49,23 @@ public class PedidoServices {
     }
 
 
-    public List<Pedido> readPedidosFromUser(String nickname){
+    public List<Pedido> readPedidosFromUser(String nickname) {
         int id_comprador = usuarioDAO.getID(nickname);
         List<Pedido> pedidos = pedidoDAO.readAll();
         pedidos.removeIf(pedido -> pedido.getId_comprador() != id_comprador);
         return pedidos;
     }
 
-    public List<Producto> getProductosFromOnePedidoGivenTheID(int id){
+    public List<Producto> getProductosFromOnePedidoGivenTheID(int id) {
         List<Pedido> pedidos = readAllPedidos();
         List<Producto> res = new ArrayList<>();
         List<Pedido> filtered = pedidos
-                                .stream()
-                                .filter(pedido -> pedido.getId() == id)
-                                .toList();
-        if(filtered.size() == 0) return res;
+                .stream()
+                .filter(pedido -> pedido.getId() == id)
+                .toList();
+        if (filtered.size() == 0) return res;
         List<Pedido.ItemPedido> items = filtered.get(0).getProductos();
-        for(Pedido.ItemPedido item : items){
+        for (Pedido.ItemPedido item : items) {
             res.add(item.getProducto());
         }
         return res;

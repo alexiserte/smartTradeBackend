@@ -32,7 +32,7 @@ public class CompradorFachada extends Fachada {
 
     public ResponseEntity<?> login(String identifier, String password) {
         if (password == null) { // Si no se envía la contraseña, se asume que se quiere obtener la información
-                                // del usuario
+            // del usuario
             try {
                 Comprador comprador = compradorServices.readOneComprador(identifier);
                 return new ResponseEntity<>(comprador, HttpStatus.OK);
@@ -58,29 +58,24 @@ public class CompradorFachada extends Fachada {
     @SuppressWarnings("unused")
     public ResponseEntity<?> register(Map<String, ?> body) {
         String nickname = (String) body.get("nickname");
-        System.out.println("error en el nickname: " + nickname);
         String password = (String) body.get("user_password"); // Se cambió el nombre de la clave de "password" a
-                                                              // "user_password"
-        System.out.println("error en el password: " + password);
+        // "user_password"
+        if (password == null) {
+            password = (String) body.get("password");
+        }
+
         String correo = (String) body.get("correo");
-        System.out.println("error en el correo: " + correo);
+
         String direccion = (String) body.get("direccion");
-        System.out.println("error en la direccion: " + direccion);
+
         String pais = (String) body.get("pais");
-        System.out.println("error en el pais: " + pais);
+
         String ciudad = (String) body.get("ciudad");
-        System.out.println("error en la ciudad: " + ciudad);
+
         try {
             Comprador comprador = compradorServices.readOneComprador(nickname);
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.CONFLICT);
         } catch (EmptyResultDataAccessException e) {
-            System.out.println(":)");
-            System.out.println(nickname);
-            System.out.println(password);
-            System.out.println(correo);
-            System.out.println(direccion);
-            System.out.println(pais);
-            System.out.println(ciudad);
             compradorServices.createNewComprador(nickname, password, correo, direccion, pais, ciudad);
             return new ResponseEntity<>("Comprador creado correctamente", HttpStatus.CREATED);
         } catch (Exception e) {
@@ -90,57 +85,56 @@ public class CompradorFachada extends Fachada {
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity<?> deleteComprador(String  nickname) {
-        try{
+    public ResponseEntity<?> deleteComprador(String nickname) {
+        try {
             Comprador comprador = compradorServices.readOneComprador(nickname);
             compradorServices.deleteComprador(nickname);
-            return new ResponseEntity<>("Usuario eliminado correctamente",HttpStatus.OK);
-        }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("Usuario no encontrado",HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al eliminar el usuario: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al eliminar el usuario: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<?> updateComprador(String nickname,String password,String mail,String dirección,Integer puntosResponsabilidad)
-    {
-        try{
+    public ResponseEntity<?> updateComprador(String nickname, String password, String mail, String dirección, Integer puntosResponsabilidad) {
+        try {
             Comprador comprador = compradorServices.readOneComprador(nickname);
-            if(password == null && dirección == null && puntosResponsabilidad == null && mail == null){
-                return new ResponseEntity<>("No se ha enviado ningún atributo para actualizar",HttpStatus.BAD_REQUEST);
+            if (password == null && dirección == null && puntosResponsabilidad == null && mail == null) {
+                return new ResponseEntity<>("No se ha enviado ningún atributo para actualizar", HttpStatus.BAD_REQUEST);
             }
-            Map<String,Object> attributes = new HashMap<>();
-            if(password != null){
+            Map<String, Object> attributes = new HashMap<>();
+            if (password != null) {
                 attributes.put("user_password", password);
             }
-            if(dirección != null){
+            if (dirección != null) {
                 attributes.put("direccion", dirección);
             }
-            if(puntosResponsabilidad != null){
+            if (puntosResponsabilidad != null) {
                 attributes.put("puntos_responsabilidad", puntosResponsabilidad);
             }
-            if(mail != null){
+            if (mail != null) {
                 attributes.put("correo", mail);
             }
 
             compradorServices.updateComprador(comprador.getNickname(), attributes);
             return new ResponseEntity<>("Usuario actualizado correctamente", HttpStatus.OK);
-        }catch(EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al actualizar un archivo: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-        } 
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al actualizar un archivo: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-        public ResponseEntity<?> productosComprados(String nickname) {
+    public ResponseEntity<?> productosComprados(String nickname) {
         try {
             Comprador comprador = compradorServices.readOneComprador(nickname);
-            try{
+            try {
                 List<Producto> productos = productoServices.getProductosCompradosPorUsuario(comprador.getNickname());
                 return new ResponseEntity<>(productos, HttpStatus.OK);
-            }catch(EmptyResultDataAccessException e){
+            } catch (EmptyResultDataAccessException e) {
                 return new ResponseEntity<>("No se han encontrado productos comprados por este usuario", HttpStatus.NOT_FOUND);
-            }catch(Exception e){
+            } catch (Exception e) {
                 return new ResponseEntity<>("Error al obtener los productos comprados: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (EmptyResultDataAccessException e) {
@@ -168,28 +162,27 @@ public class CompradorFachada extends Fachada {
         }
     }
 
-    public ResponseEntity<?> getProductsFromOnePedidoGivenTheId(int id){
-        try{
+    public ResponseEntity<?> getProductsFromOnePedidoGivenTheId(int id) {
+        try {
             List<Producto> productos = pedidoServices.getProductosFromOnePedidoGivenTheID(id);
-            return new ResponseEntity<>(productos,HttpStatus.OK);
-        }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("No se han encontrado productos en este pedido",HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al obtener los productos del pedido: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(productos, HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("No se han encontrado productos en este pedido", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al obtener los productos del pedido: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<?> createNewPedido (HashMap<String, ?> body){
-        try{
+    public ResponseEntity<?> createNewPedido(HashMap<String, ?> body) {
+        try {
             pedidoServices.createNewPedido(body);
-            return new ResponseEntity<>("Pedido creado correctamente",HttpStatus.CREATED);
-        }catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("--------",HttpStatus.NOT_FOUND);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error al crear el pedido: " + e.getLocalizedMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Pedido creado correctamente", HttpStatus.CREATED);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("--------", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al crear el pedido: " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 
 }

@@ -20,7 +20,8 @@ import com.smartTrade.backend.Utils.*;
 public class ProductoDAO implements DAOInterface<Object> {
 
     private static final String PRODUCT_BASE_QUERY = "SELECT nombre, id_categoria, descripcion, id_imagen, fecha_añadido, validado, huella_ecologica, stock, etiqueta_inteligente FROM Producto";
-    public static class ProductoAntiguo{
+
+    public static class ProductoAntiguo {
         private String nombre;
         private int id_categoria;
         private String descripcion;
@@ -30,7 +31,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         private int huella_ecologica;
         private int stock;
 
-        public ProductoAntiguo(Producto p,String imagen) {
+        public ProductoAntiguo(Producto p, String imagen) {
             this.nombre = p.getNombre();
             this.id_categoria = p.getId_categoria();
             this.descripcion = p.getDescripcion();
@@ -65,11 +66,16 @@ public class ProductoDAO implements DAOInterface<Object> {
             return validado;
         }
 
-        public int getHuella_ecologica() { return huella_ecologica; }
+        public int getHuella_ecologica() {
+            return huella_ecologica;
+        }
 
-        public int getStock(){return stock;}
+        public int getStock() {
+            return stock;
+        }
 
     }
+
     private JdbcTemplate database;
     @Autowired
     VendedorDAO vendedorDAO;
@@ -90,7 +96,7 @@ public class ProductoDAO implements DAOInterface<Object> {
         this.database = database;
     }
 
-    public void create(Map<String,?> args) {
+    public void create(Map<String, ?> args) {
         String nombre = (String) args.get("nombre");
         String characteristicName = (String) args.get("characteristicName");
         String vendorName = (String) args.get("vendorName");
@@ -109,15 +115,15 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         try {
             database.queryForObject(PRODUCT_BASE_QUERY + " WHERE nombre = ?", new ProductMapper(), nombre);
-            addNewVendorToAnExistingProduct(nombre,vendorName,precio);
+            addNewVendorToAnExistingProduct(nombre, vendorName, precio);
         } catch (EmptyResultDataAccessException e) {
-            createNewProduct(nombre, descripcion, precio, vendorName, characteristicName, imagenResized, huella_ecologica,smartTag);
+            createNewProduct(nombre, descripcion, precio, vendorName, characteristicName, imagenResized, huella_ecologica, smartTag);
         }
     }
 
     /* Inicio Refactoring Extract Method  */
 
-    private void addNewVendorToAnExistingProduct(String name,String vendorName, double price){
+    private void addNewVendorToAnExistingProduct(String name, String vendorName, double price) {
         java.sql.Date fechaSQL = DateMethods.getTodayDate();
 
         int id_vendedor = vendedorDAO.getVendorID(vendorName);
@@ -127,19 +133,19 @@ public class ProductoDAO implements DAOInterface<Object> {
         database.update("INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)", id_producto, price, fechaSQL, id_vendedor);
     }
 
-    private void createNewProduct(String nombre, String descripcion, double precio, String vendorName, String categoryName, String imagenResized, int huella_ecologica, String smartTag){
+    private void createNewProduct(String nombre, String descripcion, double precio, String vendorName, String categoryName, String imagenResized, int huella_ecologica, String smartTag) {
         java.sql.Date fechaSQL = DateMethods.getTodayDate();
 
         int id_imagen = imagenDAO.getID(imagenResized);
         if (id_imagen == -1) {
-            imagenDAO.create(Map.of("imagen",imagenResized));
+            imagenDAO.create(Map.of("imagen", imagenResized));
             id_imagen = imagenDAO.getID(imagenResized);
         }
 
         int id_categoria = categoriaDAO.getIDFromName(categoryName);
         int id_vendedor = vendedorDAO.getVendorID(vendorName);
 
-        database.update("INSERT INTO Producto(nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica,etiqueta_inteligente) VALUES (?, ?,?,?,?,?,?,?);", nombre, id_categoria, descripcion, id_imagen, fechaSQL, false, huella_ecologica,smartTag);
+        database.update("INSERT INTO Producto(nombre, id_categoria, descripcion,id_imagen,fecha_añadido,validado,huella_ecologica,etiqueta_inteligente) VALUES (?, ?,?,?,?,?,?,?);", nombre, id_categoria, descripcion, id_imagen, fechaSQL, false, huella_ecologica, smartTag);
         database.update("INSERT INTO Pendientes_Validacion(id_producto) SELECT id FROM Producto WHERE nombre = ?;", nombre);
 
         int id_producto = getIDFromName(nombre);
@@ -150,7 +156,7 @@ public class ProductoDAO implements DAOInterface<Object> {
 
     /* Fin Refactoring Extract Method  */
 
-    public List<Object> readOne(Map<String,?> args) {
+    public List<Object> readOne(Map<String, ?> args) {
         String productName = (String) args.get("productName");
 
         List<Object> res = new ArrayList<>();
@@ -191,7 +197,7 @@ public class ProductoDAO implements DAOInterface<Object> {
     public ProductoAntiguo readOneProductAntiguo(String productName) {
         int id_imagen = database.queryForObject("SELECT id_imagen FROM Producto WHERE nombre = ?", Integer.class,
                 productName);
-        String imagen = imagenDAO.readOne(Map.of("id_imagen",id_imagen));
+        String imagen = imagenDAO.readOne(Map.of("id_imagen", id_imagen));
         return new ProductoAntiguo(readOneProduct(productName), imagen);
     }
 
@@ -201,55 +207,45 @@ public class ProductoDAO implements DAOInterface<Object> {
 
 
     @SuppressWarnings("unchecked")
-    public void update(Map<String,?> args) {
+    public void update(Map<String, ?> args) {
 
         HashMap<String, ?> atributos = (HashMap<String, ?>) args.get("atributos");
         String nombre = (String) atributos.get("nombre");
         String imagen = (String) atributos.get("imagen");
-        System.out.println(imagen);
         String categoryName = (String) atributos.get("categoria");
 
         Integer id_imagen = -1;
         id_imagen = imagenDAO.getID(imagen);
         try {
-            System.out.println("perro sanxe");
             if (id_imagen == -1 || id_imagen == null) {
-                Map<String,String> args2 = new HashMap<>();
-                args2.put("imagen",imagen);
-                System.out.println("Esto se ejecuta4");
+                Map<String, String> args2 = new HashMap<>();
+                args2.put("imagen", imagen);
                 imagenDAO.create(args2);
                 id_imagen = imagenDAO.getID(imagen);
+            } else {
             }
-            else{
-                System.out.println("Esto se ejecuta3");
-            }
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
             throw new RuntimeException("\nsombra aqui sombra alla maquillate maquillate\n");
         }
 
         int id_categoria = categoriaDAO.getIDFromName(categoryName);
 
-        System.out.println("en la categoria no dio error");
-        if(atributos.containsKey("precio") || atributos.keySet().contains("stock")){
-            updateProductFromOneVendor(nombre,(String) atributos.get("vendedor"),atributos);
+        if (atributos.containsKey("precio") || atributos.keySet().contains("stock")) {
+            updateProductFromOneVendor(nombre, (String) atributos.get("vendedor"), atributos);
 
         }
-        System.out.println("actualizarlo deberia no dar error");
-
-        System.out.println("fffff");
 
         List<String> keys = new ArrayList<>(atributos.keySet());
         Producto product = null;
         try {
             product = readOneProduct(nombre);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Perú es español");
         }
-        System.out.println("Esto se ejecuta4");
 
 
-        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
+        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
             String key = iterator.next();
             if (key.equals("name")) {
                 if (atributos.get(key).equals(product.getNombre())) {
@@ -270,20 +266,7 @@ public class ProductoDAO implements DAOInterface<Object> {
                     iterator.remove();
                 }
 
-            }/* else if (key.equals("fecha_añadido")) {
-                if (((Date) atributos.get(key)).equals(product.getFecha_publicacion())) {
-                    iterator.remove();
-                }
-            } else if (key.equals("validado")) {
-                if ((boolean) atributos.get(key) == product.getValidado()) {
-                    iterator.remove();
-                }
-            /else if (key.equals("huella_ecologica")) {
-                if ((int) atributos.get(key) == product.getHuella_ecologica()) {
-                    iterator.remove();
-                }
-            }*/
-            else if (key.equals("etiqueta_inteligente")) {
+            }else if (key.equals("etiqueta_inteligente")) {
                 if (((String) atributos.get(key)).equals(product.getEtiqueta_inteligente())) {
                     iterator.remove();
                 }
@@ -291,19 +274,19 @@ public class ProductoDAO implements DAOInterface<Object> {
 
         }
 
-        System.out.println("Esto se ejecuta5");
 
         if (keys.isEmpty()) {
             return;
         }
 
-        System.out.println("Esto se ejecuta6");
-
         for (String key : keys) {
             String keyValue = (String) key;
-            if(keyValue.equals("name")) keyValue = "nombre";
+            if (keyValue.equals("name")) keyValue = "nombre";
             if (keyValue.equals("vendedor") || keyValue.equals("precio") || keyValue.equals("stock")) continue;
-            if(keyValue.equals("imagen")){database.update("UPDATE Producto SET id_imagen = ? WHERE nombre = ?",id_imagen,nombre);continue;}
+            if (keyValue.equals("imagen")) {
+                database.update("UPDATE Producto SET id_imagen = ? WHERE nombre = ?", id_imagen, nombre);
+                continue;
+            }
             Object valor = atributos.get(key);
 
             if (valor instanceof Integer) {
@@ -318,10 +301,9 @@ public class ProductoDAO implements DAOInterface<Object> {
             }
         }
 
-        System.out.println("Esto se ejecuta7");
     }
 
-    public void delete(Map<String,?> args) {
+    public void delete(Map<String, ?> args) {
         String nombre = (String) args.get("nombre");
         int id_producto = getIDFromName(nombre);
         database.update("DELETE FROM Producto WHERE nombre = ?", nombre);
@@ -381,14 +363,13 @@ public class ProductoDAO implements DAOInterface<Object> {
             keys = new ArrayList<>(atributos.keySet());
             id_producto = getIDFromName(nombre);
             id_vendedor = vendedorDAO.getVendorID(vendorName);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Perú es español");
         }
 
-        System.out.println("ESTO ESTA BIEN X1");
 
-        for(String key : keys) {
+        for (String key : keys) {
 
             if (key.equals("precio")) {
                 double precio = (double) atributos.get("precio");
@@ -396,36 +377,32 @@ public class ProductoDAO implements DAOInterface<Object> {
                 database.update(
                         "INSERT INTO Historico_Precios(id_producto,precio,fecha_modificacion,id_vendedor) VALUES(?,?,?,?)",
                         id_producto, precio, fechaActual, id_vendedor);
-                System.out.println("ESTO ESTA BIEN X2");
                 database.update("UPDATE Vendedores_Producto SET precio = ? WHERE id_producto = ? AND id_vendedor = ?",
                         precio, id_producto, id_vendedor);
-                System.out.println("ESTO ESTA BIEN X3");
             } else if (keys.contains("stock")) {
                 int stock = (int) atributos.get("stock");
-                System.out.println("ESTO ESTA BIEN X4");
                 database.update("UPDATE Vendedores_Producto SET stock_vendedor = ? WHERE id_producto = ? AND id_vendedor = ?",
                         stock, id_producto, id_vendedor);
-                System.out.println("ESTO ESTA BIEN X5");
             }
         }
     }
 
 
-    public int getStockFromOneProduct(String productName,String vendorName){
+    public int getStockFromOneProduct(String productName, String vendorName) {
         int id_producto = getIDFromName(productName);
         int id_vendedor = vendedorDAO.getVendorID(vendorName);
-        return database.queryForObject("SELECT stock_vendedor FROM Vendedores_Producto WHERE id_producto = ? AND id_vendedor = ?", Integer.class,id_producto,id_vendedor);
+        return database.queryForObject("SELECT stock_vendedor FROM Vendedores_Producto WHERE id_producto = ? AND id_vendedor = ?", Integer.class, id_producto, id_vendedor);
     }
 
-    public void addValoracion(int id_pedido, String productName, int valoracion){
+    public void addValoracion(int id_pedido, String productName, int valoracion) {
         int id_producto = getIDFromName(productName);
         database.update("UPDATE Detalle_Pedido SET valoracion = ? WHERE id_producto = ? AND id_pedido = ?",
                 valoracion, id_producto, id_pedido);
     }
 
-    public double getValoracion(String productName){
+    public double getValoracion(String productName) {
         int id_producto = getIDFromName(productName);
-        return database.queryForObject("SELECT valoracion_media FROM Producto WHERE id = ?", Integer.class,id_producto);
+        return database.queryForObject("SELECT valoracion_media FROM Producto WHERE id = ?", Integer.class, id_producto);
     }
 
 

@@ -20,7 +20,7 @@ public class UsuarioController {
     @GetMapping("/user/")
     public ResponseEntity<?> login(@RequestParam(value = "identifier", required = true) String identifier,
                                    @RequestParam(value = "password", required = false) String password, HttpServletRequest request) {
-        ResponseEntity<?> res =  fechada.login(identifier, password);
+        ResponseEntity<?> res = fechada.login(identifier, password);
         logger.logRequestAndResponse(HttpMethod.GET, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
@@ -31,5 +31,5 @@ public class UsuarioController {
         logger.logRequestAndResponse(HttpMethod.POST, request.getRequestURI() + request.getQueryString(), res.toString());
         return res;
     }
-   
+
 }
